@@ -1,0 +1,20 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "*.js"
+  ],
+  "verbose": true,
+  "exec": "ts-node -r tsconfig-paths/register src/index.ts",
+  "events": {
+  },
+  "watch": [
+    "src/"
+  ],
+  "stdout": true,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "ts"
+}

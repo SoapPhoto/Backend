@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "target": "es2015",
+    "removeComments": false,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "paths": {
+      "@entities/*": ["src/entities/*"],
+      "@services/*": ["src/services/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "test"
+  ]
+}
