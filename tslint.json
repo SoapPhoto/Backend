@@ -12,5 +12,11 @@
       "timeEnd",
       "trace"
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules",
+      "test"
+    ]
   }
 }

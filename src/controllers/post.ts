@@ -1,15 +1,15 @@
 import { Get, JsonController } from 'routing-controllers';
 import { Inject } from 'typedi';
 
-import { PostService } from '@services/post';
+import { PictureService } from '@services/picture';
 
 @JsonController('/post')
 export class PostController {
   @Inject()
-  public postService: PostService;
+  public pictureService: PictureService;
 
   @Get('/')
 	public getAll(): Promise<any> {
-    return this.postService.getList();
+    return this.pictureService.getList();
   }
 }

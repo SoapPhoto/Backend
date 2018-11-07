@@ -12,7 +12,9 @@
     "suppressImplicitAnyIndexErrors": true,
     "paths": {
       "@entities/*": ["src/entities/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@graphql/*": ["src/graphql/*"],
+      "@repositories/*": ["src/repositories/*"]
     }
   },
   "exclude": [
