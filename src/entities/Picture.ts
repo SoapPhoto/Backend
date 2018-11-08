@@ -11,7 +11,6 @@ ObjectID.prototype.valueOf = function () {
 export class Picture {
   @Field(type => ID)
   @ObjectIdColumn()
-  // tslint:disable-next-line:variable-name
   public readonly _id: ObjectID;
 
   @Field()

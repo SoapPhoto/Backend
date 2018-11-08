@@ -6,7 +6,7 @@
     "*.js"
   ],
   "verbose": true,
-  "exec": "ts-node -r tsconfig-paths/register src/index.ts",
+  "exec": "ts-node -r tsconfig-paths/register src/index.ts -I /node_modules/",
   "events": {
   },
   "watch": [

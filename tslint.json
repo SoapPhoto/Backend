@@ -1,7 +1,9 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-config-airbnb"],
   "rules": {
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case", "allow-snake-case"],
     "object-literal-sort-keys": false,
+    "import-name": [false],
     "no-console": [
       false,
       "log",

@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { getCustomRepository } from 'typeorm';
 
-import { Picture } from '@entities/Picture';
 import { PictureInput } from '@graphql/Picture/input';
 import { PictureRepository } from '@repositories/PictureRepository';
 
