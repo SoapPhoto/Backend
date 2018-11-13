@@ -44,6 +44,7 @@ export default class Token {
   private getClient = async (req: Request, res: Response) => {
     const credentials = this.getClientCredentials(req);
     // const grantType = req.body.grant_type
+    console.log(credentials);
     if (!credentials.clientId || !credentials.clientSecret) {
       throw new Error('error_credentials');
     }

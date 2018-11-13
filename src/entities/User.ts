@@ -1,17 +1,12 @@
-import { ObjectID } from 'mongodb';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
-
-ObjectID.prototype.valueOf = function () {
-  return this.toString();
-};
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 @ObjectType()
 export class User {
   @Field(type => ID)
-  @ObjectIdColumn()
-  public readonly _id: ObjectID;
+  @PrimaryGeneratedColumn()
+  public readonly id: number;
 
   @Field()
   @Column()

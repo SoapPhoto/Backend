@@ -22,7 +22,6 @@ useContainerForGql(Container);
   useExpressServer(app, {
     routePrefix: '/api',
     controllers: [`${__dirname}/controllers/*.ts`],
-    middlewares: [`${__dirname}/middlewares/*.ts`],
     defaultErrorHandler: false,
   });
   useExpressServer(app, {

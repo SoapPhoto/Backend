@@ -1,20 +1,15 @@
-import { ObjectID } from 'mongodb';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, CreateDateColumn, Entity, JoinColumn, ObjectIdColumn, OneToOne } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Client } from './Client';
 import { User } from './User';
-
-ObjectID.prototype.valueOf = function () {
-  return this.toString();
-};
 
 @Entity('accessToken')
 @ObjectType()
 export class AccessToken {
   @Field(type => ID)
-  @ObjectIdColumn()
-  public readonly _id: ObjectID;
+  @PrimaryGeneratedColumn()
+  public readonly id: number;
 
   @Field()
   @Column()

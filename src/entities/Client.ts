@@ -1,17 +1,20 @@
-import { ObjectID } from 'mongodb';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
-
-ObjectID.prototype.valueOf = function () {
-  return this.toString();
-};
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('client')
 @ObjectType()
 export class Client {
   @Field(type => ID)
-  @ObjectIdColumn()
-  public readonly _id: ObjectID;
+  @PrimaryGeneratedColumn()
+  public id: number;
+
+  @CreateDateColumn()
+  public createTime: Date;
 
   @Field()
   @Column()
@@ -25,16 +28,17 @@ export class Client {
   @Column()
   public clientId: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ unique: true })
   public grantTypes: string;
 
   @Field(types => [String])
   @Column('simple-array')
   public grants: string[];
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({
+    unique: true,
+  })
   public redirectUri: string;
-
 }

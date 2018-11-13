@@ -3,6 +3,7 @@
   "rules": {
     "variable-name": [true, "allow-leading-underscore", "allow-pascal-case", "allow-snake-case"],
     "object-literal-sort-keys": false,
+    "max-line-length": [true, 120],
     "import-name": [false],
     "no-console": [
       false,
