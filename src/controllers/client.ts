@@ -15,7 +15,7 @@ export class PostController {
       clientId: 'test',
       clientSecret: 'abc',
       clientName: 'soap',
-      grants: [''],
+      grants: ['password'],
     });
   }
 }

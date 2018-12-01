@@ -5,7 +5,6 @@ import { DeepPartial, EntityRepository, Repository, SaveOptions, UpdateResult } 
 export class ClientRepository extends Repository<Client> {
   public async add<T extends DeepPartial<Client>>(client: T) {
     const test = await this.save(client);
-    console.log(this.metadata);
     return test;
     // await this.afterLoad();
   }

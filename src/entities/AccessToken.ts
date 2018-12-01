@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Client } from './Client';
 import { User } from './User';
@@ -24,17 +24,18 @@ export class AccessToken {
   public createdAt: Date;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public permission: string;
 
   @Field()
-  @OneToOne(type => Client)
+  @ManyToOne(type => Client)
   @JoinColumn()
   public client: Client;
 
   @Field()
-  @OneToOne(type => User)
+  @ManyToOne(type => User)
   @JoinColumn()
   public user: User;
-
 }

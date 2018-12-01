@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import passwordType from '../grantTypes/passwordType';
 import refreshToken from '../grantTypes/refreshToken';
 import { Imodel, IOauthConfig } from '../oauth';
+import { OAuthError } from '../utils/error';
 
 const grantTypes = {
   password: passwordType,
@@ -29,7 +30,7 @@ export default class Token {
   private handleGrantType = (req: Request, client: any) => {
     const grantType = req.body.grant_type;
     if (client.grants.indexOf(grantType) < 0) {
-      throw new Error('unsupported_grant_type');
+      throw new OAuthError('unsupported_grant_type');
     }
     // tslint:disable-next-line:variable-name
     const Type = grantTypes[grantType];
@@ -44,13 +45,12 @@ export default class Token {
   private getClient = async (req: Request, res: Response) => {
     const credentials = this.getClientCredentials(req);
     // const grantType = req.body.grant_type
-    console.log(credentials);
     if (!credentials.clientId || !credentials.clientSecret) {
-      throw new Error('error_credentials');
+      throw new OAuthError('error_credentials');
     }
     const client = await this.model.getClient(credentials.clientId, credentials.clientSecret);
     if (!client) {
-      throw new Error('invalid_client');
+      throw new OAuthError('invalid_client');
     }
     return client;
   }
@@ -63,6 +63,6 @@ export default class Token {
     if (req.body && req.body.client_id && req.body.client_secret) {
       return { clientId: req.body.client_id, clientSecret: req.body.client_secret };
     }
-    throw new Error('error_credentials');
+    throw new OAuthError('error_credentials');
   }
 }

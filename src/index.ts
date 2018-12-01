@@ -10,6 +10,7 @@ import { createConnection, useContainer as useContainerForOrm } from 'typeorm';
 
 import config from './config';
 import graphql from './graphql';
+import { handleError } from './middlewares/error';
 
 // init
 useContainerForOrm(Container);
@@ -35,7 +36,7 @@ useContainerForGql(Container);
     cacheControl: true,
   });
   server.applyMiddleware({ app });
-  // app.use(bodyParser.json());
+  app.use(handleError);
   // app.use(bodyParser.urlencoded({ extended: false }));
   app.listen(process.env.PORT || 3000);
   console.log(`\n 🐱 server is running on port ${process.env.PORT || 3000}.\n`);

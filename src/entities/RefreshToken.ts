@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -31,16 +31,18 @@ export class RefreshToken {
   public createdAt: Date;
 
   @Field()
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public scope: string;
 
   @Field()
-  @OneToOne(type => Client)
+  @ManyToOne(type => Client)
   @JoinColumn()
   public client: Client;
 
   @Field()
-  @OneToOne(type => User)
+  @ManyToOne(type => User)
   @JoinColumn()
   public user: User;
 

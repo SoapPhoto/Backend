@@ -29,7 +29,7 @@ export class Client {
   public clientId: string;
 
   @Field({ nullable: true })
-  @Column({ unique: true })
+  @Column({ nullable: true })
   public grantTypes: string;
 
   @Field(types => [String])
@@ -38,7 +38,7 @@ export class Client {
 
   @Field({ nullable: true })
   @Column({
-    unique: true,
+    nullable: true,
   })
   public redirectUri: string;
 }

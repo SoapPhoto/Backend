@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 @ObjectType()
@@ -8,8 +8,8 @@ export class User {
   @PrimaryGeneratedColumn()
   public readonly id: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   public nickname: string;
 
   @Field()
@@ -21,27 +21,30 @@ export class User {
   public salt: string;
 
   @Field()
-  @Column()
+  @Column({
+    unique: true,
+  })
   public username: string;
 
   @Field()
-  @Column()
+  @Column({
+    unique: true,
+  })
   public email: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   public description: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   public avatar: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   public cover: string;
 
-  @Field(type => Date)
-  @Column()
+  @CreateDateColumn()
   public createdAt: Date;
 
 }
