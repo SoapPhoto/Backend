@@ -39,7 +39,7 @@ export default class OAuth2 implements Imodel {
   }
 
   public getAccessToken = async (accessToken: string): Promise<any> => {
-    return '';
+    return await this.accessTokenRepository.getByToken(accessToken);
   }
 
   public saveToken =  async(
@@ -69,10 +69,15 @@ export default class OAuth2 implements Imodel {
 
   // 校验RefreshToken的有效性
   public revokeToken =  async (token: any) => {
+    if (token) {
+      if (token.expires >= new Date()) {
+        return true;
+      }
+    }
     return false;
   }
 
   public getRefreshToken = async (refreshToken: string) => {
-    return '';
+    return await this.refreshTokenRepository.getByToken(refreshToken);
   }
 }

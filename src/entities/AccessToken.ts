@@ -12,7 +12,9 @@ export class AccessToken {
   public readonly id: number;
 
   @Field()
-  @Column()
+  @Column({
+    unique: true,
+  })
   public accessToken: string;
 
   @Field(type => Date)

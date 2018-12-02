@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 
+import { AccessToken } from '@entities/AccessToken';
 import { Imodel } from '../oauth';
+import { OAuthError } from '../utils/error';
 import { IOauthConfig } from './../oauth';
 
 export default class Authenticate {
@@ -19,7 +21,7 @@ export default class Authenticate {
   public getTokenFromRequest = (req: Request) => {
     const token = req.headers.authorization;
     if (!token) {
-      throw new Error('invalid_authorization');
+      throw new OAuthError('invalid_authorization');
     }
     return token.match(/Bearer\s(\S+)/)[1];
   }
@@ -27,20 +29,28 @@ export default class Authenticate {
   public getAccessToken = async (token: string) => {
     const accessToken = await this.model.getAccessToken(token);
     if (!accessToken) {
-      throw new Error('invalid_access_token');
+      throw new OAuthError('invalid_access_token');
     }
     return accessToken;
   }
 
-  public validateAccessToken = (accessToken: any, roles: any) => {
-    if (!(accessToken.accessTokenExpiresAt instanceof Date)) {
-      throw new Error('invalid_access_token_expires_at');
+  public validateAccessToken = (accessToken: AccessToken, roles: string[]) => {
+    if (!(accessToken.expires instanceof Date)) {
+      throw new OAuthError('invalid_access_token_expires_at');
     }
 
-    if (accessToken.accessTokenExpiresAt < new Date()) {
-      throw new Error('invalid_access_token_expired');
+    if (accessToken.expires < new Date()) {
+      throw new OAuthError('invalid_access_token_expired');
     }
 
+    if (roles.length > 0) {
+      if (!accessToken.user.roles) {
+        throw new OAuthError('invalid_access_token_roles');
+      }
+      if (!accessToken.user.roles.findIndex(role => !!roles.findIndex(e => e === role))) {
+        throw new OAuthError('invalid_access_token_roles');
+      }
+    }
     return accessToken;
   }
 }

@@ -19,7 +19,9 @@ export class RefreshToken {
   public readonly id: number;
 
   @Field()
-  @Column()
+  @Column({
+    unique: true,
+  })
   public refreshToken: string;
 
   @Field(type => Date)

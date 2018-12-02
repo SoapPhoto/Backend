@@ -8,6 +8,7 @@ import { useContainer as useContainerForGql } from 'type-graphql';
 import { Container } from 'typedi';
 import { createConnection, useContainer as useContainerForOrm } from 'typeorm';
 
+import authorizationChecker from '@utils/authorizationChecker';
 import config from './config';
 import graphql from './graphql';
 import { handleError } from './middlewares/error';
@@ -21,11 +22,13 @@ useContainerForGql(Container);
   await createConnection(config.database);
   const app = express();
   useExpressServer(app, {
+    authorizationChecker,
     routePrefix: '/api',
     controllers: [`${__dirname}/controllers/*.ts`],
     defaultErrorHandler: false,
   });
   useExpressServer(app, {
+    authorizationChecker,
     routePrefix: '/oauth',
     controllers: [`${__dirname}/oauth/controllers/*.ts`],
     defaultErrorHandler: false,

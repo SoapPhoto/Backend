@@ -6,6 +6,7 @@ import { IUser } from '@controllers/account';
 import { User } from '@entities/User';
 import { UserRepository } from '@repositories/UserRepository';
 import { ApiError } from '@utils/ApiError';
+import { ROLES } from '@utils/constants';
 
 @Service()
 export class UserService {
@@ -22,6 +23,7 @@ export class UserService {
     }
     const newUser = new User();
     newUser.email = user.email;
+    newUser.roles = [ROLES.USER];
     newUser.username = user.username;
     const salt = await crypto.randomBytes(32).toString('hex');
     const hash = await crypto.pbkdf2Sync(user.password, salt, 20, 32, 'sha512').toString('hex');

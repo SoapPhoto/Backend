@@ -18,4 +18,18 @@ export class RefreshTokenRepository extends Repository<RefreshToken> {
     refreshToken.expires = input.refreshTokenExpiresAt;
     return this.save(refreshToken);
   }
+  public getByToken = async (refreshToken: string) => {
+    return await this.createQueryBuilder('refreshToken')
+      .where('refreshToken.refreshToken=:refreshToken', { refreshToken })
+      .leftJoinAndSelect('refreshToken.client', 'client')
+      .leftJoinAndSelect('refreshToken.user', 'user')
+      .getOne();
+  }
+  public delete = async (refreshToken: string) => {
+    return await this.createQueryBuilder()
+    .delete()
+    .from(RefreshToken)
+    .where('refreshToken=:refreshToken', { refreshToken })
+    .execute();
+  }
 }

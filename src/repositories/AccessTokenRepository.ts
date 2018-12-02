@@ -18,4 +18,19 @@ export class AccessTokenRepository extends Repository<AccessToken> {
     accessToken.expires = input.accessTokenExpiresAt;
     return this.save(accessToken);
   }
+  public getByToken = async (accessToken: string) => {
+    return await this.createQueryBuilder('accessToken')
+      .where('accessToken.accessToken=:accessToken', { accessToken })
+      .leftJoinAndSelect('accessToken.client', 'client')
+      .leftJoinAndSelect('accessToken.user', 'user')
+      .getOne();
+  }
+
+  public delete = async (accessToken: string) => {
+    return await this.createQueryBuilder()
+    .delete()
+    .from(AccessToken)
+    .where('accessToken=:accessToken', { accessToken })
+    .execute();
+  }
 }

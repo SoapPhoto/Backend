@@ -47,4 +47,8 @@ export class User {
   @CreateDateColumn()
   public createdAt: Date;
 
+  @Field(types => [String], { nullable: true })
+  @Column('simple-array', { nullable: true })
+  public roles: string[];
+
 }

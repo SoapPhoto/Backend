@@ -3,6 +3,6 @@ import oauthServer from './oauth';
 
 export default new oauthServer({
   model: new model(),
-  accessTokenLifetime: 1000,
-  refreshTokenLifetime: 200000,
+  accessTokenLifetime: 3600,
+  refreshTokenLifetime: 1209600,
 });

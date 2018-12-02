@@ -1,5 +1,6 @@
 import { Request } from 'express';
 
+import { OAuthError } from '../utils/error';
 import AbstractType from './abstractType';
 
 export default class PasswordType extends AbstractType {
@@ -14,14 +15,14 @@ export default class PasswordType extends AbstractType {
   public getRefreshToken = async (req: Request) => {
     const token = await this.model.getRefreshToken(req.body.refresh_token);
     if (!token) {
-      throw new Error('invalid_refresh_token');
+      throw new OAuthError('invalid_refresh_token');
     }
     return token;
   }
   public revokeToken = async (token: any) => {
     const isToken = await this.model.revokeToken(token);
     if (!isToken) {
-      throw new Error('invalid_refresh_token');
+      throw new OAuthError('invalid_refresh_token');
     }
     return isToken;
   }
