@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-express';
 // import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as morgan from 'morgan';
 import { useContainer as useContainerForRouting, useExpressServer } from 'routing-controllers';
 import { useContainer as useContainerForGql } from 'type-graphql';
 import { Container } from 'typedi';
@@ -36,10 +37,17 @@ useContainerForGql(Container);
   const server = new ApolloServer({
     schema: await graphql(),
     tracing: true,
+    context: (data: any) => data,
     cacheControl: true,
+    uploads: true,
+    formatError: (error: any) => {
+      console.log(error);
+      return new Error('Internal server error');
+    },
   });
   server.applyMiddleware({ app });
   app.use(handleError);
+  app.use(morgan('tiny'));
   // app.use(bodyParser.urlencoded({ extended: false }));
   app.listen(process.env.PORT || 3000);
   console.log(`\n 🐱 server is running on port ${process.env.PORT || 3000}.\n`);

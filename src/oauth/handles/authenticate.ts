@@ -47,7 +47,10 @@ export default class Authenticate {
       if (!accessToken.user.roles) {
         throw new OAuthError('invalid_access_token_roles');
       }
-      if (!accessToken.user.roles.findIndex(role => !!roles.findIndex(e => e === role))) {
+      const isRoles = accessToken.user.roles.findIndex((role) => {
+        return roles.findIndex(e => e === role) > -1;
+      });
+      if (isRoles) {
         throw new OAuthError('invalid_access_token_roles');
       }
     }

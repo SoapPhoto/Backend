@@ -12,11 +12,9 @@ export class User {
   @Column({ nullable: true })
   public nickname: string;
 
-  @Field()
   @Column()
   public hash: string;
 
-  @Field()
   @Column()
   public salt: string;
 

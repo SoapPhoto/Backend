@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './User';
 
 @Entity('picture')
 @ObjectType()
@@ -8,12 +9,25 @@ export class Picture {
   @PrimaryGeneratedColumn()
   public readonly id: number;
 
-  @Field()
-  @Column()
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+  })
   public title: string;
 
-  @Field(type => Date)
+  @Field()
   @Column()
+  public hash: string;
+
+  @Field()
+  @ManyToOne(type => User)
+  @JoinColumn()
+  public user: User;
+
+  @Field(type => Date)
+  @CreateDateColumn()
   public createdAt: Date;
 
 }

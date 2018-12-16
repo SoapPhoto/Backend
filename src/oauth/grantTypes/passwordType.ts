@@ -1,5 +1,6 @@
 import { Request } from 'express';
 
+import { OAuthError } from '../utils/error';
 import AbstractType from './abstractType';
 
 export default class PasswordType extends AbstractType {
@@ -13,7 +14,7 @@ export default class PasswordType extends AbstractType {
   public getUser = async (req: Request) => {
     const user = await this.model.getUser(req.body.username, req.body.password);
     if (!user) {
-      throw new Error('invalid_user');
+      throw new OAuthError('invalid_user');
     }
     return user;
   }
