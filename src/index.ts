@@ -40,10 +40,6 @@ useContainerForGql(Container);
     context: (data: any) => data,
     cacheControl: true,
     uploads: true,
-    formatError: (error: any) => {
-      console.log(error);
-      return new Error('Internal server error');
-    },
   });
   server.applyMiddleware({ app });
   app.use(handleError);

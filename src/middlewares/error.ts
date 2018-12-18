@@ -18,6 +18,6 @@ export function handleError(error: ErrorRequestHandler, req: Request, res: Respo
       error,
     });
   }
-  console.error(error);
+  console.error(123123123, error);
   next();
 }

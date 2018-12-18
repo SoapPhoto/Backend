@@ -13,4 +13,13 @@ export class PictureService {
   public getList = async () => {
     return await this.pictureRepository.find();
   }
+
+  public getOne = async (id: string) => {
+    const data = await this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.id=:id', { id })
+      .leftJoinAndSelect('picture.user', 'user')
+      .getOne();
+    console.log(data);
+    return data;
+  }
 }
