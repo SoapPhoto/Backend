@@ -1,3 +1,5 @@
+import { ApolloError } from 'apollo-server';
+
 const known_errors = {
   200: 'OK',
   400: 'bad_request',

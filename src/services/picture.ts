@@ -11,7 +11,9 @@ export class PictureService {
   public add = this.pictureRepository.add;
 
   public getList = async () => {
-    return await this.pictureRepository.find();
+    return await this.pictureRepository.createQueryBuilder('picture')
+    .leftJoinAndSelect('picture.user', 'user')
+    .getMany();
   }
 
   public getOne = async (id: string) => {

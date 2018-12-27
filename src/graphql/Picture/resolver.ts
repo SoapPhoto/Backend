@@ -6,7 +6,7 @@ import { Picture, PictureInfo } from '@entities/Picture';
 import { PictureService } from '@services/Picture';
 import { qiniuUpload } from '@utils/qiniu';
 import { storeUpload } from '@utils/upload';
-import { GraphQLUpload } from 'apollo-server-core';
+import { ApolloError, GraphQLUpload } from 'apollo-server-core';
 import { Upload } from 'typing';
 
 @Service()
@@ -17,14 +17,19 @@ export class PictureResolver {
 
   @Query(returns => [Picture])
   public async pictures() {
-    return await this.pictureService.getList();
+    const data = await this.pictureService.getList();
+    return data;
   }
 
   @Query(returns => Picture)
   public async picture(
     @Arg('id') id: string,
   ) {
-    return await this.pictureService.getOne(id);
+    const data = await this.pictureService.getOne(id);
+    if (!data) {
+      throw new ApolloError(`not resolve a Picture id '${id}'`, 'NOT_FOUND');
+    }
+    return data;
   }
 
   @Mutation(returns => Picture)
@@ -38,7 +43,6 @@ export class PictureResolver {
       await oauth.default.authenticate(context.req, context.res, ['user', 'admin']);
       const { id, pathname } = await storeUpload(file.stream, file.filename, path.join(__dirname, '../../../upload'));
       const data = await qiniuUpload(pathname, id);
-      console.log(data);
       const picture = await this.pictureService.add({
         info,
         key: data.key,
@@ -47,7 +51,6 @@ export class PictureResolver {
       });
       return picture;
     } catch (err) {
-      console.log(err);
       throw err;
     }
   }

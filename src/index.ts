@@ -36,9 +36,7 @@ useContainerForGql(Container);
   });
   const server = new ApolloServer({
     schema: await graphql(),
-    tracing: true,
     context: (data: any) => data,
-    cacheControl: true,
     uploads: true,
   });
   server.applyMiddleware({ app });

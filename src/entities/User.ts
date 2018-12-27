@@ -1,5 +1,6 @@
+import * as crypto from 'crypto';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterLoad, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 @ObjectType()
@@ -49,4 +50,11 @@ export class User {
   @Column('simple-array', { nullable: true })
   public roles: string[];
 
+  @AfterLoad()
+  public setDefaultAvatar() {
+    if (!this.avatar) {
+      const emailHash = crypto.createHash('md5').update(this.email).digest('hex');
+      this.avatar = `//gravatar.loli.net/avatar/${emailHash}?d=mp&s=300`;
+    }
+  }
 }

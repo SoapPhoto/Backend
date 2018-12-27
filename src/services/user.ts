@@ -32,4 +32,9 @@ export class UserService {
 
     return await this.userRepository.save(newUser);
   }
+  public getOne = async (username: string) => {
+    return await this.userRepository.createQueryBuilder('user')
+    .where('user.username=:username', { username })
+    .getOne();
+  }
 }
