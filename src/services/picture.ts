@@ -10,10 +10,13 @@ export class PictureService {
 
   public add = this.pictureRepository.add;
 
-  public getList = async () => {
-    return await this.pictureRepository.createQueryBuilder('picture')
-    .leftJoinAndSelect('picture.user', 'user')
-    .getMany();
+  public getList = async (userId: string = '') => {
+    const query = this.pictureRepository.createQueryBuilder('picture')
+      .leftJoinAndSelect('picture.user', 'user');
+    if (userId) {
+      query.where('picture.user=:userId', { userId });
+    }
+    return await query.getMany();
   }
 
   public getOne = async (id: string) => {

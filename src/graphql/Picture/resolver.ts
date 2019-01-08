@@ -16,14 +16,18 @@ export class PictureResolver {
   public pictureService: PictureService;
 
   @Query(returns => [Picture])
-  public async pictures() {
-    const data = await this.pictureService.getList();
+  public async pictures(
+    @Arg('userId', {
+      nullable: true,
+    }) userId: string,
+  ) {
+    const data = await this.pictureService.getList(userId);
     return data;
   }
 
   @Query(returns => Picture)
   public async picture(
-    @Arg('id') id: string,
+    @Arg('id') id?: string,
   ) {
     const data = await this.pictureService.getOne(id);
     if (!data) {
