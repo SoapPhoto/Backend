@@ -14,7 +14,7 @@ export class OauthController {
 
   @Get('token')
   @Post('token')
-	public async token(@Req() req: Request, @Res() res: Response): Promise<any> {
+  public async token(@Req() req: Request, @Res() res: Response): Promise<any> {
     return await oauth.token(req, res);
   }
 }

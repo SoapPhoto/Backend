@@ -1,9 +1,10 @@
 import { ApolloError, AuthenticationError } from 'apollo-server';
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 
 import { User } from '@entities/User';
 import { UserService } from '@services/user';
+import { UserInput } from './input';
 
 @Service()
 @Resolver(of => User)
@@ -31,5 +32,19 @@ export class UserResolver {
       throw new ApolloError(`not resolve a User username '${username}'`, 'NOT_FOUND');
     }
     return data;
+  }
+
+  @Authorized()
+  @Mutation(returns => Boolean)
+  public async updateUser(
+    @Arg('user') user: UserInput,
+    @Arg('id') id: number,
+    @Ctx() context: any,
+  ) {
+    if (id !== context.req.auth.user.id) {
+      // throw new ApolloError(`not resolve a User username '${username}'`, 'NOT_FOUND');
+    }
+    await this.userService.update(id, user);
+    return true;
   }
 }

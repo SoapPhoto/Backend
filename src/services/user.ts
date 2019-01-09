@@ -4,6 +4,7 @@ import { getCustomRepository } from 'typeorm';
 
 import { IUser } from '@controllers/account';
 import { User } from '@entities/User';
+import { UserInput } from '@graphql/User/input';
 import { UserRepository } from '@repositories/UserRepository';
 import { ApiError } from '@utils/ApiError';
 import { ROLES } from '@utils/constants';
@@ -36,5 +37,16 @@ export class UserService {
     return await this.userRepository.createQueryBuilder('user')
     .where('user.username=:username', { username })
     .getOne();
+  }
+  public update = async (id: number, input: UserInput) => {
+    const user = await this.userRepository.findOne({
+      id,
+    });
+    console.log(user);
+    // await this.userRepository.createQueryBuilder()
+    //   .update(User)
+    //   .set(input)
+    //   .where('id=:id', { id })
+    //   .execute();
   }
 }
