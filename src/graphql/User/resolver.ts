@@ -1,5 +1,5 @@
 import { ApolloError, AuthenticationError } from 'apollo-server';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, ID, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 
 import { User } from '@entities/User';
@@ -35,16 +35,16 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(returns => Boolean)
+  @Mutation(returns => User)
   public async updateUser(
     @Arg('user') user: UserInput,
-    @Arg('id') id: number,
+    @Arg('id', types => ID) id: string,
     @Ctx() context: any,
   ) {
-    if (id !== context.req.auth.user.id) {
-      // throw new ApolloError(`not resolve a User username '${username}'`, 'NOT_FOUND');
+    console.log(id, context.req.auth.user.id);
+    if (id !== context.req.auth.user.id.toString()) {
+      throw new AuthenticationError('No permission');
     }
-    await this.userService.update(id, user);
-    return true;
+    return await this.userService.update(id, user);
   }
 }

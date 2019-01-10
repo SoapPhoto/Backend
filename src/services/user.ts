@@ -38,11 +38,9 @@ export class UserService {
     .where('user.username=:username', { username })
     .getOne();
   }
-  public update = async (id: number, input: UserInput) => {
-    const user = await this.userRepository.findOne({
-      id,
-    });
-    console.log(user);
+  public update = async (id: string, input: UserInput) => {
+    const user = await this.userRepository.updateUser(id, input);
+    return user;
     // await this.userRepository.createQueryBuilder()
     //   .update(User)
     //   .set(input)
