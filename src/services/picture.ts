@@ -24,7 +24,6 @@ export class PictureService {
       .where('picture.id=:id', { id })
       .leftJoinAndSelect('picture.user', 'user')
       .getOne();
-    console.log(data);
     return data;
   }
 }

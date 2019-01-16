@@ -11,6 +11,7 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "paths": {
+      "@/*": ["src/*"],
       "@entities/*": ["src/entities/*"],
       "@services/*": ["src/services/*"],
       "@graphql/*": ["src/graphql/*"],
