@@ -1,27 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "module": "commonjs",
-    "target": "es2015",
-    "removeComments": false,
-    "sourceMap": true,
-    "moduleResolution": "node",
+    "declaration": true,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "paths": {
-      "@/*": ["src/*"],
-      "@entities/*": ["src/entities/*"],
-      "@services/*": ["src/services/*"],
-      "@graphql/*": ["src/graphql/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@utils/*": ["src/utils/*"],
-      "@repositories/*": ["src/repositories/*"]
-    }
+    "target": "es6",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./"
   },
-  "exclude": [
-    "node_modules",
-    "test"
-  ]
+  "exclude": ["node_modules"]
 }

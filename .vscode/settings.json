@@ -1,0 +1,6 @@
+{
+  "prettier.tslintIntegration": true,
+  "editor.codeActionsOnSave": {
+      "source.fixAll.tslint": true
+  }
+}
