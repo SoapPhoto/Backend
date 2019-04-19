@@ -2,18 +2,19 @@ import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { LoggingInterceptor } from 'src/shared/logging.interceptor';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from '@/auth/auth.module';
+import { ClientModule } from '@/oauth/client/client.module';
+import { OauthModule } from '@/oauth/oauth.module';
+import { LoggingInterceptor } from '@/shared/logging.interceptor';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
+    ClientModule,
+    AuthModule,
+    OauthModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
