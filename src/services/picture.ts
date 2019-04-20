@@ -1,8 +1,9 @@
 import { Service } from 'typedi';
 import { getCustomRepository } from 'typeorm';
 
-import { PictureInput } from '@graphql/Picture/input';
+import { PictureListArgs } from '@graphql/Picture/input';
 import { PictureRepository } from '@repositories/PictureRepository';
+import { UserInputError } from 'apollo-server';
 
 @Service()
 export class PictureService {
@@ -10,11 +11,20 @@ export class PictureService {
 
   public add = this.pictureRepository.add;
 
-  public getList = async (userId: string = '') => {
+  public getList = async ({ userId, picture, last, first }: PictureListArgs) => {
     const query = this.pictureRepository.createQueryBuilder('picture')
       .leftJoinAndSelect('picture.user', 'user');
     if (userId) {
       query.where('picture.user=:userId', { userId });
+    }
+    if (picture) {
+      let limit = 10;
+      if (last || first) {
+        limit = last || first;
+      }
+      query.where('picture.id=:picture', { picture })
+        .orderBy('picture.createdAt', 'ASC')
+        .take(limit);
     }
     return await query.getMany();
   }

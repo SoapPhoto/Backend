@@ -1,7 +1,8 @@
 import * as path from 'path';
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Args, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Inject, Service } from 'typedi';
 
+import { logger } from '@/utils/logger';
 import { Picture, PictureInfo } from '@entities/Picture';
 import { PictureService } from '@services/Picture';
 import { formatError } from '@utils/formatError';
@@ -9,6 +10,7 @@ import { qiniuUpload } from '@utils/qiniu';
 import { storeUpload } from '@utils/upload';
 import { ApolloError, GraphQLUpload } from 'apollo-server-core';
 import { Upload } from 'typing';
+import { PictureListArgs } from './input';
 
 @Service()
 @Resolver(of => Picture)
@@ -16,13 +18,17 @@ export class PictureResolver {
   @Inject()
   public pictureService: PictureService;
 
+  @Query(returns => String)
+  public async hello() {
+    logger.debug('hello');
+    return 'hello';
+  }
   @Query(returns => [Picture])
   public async pictures(
-    @Arg('userId', {
-      nullable: true,
-    }) userId: string,
+    @Args()
+    input: PictureListArgs,
   ) {
-    const data = await this.pictureService.getList(userId);
+    const data = await this.pictureService.getList(input);
     return data;
   }
 

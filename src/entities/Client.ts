@@ -14,7 +14,7 @@ export class Client {
   public id: number;
 
   @CreateDateColumn()
-  public createTime: Date;
+  public createdAt: Date;
 
   @Field()
   @Column()
