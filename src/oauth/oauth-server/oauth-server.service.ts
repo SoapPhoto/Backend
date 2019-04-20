@@ -4,6 +4,7 @@ import * as OAuth2Server from 'oauth2-server';
 import { getTokenExpiresAt } from '@/common/utils/token';
 import { UserEntity } from '@/user/user.entity';
 import { UserService } from '@/user/user.service';
+import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
@@ -44,13 +45,13 @@ export class OauthServerService {
     const newToken = await this.accessTokenService.create(token);
     return newToken;
   }
-  private getAccessToken = async () => {
-    console.log('getAccessToken');
+  private getAccessToken = async (token: string) => {
+    return this.accessTokenService.getAccessToken(token);
   }
-  private getRefreshToken = async (refreshToken) => {
+  private getRefreshToken = async (refreshToken: string) => {
     return this.accessTokenService.getRefreshToken(refreshToken);
   }
-  private revokeToken = async (token) => {
+  private revokeToken = async (token: AccessTokenEntity) => {
     if (token) {
       if (token.refreshTokenExpiresAt >= new Date()) {
         return true;

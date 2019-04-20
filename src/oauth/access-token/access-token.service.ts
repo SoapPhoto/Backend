@@ -25,4 +25,13 @@ export class AccessTokenService {
     });
     return token;
   }
+  public getAccessToken = async (accessToken: string) => {
+    const token = await this.accessTokenRepository.findOne({
+      relations: ['client', 'user'],
+      where: {
+        accessToken,
+      },
+    });
+    return token;
+  }
 }
