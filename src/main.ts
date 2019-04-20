@@ -6,10 +6,13 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
+import { AuthGuard } from './common/guard/auth.guard';
+import { OauthMiddleware } from './common/middleware/oauth.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalGuards(new AuthGuard());
 
   // swagger 文档
   const options = new DocumentBuilder()

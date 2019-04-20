@@ -28,7 +28,11 @@ export class UserService {
     return user;
   }
   public async verifyUser(username: string, password: string) {
-    const user = await this.userEntity.findOne({ username });
+    const user = await this.userEntity.createQueryBuilder('user')
+      .where('user.username=:username', { username })
+      .addSelect('user.hash')
+      .addSelect('user.salt')
+      .getOne();
     if (user) {
       const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
       if (hash === user.hash) {

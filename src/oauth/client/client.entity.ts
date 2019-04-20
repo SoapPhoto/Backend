@@ -18,6 +18,6 @@ export class ClientEntity extends BaseEntity {
   @Column({ nullable: false, default: 3600 })
   public readonly accessTokenLifetime: number;
 
-  @Column({ nullable: false, default: 7200 })
+  @Column({ nullable: false, default: 1209600 })
   public readonly refreshTokenLifetime: number;
 }

@@ -9,12 +9,15 @@ export class OauthController {
   constructor(
     private readonly oauthServerService: OauthServerService,
   ) {}
-  @Post('/authorize')
-  public async accessToken(@Req() req: Request, @Res() res: Response) {
+
+  @Post('/token')
+  public async accessToken(
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     const request = new OAuth2Server.Request(req);
     const response = new OAuth2Server.Response(res);
     const token = await this.oauthServerService.server.token(request, response);
-    console.log(token);
-    return { test: 1 };
+    res.json(token);
   }
 }

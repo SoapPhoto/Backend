@@ -23,11 +23,11 @@ export class UserEntity extends BaseEntity {
   public readonly email: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   public hash: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   public salt: string;
 
 }

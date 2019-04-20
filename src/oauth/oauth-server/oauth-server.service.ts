@@ -4,6 +4,7 @@ import * as OAuth2Server from 'oauth2-server';
 import { getTokenExpiresAt } from '@/common/utils/token';
 import { UserEntity } from '@/user/user.entity';
 import { UserService } from '@/user/user.service';
+import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
 
@@ -13,13 +14,16 @@ export class OauthServerService {
   constructor(
     private readonly clientService: ClientService,
     private readonly userService: UserService,
+    private readonly accessTokenService: AccessTokenService,
   ) {
     this.server = new OAuth2Server({
       model: {
         getClient: this.getClient,
         saveToken: this.saveToken,
         getAccessToken: this.getAccessToken,
+        getRefreshToken: this.getRefreshToken,
         verifyScope: this.verifyScope,
+        revokeToken: this.revokeToken,
         getUser: this.getUser,
       },
     });
@@ -30,18 +34,32 @@ export class OauthServerService {
   }
   private saveToken = async ({ accessToken, refreshToken }: any, client: ClientEntity, user: UserEntity) => {
     const token = {
+      client,
+      user,
       accessToken,
       refreshToken,
       accessTokenExpiresAt: getTokenExpiresAt(client.accessTokenLifetime),
       refreshTokenExpiresAt: getTokenExpiresAt(client.refreshTokenLifetime),
     };
-    console.log('saveToken', token, client, user);
+    const newToken = await this.accessTokenService.create(token);
+    return newToken;
   }
   private getAccessToken = async () => {
     console.log('getAccessToken');
   }
+  private getRefreshToken = async (refreshToken) => {
+    return this.accessTokenService.getRefreshToken(refreshToken);
+  }
+  private revokeToken = async (token) => {
+    if (token) {
+      if (token.refreshTokenExpiresAt >= new Date()) {
+        return true;
+      }
+    }
+    return false;
+  }
   private verifyScope = async () => {
-    console.log('verifyScope');
+    return true;
   }
   private getUser = async (email: string, password: string) => {
     const user = await this.userService.verifyUser(email, password);

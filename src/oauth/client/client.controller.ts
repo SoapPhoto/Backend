@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Post, Query } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/client.dto';
@@ -10,7 +10,7 @@ export class ClientController {
     private readonly clientService: ClientService,
   ) {}
 
-  @Get('add')
+  @Post('add')
   public async addClient(
     @Query() param: CreateClientDto,
   ) {
