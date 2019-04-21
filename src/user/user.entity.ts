@@ -1,7 +1,8 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@/common/base.entity';
+import { PictureEntity } from '@/picture/picture.entity';
 import { IsEmail } from 'class-validator';
 
 @Entity('user')
@@ -28,6 +29,9 @@ export class UserEntity extends BaseEntity {
 
   @Exclude()
   @Column({ select: false })
-  public salt: string;
+  public readonly salt: string;
+
+  @OneToMany(type => PictureEntity, photo => photo.user)
+  public readonly pictures: PictureEntity[];
 
 }

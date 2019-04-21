@@ -8,6 +8,8 @@ import { OauthModule } from '@/oauth/oauth.module';
 import { LoggingInterceptor } from '@/shared/logging.interceptor';
 import { AuthGuard } from './common/guard/auth.guard';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
+import { QiniuModule } from './common/qiniu/qiniu.module';
+import { PictureModule } from './picture/picture.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { OauthMiddleware } from './common/middleware/oauth.middleware';
     ClientModule,
     AuthModule,
     OauthModule,
+    PictureModule,
+    QiniuModule,
   ],
   providers: [
     {
