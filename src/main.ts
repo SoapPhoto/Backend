@@ -8,6 +8,8 @@ import * as compression from 'compression';
 
 import { AppModule } from './app.module';
 
+import { QueryExceptionFilter } from '@/common/filter/query-exception.filter';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -15,6 +17,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
+  // mysql查询错误捕获
+  app.useGlobalFilters(new QueryExceptionFilter());
 
   // swagger 文档
   const options = new DocumentBuilder()
@@ -26,6 +30,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT);
-  Logger.log(`Server running on http://localhost:${process.env.PORT}`, 'Bootstrap');
+  Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
 }
+
 bootstrap();

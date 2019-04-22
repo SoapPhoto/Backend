@@ -29,7 +29,6 @@ export class OauthController {
         throw new UnauthorizedException(err.message);
       }
       throw new BadRequestException(err.message);
-      // console.log(4242424, err, OAuth2Server.OAuthError);
     }
   }
 }
