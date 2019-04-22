@@ -4,16 +4,17 @@ require('dotenv').config();
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as compression from 'compression';
 
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(compression());
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
-  // app.useGlobalFilters(new HttpExceptionFilter());
 
   // swagger 文档
   const options = new DocumentBuilder()
