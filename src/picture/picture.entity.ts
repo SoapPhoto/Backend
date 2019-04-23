@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@/common/base.entity';
 import { UserEntity } from '@/user/user.entity';
+import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')
 export class PictureEntity extends BaseEntity {
@@ -25,5 +26,12 @@ export class PictureEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, user => user.pictures)
   public readonly user: UserEntity;
+
+  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
+  public readonly activitys: PictureUserActivityEntity[];
+
+  public like: boolean = false;
+
+  public likes: number;
 
 }

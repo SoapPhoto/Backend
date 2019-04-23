@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -8,7 +8,6 @@ import { User } from '@/common/decorator/user.decorator';
 import { File } from '@/common/interface/file.interface';
 import { QiniuService } from '@/common/qiniu/qiniu.service';
 import { UserEntity } from '@/user/user.entity';
-import { plainToClass } from 'class-transformer';
 import { PictureService } from './picture.service';
 
 @Controller('picture')
@@ -45,7 +44,18 @@ export class PictureController {
   }
 
   @Get()
-  public async getList () {
-    return this.pictureService.getList();
+  public async getList (
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.getList(user);
+  }
+
+  @Put('like/:id([0-9]+)')
+  @Roles('user')
+  public async updatePictureActivity(
+    @Param('id') id: string,
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.likePicture(id, user);
   }
 }
