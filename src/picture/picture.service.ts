@@ -21,28 +21,23 @@ export class PictureService {
     );
   }
   public getList = async (user?: UserEntity) => {
-    const list = await this.pictureRepository.createQueryBuilder('picture')
+    const query = this.pictureRepository.createQueryBuilder('picture')
       .leftJoinAndSelect('picture.user', 'user')
-      .leftJoinAndSelect('picture.activitys', 'activity', 'activity.like=:like', { like: true })
-      .addSelect(
-        subQuery => subQuery.select('COUNT(*)', 'likes')
-          .from(PictureUserActivityEntity, 'picture')
-          .where('picture.like=:like', { like: true })
-        , 'likes',
-      )
-      .getMany();
-    console.log(list);
-    // if (user) {
-    //   const data = await Promise.all(
-    //     list.map(async ({ id }) => await this.activityService.getOne(id, user.id)),
-    //   );
-    //   for (const activity of data) {
-    //     if (activity) {
-    //       const index = list.findIndex(({ id }) => id === activity.picture.id);
-    //       list[index].like = activity.like;
-    //     }
-    //   }
-    // }
+      .loadRelationCountAndMap(
+        'picture.likes', 'picture.activitys', 'activity',
+        qb => qb.andWhere('activity.like=:like', { like: true }),
+      );
+    if (user) {
+      query
+        .loadRelationCountAndMap(
+          'picture.isLike', 'picture.activitys', 'activity',
+          qb => qb.andWhere(
+            'activity.userId=:userId AND activity.like=:like',
+            { userId: user.id, like: true },
+          ),
+        );
+    }
+    const list = await query.cache(true).getMany();
     return plainToClass(PictureEntity, list);
   }
 

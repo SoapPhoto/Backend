@@ -10,6 +10,7 @@ import { AuthGuard } from './common/guard/auth.guard';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { QiniuModule } from './common/qiniu/qiniu.module';
 import { PictureModule } from './picture/picture.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PictureModule } from './picture/picture.module';
     OauthModule,
     PictureModule,
     QiniuModule,
+    UserModule,
   ],
   providers: [
     {

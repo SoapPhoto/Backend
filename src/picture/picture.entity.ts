@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@/common/base.entity';
@@ -30,8 +31,10 @@ export class PictureEntity extends BaseEntity {
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
   public readonly activitys: PictureUserActivityEntity[];
 
-  public like: boolean = false;
+  @Type(() => Boolean)
+  public isLike: boolean = false;
 
+  @Type(() => Number)
   public likes: number;
 
 }
