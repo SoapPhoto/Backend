@@ -41,4 +41,7 @@ export class UserEntity extends BaseEntity {
 
   @Type(() => Number)
   public likes = 0;
+
+  @Type(() => Number)
+  public pictureCount = 0;
 }

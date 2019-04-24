@@ -46,7 +46,10 @@ export class UserService {
   }
 
   public async getUser(query: string, user?: UserEntity) {
-    const q = this.userEntity.createQueryBuilder('user');
+    const q = this.userEntity.createQueryBuilder('user')
+      .loadRelationCountAndMap(
+        'user.pictureCount', 'user.pictures',
+      );
     const isId = validator.isNumberString(query);
     if (isId) {
       q.where('user.id=:id', { id: query });
