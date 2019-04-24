@@ -41,4 +41,34 @@ export class UserService {
     }
     return undefined;
   }
+
+  public async getUserById(query: string, user?: UserEntity) {
+    return this.getUser('id', query, user);
+  }
+
+  public async getUserByName(query: string, user?: UserEntity) {
+    return this.getUser('username', query, user);
+  }
+
+  public async getUser(type: 'id' | 'username', query: string, user?: UserEntity) {
+    const q = this.userEntity.createQueryBuilder('user');
+    console.log(type, query);
+    if (type === 'id') {
+      q.where('user.id=:id', { id: query });
+    } else {
+      q.where('user.username=:username', { username: query });
+    }
+    if (user) {
+      q
+        .loadRelationCountAndMap(
+          'user.likes', 'user.pictureActivitys', 'activity',
+          qb => qb.andWhere(
+            `activity.${type === 'id' ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
+            { query, like: true },
+          ),
+        );
+    }
+    const data = await q.cache(true).getOne();
+    return plainToClass(UserEntity, data);
+  }
 }

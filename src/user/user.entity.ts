@@ -1,5 +1,5 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Type } from 'class-transformer';
+import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@/common/base.entity';
 import { PictureEntity } from '@/picture/picture.entity';
@@ -36,4 +36,9 @@ export class UserEntity extends BaseEntity {
   @OneToMany(type => PictureEntity, photo => photo.user)
   public readonly pictures: PictureEntity[];
 
+  @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
+  public readonly pictureActivitys: PictureUserActivityEntity[];
+
+  @Type(() => Number)
+  public likes = 0;
 }

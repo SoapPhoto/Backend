@@ -1,5 +1,7 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 
+import { IsUserName } from '@/common/validator';
+
 export class CreateUserDto {
 
   @IsEmail()
@@ -7,6 +9,7 @@ export class CreateUserDto {
 
   @Length(1, 15)
   @IsString()
+  @IsUserName()
   public readonly username: string;
 
   @Length(8, 30)
