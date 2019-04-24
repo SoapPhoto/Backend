@@ -9,18 +9,34 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @Get(':id([0-9]+)/picture')
+  public async getUserIdPicture(
+    @Param('id') id: string,
+    @User() user?: UserEntity,
+  ) {
+    return this.userService.getUserPicture(id, user);
+  }
+
+  @Get(':name/picture')
+  public async getUserNamePicture(
+    @Param('name') username: string,
+    @User() user?: UserEntity,
+  ) {
+    return this.userService.getUserPicture(username, user);
+  }
+
   @Get(':id([0-9]+)')
   public async getIdInfo(
     @Param('id') id: string,
     @User() user?: UserEntity,
   ) {
-    return this.userService.getUserById(id, user);
+    return this.userService.getUser(id, user);
   }
   @Get(':name')
   public async getNameInfo(
     @Param('name') username: string,
     @User() user?: UserEntity,
   ) {
-    return this.userService.getUserByName(username, user);
+    return this.userService.getUser(username, user);
   }
 }

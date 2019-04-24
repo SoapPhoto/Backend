@@ -2,10 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { validator } from '@/common/utils/validator';
 import { UserEntity } from '@/user/user.entity';
 import { plainToClass } from 'class-transformer';
 import { PictureEntity } from './picture.entity';
-import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class PictureService {
       this.pictureRepository.create(data),
     );
   }
-  public getList = async (user?: UserEntity) => {
+  public selectList = (user?: UserEntity) => {
     const query = this.pictureRepository.createQueryBuilder('picture')
       .leftJoinAndSelect('picture.user', 'user')
       .loadRelationCountAndMap(
@@ -37,7 +37,10 @@ export class PictureService {
           ),
         );
     }
-    const list = await query.cache(true).getMany();
+    return query;
+  }
+  public getList = async (user?: UserEntity) => {
+    const list = await this.selectList(user).cache(true).getMany();
     return plainToClass(PictureEntity, list);
   }
 
@@ -56,5 +59,16 @@ export class PictureService {
     return {
       count: await this.activityService.like(picture, user),
     };
+  }
+
+  public getUserPicture = async (query: string, user?: UserEntity) => {
+    const q = this.selectList(user);
+    if (validator.isNumberString(query)) {
+      q.where('picture.userId=:query', { query });
+    } else {
+      q.where('picture.userUsername=:query', { query });
+    }
+    const data = await q.cache(3000).getMany();
+    return plainToClass(PictureEntity, data);
   }
 }

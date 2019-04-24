@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
+import { validator } from '@/common/utils/validator';
+import { PictureService } from '@/picture/picture.service';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
@@ -10,6 +12,7 @@ import { UserEntity } from './user.entity';
 @Injectable()
 export class UserService {
   constructor(
+    private pictureService: PictureService,
     @InjectRepository(UserEntity)
     private userEntity: Repository<UserEntity>,
   ) {}
@@ -42,18 +45,10 @@ export class UserService {
     return undefined;
   }
 
-  public async getUserById(query: string, user?: UserEntity) {
-    return this.getUser('id', query, user);
-  }
-
-  public async getUserByName(query: string, user?: UserEntity) {
-    return this.getUser('username', query, user);
-  }
-
-  public async getUser(type: 'id' | 'username', query: string, user?: UserEntity) {
+  public async getUser(query: string, user?: UserEntity) {
     const q = this.userEntity.createQueryBuilder('user');
-    console.log(type, query);
-    if (type === 'id') {
+    const isId = validator.isNumberString(query);
+    if (isId) {
       q.where('user.id=:id', { id: query });
     } else {
       q.where('user.username=:username', { username: query });
@@ -63,12 +58,16 @@ export class UserService {
         .loadRelationCountAndMap(
           'user.likes', 'user.pictureActivitys', 'activity',
           qb => qb.andWhere(
-            `activity.${type === 'id' ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
+            `activity.${isId ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
             { query, like: true },
           ),
         );
     }
     const data = await q.cache(true).getOne();
     return plainToClass(UserEntity, data);
+  }
+
+  public async getUserPicture(query: string , user?: UserEntity) {
+    return this.pictureService.getUserPicture(query, user);
   }
 }

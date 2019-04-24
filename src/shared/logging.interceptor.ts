@@ -25,7 +25,6 @@ export class LoggingInterceptor implements NestInterceptor {
           context.getClass().name,
         ),
       ),
-      // catchError(err => throwError(err)),
     );
   }
 }

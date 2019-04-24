@@ -14,5 +14,6 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
   ],
   providers: [PictureService],
   controllers: [PictureController],
+  exports: [PictureService],
 })
 export class PictureModule {}
