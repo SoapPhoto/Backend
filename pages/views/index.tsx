@@ -1,12 +1,18 @@
-import BaseLink from 'next/link';
+import { Provider, observer } from 'mobx-react';
+import { NextContext } from 'next';
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { parsePath } from '@pages/common/utils';
+import { ROUTE } from '@pages/common/utils/constants';
 import { ThemeWrapper } from '@pages/containers/Theme';
+import { initStore } from '@pages/stores/init';
 import { Link } from '../components/router';
+import { observable } from 'mobx';
 
 interface InitialProps {
   query: any;
+  url: any;
   list: any[];
 }
 
@@ -17,29 +23,41 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
+@observer
 export default class Index extends React.Component<IProps> {
-  public static getInitialProps({ query }: InitialProps) {
+  public static getInitialProps({ asPath, query }: NextContext<any>) {
     const { data } = query;
-    return { list: data.data };
+    const router = parsePath(asPath);
+    return {
+      screenKey: ROUTE[router.pathname],
+      picture: {
+        key: ROUTE[router.pathname],
+        list: data.data,
+      },
+    };
   }
-  public componentDidMount() {
-    console.log(this.props);
+  @observable public store: any = null;
+  constructor(props: any) {
+    super(props);
+    console.log(this.props)
+    this.store = initStore(this.props);
   }
   public render() {
+    const { screenKey } = this.props;
     return (
-      <ThemeWrapper>
-        <div>
-          <h1>Hello Next.js 👋</h1>
-          <Link to="test"><a>About</a></Link>
-          {
-            this.props.list.map(picture => (
-              <BaseLink key={picture.id} href={'views/picture'} as={`picture/${picture.id}`}>
-                <Title>{picture.key}</Title>
-              </BaseLink>
-            ))
-          }
-        </div>
-      </ThemeWrapper>
+      <Provider store={this.store}>
+        <ThemeWrapper>
+          <div>
+            <h1>Hello Next.js 👋</h1>
+            <Link to="test"><a>About</a></Link>
+            {
+              this.store[screenKey].list.map(picture => (
+                <div key={picture.id}>{picture.key}</div>
+              ))
+            }
+          </div>
+        </ThemeWrapper>
+      </Provider>
     );
   }
 }
