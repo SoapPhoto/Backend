@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseEntity } from '@/common/base.entity';
+import { BaseEntity } from '@server/common/base.entity';
 
 @Entity('client')
 export class ClientEntity extends BaseEntity {

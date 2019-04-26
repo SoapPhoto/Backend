@@ -1,6 +1,6 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 
-import { IsUserName } from '@/common/validator';
+import { IsUserName } from '@server/common/validator';
 
 export class CreateUserDto {
 

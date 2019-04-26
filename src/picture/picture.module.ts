@@ -1,4 +1,4 @@
-import { QiniuModule } from '@/common/qiniu/qiniu.module';
+import { QiniuModule } from '@server/common/qiniu/qiniu.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PictureController } from './picture.controller';

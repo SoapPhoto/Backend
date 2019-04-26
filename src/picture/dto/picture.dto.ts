@@ -1,4 +1,4 @@
-import { PaginationDto } from '@/common/dto/pagination.dto';
+import { PaginationDto } from '@server/common/dto/pagination.dto';
 
 export class GetPictureListDto extends PaginationDto {
 

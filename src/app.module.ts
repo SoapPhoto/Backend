@@ -4,10 +4,10 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
 
-import { AuthModule } from '@/auth/auth.module';
-import { ClientModule } from '@/oauth/client/client.module';
-import { OauthModule } from '@/oauth/oauth.module';
-import { LoggingInterceptor } from '@/shared/logging.interceptor';
+import { AuthModule } from '@server/auth/auth.module';
+import { ClientModule } from '@server/oauth/client/client.module';
+import { OauthModule } from '@server/oauth/oauth.module';
+import { LoggingInterceptor } from '@server/shared/logging.interceptor';
 import { CacheModule } from './common/cache/cache.module';
 import { AuthGuard } from './common/guard/auth.guard';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';

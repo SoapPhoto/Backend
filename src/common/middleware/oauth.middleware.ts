@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import * as OAuth2Server from 'oauth2-server';
 
-import { OauthServerService } from '@/oauth/oauth-server/oauth-server.service';
+import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 
 @Injectable()
 export class OauthMiddleware implements NestMiddleware {

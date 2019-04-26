@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
-import { BaseEntity } from '@/common/base.entity';
-import { UserEntity } from '@/user/user.entity';
+import { BaseEntity } from '@server/common/base.entity';
+import { UserEntity } from '@server/user/user.entity';
 import { ClientEntity } from '../client/client.entity';
 
 @Entity('accessToken')

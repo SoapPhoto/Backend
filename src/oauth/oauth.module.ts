@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 
-import { UserModule } from '@/user/user.module';
+import { UserModule } from '@server/user/user.module';
 import { AccessTokenModule } from './access-token/access-token.module';
 import { ClientModule } from './client/client.module';
 import { OauthServerService } from './oauth-server/oauth-server.service';

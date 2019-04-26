@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseEntity } from '@/common/base.entity';
-import { UserEntity } from '@/user/user.entity';
+import { BaseEntity } from '@server/common/base.entity';
+import { UserEntity } from '@server/user/user.entity';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')

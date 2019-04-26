@@ -1,8 +1,8 @@
 import { Controller, Post, Query, UseGuards } from '@nestjs/common';
 
-import { Roles } from '@/common/decorator/roles.decorator';
-import { User } from '@/common/decorator/user.decorator';
-import { UserEntity } from '@/user/user.entity';
+import { Roles } from '@server/common/decorator/roles.decorator';
+import { User } from '@server/common/decorator/user.decorator';
+import { UserEntity } from '@server/user/user.entity';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/client.dto';
 

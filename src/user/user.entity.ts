@@ -1,11 +1,11 @@
 import { Exclude, Type } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseEntity } from '@/common/base.entity';
-import { PictureEntity } from '@/picture/picture.entity';
+import { BaseEntity } from '@server/common/base.entity';
+import { PictureEntity } from '@server/picture/picture.entity';
 import { IsEmail } from 'class-validator';
 
-import { PictureUserActivityEntity } from '@/picture/user-activity/user-activity.entity';
+import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {

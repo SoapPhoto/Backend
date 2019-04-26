@@ -12,7 +12,7 @@
 		"body": [
 			"import { Entity, PrimaryGeneratedColumn } from 'typeorm';",
 			"",
-			"import { BaseEntity } from '@/common/base.entity';",
+			"import { BaseEntity } from '@server/common/base.entity';",
 			"",
 			"@Entity('$1')",
 			"export class $2Entity extends BaseEntity {",

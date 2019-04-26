@@ -3,10 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
-import { validator } from '@/common/utils/validator';
-import { GetPictureListDto } from '@/picture/dto/picture.dto';
-import { PictureService } from '@/picture/picture.service';
-import { Maybe } from '@/typing';
+import { validator } from '@server/common/utils/validator';
+import { GetPictureListDto } from '@server/picture/dto/picture.dto';
+import { PictureService } from '@server/picture/picture.service';
+import { Maybe } from '@server/typing';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';

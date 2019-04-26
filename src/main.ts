@@ -5,12 +5,12 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
-import { RenderModule } from 'nest-next';
+import { RenderModule, RenderService } from 'nest-next';
 import * as Next from 'next';
 
 import { AppModule } from './app.module';
 
-import { QueryExceptionFilter } from '@/common/filter/query-exception.filter';
+import { QueryExceptionFilter } from '@server/common/filter/query-exception.filter';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
@@ -37,7 +37,23 @@ async function bootstrap() {
   SwaggerModule.setup('docs', server, document);
 
   const renderer = server.get(RenderModule);
-  renderer.register(server, app);
+  renderer.register(server, app, {
+    viewsDir: '/views',
+  });
+
+  const service = server.get(RenderService);
+  service.setErrorHandler(async (err, req, res) => {
+    // send JSON response
+    if (err.response.statusCode === 404) {
+      res.render('404', {
+        title: err.response,
+      });
+    } else {
+      res.render('500', {
+        title: 'Next with Nest',
+      });
+    }
+  });
 
   await server.listen(process.env.PORT);
 

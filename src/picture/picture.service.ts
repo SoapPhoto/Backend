@@ -2,10 +2,10 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 
-import { QiniuService } from '@/common/qiniu/qiniu.service';
-import { validator } from '@/common/utils/validator';
-import { Maybe } from '@/typing';
-import { UserEntity } from '@/user/user.entity';
+import { QiniuService } from '@server/common/qiniu/qiniu.service';
+import { validator } from '@server/common/utils/validator';
+import { Maybe } from '@server/typing';
+import { UserEntity } from '@server/user/user.entity';
 import { plainToClass } from 'class-transformer';
 import moment = require('moment');
 import { async } from 'rxjs/internal/scheduler/async';

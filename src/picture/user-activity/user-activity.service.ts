@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { UserEntity } from '@/user/user.entity';
+import { UserEntity } from '@server/user/user.entity';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
 

@@ -1,13 +1,13 @@
 import { Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import * as fs from 'fs';
 
-import { Roles } from '@/common/decorator/roles.decorator';
-import { User } from '@/common/decorator/user.decorator';
-import { File } from '@/common/interface/file.interface';
-import { QiniuService } from '@/common/qiniu/qiniu.service';
-import { photoUpload } from '@/common/utils/upload';
-import { Maybe } from '@/typing';
-import { UserEntity } from '@/user/user.entity';
+import { Roles } from '@server/common/decorator/roles.decorator';
+import { User } from '@server/common/decorator/user.decorator';
+import { File } from '@server/common/interface/file.interface';
+import { QiniuService } from '@server/common/qiniu/qiniu.service';
+import { photoUpload } from '@server/common/utils/upload';
+import { Maybe } from '@server/typing';
+import { UserEntity } from '@server/user/user.entity';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 

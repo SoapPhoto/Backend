@@ -1,9 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as OAuth2Server from 'oauth2-server';
 
-import { getTokenExpiresAt } from '@/common/utils/token';
-import { UserEntity } from '@/user/user.entity';
-import { UserService } from '@/user/user.service';
+import { getTokenExpiresAt } from '@server/common/utils/token';
+import { UserEntity } from '@server/user/user.entity';
+import { UserService } from '@server/user/user.service';
 import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
