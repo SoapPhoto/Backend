@@ -1,13 +1,14 @@
-import { Controller, Get, Param, Post, Put, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import * as fs from 'fs';
 
 import { Roles } from '@/common/decorator/roles.decorator';
 import { User } from '@/common/decorator/user.decorator';
 import { File } from '@/common/interface/file.interface';
 import { QiniuService } from '@/common/qiniu/qiniu.service';
+import { photoUpload } from '@/common/utils/upload';
+import { Maybe } from '@/typing';
 import { UserEntity } from '@/user/user.entity';
+import { GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 
 @Controller('picture')
@@ -19,35 +20,41 @@ export class PictureController {
 
   @Post('upload')
   @Roles('user')
-  @UseInterceptors(FileInterceptor('photo', {
-    storage: diskStorage({
-      destination: './photo',
-      filename: (req, file, cb) => {
-        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-        return cb(null, `${randomName}${extname(file.originalname)}`);
-      },
-    }),
-  }))
+  @UseInterceptors(photoUpload)
   public async upload(
     @UploadedFile() file: File,
     @User() user: UserEntity,
   ) {
-    const data = await this.qiniuService.uploadFile(file);
-    const picture = await this.pictureService.create({
-      user,
-      originalname: file.originalname,
-      mimetype: file.mimetype,
-      size: file.size,
-      ...data,
-    });
-    return picture;
+    try {
+      const data = await this.qiniuService.uploadFile(file);
+      const picture = await this.pictureService.create({
+        user,
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        ...data,
+      });
+      return picture;
+    } finally {
+      fs.unlink(file.path, () => null);
+    }
+  }
+
+  @Delete(':id')
+  @Roles('user')
+  public async deletePicture (
+    @Param('id') id: number,
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.delete(id, user);
   }
 
   @Get()
   public async getList (
-    @User() user: UserEntity,
+    @User() user: Maybe<UserEntity>,
+    @Query() query: GetPictureListDto,
   ) {
-    return this.pictureService.getList(user);
+    return this.pictureService.getList(user, query);
   }
 
   @Put('like/:id([0-9]+)')

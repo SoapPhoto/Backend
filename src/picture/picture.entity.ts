@@ -25,6 +25,7 @@ export class PictureEntity extends BaseEntity {
   @Column()
   public readonly size: number;
 
+  @Type(() => UserEntity)
   @ManyToOne(() => UserEntity, user => user.pictures)
   public readonly user: UserEntity;
 

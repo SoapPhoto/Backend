@@ -26,12 +26,18 @@ export class UserEntity extends BaseEntity {
   public readonly email: string;
 
   @Exclude()
-  @Column({ select: false })
+  @Column()
   public hash: string;
 
   @Exclude()
-  @Column({ select: false })
+  @Column()
   public readonly salt: string;
+
+  @Exclude()
+  @Column({
+    default: 'user',
+  })
+  public readonly role: string;
 
   @OneToMany(type => PictureEntity, photo => photo.user)
   public readonly pictures: PictureEntity[];

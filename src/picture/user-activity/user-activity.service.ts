@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { UserEntity } from '@/user/user.entity';
 import { PictureEntity } from '../picture.entity';
@@ -63,5 +63,13 @@ export class PictureUserActivityService {
     return this.activityRepository.save(
       this.activityRepository.create(data),
     );
+  }
+  public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => {
+    return entityManager
+      .createQueryBuilder()
+      .delete()
+      .from(PictureUserActivityEntity)
+      .where('pictureId=:id', { id: picture.id })
+      .execute();
   }
 }

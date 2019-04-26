@@ -4,7 +4,9 @@ import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
 import { validator } from '@/common/utils/validator';
+import { GetPictureListDto } from '@/picture/dto/picture.dto';
 import { PictureService } from '@/picture/picture.service';
+import { Maybe } from '@/typing';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
@@ -33,8 +35,6 @@ export class UserService {
   public async verifyUser(username: string, password: string) {
     const user = await this.userEntity.createQueryBuilder('user')
       .where('user.username=:username', { username })
-      .addSelect('user.hash')
-      .addSelect('user.salt')
       .getOne();
     if (user) {
       const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
@@ -45,7 +45,7 @@ export class UserService {
     return undefined;
   }
 
-  public async getUser(query: string, user?: UserEntity) {
+  public async getUser(query: string, user: Maybe<UserEntity>) {
     const q = this.userEntity.createQueryBuilder('user')
       .loadRelationCountAndMap(
         'user.pictureCount', 'user.pictures',
@@ -70,7 +70,7 @@ export class UserService {
     return plainToClass(UserEntity, data);
   }
 
-  public async getUserPicture(query: string , user?: UserEntity) {
-    return this.pictureService.getUserPicture(query, user);
+  public async getUserPicture(id: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
+    return this.pictureService.getUserPicture(id, query, user);
   }
 }

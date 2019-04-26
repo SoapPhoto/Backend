@@ -19,7 +19,6 @@ export class ClientController {
     @User() user: UserEntity,
     @Query() param: CreateClientDto,
   ) {
-    console.log(user);
     const data = await this.clientService.create(param);
     return data;
   }
