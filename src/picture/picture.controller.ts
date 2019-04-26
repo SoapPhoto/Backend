@@ -11,7 +11,7 @@ import { UserEntity } from '@/user/user.entity';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 
-@Controller('picture')
+@Controller('api/picture')
 export class PictureController {
   constructor(
     private readonly qiniuService: QiniuService,

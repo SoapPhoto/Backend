@@ -1,0 +1,23 @@
+{
+  "presets": [
+    "next/babel",
+    "@zeit/next-typescript/babel"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./pages"
+        ],
+        "alias": {
+          "@src": "./pages"
+        },
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ]
+  ]
+}

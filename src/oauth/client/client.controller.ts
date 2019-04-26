@@ -6,7 +6,7 @@ import { UserEntity } from '@/user/user.entity';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/client.dto';
 
-@Controller('client')
+@Controller('api/client')
 export class ClientController {
 
   constructor(
