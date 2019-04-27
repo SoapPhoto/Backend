@@ -1,63 +1,46 @@
-import { Provider, observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { parsePath } from '@pages/common/utils';
-import { ROUTE } from '@pages/common/utils/constants';
-import { ThemeWrapper } from '@pages/containers/Theme';
-import { initStore } from '@pages/stores/init';
+import { request } from '@pages/common/utils/request';
+import { BodyLayout } from '@pages/containers/BodyLayout';
+import { Header } from '@pages/containers/Header';
+import { AccountStore } from '@pages/stores/AccountStore';
 import { Link } from '../components/router';
-import { observable } from 'mobx';
 
-interface InitialProps {
-  query: any;
-  url: any;
-  list: any[];
+interface InitialProps extends NextContext {
+  screenData: any;
 }
 
-interface IProps extends InitialProps {}
+interface IProps extends InitialProps {
+  accountStore: AccountStore;
+}
 
 const Title = styled.h1`
   color: red;
   font-size: 20px;
 `;
-
+@inject('accountStore')
 @observer
 export default class Index extends React.Component<IProps> {
-  public static getInitialProps({ asPath, query }: NextContext<any>) {
-    const { data } = query;
-    const router = parsePath(asPath);
+  public static async getInitialProps(_: NextContext<any>) {
+    const { data } = await request.get('/api/picture');
     return {
-      screenKey: ROUTE[router.pathname],
-      picture: {
-        key: ROUTE[router.pathname],
-        list: data.data,
-      },
+      data,
     };
   }
-  @observable public store: any = null;
-  constructor(props: any) {
-    super(props);
-    console.log(this.props)
-    this.store = initStore(this.props);
-  }
   public render() {
-    const { screenKey } = this.props;
+    const { accountStore } = this.props;
     return (
-      <Provider store={this.store}>
-        <ThemeWrapper>
-          <div>
-            <h1>Hello Next.js 👋</h1>
-            <Link to="test"><a>About</a></Link>
-            {
-              this.store[screenKey].list.map(picture => (
-                <div key={picture.id}>{picture.key}</div>
-              ))
-            }
-          </div>
-        </ThemeWrapper>
-      </Provider>
+      <BodyLayout>
+        <Header />
+        {
+          accountStore.isLogin &&
+          <div>Hello {accountStore.userInfo.username}</div>
+        }
+        <Link to="test"><a>About</a></Link>
+      </BodyLayout>
     );
   }
 }

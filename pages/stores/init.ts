@@ -1,37 +1,16 @@
-import { PictureStore } from './PictureList';
+import { AccountStore } from './AccountStore';
+import { AppStore } from './AppStore';
 
-import { assignStore } from '@pages/common/utils/store';
+export interface IMyMobxStore {
+  accountStore?: AccountStore;
+}
 
-let rootStore = null;
-
-export const initStore = (state: any) => {
-  if (rootStore === null) {
-    rootStore = {};
-    for (const key in state) {
-      if (key !== 'url') {
-        switch (key) {
-          case 'picture':
-            rootStore[state[key].key] = assignStore(new PictureStore(), state[key]);
-            break;
-
-          default:
-            break;
-        }
-      }
-    }
-  } else {
-    for (const key in state) {
-      if (key !== 'url') {
-        switch (key) {
-          case 'picture':
-            assignStore(rootStore[state[key].key], state[key]);
-            break;
-
-          default:
-            break;
-        }
-      }
-    }
-  }
-  return rootStore;
+export const initStore = (initialState?: {
+  accountStore: Partial<AccountStore>,
+}): IMyMobxStore => {
+  const store = {
+    accountStore: new AccountStore(initialState.accountStore),
+    appStore: new AppStore(),
+  };
+  return store;
 };

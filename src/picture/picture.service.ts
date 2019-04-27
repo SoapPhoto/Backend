@@ -8,7 +8,6 @@ import { Maybe } from '@server/typing';
 import { UserEntity } from '@server/user/user.entity';
 import { plainToClass } from 'class-transformer';
 import moment = require('moment');
-import { async } from 'rxjs/internal/scheduler/async';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';

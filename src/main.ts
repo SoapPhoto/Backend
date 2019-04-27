@@ -5,6 +5,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';
 import * as Next from 'next';
 
@@ -21,6 +22,7 @@ async function bootstrap() {
   const server = await NestFactory.create(AppModule);
 
   server.use(compression());
+  server.use(cookieParser());
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
@@ -43,15 +45,19 @@ async function bootstrap() {
 
   const service = server.get(RenderService);
   service.setErrorHandler(async (err, req, res) => {
-    // send JSON response
+    const isJSON = /application\/json/g.test(req.headers.accept);
     if (err.response.statusCode === 404) {
-      res.render('404', {
-        title: err.response,
-      });
+      if (isJSON) {
+        res.json(err.response);
+      } else {
+        res.render('404', err.response);
+      }
     } else {
-      res.render('500', {
-        title: 'Next with Nest',
-      });
+      if (isJSON) {
+        res.json(err.response);
+      } else {
+        res.render('500', err.response);
+      }
     }
   });
 
