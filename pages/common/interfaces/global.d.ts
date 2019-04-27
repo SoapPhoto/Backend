@@ -19,3 +19,10 @@ export interface CustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
   router: RouterProps<Q>;
   ctx: CustomNextContext<Q>;
 }
+
+export interface PaginationList {
+  timestamp: number;
+  pageSize: number;
+  page: number;
+  count: number;
+}

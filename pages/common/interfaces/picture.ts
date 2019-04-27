@@ -1,6 +1,8 @@
 import { BaseEntity } from './base';
 import { UserEntity } from './user';
 
+import { PaginationList } from './global';
+
 export declare class PictureEntity extends BaseEntity {
   public readonly id: number;
   public readonly key: string;
@@ -11,4 +13,8 @@ export declare class PictureEntity extends BaseEntity {
   public readonly user: UserEntity;
   public isLike: boolean;
   public likes: number;
+}
+
+export interface IPictureListRequest extends PaginationList {
+  data: PictureEntity[];
 }

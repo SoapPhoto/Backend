@@ -11,7 +11,7 @@ export default () => {
     params.append('grant_type', 'password');
     request.post('oauth/token', params, {
       headers: {
-        Authorization: 'Basic NTczYjUxNTktNTRjYy00ODg2LWJiMmItMjgxY2U2Y2Q5ZWExOnRlc3Q',
+        Authorization: 'Basic MTdjZWE1MjItYzNjMS00M2IxLWE4MjMtNmNmMjg2Y2I1ZTE0OnRlc3Q',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });

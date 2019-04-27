@@ -5,7 +5,6 @@ const normalize = `
     -webkit-text-size-adjust: 100%; /* 2 */
   }
   body {
-    background-color: #f5f6f7;
     font-size: 14px !important;
     line-height: 1.5;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue","Helvetica",PingFang SC,PingFang TC,Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,"WenQuanYi Micro Hei",sans-serif;
