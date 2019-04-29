@@ -1,32 +1,59 @@
 import { changeToDu } from './gps';
 
+export interface IEXIF {
+  aperture?: number;
+  exposureTime?: string;
+  focalLength?: number;
+  iso?: string;
+  gps?: [number, number];
+}
+
+export interface IImageInfo {
+  exif: IEXIF;
+  color: string;
+  isDark: boolean;
+  height: number;
+  width: number;
+  make: string | null;
+  model: string | null;
+}
+
 // tslint:disable-next-line:variable-name
 function parse(num: number) {
   // tslint:disable-next-line:radix
   return parseInt((num * 10).toString()) / 10;
 }
 
-export async function getImageInfo(image: any): Promise<any[]> {
+export async function getImageInfo(image: any): Promise<[IImageInfo, string]> {
   return new Promise((resolve): any => {
     if (!image) {
-      return [];
+      return [{}, ''];
     }
     (window as any).EXIF.getData(image, async function () {
       const allMetaData = (window as any).EXIF.getAllTags(this);
-      let info: any = {};
-      const exifData: any = {};
+      const info: IImageInfo = {
+        exif: {},
+        color: '#fff',
+        isDark: false,
+        height: 0,
+        width: 0,
+        make: null,
+        model: null,
+      };
+      const exifData: IEXIF = {};
       const imgSrc = window.URL.createObjectURL(image);
       const imgHtml = document.createElement('img');
       imgHtml.src = imgSrc;
-      const colorThief = new (window as any).ColorThief();
-      info = await (async() => {
+      const fac = new (window as any).FastAverageColor();
+      await (async() => {
         return new Promise((res) => {
           imgHtml.onload = () => {
-            res({
-              color: colorThief.getColor(imgHtml),
-              height: imgHtml.naturalHeight,
-              width: imgHtml.naturalWidth,
-            });
+            const color  = fac.getColor(imgHtml);
+            info.color = color.hex;
+            info.isDark = color.isDark;
+            info.height = imgHtml.naturalHeight;
+            info.width = imgHtml.naturalWidth;
+            res();
           };
         });
       })();
@@ -48,10 +75,10 @@ export async function getImageInfo(image: any): Promise<any[]> {
         exifData.iso = allMetaData.ISOSpeedRatings;
       }
       if (allMetaData.Make) {
-        exifData.make = allMetaData.Make;
+        info.make = allMetaData.Make;
       }
       if (allMetaData.Model) {
-        exifData.model = allMetaData.Model;
+        info.model = allMetaData.Model;
       }
       if (allMetaData.GPSLatitude && allMetaData.GPSLatitude.length === 3) {
         exifData.gps = [

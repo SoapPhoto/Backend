@@ -17,8 +17,8 @@ export default class MyDocument extends Document {
         ...initialProps,
         styles: (
           <>
-            { initialProps && initialProps.styles }
-            {sheet.getStyleElement()}
+            { initialProps.styles }
+            { sheet.getStyleElement() }
           </>
         ),
       };
@@ -32,9 +32,12 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
+        </Head>
+        <Head>
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1, viewport-fit=cover"
+            content="initial-scale=1.2, width=device-width"
+            key="viewport"
           />
         </Head>
         <body id="body">

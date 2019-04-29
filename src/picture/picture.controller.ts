@@ -1,4 +1,16 @@
-import { Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import * as fs from 'fs';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -25,15 +37,18 @@ export class PictureController {
   @UseInterceptors(photoUpload)
   public async upload(
     @UploadedFile() file: File,
+    @Body('info') infoStr: string,
     @User() user: UserEntity,
   ) {
     try {
+      const info = JSON.parse(infoStr);
       const data = await this.qiniuService.uploadFile(file);
       const picture = await this.pictureService.create({
         user,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
+        ...info,
         ...data,
       });
       return picture;

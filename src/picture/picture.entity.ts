@@ -1,7 +1,8 @@
 import { Type } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
+import { Maybe } from '@server/typing';
 import { UserEntity } from '@server/user/user.entity';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
@@ -37,5 +38,35 @@ export class PictureEntity extends BaseEntity {
 
   @Type(() => Number)
   public likes: number;
+
+  @Column()
+  public readonly color: string;
+
+  @Type(() => Boolean)
+  @Column()
+  public readonly isDark: boolean;
+
+  @Type(() => Number)
+  @Column()
+  public readonly height: number;
+
+  @Type(() => Number)
+  @Column()
+  public readonly width: number;
+
+  @Column()
+  public readonly make?: string;
+
+  @Column()
+  public readonly model?: string;
+
+  @Column('simple-json')
+  public readonly exif: {
+    aperture?: number;
+    exposureTime?: string;
+    focalLength?: number;
+    iso?: number;
+    gps?: [number, number];
+  };
 
 }
