@@ -7,6 +7,12 @@ import { ViewsService } from './views.service';
 @Module({
   imports: [PictureModule],
   controllers: [ViewsController],
-  providers: [ViewsService],
+  providers: [
+    ViewsService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ViewAuthGuard,
+    // },
+  ],
 })
 export class ViewsModule {}

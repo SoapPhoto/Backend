@@ -1,5 +1,6 @@
-import { request } from '@pages/common/utils/request';
 import * as React from 'react';
+
+import { request } from '@pages/common/utils/request';
 
 export default () => {
   const [username, setUsername] = React.useState('');
@@ -11,7 +12,7 @@ export default () => {
     params.append('grant_type', 'password');
     request.post('oauth/token', params, {
       headers: {
-        Authorization: 'Basic MTdjZWE1MjItYzNjMS00M2IxLWE4MjMtNmNmMjg2Y2I1ZTE0OnRlc3Q',
+        Authorization: `Basic ${process.env.BASIC_TOKEN}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });

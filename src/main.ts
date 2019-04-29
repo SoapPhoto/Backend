@@ -46,6 +46,7 @@ async function bootstrap() {
   const service = server.get(RenderService);
   service.setErrorHandler(async (err, req, res) => {
     const isJSON = /application\/json/g.test(req.headers.accept);
+    Logger.error(err.response);
     if (err.response.statusCode === 404) {
       if (isJSON) {
         res.json(err.response);

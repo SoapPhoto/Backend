@@ -1,8 +1,9 @@
-import { Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import * as fs from 'fs';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
+import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
 import { QiniuService } from '@server/common/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
@@ -12,6 +13,7 @@ import { GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 
 @Controller('api/picture')
+@UseGuards(AuthGuard)
 export class PictureController {
   constructor(
     private readonly qiniuService: QiniuService,

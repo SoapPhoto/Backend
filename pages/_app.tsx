@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { Provider } from 'mobx-react';
 import { CustomNextAppContext } from './common/interfaces/global';
+import { BodyLayout } from './containers/BodyLayout';
+import { Header } from './containers/Header';
 import { ThemeWrapper } from './containers/Theme';
 import { IMyMobxStore, initStore } from './stores/init';
 
@@ -47,9 +49,11 @@ export default class MyApp extends App {
       <Container>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
-            <Component
-              {...pageProps}
-            />
+            <BodyLayout>
+              <Component
+                {...pageProps}
+              />
+            </BodyLayout>
           </ThemeWrapper>
         </Provider>
       </Container>

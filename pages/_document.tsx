@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
         ...initialProps,
         styles: (
           <>
-            {initialProps.styles}
+            { initialProps && initialProps.styles }
             {sheet.getStyleElement()}
           </>
         ),
@@ -36,7 +36,6 @@ export default class MyDocument extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1, viewport-fit=cover"
           />
-          {/* {this.props.styles} */}
         </Head>
         <body id="body">
           <Main />

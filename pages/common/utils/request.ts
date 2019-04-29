@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: `http://localhost:${process.env.PORT}`,
   validateStatus (status: number) {
     return status < 500 && status !== 404;
   },
