@@ -12,6 +12,7 @@ import * as Next from 'next';
 import { AppModule } from './app.module';
 
 import { QueryExceptionFilter } from '@server/common/filter/query-exception.filter';
+import { QueryFailedError } from 'typeorm';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
@@ -27,7 +28,7 @@ async function bootstrap() {
     transform: true,
   }));
   // mysql查询错误捕获
-  server.useGlobalFilters(new QueryExceptionFilter());
+  // server.useGlobalFilters(new QueryExceptionFilter());
 
   // swagger 文档
   const options = new DocumentBuilder()
@@ -45,19 +46,29 @@ async function bootstrap() {
 
   const service = server.get(RenderService);
   service.setErrorHandler(async (err, req, res) => {
+    Logger.error(err);
     const isJSON = /application\/json/g.test(req.headers.accept);
-    Logger.error(err.response);
-    if (err.response.statusCode === 404) {
-      if (isJSON) {
+    if (isJSON) {
+      if (err.response) {
         res.json(err.response);
       } else {
-        res.render('404', err.response);
+        res
+          .status(500)
+          .json({
+            statusCode: 500,
+            timestamp: new Date().toISOString(),
+            message: err.message,
+          });
       }
     } else {
-      if (isJSON) {
-        res.json(err.response);
+      if (err.response) {
+        if (err.response.statusCode === 404) {
+          res.render('404', err.response);
+        } else {
+          res.render('500', err.response);
+        }
       } else {
-        res.render('500', err.response);
+        res.render('500', err);
       }
     }
   });

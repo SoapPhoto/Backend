@@ -41,7 +41,10 @@ export class PictureController {
     @User() user: UserEntity,
   ) {
     try {
-      const info = JSON.parse(infoStr);
+      let info = {};
+      if (infoStr) {
+        info = JSON.parse(infoStr);
+      }
       const data = await this.qiniuService.uploadFile(file);
       const picture = await this.pictureService.create({
         user,

@@ -54,13 +54,15 @@ export class PictureEntity extends BaseEntity {
   @Column()
   public readonly width: number;
 
-  @Column()
+  @Column({ nullable: true })
   public readonly make?: string;
 
-  @Column()
+  @Column({ nullable: true })
   public readonly model?: string;
 
-  @Column('simple-json')
+  @Column('simple-json', {
+    nullable: true,
+  })
   public readonly exif: {
     aperture?: number;
     exposureTime?: string;
