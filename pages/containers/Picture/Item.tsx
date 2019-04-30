@@ -13,7 +13,7 @@ export const PictureItem: React.SFC<IProps> = ({
   return (
     <ItemWapper>
       <ImageBox>
-        <ItemImage src={`//images.weserv.nl/?url=//cdn.soapphoto.com/${detail.key}`} />
+        <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
       </ImageBox>
     </ItemWapper>
   );

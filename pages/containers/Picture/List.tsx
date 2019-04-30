@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IPictureListRequest } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
 import { PictureItem } from './Item';
-import { Wapper, Col } from './styles';
+import { Col, Wapper } from './styles';
 
 interface IProps {
   data: IPictureListRequest;
@@ -12,7 +12,7 @@ interface IProps {
 export const PictureList: React.SFC<IProps> = ({
   data,
 }) => {
-  const [list, setList] = React.useState([]);
+  const [list, setList] = React.useState(listParse(data.data, 4));
   React.useEffect(
     () => {
       setList(listParse(data.data, 4));

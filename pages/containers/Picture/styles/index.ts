@@ -19,6 +19,7 @@ export const ImageBox = styled.div`
   border: 1px solid #f0f0f0 ;
   box-shadow: 0 30px 100px 5px #f0f0f0;
   border-radius: 4px;
+  overflow: hidden;
 `;
 
 export const ItemImage = styled.img`
