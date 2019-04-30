@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as OAuth2Server from 'oauth2-server';
 
 import { getTokenExpiresAt } from '@server/common/utils/token';
@@ -11,7 +11,7 @@ import { ClientService } from '../client/client.service';
 
 @Injectable()
 export class OauthServerService {
-  public server;
+  public server: any;
   constructor(
     private readonly clientService: ClientService,
     private readonly userService: UserService,

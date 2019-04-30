@@ -1,28 +1,39 @@
 import styled from 'styled-components';
 
+const padding = 24;
+
 export const Wapper = styled.section`
-  margin: 24px 42px;
+  margin: ${padding}px 42px;
 `;
 
 export const Col = styled.div<{col: number}>`
   display: grid;
-  grid-gap: 24px;
+  grid-gap: ${padding}px;
   grid-template-columns: repeat(${props => props.col}, 1fr);
 `;
 
-export const ItemWapper = styled.div`
+export const ColItem = styled.div`
+  display: grid;
+  grid-row-gap: 24px;
+  grid-template-rows: auto;
 `;
 
-export const ImageBox = styled.div`
+export const ItemWapper = styled.div`
+  position: relative;
+`;
+
+export const ImageBox = styled.div<{height: number; background: string}>`
   display: block;
+  padding-bottom: ${props => props.height}%;
+  background-color: ${props => props.background};
   width: 100%;
-  border: 1px solid #f0f0f0 ;
-  box-shadow: 0 30px 100px 5px #f0f0f0;
   border-radius: 4px;
   overflow: hidden;
 `;
 
 export const ItemImage = styled.img`
+  position: absolute;
+  top: 0;
   display: block;
   width: 100%;
 `;

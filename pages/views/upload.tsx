@@ -17,21 +17,23 @@ const Image = styled.img`
 `;
 
 export default () => {
-  const inputRef = React.useRef<HTMLInputElement>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
   const addPicture = () => {
-    const form = new FormData();
-    form.append('photo', imageRef.current);
-    form.append('info', JSON.stringify(imageInfo));
-    request.post('/api/picture/upload', form);
+    if (imageRef.current) {
+      const form = new FormData();
+      form.append('photo', imageRef.current);
+      form.append('info', JSON.stringify(imageInfo));
+      request.post('/api/picture/upload', form);
+    }
   };
   const uploadImage = () => {
-    inputRef.current.click();
+    inputRef.current!.click();
   };
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
       imageRef.current = e.target.files[0];
       const [info, url] = await getImageInfo(e.target.files[0]);
       setImageUrl(url);

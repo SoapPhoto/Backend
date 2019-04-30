@@ -5,7 +5,7 @@ export interface IMyMobxStore {
   accountStore?: AccountStore;
 }
 
-export const initStore = (initialState?: {
+export const initStore = (initialState: {
   accountStore: Partial<AccountStore>,
 }): IMyMobxStore => {
   const store = {

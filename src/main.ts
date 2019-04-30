@@ -11,9 +11,6 @@ import * as Next from 'next';
 
 import { AppModule } from './app.module';
 
-import { QueryExceptionFilter } from '@server/common/filter/query-exception.filter';
-import { QueryFailedError } from 'typeorm';
-
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
   const app = Next({ dev });
@@ -27,8 +24,6 @@ async function bootstrap() {
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
-  // mysql查询错误捕获
-  // server.useGlobalFilters(new QueryExceptionFilter());
 
   // swagger 文档
   const options = new DocumentBuilder()
@@ -73,7 +68,7 @@ async function bootstrap() {
     }
   });
 
-  await server.listen(process.env.PORT);
+  await server.listen(process.env.PORT!);
 
   Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
 }

@@ -44,7 +44,7 @@ export class QiniuService {
   public deleteFile(key: string) {
     const bucketManager = this.createBucketManager();
     return new Promise((resolve, reject) => {
-      bucketManager.delete(process.env.QN_BUCKET, key, (respErr, respBody, respInfo) => {
+      bucketManager.delete(process.env.QN_BUCKET!, key, (respErr, respBody, respInfo) => {
         if (respErr) {
           reject(respErr);
         }

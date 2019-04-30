@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Provider } from 'mobx-react';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
-import { Header } from './containers/Header';
 import { ThemeWrapper } from './containers/Theme';
 import { IMyMobxStore, initStore } from './stores/init';
 
@@ -39,7 +38,7 @@ export default class MyApp extends App {
   }
   public mobxStore: IMyMobxStore;
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }

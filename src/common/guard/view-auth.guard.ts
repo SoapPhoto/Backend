@@ -18,12 +18,13 @@ export class ViewAuthGuard implements CanActivate {
     if (isGuest) {
       if (request.user) {
         response.redirect(301, request.query.redirectUrl || '/');
-      } else {
-        return true;
+        return false;
       }
-    } else {
-      if (request.user) return true;
-      response.redirect(301, `/login?redirectUrl=${request.url}`);
+      return true;
+
     }
+    if (request.user) return true;
+    response.redirect(301, `/login?redirectUrl=${request.url}`);
+    return false;
   }
 }

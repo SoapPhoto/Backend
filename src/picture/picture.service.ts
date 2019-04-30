@@ -65,7 +65,7 @@ export class PictureService {
       .getOne();
   }
 
-  public likePicture = async (id: string, user: Maybe<UserEntity>) => {
+  public likePicture = async (id: string, user: UserEntity) => {
     const picture = await this.getOne(id);
     if (!picture) {
       throw new BadRequestException('no_picture');

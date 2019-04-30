@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IPictureListRequest } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
 import { PictureItem } from './Item';
-import { Col, Wapper } from './styles';
+import { Col, ColItem, Wapper } from './styles';
 
 interface IProps {
   data: IPictureListRequest;
@@ -24,13 +24,13 @@ export const PictureList: React.SFC<IProps> = ({
       <Col col={4}>
         {
           list.map((col, index) => (
-            <div key={index}>
+            <ColItem key={index}>
               {
                 col.map(picture => (
                   <PictureItem key={picture.id} detail={picture} />
                 ))
               }
-            </div>
+            </ColItem>
           ))
         }
       </Col>

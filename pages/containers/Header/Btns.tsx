@@ -12,8 +12,8 @@ export interface IProps {
 export const Btns: React.SFC<IProps> = inject('accountStore')(
   observer(
     ({ accountStore }) => {
-      const { isLogin, userInfo } = accountStore;
-      if (isLogin) {
+      const { isLogin, userInfo } = accountStore!;
+      if (isLogin && userInfo) {
         return (
           <RightWarpper>
             <div>{userInfo.username}</div>

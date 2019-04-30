@@ -3,9 +3,8 @@ import { QueryFailedError } from 'typeorm';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-  public catch(exception: QueryFailedError, host: ArgumentsHost) {
+  public catch(_: QueryFailedError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest();
     const response = ctx.getResponse();
     response
       .status(500)

@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 import { Type } from 'class-transformer';
 import moment = require('moment');

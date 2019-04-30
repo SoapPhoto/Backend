@@ -1,5 +1,13 @@
 import { changeToDu } from './gps';
 
+declare global {
+// tslint:disable-next-line: interface-name
+  interface Window {
+    EXIF: any;
+    FastAverageColor: any;
+  }
+}
+
 export interface IEXIF {
   aperture?: number;
   exposureTime?: string;
@@ -17,20 +25,15 @@ export interface IImageInfo {
   make: string | null;
   model: string | null;
 }
-
-// tslint:disable-next-line:variable-name
 function parse(num: number) {
   // tslint:disable-next-line:radix
   return parseInt((num * 10).toString()) / 10;
 }
 
-export async function getImageInfo(image: any): Promise<[IImageInfo, string]> {
-  return new Promise((resolve): any => {
-    if (!image) {
-      return [{}, ''];
-    }
-    (window as any).EXIF.getData(image, async function () {
-      const allMetaData = (window as any).EXIF.getAllTags(this);
+export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
+  return new Promise((resolve) => {
+    window.EXIF.getData(image, async function () {
+      const allMetaData = window.EXIF.getAllTags(this);
       const info: IImageInfo = {
         exif: {},
         color: '#fff',
@@ -44,7 +47,7 @@ export async function getImageInfo(image: any): Promise<[IImageInfo, string]> {
       const imgSrc = window.URL.createObjectURL(image);
       const imgHtml = document.createElement('img');
       imgHtml.src = imgSrc;
-      const fac = new (window as any).FastAverageColor();
+      const fac = new window.FastAverageColor();
       await (async() => {
         return new Promise((res) => {
           imgHtml.onload = () => {

@@ -10,10 +10,16 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": true,
+    "pretty": true,
     "paths": {
       "@server/*": ["src/*"],
       "@pages/*": ["pages/*"]
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", ".next"]
 }

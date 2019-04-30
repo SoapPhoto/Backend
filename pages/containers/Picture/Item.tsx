@@ -10,9 +10,10 @@ interface IProps {
 export const PictureItem: React.SFC<IProps> = ({
   detail,
 }) => {
+  const height = ((detail.width - detail.height) / detail.width) * 100 || 100;
   return (
     <ItemWapper>
-      <ImageBox>
+      <ImageBox height={height} background={detail.color}>
         <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
       </ImageBox>
     </ItemWapper>

@@ -4,12 +4,10 @@ const withTypescript = require('@zeit/next-typescript');
 const webpack = require('webpack');
 const path = require('path');
 const Dotenv = require('dotenv-webpack')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = withTypescript({
   useFileSystemPublicRoutes: false,
-  webpack(config, options) {
-    // if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin())
+  webpack(config) {
     config.plugins.push(
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en)/)
     )

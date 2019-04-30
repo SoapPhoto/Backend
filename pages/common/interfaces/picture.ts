@@ -13,6 +13,7 @@ export declare class PictureEntity extends BaseEntity {
   public readonly user: UserEntity;
   public readonly height: number;
   public readonly width: number;
+  public readonly color: string;
   public isLike: boolean;
   public likes: number;
 }
