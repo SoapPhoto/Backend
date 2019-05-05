@@ -1,5 +1,6 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { UserModule } from '@server/user/user.module';
 import { AccessTokenModule } from './access-token/access-token.module';
 import { ClientModule } from './client/client.module';
@@ -18,4 +19,10 @@ import { OauthService } from './oauth.service';
   controllers: [OauthController],
   providers: [OauthService, OauthServerService],
 })
-export class OauthModule {}
+export class OauthModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(OauthMiddleware)
+      .forRoutes(OauthController);
+  }
+}

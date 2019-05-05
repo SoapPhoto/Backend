@@ -1,8 +1,10 @@
 import { BadRequestException, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
-import * as OAuth2Server from 'oauth2-server';
 
 import { OauthServerService } from './oauth-server/oauth-server.service';
+
+// tslint:disable-next-line: no-var-requires
+const OAuth2Server = require('oauth2-server');
 
 @Controller('oauth')
 export class OauthController {
@@ -16,6 +18,7 @@ export class OauthController {
     @Res() res: Response,
   ) {
     try {
+      console.log(2424124124124124);
       const request = new OAuth2Server.Request(req);
       const response = new OAuth2Server.Response(res);
       const token = await this.oauthServerService.server.token(request, response);

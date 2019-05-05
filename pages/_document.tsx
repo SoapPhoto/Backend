@@ -32,13 +32,12 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
-        </Head>
-        <Head>
           <meta
             name="viewport"
             content="initial-scale=1.2, width=device-width"
             key="viewport"
           />
+          <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
         </Head>
         <body id="body">
           <Main />

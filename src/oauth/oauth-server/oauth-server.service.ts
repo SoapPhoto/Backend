@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import * as OAuth2Server from 'oauth2-server';
 
 import { getTokenExpiresAt } from '@server/common/utils/token';
 import { UserEntity } from '@server/user/user.entity';
@@ -8,6 +7,9 @@ import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
+
+// tslint:disable-next-line: no-var-requires
+const OAuth2Server = require('oauth2-server');
 
 @Injectable()
 export class OauthServerService {
@@ -30,6 +32,7 @@ export class OauthServerService {
     });
   }
   private getClient = async (clientId: string, clientSecret: string) => {
+    console.log(2222222, clientId, clientSecret);
     const client = await this.clientService.getOne(clientId, clientSecret);
     return client;
   }

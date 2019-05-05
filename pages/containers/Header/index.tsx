@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
-import Link from 'next/link';
 import * as React from 'react';
 
+import { Link } from '@pages/routes';
 import { Btns } from './Btns';
 import { Icon } from './Icon';
 import { Logo, MenuItem, MenuWapper, Wrapper } from './styles';
@@ -13,7 +13,7 @@ export const Header = inject('accountStore')(
         return (
           <Wrapper>
             <Logo>
-              <Link href="views/index" as="/">
+              <Link route="/">
                 <a href="/"><Icon/></a>
               </Link>
             </Logo>

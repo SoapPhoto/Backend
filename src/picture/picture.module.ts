@@ -1,5 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { QiniuModule } from '@server/common/qiniu/qiniu.module';
 import { PictureController } from './picture.controller';
 import { PictureEntity } from './picture.entity';
@@ -16,4 +18,10 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
   controllers: [PictureController],
   exports: [PictureService],
 })
-export class PictureModule {}
+export class PictureModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(OauthMiddleware)
+      .forRoutes(PictureController);
+  }
+}

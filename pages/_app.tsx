@@ -1,13 +1,22 @@
+import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';
+import Router from 'next/router';
+import * as NProgress from 'nprogress';
 import * as React from 'react';
 
-import { Provider } from 'mobx-react';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
 import { IMyMobxStore, initStore } from './stores/init';
 
 const server = typeof window === 'undefined';
+
+Router.events.on('routeChangeStart', (url: string) => {
+  console.log(`Loading: ${url}`);
+  NProgress.start();
+});
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {

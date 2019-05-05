@@ -24,20 +24,24 @@ export class ViewsController {
 
   @Get('picture/:id')
   @Render('picture')
-  public async pictureDetail() {
-    return {};
+  public async pictureDetail(
+    @User() user: Maybe<UserEntity>,
+  ) {
+    return {
+      accountStore: {
+        userInfo: user,
+      },
+    };
   }
 
   @Get('login')
   @Render('auth/login')
-  @Roles('guest')
   public async login() {
     return {};
   }
 
   @Get('upload')
   @Render('upload')
-  @Roles('user')
   public async upload(
     @User() user: Maybe<UserEntity>,
   ) {

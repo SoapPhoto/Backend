@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { PictureModule } from '@server/picture/picture.module';
 import { UserController } from './user.controller';
 import { UserEntity } from './user.entity';
@@ -15,4 +16,10 @@ import { UserService } from './user.service';
   exports: [UserService],
   controllers: [UserController],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(OauthMiddleware)
+      .forRoutes(UserController);
+  }
+}

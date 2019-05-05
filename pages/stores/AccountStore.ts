@@ -28,6 +28,8 @@ export class AccountStore {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
+    console.log(data.data.user);
+    this.setUserInfo(data.data.user);
   }
 
 }

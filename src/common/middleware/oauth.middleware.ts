@@ -1,9 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import * as OAuth2Server from 'oauth2-server';
 
 import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { UserEntity } from '@server/user/user.entity';
 import { plainToClass } from 'class-transformer';
+
+// tslint:disable-next-line: no-var-requires
+const OAuth2Server = require('oauth2-server');
 
 @Injectable()
 export class OauthMiddleware implements NestMiddleware {
