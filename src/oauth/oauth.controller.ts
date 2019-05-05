@@ -18,16 +18,16 @@ export class OauthController {
     @Res() res: Response,
   ) {
     try {
-      console.log(2424124124124124);
       const request = new OAuth2Server.Request(req);
       const response = new OAuth2Server.Response(res);
       const token = await this.oauthServerService.server.token(request, response);
-      res.cookie('Authorization', `Bearer ${token.accessToken}`, {
-        expires: token.accessTokenExpiresAt,
-        httpOnly: true,
-      });
+      // res.cookie('Authorization', `Bearer ${token.accessToken}`, {
+      //   expires: token.accessTokenExpiresAt,
+      //   httpOnly: true,
+      // });
       res.json(token);
     } catch (err) {
+      console.log(err);
       if (
         err instanceof OAuth2Server.OAuthError ||
         err instanceof OAuth2Server.InvalidArgumentError ||

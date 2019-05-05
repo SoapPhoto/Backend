@@ -12,26 +12,14 @@ import { UserEntity } from '@server/user/user.entity';
 export class ViewsController {
   @Get()
   @Render('Index')
-  public async index(
-    @User() user: Maybe<UserEntity>,
-  ) {
-    return {
-      accountStore: {
-        userInfo: user,
-      },
-    };
+  public async index() {
+    return {};
   }
 
   @Get('picture/:id')
   @Render('picture')
-  public async pictureDetail(
-    @User() user: Maybe<UserEntity>,
-  ) {
-    return {
-      accountStore: {
-        userInfo: user,
-      },
-    };
+  public async pictureDetail() {
+    return {};
   }
 
   @Get('login')
@@ -42,13 +30,7 @@ export class ViewsController {
 
   @Get('upload')
   @Render('upload')
-  public async upload(
-    @User() user: Maybe<UserEntity>,
-  ) {
-    return {
-      accountStore: {
-        userInfo: user,
-      },
-    };
+  public async upload() {
+    return {};
   }
 }

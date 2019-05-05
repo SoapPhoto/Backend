@@ -19,10 +19,4 @@ import { OauthService } from './oauth.service';
   controllers: [OauthController],
   providers: [OauthService, OauthServerService],
 })
-export class OauthModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(OauthController);
-  }
-}
+export class OauthModule {}
