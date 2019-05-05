@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    // "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": false,
     "strictNullChecks": true,

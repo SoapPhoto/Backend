@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import Link from 'next/link';
 import { ImageBox, ItemImage, ItemWapper } from './styles';
 
 interface IProps {
@@ -10,12 +11,16 @@ interface IProps {
 export const PictureItem: React.SFC<IProps> = ({
   detail,
 }) => {
-  const height = ((detail.width - detail.height) / detail.width) * 100 || 100;
+  const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   return (
-    <ItemWapper>
-      <ImageBox height={height} background={detail.color}>
-        <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
-      </ImageBox>
-    </ItemWapper>
+    <Link href="views/picture" as={`/picture/${detail.id}`}>
+      <a href={`picture/${detail.id}`}>
+        <ItemWapper>
+          <ImageBox height={height} background={detail.color}>
+            <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
+          </ImageBox>
+        </ItemWapper>
+      </a>
+    </Link>
   );
 };
