@@ -81,6 +81,7 @@
     "@types/next": "^8.0.4",
     "@types/node": "^10.12.18",
     "@types/nprogress": "0.0.29",
+    "@types/path-to-regexp": "^1.7.0",
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
     "@types/supertest": "^2.0.7",

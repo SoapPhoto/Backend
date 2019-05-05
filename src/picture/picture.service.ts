@@ -21,31 +21,10 @@ export class PictureService {
     private pictureRepository: Repository<PictureEntity>,
   ) {}
   public create = async (data: Partial<PictureEntity>) => {
-    return this.pictureRepository.save(
+    const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );
-  }
-  public selectList = (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const q = this.pictureRepository.createQueryBuilder('picture')
-      .leftJoinAndSelect('picture.user', 'user')
-      .loadRelationCountAndMap(
-        'picture.likes', 'picture.activitys', 'activity',
-        qb => qb.andWhere('activity.like=:like', { like: true }),
-      );
-    if (user) {
-      q
-        .loadRelationCountAndMap(
-          'picture.isLike', 'picture.activitys', 'activity',
-          qb => qb.andWhere(
-            'activity.userId=:userId AND activity.like=:like',
-            { userId: user.id, like: true },
-          ),
-        );
-    }
-    if (query.timestamp) {
-      q.where('picture.createTime <= :time', { time: query.time });
-    }
-    return q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+    return plainToClass(PictureEntity, createData);
   }
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
     const data = await this.selectList(user, query).cache(true).getManyAndCount();
@@ -58,11 +37,11 @@ export class PictureService {
     };
   }
 
-  public getOne = async (id: string | number) => {
-    return this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.id=:id', { id })
-      .leftJoinAndSelect('picture.user', 'user')
-      .getOne();
+  public getOnePicture = async (id: string, user: UserEntity) => {
+    const q = this.select(user);
+    q.andWhere('picture.id=:id', { id });
+    const data = await q.cache(3000).getOne();
+    return plainToClass(PictureEntity, data);
   }
 
   public likePicture = async (id: string, user: UserEntity) => {
@@ -109,5 +88,38 @@ export class PictureService {
       };
     }
     throw new UnauthorizedException();
+  }
+  private select = (user: Maybe<UserEntity>) => {
+    const q = this.pictureRepository.createQueryBuilder('picture')
+      .leftJoinAndSelect('picture.user', 'user')
+      .loadRelationCountAndMap(
+        'picture.likes', 'picture.activitys', 'activity',
+        qb => qb.andWhere('activity.like=:like', { like: true }),
+      );
+    if (user) {
+      q
+        .loadRelationCountAndMap(
+          'picture.isLike', 'picture.activitys', 'activity',
+          qb => qb.andWhere(
+            'activity.userId=:userId AND activity.like=:like',
+            { userId: user.id, like: true },
+          ),
+        );
+    }
+    return q;
+  }
+  private selectList = (user: Maybe<UserEntity>, query: GetPictureListDto) => {
+    const q = this.select(user);
+    if (query.timestamp) {
+      q.where('picture.createTime <= :time', { time: query.time });
+    }
+    return q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+  }
+
+  private getOne = async (id: string | number) => {
+    return this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.id=:id', { id })
+      .leftJoinAndSelect('picture.user', 'user')
+      .getOne();
   }
 }

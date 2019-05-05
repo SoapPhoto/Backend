@@ -22,6 +22,8 @@ export const ColItem = styled.div`
 
 export const ItemWapper = styled.div`
   position: relative;
+  border-radius: 4px;
+  overflow: hidden;
   &:active {
     transform: scale(0.98);
     transition: transform 0.1s;
@@ -33,13 +35,11 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   padding-bottom: ${props => props.height}%;
   background-color: ${props => props.background};
   width: 100%;
-  overflow: hidden;
 `;
 
 export const ItemImage = styled.img`
   position: absolute;
   top: 0;
   display: block;
-  border-radius: 4px;
   width: 100%;
 `;

@@ -77,6 +77,14 @@ export class PictureController {
     return this.pictureService.getList(user, query);
   }
 
+  @Get(':id([0-9]+)')
+  public async getOne(
+    @Param('id') id: string,
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.getOnePicture(id, user);
+  }
+
   @Put('like/:id([0-9]+)')
   @Roles('user')
   public async updatePictureActivity(

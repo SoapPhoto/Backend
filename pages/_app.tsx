@@ -12,6 +12,14 @@ import { IInitialStore, IMyMobxStore, initStore } from './stores/init';
 
 const server = typeof window === 'undefined';
 
+interface IPageProps {
+  initialStore: IInitialStore;
+  error?: {
+    status: number;
+    message?: string;
+  };
+}
+
 Router.events.on('routeChangeStart', (url: string) => {
   console.log(`Loading: ${url}`);
   NProgress.start();
@@ -24,7 +32,7 @@ export default class MyApp extends App {
     const { ctx, Component } = data;
     let { req } = ctx as any;
     if (!req) req = {};
-    const basePageProps: { initialStore: IInitialStore } = {
+    const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
           userInfo: req.user,
@@ -43,6 +51,7 @@ export default class MyApp extends App {
         ...pageProps,
         initialStore: _.mergeWith(basePageProps.initialStore, pageProps.initialStore || {}),
       };
+      console.log(pageProps.error);
     }
     ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     return {

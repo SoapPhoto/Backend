@@ -1,4 +1,4 @@
-import { CacheInterceptor, Controller, Get, Render, UseGuards, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, Controller, Get, Render, UseGuards, UseInterceptors, Req, Res } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
@@ -16,10 +16,11 @@ export class ViewsController {
     return {};
   }
 
-  @Get('picture/:id')
-  @Render('picture')
-  public async pictureDetail() {
-    return {};
+  @Get('picture/:id([0-9]+)')
+  public async pictureDetail(
+    @Res() res: any,
+  ) {
+    res.render('picture', {});
   }
 
   @Get('login')

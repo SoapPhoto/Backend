@@ -7,7 +7,7 @@ import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
 import { PictureList } from '@pages/containers/Picture/List';
 import { AccountStore } from '@pages/stores/AccountStore';
-import { IMyMobxStore, IInitialStore } from '@pages/stores/init';
+import { IInitialStore } from '@pages/stores/init';
 
 interface InitialProps extends NextContext {
   screenData: IPictureListRequest;
