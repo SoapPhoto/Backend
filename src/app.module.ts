@@ -29,10 +29,4 @@ import { ViewsModule } from './views/views.module';
     },
   ],
 })
-export class AppModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

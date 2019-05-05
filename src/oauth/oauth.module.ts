@@ -1,5 +1,6 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { UserModule } from '@server/user/user.module';
 import { AccessTokenModule } from './access-token/access-token.module';
 import { ClientModule } from './client/client.module';

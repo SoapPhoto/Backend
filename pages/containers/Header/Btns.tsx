@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react';
-import Link from 'next/link';
 import * as React from 'react';
+
+import { Link } from '@pages/routes';
 
 import { AccountStore } from '@pages/stores/AccountStore';
 import { RightWarpper } from './styles';
@@ -22,7 +23,7 @@ export const Btns: React.SFC<IProps> = inject('accountStore')(
       }
       return (
         <RightWarpper>
-          <Link href="views/auth/login" as="login">
+          <Link route="/login">
             <a href="/login">登录</a>
           </Link>
         </RightWarpper>

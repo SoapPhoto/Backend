@@ -18,7 +18,6 @@ async function bootstrap() {
   await app.prepare();
 
   const server = await NestFactory.create(AppModule);
-
   server.use(compression());
   server.use(cookieParser());
   server.useGlobalPipes(new ValidationPipe({
