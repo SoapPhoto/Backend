@@ -3,9 +3,11 @@ import { NextContext } from 'next';
 import * as React from 'react';
 
 import { IPictureListRequest } from '@pages/common/interfaces/picture';
+import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
 import { PictureList } from '@pages/containers/Picture/List';
 import { AccountStore } from '@pages/stores/AccountStore';
+import { IMyMobxStore, IInitialStore } from '@pages/stores/init';
 
 interface InitialProps extends NextContext {
   screenData: IPictureListRequest;
@@ -18,10 +20,16 @@ interface IProps extends InitialProps {
 @inject('accountStore')
 @observer
 export default class Index extends React.Component<IProps> {
-  public static async getInitialProps(_: NextContext<any>) {
+  public static async getInitialProps(_: NextContext<any, { user: UserEntity }>) {
     const { data } = await request.get<IPictureListRequest>('/api/picture');
+    const initialStore: IInitialStore = {
+      accountStore: {
+        test: 2,
+      },
+    };
     return {
       screenData: data,
+      initialStore: { ...initialStore },
     };
   }
   public render() {

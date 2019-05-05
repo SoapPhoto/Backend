@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { PictureModule } from '@server/picture/picture.module';
 import { ViewsController } from './views.controller';
 import { ViewsService } from './views.service';
@@ -15,4 +16,10 @@ import { ViewsService } from './views.service';
     // },
   ],
 })
-export class ViewsModule {}
+export class ViewsModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(OauthMiddleware)
+      .forRoutes(ViewsController);
+  }
+}

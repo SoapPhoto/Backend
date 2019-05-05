@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';
 import Router from 'next/router';
@@ -7,7 +8,7 @@ import * as React from 'react';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
-import { IMyMobxStore, initStore } from './stores/init';
+import { IInitialStore, IMyMobxStore, initStore } from './stores/init';
 
 const server = typeof window === 'undefined';
 
@@ -21,12 +22,14 @@ Router.events.on('routeChangeError', () => NProgress.done());
 export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {
     const { ctx, Component } = data;
-    const mobxStore = initStore({
-      accountStore: ctx.query.accountStore,
-    });
-    ctx.mobxStore = mobxStore;
-    const basePageProps = {
-      initialStore: mobxStore,
+    let { req } = ctx as any;
+    if (!req) req = {};
+    const basePageProps: { initialStore: IInitialStore } = {
+      initialStore: {
+        accountStore: {
+          userInfo: req.user,
+        },
+      },
     };
     let pageProps = {
       ...basePageProps,
@@ -37,10 +40,11 @@ export default class MyApp extends App {
         ...ctx,
       });
       pageProps = {
-        ...basePageProps,
         ...pageProps,
+        initialStore: _.mergeWith(basePageProps.initialStore, pageProps.initialStore || {}),
       };
     }
+    ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     return {
       pageProps,
     };

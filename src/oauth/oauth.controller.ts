@@ -27,7 +27,6 @@ export class OauthController {
       // });
       res.json(token);
     } catch (err) {
-      console.log(err);
       if (
         err instanceof OAuth2Server.OAuthError ||
         err instanceof OAuth2Server.InvalidArgumentError ||

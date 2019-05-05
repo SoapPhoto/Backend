@@ -8,9 +8,13 @@ export class AccountStore {
     return !!this.userInfo;
   }
   @observable public userInfo?: UserEntity;
+  @observable public test = 1;
   constructor(store?: Partial<AccountStore>) {
     if (store) {
       this.userInfo = store.userInfo;
+      if (store.test !== undefined) {
+        this.test = store.test;
+      }
     }
   }
   public setUserInfo = (userInfo?: UserEntity) => {
