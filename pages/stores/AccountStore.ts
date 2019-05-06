@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
@@ -9,14 +9,21 @@ export class AccountStore {
   }
   @observable public userInfo?: UserEntity;
   @observable public test = 1;
-  constructor(store?: Partial<AccountStore>) {
+
+  // 用来初始化
+  @action
+  public update = (store?: Partial<AccountStore>) => {
     if (store) {
-      this.userInfo = store.userInfo;
+      if (store.userInfo !== undefined) {
+        this.setUserInfo(store.userInfo);
+      }
       if (store.test !== undefined) {
         this.test = store.test;
       }
     }
   }
+
+  @action
   public setUserInfo = (userInfo?: UserEntity) => {
     this.userInfo = userInfo;
   }
@@ -32,7 +39,6 @@ export class AccountStore {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    console.log(data.data.user);
     this.setUserInfo(data.data.user);
   }
 

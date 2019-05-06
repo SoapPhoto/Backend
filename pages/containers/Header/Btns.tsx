@@ -17,7 +17,9 @@ export const Btns: React.SFC<IProps> = inject('accountStore')(
       if (isLogin && userInfo) {
         return (
           <RightWarpper>
-            <div>{userInfo.username}</div>
+            <Link route="/login">
+              <a href="/login">{userInfo.username}</a>
+            </Link>
           </RightWarpper>
         );
       }

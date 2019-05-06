@@ -1,17 +1,13 @@
-import { CacheInterceptor, Controller, Get, Render, UseGuards, UseInterceptors, Req, Res } from '@nestjs/common';
+import { CacheInterceptor, Controller, Get, Render, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 
-import { Roles } from '@server/common/decorator/roles.decorator';
-import { User } from '@server/common/decorator/user.decorator';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
-import { Maybe } from '@server/typing';
-import { UserEntity } from '@server/user/user.entity';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
 @UseGuards(ViewAuthGuard)
 export class ViewsController {
   @Get()
-  @Render('Index')
+  @Render('home')
   public async index() {
     return {};
   }

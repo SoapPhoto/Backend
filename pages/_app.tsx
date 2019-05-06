@@ -5,12 +5,11 @@ import Router from 'next/router';
 import * as NProgress from 'nprogress';
 import * as React from 'react';
 
+import { server } from '@pages/common/utils';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
 import { IInitialStore, IMyMobxStore, initStore } from './stores/init';
-
-const server = typeof window === 'undefined';
 
 interface IPageProps {
   initialStore: IInitialStore;
@@ -42,6 +41,7 @@ export default class MyApp extends App {
     let pageProps = {
       ...basePageProps,
     };
+    ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({
         ...basePageProps,
@@ -49,11 +49,10 @@ export default class MyApp extends App {
       });
       pageProps = {
         ...pageProps,
-        initialStore: _.mergeWith(basePageProps.initialStore, pageProps.initialStore || {}),
+        initialStore: _.merge(basePageProps.initialStore, pageProps.initialStore || {}),
       };
-      console.log(pageProps.error);
+      ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     }
-    ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     return {
       pageProps,
     };
@@ -66,6 +65,7 @@ export default class MyApp extends App {
   }
   public render() {
     const { Component, pageProps } = this.props;
+    console.log(this.props);
     return (
       <Container>
         <Provider {...this.mobxStore}>

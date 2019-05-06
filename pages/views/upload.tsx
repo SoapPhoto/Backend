@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { getImageInfo, IImageInfo } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
+import { withAuth } from '@pages/components/router/withAuth';
+import { withRouter } from 'next/router';
 import styled from 'styled-components';
 
 const Wapper = styled.div`
@@ -16,7 +18,7 @@ const Image = styled.img`
   max-height: 600px;
 `;
 
-export default () => {
+const Upload = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
@@ -68,3 +70,7 @@ export default () => {
     </Wapper>
   );
 };
+
+export default withAuth('user')(
+  Upload,
+);

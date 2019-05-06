@@ -3,14 +3,16 @@ import { DefaultQuery, RouterProps } from 'next/router';
 import { IncomingMessage, ServerResponse } from 'http';
 
 import { IMyMobxStore } from '@pages/stores/init';
+import { Request, Response } from 'express';
+import { UserEntity } from './user';
 
 export interface CustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   mobxStore: IMyMobxStore;
   pathname: string;
   query: Q;
   asPath: string;
-  req?: IncomingMessage;
-  res?: ServerResponse;
+  req?: Request & { user?: UserEntity };
+  res?: Response;
   err?: Error;
 }
 
