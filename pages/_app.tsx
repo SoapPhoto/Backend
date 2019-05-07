@@ -2,14 +2,13 @@ import * as _ from 'lodash';
 import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';
 import Router from 'next/router';
-import * as NProgress from 'nprogress';
 import * as React from 'react';
 
 import { server } from '@pages/common/utils';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
-import { IInitialStore, IMyMobxStore, initStore } from './stores/init';
+import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
 
 interface IPageProps {
   initialStore: IInitialStore;
@@ -20,11 +19,19 @@ interface IPageProps {
 }
 
 Router.events.on('routeChangeStart', (url: string) => {
-  console.log(`Loading: ${url}`);
-  NProgress.start();
+  console.log(`PUSH: ${url}`);
+  store.appStore.setAction('PUSH');
+  store.appStore.setLoading(true);
 });
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+// if (!server) {
+//   Router.beforePopState(({ url }) => {
+//     store.appStore.setAction('POP');
+//     console.log(`POP: ${url}`);
+//     return true;
+//   });
+// }
+Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
+Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 
 export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {
@@ -63,9 +70,15 @@ export default class MyApp extends App {
     super(props);
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
+  public componentDidMount() {
+    Router.beforePopState(({ url, as, options }) => {
+      store.appStore.setAction('POP');
+      console.log(`POP: ${url}`);
+      return true;
+    });
+  }
   public render() {
     const { Component, pageProps } = this.props;
-    console.log(this.props);
     return (
       <Container>
         <Provider {...this.mobxStore}>

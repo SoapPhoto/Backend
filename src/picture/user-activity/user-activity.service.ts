@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, getManager, Repository } from 'typeorm';
 
+import { NotificationService } from '@server/notification/notification.service';
 import { UserEntity } from '@server/user/user.entity';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
@@ -9,6 +10,7 @@ import { PictureUserActivityEntity } from './user-activity.entity';
 @Injectable()
 export class PictureUserActivityService {
   constructor(
+    private readonly notificationService: NotificationService,
     @InjectRepository(PictureUserActivityEntity)
     private activityRepository: Repository<PictureUserActivityEntity>,
   ) {}
@@ -27,24 +29,29 @@ export class PictureUserActivityService {
     user: UserEntity,
   ) => {
     const activity = await this.getOne(picture.id, user.id);
-    if (activity) {
-      await this.activityRepository.save(
-        this.activityRepository.merge(activity, {
-          like: !activity.like,
-          ...!activity.like ? {
+    await getManager().transaction(async (entityManager) => {
+      if (activity) {
+        await entityManager.save(
+          this.activityRepository.merge(activity, {
+            like: !activity.like,
+            ...!activity.like ? {
+              likedTime: new Date(),
+            } : {},
+          }),
+        );
+      } else {
+        await entityManager.save(
+          this.activityRepository.create({
+            picture,
+            user,
+            like: true,
             likedTime: new Date(),
-          } : {},
-        }),
-      );
-    } else {
-      await this.activityRepository.save(
-        this.activityRepository.create({
-          picture,
-          user,
-          like: true,
-          likedTime: new Date(),
-        }),
-      );
+          }),
+        );
+      }
+    });
+    if (!activity || activity.like) {
+      this.notificationService.publishNotification(user, picture.user);
     }
     return this.activityRepository.count({ picture, like: true });
   }

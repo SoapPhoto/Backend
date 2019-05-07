@@ -1,5 +1,5 @@
 
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
@@ -9,7 +9,7 @@ import { OauthModule } from '@server/oauth/oauth.module';
 import { LoggingInterceptor } from '@server/shared/logging.interceptor';
 import { ApiModule } from './api.module';
 import { CacheModule } from './common/cache/cache.module';
-import { OauthMiddleware } from './common/middleware/oauth.middleware';
+import { EventsModule } from './events/events.module';
 import { ViewsModule } from './views/views.module';
 
 @Module({
@@ -21,6 +21,7 @@ import { ViewsModule } from './views/views.module';
     ViewsModule,
     CacheModule,
     ApiModule,
+    EventsModule,
   ],
   providers: [
     {

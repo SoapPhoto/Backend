@@ -3,6 +3,7 @@ require('dotenv').config();
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { WsAdapter } from '@nestjs/platform-ws';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
@@ -23,6 +24,7 @@ async function bootstrap() {
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
+  server.useWebSocketAdapter(new WsAdapter(server));
 
   // swagger 文档
   const options = new DocumentBuilder()

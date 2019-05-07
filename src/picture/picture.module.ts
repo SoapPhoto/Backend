@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { QiniuModule } from '@server/common/qiniu/qiniu.module';
+import { NotificationModule } from '@server/notification/notification.module';
 import { PictureController } from './picture.controller';
 import { PictureEntity } from './picture.entity';
 import { PictureService } from './picture.service';
@@ -12,6 +13,7 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
   imports: [
     TypeOrmModule.forFeature([PictureEntity]),
     QiniuModule,
+    NotificationModule,
     PictureUserActivityModule,
   ],
   providers: [PictureService],

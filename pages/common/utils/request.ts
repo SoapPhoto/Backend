@@ -1,7 +1,12 @@
 import axios from 'axios';
+// import { setupCache } from 'axios-cache-adapter';
 
+// const cache = setupCache({
+//   maxAge: 15 * 60 * 1000,
+// });
 const instance = axios.create({
-  baseURL: `http://localhost:${process.env.PORT}`,
+  // adapter: cache.adapter,
+  baseURL: `http://localhost.com:${process.env.PORT}`,
   validateStatus (status: number) {
     return status < 500 && status !== 404;
   },
