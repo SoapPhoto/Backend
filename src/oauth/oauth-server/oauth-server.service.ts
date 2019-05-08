@@ -32,7 +32,6 @@ export class OauthServerService {
     });
   }
   private getClient = async (clientId: string, clientSecret: string) => {
-    console.log(2222222, clientId, clientSecret);
     const client = await this.clientService.getOne(clientId, clientSecret);
     return client;
   }

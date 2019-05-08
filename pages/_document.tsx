@@ -38,7 +38,6 @@ export default class MyDocument extends Document {
             key="viewport"
           />
           <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC" rel="stylesheet"/>
-          <link rel="stylesheet" type="text/css" href="/static/nprogress.css" />
         </Head>
         <body id="body">
           <Main />

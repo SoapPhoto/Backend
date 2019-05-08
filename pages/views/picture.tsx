@@ -33,7 +33,6 @@ export default class Picture extends React.Component<IProps> {
     };
   }
   public render() {
-    console.log(this.props);
     return (
       <div>41242</div>
     );

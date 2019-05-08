@@ -17,19 +17,9 @@ interface IPageProps {
     message?: string;
   };
 }
-
 Router.events.on('routeChangeStart', (url: string) => {
-  console.log(`PUSH: ${url}`);
-  store.appStore.setAction('PUSH');
   store.appStore.setLoading(true);
 });
-// if (!server) {
-//   Router.beforePopState(({ url }) => {
-//     store.appStore.setAction('POP');
-//     console.log(`POP: ${url}`);
-//     return true;
-//   });
-// }
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 
@@ -70,20 +60,18 @@ export default class MyApp extends App {
     super(props);
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
-  public componentDidMount() {
-    Router.beforePopState(({ url, as, options }) => {
-      store.appStore.setAction('POP');
-      console.log(`POP: ${url}`);
-      return true;
-    });
-  }
   public render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, router } = this.props;
+    const { picture } = router.query as any;
     return (
       <Container>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
             <BodyLayout>
+              {
+                picture &&
+                <div>{picture}</div>
+              }
               <Component
                 {...pageProps}
               />

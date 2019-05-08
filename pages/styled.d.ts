@@ -2,6 +2,7 @@ import 'styled-components'
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    nprogress: string;
     // body背景颜色
     background: string;
     // 一些主色调

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { getImageInfo, IImageInfo } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
 import { withAuth } from '@pages/components/router/withAuth';
-import { withRouter } from 'next/router';
 import styled from 'styled-components';
 
 const Wapper = styled.div`

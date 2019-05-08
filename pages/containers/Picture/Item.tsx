@@ -2,8 +2,8 @@ import { withRouter, WithRouterProps } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
-import { Router } from '@pages/routes';
-import Link from 'next/link';
+// import { Router } from '@pages/routes';
+import Router from 'next/router';
 import { ImageBox, ItemImage, ItemWapper } from './styles';
 
 interface IProps {
@@ -15,15 +15,22 @@ export const PictureItem = withRouter<IProps>(({
   router,
 }) => {
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
+  const onClick = (e) => {
+    e.preventDefault();
+    Router.push(`${router!.route}?picture=${detail.id}`, `/picture/${detail.id}`, {
+      shallow: true,
+    });
+  };
   return (
-    <Link href={`${router!.route}?picture=${detail.id}`} as={`/picture/${detail.id}`}>
-      <a>
-        <ItemWapper>
-          <ImageBox height={height} background={detail.color}>
-            <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
-          </ImageBox>
-        </ItemWapper>
-      </a>
-    </Link>
+    <a
+      href={`/picture/${detail.id}`}
+      onClick={onClick}
+    >
+      <ItemWapper>
+        <ImageBox height={height} background={detail.color}>
+          <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
+        </ImageBox>
+      </ItemWapper>
+    </a>
   );
 });

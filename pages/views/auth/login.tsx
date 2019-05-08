@@ -32,16 +32,18 @@ const Login: React.SFC<IProps> = ({ accountStore, router }) => {
       <Title>登录</Title>
       <Input
         type="text"
+        placeholder="用户名"
         value={username}
         onChange={e => setUsername(e.target.value)}
       />
       <Input
         type="password"
         value={password}
-        style={{ marginTop: '12px' }}
+        placeholder="密码"
+        style={{ marginTop: '18px' }}
         onChange={e => setPassword(e.target.value)}
       />
-      <Button onClick={handleOk}>登录</Button>
+      <Button style={{ marginTop: '24px' }} onClick={handleOk}>登录</Button>
     </Wrapper>
   );
 };

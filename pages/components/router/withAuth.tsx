@@ -20,13 +20,7 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
     public static displayName = `withAuthSync(${getDisplayName<P>(WrappedComponent)})`;
 
     public static async getInitialProps (ctx: CustomNextContext) {
-      let isLogin = store.accountStore.isLogin;
-      if (!server) {
-        const cookies = cookie.parse(document.cookie);
-        if (!cookies.Authorization) {
-          isLogin = false;
-        }
-      }
+      const { isLogin } = store.accountStore;
       switch (role) {
         case 'guest':
           if (isLogin) {

@@ -5,12 +5,13 @@ import { darken, lighten } from 'polished';
 const black = '#000';
 
 const colors = {
-  blue: '#3a52fe',
+  blue: '#05f',
   fontColor: lighten(.1, black),
 };
 
 const theme: DefaultTheme =  {
   colors,
+  nprogress: colors.blue,
   header: {
     background: '#fff',
     shadowColor: 'rgba(0, 0, 0, 0.06)',
