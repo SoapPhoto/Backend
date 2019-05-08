@@ -1,3 +1,6 @@
+// tslint:disable-next-line: max-line-length
+const font = `-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue","Helvetica",PingFang SC,PingFang TC, 'Noto Sans SC', Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,"WenQuanYi Micro Hei",sans-serif`;
+
 const normalize = `
   html {
     line-height: 1.15; /* 1 */
@@ -7,7 +10,7 @@ const normalize = `
   body {
     font-size: 14px !important;
     line-height: 1.5;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue","Helvetica",PingFang SC,PingFang TC,Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,"WenQuanYi Micro Hei",sans-serif;
+    font-family: ${font};
   }
   html,body{
     width: 100%;
@@ -48,7 +51,7 @@ const normalize = `
     overflow: visible;
   }
   pre {
-    font-family: monospace, monospace; /* 1 */
+    font-family: ${font};
     font-size: 1em; /* 2 */
   }
   a {
@@ -72,7 +75,7 @@ const normalize = `
   optgroup,
   select,
   textarea {
-    font-family: sans-serif;
+    font-family: ${font};
     font-size: 100%;
     line-height: 1.15;
     margin: 0;

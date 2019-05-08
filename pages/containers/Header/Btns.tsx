@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link } from '@pages/routes';
 
 import { AccountStore } from '@pages/stores/AccountStore';
-import { RightWarpper } from './styles';
+import { Href, RightWarpper } from './styles';
 
 export interface IProps {
   accountStore?: AccountStore;
@@ -18,7 +18,7 @@ export const Btns: React.SFC<IProps> = inject('accountStore')(
         return (
           <RightWarpper>
             <Link route="/login">
-              <a href="/login">{userInfo.username}</a>
+              <Href href="/login">{userInfo.username}</Href>
             </Link>
           </RightWarpper>
         );
@@ -26,7 +26,7 @@ export const Btns: React.SFC<IProps> = inject('accountStore')(
       return (
         <RightWarpper>
           <Link route="/login">
-            <a href="/login">登录</a>
+            <Href href="/login">登录</Href>
           </Link>
         </RightWarpper>
       );

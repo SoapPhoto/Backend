@@ -3,7 +3,8 @@ import normalize from './normalize';
 
 export const GlobalStyle = createGlobalStyle`
   body {
-    background-color: #f8fafc;
+    background-color: ${props => props.theme.background};
+    color: ${props => props.theme.colors.fontColor};
   }
   ${normalize};
 `;

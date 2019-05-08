@@ -1,11 +1,14 @@
 import * as React from 'react';
 
 import { parsePath } from '@pages/common/utils';
+import { Button } from '@pages/components/Button';
+import { Input } from '@pages/components/Input';
 import { withAuth } from '@pages/components/router/withAuth';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { inject, observer } from 'mobx-react';
 import { withRouter, WithRouterProps } from 'next/router';
+import { Title, Wrapper } from './styles';
 
 interface IProps extends WithRouterProps {
   accountStore: AccountStore;
@@ -25,20 +28,21 @@ const Login: React.SFC<IProps> = ({ accountStore, router }) => {
     }
   };
   return (
-    <div>
-      <h2>登录</h2>
-      <input
+    <Wrapper>
+      <Title>登录</Title>
+      <Input
         type="text"
         value={username}
         onChange={e => setUsername(e.target.value)}
       />
-      <input
-        type="text"
+      <Input
+        type="password"
         value={password}
+        style={{ marginTop: '12px' }}
         onChange={e => setPassword(e.target.value)}
       />
-      <button onClick={handleOk}>登录</button>
-    </div>
+      <Button onClick={handleOk}>登录</Button>
+    </Wrapper>
   );
 };
 

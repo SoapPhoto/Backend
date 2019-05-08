@@ -1,14 +1,19 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.header`
+import { href } from '@pages/common/utils/themes/common';
+
+export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
   justify-content: space-between;
   width: 100%;
   height: 80px;
   align-items: center;
-  background: #fff;
-  border-bottom: 1px solid rgb(238, 238, 238);
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 20px;
+  background: ${_ => _.login ? 'transparent' :_.theme.header.background};
+  border-bottom-color: ${_ => _.theme.header.borderColor};
+  border-bottom-style: solid;
+  border-bottom-width: ${_ => _.login ? 0 : 1}px;
+  box-shadow: ${_ => _.login ? 'transparent' : _.theme.header.shadowColor} 0px 6px 20px;
+  transition: .2s all ease;
 `;
 
 export const Logo = styled.div`
@@ -25,14 +30,13 @@ export const MenuWapper = styled.nav`
 export const MenuItem = styled.nav`
   margin: 0 16px;
   font-size: 14px;
-  color: #555;
+  color: ${_ => _.theme.header.menu.color};
 `;
 
 export const RightWarpper = styled.div`
   margin-right: 22px;
 `;
 
-export const LoginBtn = styled.a`
-  text-decoration:none;
-  color: #2628e1;
+export const Href = styled.a`
+  ${_ => href(_.theme.href.color)}
 `;
