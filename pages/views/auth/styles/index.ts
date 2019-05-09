@@ -8,8 +8,8 @@ export const Wrapper = styled.section`
 `;
 
 export const Title = styled.h2`
-  margin-bottom: 18px;
+  margin-bottom: 32px;
   font-weight: 500;
   font-size: 32px;
-  color: rgba(0, 0, 0, .8)
+  color: ${props => props.theme.colors.fontColor};
 `;

@@ -22,6 +22,7 @@ declare module 'styled-components' {
     }
     box: {
       background: string;
+      borderColor: string;
     }
     // header的theme
     header: {

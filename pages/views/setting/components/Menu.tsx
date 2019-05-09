@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { href } from '@pages/common/utils/themes/common';
 import { Link } from '@pages/routes';
+import { darken, lighten } from 'polished';
 import { Content } from '../style';
 
 interface IData {
@@ -19,7 +20,7 @@ export interface IUserProps {
 }
 
 const Wrapper = styled.ul`
-  border-right: 1px solid #eaeaea;
+  border-right: 1px solid ${props => props.theme.box.borderColor};
 `;
 
 const Item = styled.ul`
@@ -27,11 +28,8 @@ const Item = styled.ul`
 `;
 
 export const Href = styled.a<{active?: boolean}>`
-  ${_ => href(_.active ? _.theme.href.color : _.theme.colors.fontColor)}
+  ${_ => href(_.active ? _.theme.href.color : darken(.6, _.theme.colors.fontColor))}
   display: block;
-  &:hover {
-    background-color: #fafafa;
-  }
 `;
 
 export const Menu: React.SFC<IUserProps> = ({

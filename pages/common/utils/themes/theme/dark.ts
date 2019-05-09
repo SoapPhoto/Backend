@@ -21,7 +21,7 @@ const theme: DefaultTheme =  {
   header: {
     background: '#1e1e1e',
     shadowColor: 'transparent',
-    borderColor: 'transparent',
+    borderColor: 'rgb(51, 51, 51)',
     menu: {
       color: '#555',
     },
@@ -34,6 +34,7 @@ const theme: DefaultTheme =  {
   },
   box: {
     background: '#1e1e1e',
+    borderColor: 'rgb(51, 51, 51)',
   },
 };
 

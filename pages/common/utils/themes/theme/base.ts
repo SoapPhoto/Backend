@@ -31,6 +31,7 @@ const theme: DefaultTheme =  {
     color: colors.blue,
   },
   box: {
+    borderColor,
     background: '#fff',
   },
   background: '#f8fafc',
