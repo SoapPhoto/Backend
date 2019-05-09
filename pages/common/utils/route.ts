@@ -1,3 +1,5 @@
+import { routeObject } from '@pages/routes';
+import { pick } from 'lodash';
 import * as pathToRegexp from 'path-to-regexp';
 import * as parse from 'url-parse';
 
@@ -6,23 +8,22 @@ interface IKey {
 }
 type Keys = IKey[];
 
-interface IPathInfo extends parse {
-  params: {
-    [keyof: string]: string;
-  };
+export interface IPathInfo extends Pick<parse, 'pathname' | 'href' | 'query'> {
+  params: { [key: string]: string | undefined };
 }
 
-export const parsePath = (asPath: string, route?: string) => {
+export const parsePath = (asPath: string) => {
   let info: IPathInfo;
   info = {
     params: {},
-    ...parse(asPath, true),
+    ...pick(parse(asPath, true), ['pathname', 'href', 'query']),
   };
+  const route = setUrlPath(info.pathname);
   if (route) {
     const params: {[keyof: string]: string} = {};
     const keys: Keys = [];
     const regexp = pathToRegexp(route, keys);
-    const result = regexp.exec(asPath);
+    const result = regexp.exec(info.pathname);
     // tslint:disable-next-line:no-increment-decrement
     for (let i = 0; i < keys.length; i++) {
       params[keys[i].name] = result[i + 1];
@@ -31,3 +32,14 @@ export const parsePath = (asPath: string, route?: string) => {
   }
   return info;
 };
+
+function setUrlPath(url: string) {
+  for (const key in routeObject) {
+    if (key) {
+      const regexp = pathToRegexp(routeObject[key]);
+      if (regexp.test(url)) {
+        return routeObject[key];
+      }
+    }
+  }
+}

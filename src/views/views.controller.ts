@@ -30,4 +30,10 @@ export class ViewsController {
   public async upload() {
     return {};
   }
+
+  @Get('setting/:type(user|basic)')
+  @Render('setting')
+  public async setting() {
+    return {};
+  }
 }

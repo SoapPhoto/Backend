@@ -1,19 +1,20 @@
 import * as _ from 'lodash';
 import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';
-import Router from 'next/router';
 import * as React from 'react';
 
-import { server } from '@pages/common/utils';
+import { parsePath, server } from '@pages/common/utils';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
+import { Router } from './routes';
 import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
 
 interface IPageProps {
   initialStore: IInitialStore;
   error?: {
-    status: number;
+    error?: string;
+    statusCode: number;
     message?: string;
   };
 }
@@ -27,6 +28,7 @@ export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {
     const { ctx, Component } = data;
     let { req } = ctx as any;
+    const route = parsePath(data.ctx.asPath);
     if (!req) req = {};
     const basePageProps: IPageProps = {
       initialStore: {
@@ -35,9 +37,13 @@ export default class MyApp extends App {
         },
       },
     };
+    if (ctx.query.error) {
+      basePageProps.error = ctx.query.error;
+    }
     let pageProps = {
       ...basePageProps,
     };
+    ctx.route = route;
     ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({
@@ -67,7 +73,7 @@ export default class MyApp extends App {
       <Container>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
-            <BodyLayout>
+            <BodyLayout header={!pageProps.error}>
               {
                 picture &&
                 <div>{picture}</div>

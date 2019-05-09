@@ -1,9 +1,7 @@
-import { withRouter, WithRouterProps } from 'next/router';
+import Router, { withRouter, WithRouterProps } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
-// import { Router } from '@pages/routes';
-import Router from 'next/router';
 import { ImageBox, ItemImage, ItemWapper } from './styles';
 
 interface IProps {

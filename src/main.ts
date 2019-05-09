@@ -59,12 +59,12 @@ async function bootstrap() {
     } else {
       if (err.response) {
         if (err.response.statusCode === 404) {
-          res.render('404', err.response);
+          res.render('404', { error: err.response });
         } else {
-          res.render('500', err.response);
+          res.render('500', { error: err.response });
         }
       } else {
-        res.render('500', err);
+        res.render('500', {  error: err });
       }
     }
   });

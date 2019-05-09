@@ -1,4 +1,4 @@
-import { computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 import { getTheme } from '@pages/common/utils/themes';
 
@@ -8,5 +8,9 @@ export class ThemeStore {
   @computed
   get themeData() {
     return getTheme(this.theme);
+  }
+
+  @action public setTheme(theme) {
+    this.theme = theme;
   }
 }

@@ -1,14 +1,10 @@
 import styled from 'styled-components';
 
+import { box } from '@pages/common/utils/themes/common';
+
 export const Wrapper = styled.section`
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  ${props => box(props.theme, '400px', true)}
   margin-top: 64px;
-  padding: 32px;
-  border-radius:4px;
-  background-color: #fff;
-  box-shadow: rgba(0,0,0,0.06) 0px 6px 20px;
 `;
 
 export const Title = styled.h2`

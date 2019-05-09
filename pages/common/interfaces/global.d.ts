@@ -5,11 +5,13 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { IMyMobxStore } from '@pages/stores/init';
 import { Request, Response } from 'express';
 import { UserEntity } from './user';
+import { IPathInfo } from '../utils';
 
 export interface CustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   mobxStore: IMyMobxStore;
   pathname: string;
   query: Q;
+  route: IPathInfo;
   asPath: string;
   req?: Request & { user?: UserEntity };
   res?: Response;

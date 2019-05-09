@@ -7,6 +7,8 @@ declare module 'styled-components' {
     background: string;
     // 一些主色调
     colors: {
+      shadowColor: string;
+      borderColor: string;
       blue: string;
       fontColor: string;
     }
@@ -15,6 +17,9 @@ declare module 'styled-components' {
       color: string;
       hover: string;
       active: string;
+    }
+    box: {
+      background: string;
     }
     // header的theme
     header: {

@@ -3,8 +3,12 @@ import { DefaultTheme } from 'styled-components';
 import { darken, lighten } from 'polished';
 
 const black = '#000';
+const shadowColor = 'rgba(0, 0, 0, 0.06)';
+const borderColor = '#eaeaea';
 
 const colors = {
+  shadowColor,
+  borderColor,
   blue: '#05f',
   fontColor: lighten(.1, black),
 };
@@ -13,9 +17,9 @@ const theme: DefaultTheme =  {
   colors,
   nprogress: colors.blue,
   header: {
+    shadowColor,
+    borderColor,
     background: '#fff',
-    shadowColor: 'rgba(0, 0, 0, 0.06)',
-    borderColor: 'rgb(238, 238, 238)',
     menu: {
       color: '#555',
     },
@@ -25,6 +29,9 @@ const theme: DefaultTheme =  {
     hover: lighten(.2, colors.blue),
     active: darken(.2, colors.blue),
     color: colors.blue,
+  },
+  box: {
+    background: '#fff',
   },
   background: '#f8fafc',
 };

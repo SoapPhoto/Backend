@@ -2,8 +2,8 @@ import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
 import * as React from 'react';
 
+import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
-import { parsePath } from '@pages/common/utils';
 import { request } from '@pages/common/utils/request';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { Request } from 'express';
@@ -18,8 +18,8 @@ interface IProps extends InitialProps {
 @inject('accountStore')
 @observer
 export default class Picture extends React.Component<IProps> {
-  public static async getInitialProps(_: NextContext<any, Request>) {
-    const { params } = parsePath(_.asPath, '/picture/:id([0-9]+)');
+  public static async getInitialProps(ctx: CustomNextContext) {
+    const { params } = ctx.route;
     const { data } = await request.get<PictureEntity>(`/api/picture/${params.id}`);
     if (!data) {
       return {

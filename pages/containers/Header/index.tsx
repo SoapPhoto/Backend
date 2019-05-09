@@ -14,32 +14,30 @@ interface IProps extends WithRouterProps {
 
 export const Header = withRouter(
   inject('themeStore')(
-    observer(
-      React.memo<IProps>(
-        ({ router, themeStore }) => {
-          const isLog = /^\/views\/auth\//.test(router!.pathname);
-          return (
-            <Wrapper login={isLog}>
-              <Logo>
-                <Link route="/">
-                  <a href="/">
-                    <Icon
-                      color={themeStore!.themeData.header.logo}
-                    />
-                  </a>
-                </Link>
-              </Logo>
-              <MenuWapper>
-                {/* <MenuItem>首页</MenuItem> */}
-              </MenuWapper>
-              {
-                !isLog &&
-                <Btns />
-              }
-            </Wrapper>
-          );
-        },
-      ),
+    observer<React.SFC<IProps>>(
+      ({ router, themeStore }) => {
+        const isLog = /^\/views\/auth\//.test(router!.pathname);
+        return (
+          <Wrapper login={isLog}>
+            <Logo>
+              <Link route="/">
+                <a href="/">
+                  <Icon
+                    color={themeStore!.themeData.header.logo}
+                  />
+                </a>
+              </Link>
+            </Logo>
+            <MenuWapper>
+              {/* <MenuItem>首页</MenuItem> */}
+            </MenuWapper>
+            {
+              !isLog &&
+              <Btns />
+            }
+          </Wrapper>
+        );
+      },
     ),
   ),
 );
