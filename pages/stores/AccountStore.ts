@@ -7,8 +7,13 @@ export class AccountStore {
   @computed get isLogin() {
     return !!this.userInfo;
   }
+  /**
+   * 登录的用户信息
+   *
+   * @type {UserEntity}
+   * @memberof AccountStore
+   */
   @observable public userInfo?: UserEntity;
-  @observable public test = 1;
 
   // 用来初始化
   @action
@@ -17,9 +22,6 @@ export class AccountStore {
       if (store.userInfo !== undefined) {
         this.setUserInfo(store.userInfo);
       }
-      if (store.test !== undefined) {
-        this.test = store.test;
-      }
     }
   }
 
@@ -27,7 +29,11 @@ export class AccountStore {
   public setUserInfo = (userInfo?: UserEntity) => {
     this.userInfo = userInfo;
   }
-
+  /**
+   * 登录
+   *
+   * @memberof AccountStore
+   */
   public login = async (username: string, password: string) => {
     const params = new URLSearchParams();
     params.append('username', username);

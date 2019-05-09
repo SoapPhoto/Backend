@@ -19,7 +19,7 @@ export class UserService {
     private userEntity: Repository<UserEntity>,
   ) {}
 
-  public async createUser(data: CreateUserDto) {
+  public async createUser(data: CreateUserDto): Promise<UserEntity> {
     const salt = await crypto.randomBytes(32).toString('hex');
     const hash = await crypto.pbkdf2Sync(data.password, salt, 20, 32, 'sha512').toString('hex');
     const user = await this.userEntity.save(
@@ -32,7 +32,8 @@ export class UserService {
     );
     return user;
   }
-  public async verifyUser(username: string, password: string) {
+
+  public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
     const user = await this.userEntity.createQueryBuilder('user')
       .where('user.username=:username', { username })
       .getOne();
@@ -45,7 +46,7 @@ export class UserService {
     return undefined;
   }
 
-  public async getUser(query: string, user: Maybe<UserEntity>) {
+  public async getUser(query: string, user: Maybe<UserEntity>): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user')
       .loadRelationCountAndMap(
         'user.pictureCount', 'user.pictures',
