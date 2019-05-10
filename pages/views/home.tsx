@@ -17,8 +17,8 @@ interface IProps extends InitialProps {
   accountStore: AccountStore;
 }
 
-@inject('accountStore')
-@observer
+// @inject('accountStore')
+// @observer
 export default class Index extends React.Component<IProps> {
   public static async getInitialProps(_: NextContext<any, { user: UserEntity }>) {
     const { data } = await request.get<IPictureListRequest>('/api/picture');
