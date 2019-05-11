@@ -2,6 +2,8 @@ import { DefaultTheme } from 'styled-components';
 
 import * as themeData from './theme';
 
-export const getTheme = (theme: string): DefaultTheme => {
+export type ThemeType = keyof typeof themeData;
+
+export const getTheme = (theme: ThemeType): DefaultTheme => {
   return themeData[theme];
 };

@@ -30,9 +30,11 @@ function parse(num: number) {
   return parseInt((num * 10).toString()) / 10;
 }
 
+type GetData = (image: File, cb: (this: any) => void) => void;
+
 export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   return new Promise((resolve) => {
-    window.EXIF.getData(image, async function () {
+    (window.EXIF.getData as GetData)(image, async function () {
       const allMetaData = window.EXIF.getAllTags(this);
       const info: IImageInfo = {
         exif: {},

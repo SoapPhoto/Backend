@@ -3,24 +3,41 @@
     "module": "commonjs",
     "jsx": "react",
     "declaration": true,
-    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2016",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "moduleResolution": "node",
-    // "noImplicitAny": true,
+    "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": false,
     "strictNullChecks": true,
+    "strict": true,
     "pretty": true,
     "types": ["react"],
+    "lib": ["es6", "es2015", "es2017", "dom"],
     "paths": {
       "@server/*": ["src/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "@typings/*": ["typings/*"]
     }
   },
-  "exclude": ["node_modules", ".next", "dist", "server"]
+  "include": [
+    "src/**/*",
+    "pages/**/*",
+    "typings/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "server",
+    "**/*.spec.ts"
+  ]
 }

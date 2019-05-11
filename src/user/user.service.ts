@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
-import { Maybe } from '@server/typing';
+import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';

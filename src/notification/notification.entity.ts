@@ -6,13 +6,13 @@ import { NotificationSubscribersUserEntity } from './subscribers-user/subscriber
 
 @Entity('notification')
 export class NotificationEntity extends BaseEntity {
-  @PrimaryGeneratedColumn() public id: number;
+  @PrimaryGeneratedColumn() public id!: number;
 
   /** 消息发布者 */
   @ManyToOne(type => UserEntity)
   @JoinColumn()
-  public publisher: UserEntity;
+  public publisher!: UserEntity;
 
   @OneToMany(type => NotificationSubscribersUserEntity, item => item.notification)
-  public subscribers: NotificationSubscribersUserEntity[];
+  public subscribers!: NotificationSubscribersUserEntity[];
 }

@@ -2,14 +2,13 @@ import { Type } from 'class-transformer';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
-import { Maybe } from '@server/typing';
 import { UserEntity } from '@server/user/user.entity';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')
 export class PictureEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public readonly id: number;
+  public readonly id!: number;
 
   /**
    * 七牛的key
@@ -18,7 +17,7 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Column()
-  public readonly key: string;
+  public readonly key!: string;
 
   /**
    * 七牛的hash
@@ -27,7 +26,7 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Column()
-  public readonly hash: string;
+  public readonly hash!: string;
 
   /**
    *
@@ -36,10 +35,10 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Column()
-  public readonly originalname: string;
+  public readonly originalname!: string;
 
   @Column()
-  public readonly mimetype: string;
+  public readonly mimetype!: string;
 
   /**
    * 图片大小
@@ -48,7 +47,7 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Column()
-  public readonly size: number;
+  public readonly size!: number;
 
   /**
    * 图片的用户
@@ -58,10 +57,10 @@ export class PictureEntity extends BaseEntity {
    */
   @Type(() => UserEntity)
   @ManyToOne(() => UserEntity, user => user.pictures)
-  public readonly user: UserEntity;
+  public readonly user!: UserEntity;
 
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
-  public readonly activitys: PictureUserActivityEntity[];
+  public readonly activitys!: PictureUserActivityEntity[];
 
   /**
    * 当前登录用户是否喜欢
@@ -79,7 +78,7 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Type(() => Number)
-  public likes: number;
+  public likes: number = 0;
 
   /**
    * 图片的主色调
@@ -88,7 +87,7 @@ export class PictureEntity extends BaseEntity {
    * @memberof PictureEntity
    */
   @Column()
-  public readonly color: string;
+  public readonly color!: string;
 
   /**
    * 图片的颜色是明还是暗
@@ -98,7 +97,7 @@ export class PictureEntity extends BaseEntity {
    */
   @Type(() => Boolean)
   @Column()
-  public readonly isDark: boolean;
+  public readonly isDark!: boolean;
 
   /**
    * 图片长度
@@ -108,7 +107,7 @@ export class PictureEntity extends BaseEntity {
    */
   @Type(() => Number)
   @Column()
-  public readonly height: number;
+  public readonly height!: number;
 
   /**
    * 图片宽度
@@ -118,7 +117,7 @@ export class PictureEntity extends BaseEntity {
    */
   @Type(() => Number)
   @Column()
-  public readonly width: number;
+  public readonly width!: number;
 
   /**
    * 设备品牌
@@ -153,7 +152,7 @@ export class PictureEntity extends BaseEntity {
   @Column('simple-json', {
     nullable: true,
   })
-  public readonly exif: {
+  public readonly exif?: {
     aperture?: number;
     exposureTime?: string;
     focalLength?: number;

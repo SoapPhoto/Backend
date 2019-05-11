@@ -5,11 +5,20 @@ import NoSSR from 'react-no-ssr';
 
 import { server } from '@pages/common/utils';
 
+interface IChildProps {
+  visible: boolean;
+  close(): void;
+}
+
+type ContentFuncType = (props: IChildProps) => React.ReactNode;
+
+type ContentType = React.ReactNode | ContentFuncType;
+
 export interface IPopperProps {
   visible: boolean;
-  content: React.ReactNode;
-  transition?: boolean;
-  getContainer?: Element;
+  content: ContentType;
+  transition ? : boolean;
+  getContainer ? : Element;
   onClose(): void;
 }
 
@@ -25,7 +34,7 @@ export function isIn(target: Node, parent: Element) {
 
 export class Popper extends React.Component<IPopperProps> {
 
-  public static getDerivedStateFromProps(nextProps) {
+  public static getDerivedStateFromProps(nextProps: IPopperProps) {
     if (nextProps.visible) {
       return {
         exited: false,
@@ -41,7 +50,7 @@ export class Popper extends React.Component<IPopperProps> {
     return null;
   }
   public popperRef = React.createRef<HTMLDivElement>();
-  public popper: PopperJS | null;
+  public popper?: PopperJS;
   public state = {
     exited: !this.props.visible,
   };
@@ -59,7 +68,7 @@ export class Popper extends React.Component<IPopperProps> {
     }
     const referenceNode = ReactDOM.findDOMNode(this);
     if (!isIn(e.target as Node, this.popperRef.current!) && !isIn(e.target as Node, referenceNode as Element)) {
-      this.props.onClose && this.props.onClose();
+      if (this.props.onClose) this.props.onClose();
     }
   }
   public handleOpen = () => {
@@ -79,12 +88,12 @@ export class Popper extends React.Component<IPopperProps> {
     }
 
     this.popper.destroy();
-    this.popper = null;
+    this.popper = undefined;
   }
   public renderContent = () => {
     const { visible, content, transition } = this.props;
     const { exited } = this.state;
-    const childProps = {
+    const childProps: IChildProps = {
       visible,
       close: () => {
         this.handleClose();

@@ -4,10 +4,10 @@ import { getManager, Repository } from 'typeorm';
 
 import { QiniuService } from '@server/common/qiniu/qiniu.service';
 import { validator } from '@server/common/utils/validator';
-import { Maybe } from '@server/typing';
 import { UserEntity } from '@server/user/user.entity';
+import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
-import moment = require('moment');
+import moment from 'moment';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';

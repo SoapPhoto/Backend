@@ -1,9 +1,12 @@
 import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
+import { TransitionStatus } from 'react-transition-group/Transition';
+import styled from 'styled-components';
 
 import { Link } from '@pages/routes';
 
+import { box } from '@pages/common/utils/themes/common';
 import { Popper } from '@pages/components/Popper';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
@@ -14,7 +17,15 @@ export interface IProps {
   themeStore?: ThemeStore;
 }
 
-const transitionStyles = {
+const Wrapper = styled.section`
+  ${props => box(props.theme, '100%', true)}
+  max-width: 180px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 32px 0px;
+`;
+
+const transitionStyles: {
+  [key in TransitionStatus]?: any
+} = {
   entering: { opacity: 1, transform: 'scale(1)' },
   entered: { opacity: 1, transform: 'scale(1)' },
   exiting: { opacity: 0, transform: 'scale(.98)' },
@@ -50,9 +61,9 @@ export const Btns: React.SFC<IProps> = inject(
                 timeout={200}
               >
                 {state => (
-                  <div style={{...transitionStyles[state], transition: '.2s all ease'}}>
+                  <Wrapper style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
                     <span>123123123213</span>
-                  </div>
+                  </Wrapper>
                 )}
               </Transition>
             )}
@@ -65,8 +76,8 @@ export const Btns: React.SFC<IProps> = inject(
       }
       return (
         <RightWarpper>
-          {content}
           <Href onClick={e => themeStore!.setTheme(themeStore!.theme === 'dark' ? 'base' : 'dark')}>theme</Href>
+          {content}
         </RightWarpper>
       );
     },

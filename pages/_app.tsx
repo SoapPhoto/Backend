@@ -27,13 +27,12 @@ Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {
     const { ctx, Component } = data;
-    let { req } = ctx as any;
+    const { req } = ctx;
     const route = parsePath(data.ctx.asPath);
-    if (!req) req = {};
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
-          userInfo: req.user,
+          userInfo: req ? req.user : undefined,
         },
       },
     };

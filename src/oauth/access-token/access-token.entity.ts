@@ -10,25 +10,25 @@ export class AccessTokenEntity extends BaseEntity {
     primary: true,
     nullable: false,
   })
-  public readonly accessToken: string;
+  public readonly accessToken!: string;
 
   @PrimaryColumn({
     primary: true,
     nullable: false,
   })
-  public readonly refreshToken: string;
+  public readonly refreshToken!: string;
 
   @Column()
-  public readonly accessTokenExpiresAt: Date;
+  public readonly accessTokenExpiresAt!: Date;
 
   @Column()
-  public readonly refreshTokenExpiresAt: Date;
+  public readonly refreshTokenExpiresAt!: Date;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  public readonly user: UserEntity;
+  public readonly user!: UserEntity;
 
   @ManyToOne(() => ClientEntity)
   @JoinColumn()
-  public readonly client: ClientEntity;
+  public readonly client!: ClientEntity;
 }

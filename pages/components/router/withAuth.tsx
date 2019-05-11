@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import { NextComponentClass } from 'next';
 import * as React from 'react';
 
@@ -44,8 +43,8 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
           break;
       }
       const componentProps =
-        (WrappedComponent as NextComponentClass).getInitialProps &&
-        (await (WrappedComponent as NextComponentClass).getInitialProps!(ctx));
+        ((WrappedComponent as any) as NextComponentClass).getInitialProps &&
+        (await ((WrappedComponent as any) as NextComponentClass).getInitialProps!(ctx));
 
       return { ...componentProps };
     }

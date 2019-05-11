@@ -13,7 +13,7 @@ export const PictureItem = withRouter<IProps>(({
   router,
 }) => {
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
-  const onClick = (e) => {
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     Router.push(`${router!.route}?picture=${detail.id}`, `/picture/${detail.id}`, {
       shallow: true,

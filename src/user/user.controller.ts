@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query, Req, Res } from '@nestjs/common';
 import { User } from '@server/common/decorator/user.decorator';
 import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
-import { Maybe } from '@server/typing';
+import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import { UserEntity } from './user.entity';

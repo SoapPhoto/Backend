@@ -1,7 +1,11 @@
-import * as routes from 'next-routes';
+import Routes, * as routes from 'next-routes';
 import { ComponentType } from 'react';
 
-export const routeObject = {
+interface IRouteObject {
+  [key: string]: string;
+}
+
+export const routeObject: IRouteObject = {
   'views/home': '/',
   'views/auth/login': '/login',
   'views/upload': '/upload',
@@ -9,20 +13,13 @@ export const routeObject = {
   'views/setting': '/setting/:type(user|basic)',
 };
 
-const router = (routes as any)();
+const router = (routes as any)() as Routes;
 
 for (const route in routeObject) {
   if (route) {
     router.add(route, routeObject[route]);
   }
 }
-
-// const route = (routes as any)()
-//   .add('views/home', '/')
-//   .add('views/auth/login', '/login')
-//   .add('views/upload', '/upload')
-//   .add('views/picture', '/picture/:id([0-9]+)')
-//   .add('views/setting', '/setting/:type(user)');
 
 export const Link = router.Link as ComponentType<routes.LinkProps>;
 

@@ -19,8 +19,8 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
 import { QiniuService } from '@server/common/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
-import { Maybe } from '@server/typing';
 import { UserEntity } from '@server/user/user.entity';
+import { Maybe } from '@typings/index';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 

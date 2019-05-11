@@ -9,16 +9,16 @@ import { NotificationEntity } from '../notification.entity';
 @Index(['user'])
 @Index(['notification'])
 export class NotificationSubscribersUserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn() public id: number;
+  @PrimaryGeneratedColumn() public id!: number;
   /** 是否已读 */
   @Column({ default: false })
-  public read: boolean;
+  public read: boolean = false;
 
   @ManyToOne(type => NotificationEntity)
   @JoinColumn()
-  public notification: NotificationEntity;
+  public notification!: NotificationEntity;
 
   @ManyToOne(type => UserEntity)
   @JoinColumn()
-  public user: UserEntity;
+  public user!: UserEntity;
 }

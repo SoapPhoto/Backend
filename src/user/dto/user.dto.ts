@@ -16,7 +16,7 @@ export class CreateUserDto {
    * @memberof CreateUserDto
    */
   @IsEmail()
-  public readonly email: string;
+  public readonly email!: string;
   /**
    * 用户名
    *
@@ -26,7 +26,7 @@ export class CreateUserDto {
   @Length(1, 15)
   @IsString()
   @IsUserName()
-  public readonly username: string;
+  public readonly username!: string;
 
   /**
    * 密码
@@ -36,5 +36,5 @@ export class CreateUserDto {
    */
   @Length(8, 30)
   @IsString()
-  public readonly password: string;
+  public readonly password!: string;
 }

@@ -10,7 +10,7 @@ import { PictureUserActivityEntity } from '@server/picture/user-activity/user-ac
 @Entity('user')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public readonly id: number;
+  public readonly id!: number;
   /**
    * 用户名
    *
@@ -22,7 +22,7 @@ export class UserEntity extends BaseEntity {
     unique: true,
     length: 15,
   })
-  public readonly username: string;
+  public readonly username!: string;
 
   /**
    * 邮箱
@@ -34,7 +34,7 @@ export class UserEntity extends BaseEntity {
   @Column({
     unique: true,
   })
-  public readonly email: string;
+  public readonly email!: string;
 
   /**
    * 密码验证
@@ -44,7 +44,7 @@ export class UserEntity extends BaseEntity {
    */
   @Exclude()
   @Column()
-  public hash: string;
+  public hash!: string;
 
   /**
    * 密码盐
@@ -54,7 +54,7 @@ export class UserEntity extends BaseEntity {
    */
   @Exclude()
   @Column()
-  public readonly salt: string;
+  public readonly salt!: string;
 
   /**
    * 用户类型
@@ -66,7 +66,7 @@ export class UserEntity extends BaseEntity {
   @Column({
     default: 'user',
   })
-  public readonly role: string;
+  public readonly role: string = 'user';
 
   /**
    * 用户的picture
@@ -75,7 +75,7 @@ export class UserEntity extends BaseEntity {
    * @memberof UserEntity
    */
   @OneToMany(type => PictureEntity, photo => photo.user)
-  public readonly pictures: PictureEntity[];
+  public readonly pictures!: PictureEntity[];
 
   /**
    * 用户的picture操作
@@ -84,7 +84,7 @@ export class UserEntity extends BaseEntity {
    * @memberof UserEntity
    */
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
-  public readonly pictureActivitys: PictureUserActivityEntity[];
+  public readonly pictureActivitys!: PictureUserActivityEntity[];
 
   /**
    * 喜欢的picture数量

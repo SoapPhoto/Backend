@@ -37,7 +37,7 @@ export default class MyDocument extends Document {
             content="initial-scale=1.2, width=device-width"
             key="viewport"
           />
-          <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC" rel="stylesheet"/>
+          <link href="//fonts.loli.net/css?family=Noto+Sans+SC" rel="stylesheet"/>
         </Head>
         <body id="body">
           <Main />

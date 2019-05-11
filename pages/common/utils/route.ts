@@ -1,7 +1,7 @@
 import { routeObject } from '@pages/routes';
 import { pick } from 'lodash';
 import * as pathToRegexp from 'path-to-regexp';
-import * as parse from 'url-parse';
+import parse from 'url-parse';
 
 interface IKey {
   name: string;
@@ -42,4 +42,5 @@ function setUrlPath(url: string) {
       }
     }
   }
+  return undefined;
 }
