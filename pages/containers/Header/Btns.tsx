@@ -2,27 +2,21 @@ import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
-import styled from 'styled-components';
 
 import { Link } from '@pages/routes';
 
 import { connect } from '@pages/common/utils/store';
-import { box } from '@pages/common/utils/themes/common';
+import { Avatar } from '@pages/components';
 import { Popper } from '@pages/components/Popper';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
-import { Href, RightWarpper } from './styles';
+import { Menu, MenuItem, MenuItemLink } from './Menu';
+import { Href, MenuProfile, RightWarpper, UserName } from './styles';
 
 export interface IProps {
   accountStore?: AccountStore;
   themeStore?: ThemeStore;
 }
-
-const Wrapper = styled.section`
-  ${props => box(props.theme, '100%', true)}
-  max-width: 180px;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 32px 0px;
-`;
 
 const transitionStyles: {
   [key in TransitionStatus]?: any
@@ -37,6 +31,7 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
   ({ accountStore, themeStore }) => {
     const [data, setData] = React.useState(false);
     const { isLogin, userInfo } = accountStore!;
+    const closeMenu = () => setData(false);
     let content = (
       <Link route="/login">
         <Href href="/login">登录</Href>
@@ -56,16 +51,37 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
               timeout={200}
             >
               {state => (
-                <Wrapper style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
-                  <span>123123123213</span>
-                </Wrapper>
+                <Menu style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
+                  <MenuItem>
+                    <MenuProfile>
+                      <Avatar
+                        size={48}
+                        src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+                      />
+                      <UserName>
+                        <span>{userInfo.username}</span>
+                      </UserName>
+                    </MenuProfile>
+                  </MenuItem>
+                  <MenuItem>
+                    <MenuItemLink onClick={closeMenu} route="/setting/user">
+                      设置
+                    </MenuItemLink>
+                  </MenuItem>
+                  <MenuItem>
+                    <MenuItemLink onClick={closeMenu} route="/setting/user">
+                      退出
+                    </MenuItemLink>
+                  </MenuItem>
+                </Menu>
               )}
             </Transition>
           )}
         >
-          {/* <Link route="/setting/basic"> */}
-            <Href onClick={() => setData(true)}>{userInfo.username}</Href>
-          {/* </Link> */}
+          <Avatar
+            src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+            onClick={() => setData(true)}
+          />
         </Popper>
       );
     }

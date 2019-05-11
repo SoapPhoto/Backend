@@ -27,16 +27,22 @@ export const MenuWapper = styled.nav`
 
 `;
 
-export const MenuItem = styled.nav`
-  margin: 0 16px;
-  font-size: 14px;
-  color: ${_ => _.theme.header.menu.color};
-`;
-
 export const RightWarpper = styled.div`
   margin-right: 22px;
 `;
 
 export const Href = styled.a`
   ${_ => href(_.theme.href.color)}
+`;
+
+export const MenuProfile = styled.div`
+  display: flex;
+`;
+
+export const UserName = styled.div`
+  display: flex;
+  font-size: 16px;
+  margin-left: 12px;
+  flex-direction: column;
+  justify-content: center;
 `;
