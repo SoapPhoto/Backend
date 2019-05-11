@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react';
 import { withRouter, WithRouterProps } from 'next/router';
 import * as React from 'react';
 
+import { connect } from '@pages/common/utils/store';
 import { Link } from '@pages/routes';
 import { ThemeStore } from '@pages/stores/ThemeStore';
 import { Btns } from './Btns';
@@ -13,31 +14,29 @@ interface IProps extends WithRouterProps {
 }
 
 export const Header = withRouter(
-  inject('themeStore')(
-    observer<React.SFC<IProps>>(
-      ({ router, themeStore }) => {
-        const isLog = /^\/views\/auth\//.test(router!.pathname);
-        return (
-          <Wrapper login={isLog}>
-            <Logo>
-              <Link route="/">
-                <a href="/">
-                  <Icon
-                    color={themeStore!.themeData.header.logo}
-                  />
-                </a>
-              </Link>
-            </Logo>
-            <MenuWapper>
-              {/* <MenuItem>首页</MenuItem> */}
-            </MenuWapper>
-            {
-              !isLog &&
-              <Btns />
-            }
-          </Wrapper>
-        );
-      },
-    ),
+  connect<React.SFC<IProps>>('themeStore')(
+    ({ router, themeStore }) => {
+      const isLog = /^\/views\/auth\//.test(router!.pathname);
+      return (
+        <Wrapper login={isLog}>
+          <Logo>
+            <Link route="/">
+              <a href="/">
+                <Icon
+                  color={themeStore!.themeData.header.logo}
+                />
+              </a>
+            </Link>
+          </Logo>
+          <MenuWapper>
+            {/* <MenuItem>首页</MenuItem> */}
+          </MenuWapper>
+          {
+            !isLog &&
+            <Btns />
+          }
+        </Wrapper>
+      );
+    },
   ),
 );

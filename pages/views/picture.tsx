@@ -6,7 +6,6 @@ import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
 import { AccountStore } from '@pages/stores/AccountStore';
-import { Request } from 'express';
 
 interface InitialProps extends NextContext {
   screenData: PictureEntity;
