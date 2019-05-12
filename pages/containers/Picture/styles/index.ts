@@ -6,6 +6,7 @@ export const Wapper = styled.section`
   width: 100%;
   max-width: 1800px;
   margin: ${padding}px auto;
+  padding: 0 24px;
 `;
 
 export const Col = styled.div<{col: number}>`

@@ -12,6 +12,12 @@ export class ViewsController {
     return {};
   }
 
+  @Get('user/:username')
+  @Render('user')
+  public async user() {
+    return {};
+  }
+
   @Get('picture/:id([0-9]+)')
   public async pictureDetail(
     @Res() res: any,

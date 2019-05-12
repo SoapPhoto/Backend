@@ -28,7 +28,7 @@ const Item = styled.ul`
 `;
 
 export const Href = styled.a<{active?: boolean}>`
-  ${_ => href(_.active ? _.theme.href.color : darken(.6, _.theme.colors.fontColor))}
+  ${_ => href(_.active ? _.theme.link.color : darken(.6, _.theme.colors.fontColor))}
   display: block;
 `;
 

@@ -15,7 +15,7 @@ declare module 'styled-components' {
       fontColor: string;
     }
     // 链接默认theme
-    href: {
+    link: {
       color: string;
       hover: string;
       active: string;
@@ -32,6 +32,10 @@ declare module 'styled-components' {
       logo: string;
       menu: {
         color: string;
+        hover: {
+          color: string;
+          background: string;
+        }
       }
     }
   }

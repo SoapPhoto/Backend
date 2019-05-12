@@ -6,6 +6,7 @@ const color = '#fff';
 const shadowColor = 'transparent';
 const borderColor = '#1e1e1e';
 const background = '#121212';
+const hoverColor = '#666';
 
 const colors = {
   shadowColor,
@@ -23,14 +24,18 @@ const theme: DefaultTheme =  {
     shadowColor: 'transparent',
     borderColor: 'rgb(51, 51, 51)',
     menu: {
-      color: '#555',
+      color: hoverColor,
+      hover: {
+        color: lighten(.5, hoverColor),
+        background: '#111',
+      },
     },
     logo: '#e8e8e8',
   },
-  href: {
-    hover: lighten(.2, '#fff'),
-    active: darken(.2, '#fff'),
-    color: '#fff',
+  link: {
+    hover: lighten(.2, hoverColor),
+    active: lighten(.2, hoverColor),
+    color: hoverColor,
   },
   box: {
     background: '#1e1e1e',

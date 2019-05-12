@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { box } from '@pages/common/utils/themes/common';
 import { Link } from '@pages/routes';
+import { darken } from 'polished';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
@@ -27,7 +28,7 @@ const ItemWrapper = styled.div`
     padding-bottom: 16px;
   }
   &:not(:first-child) {
-    border-top: 1px solid ${props => props.theme.colors.borderColor};
+    border-top: 1px solid ${props => props.theme.box.borderColor};
     padding-top: 16px;
     padding-bottom: 16px;
   }
@@ -36,10 +37,16 @@ const ItemWrapper = styled.div`
 const MenuLink = styled.a`
   display: flex;
   align-items: center;
+  color: ${props => props.theme.header.menu.color};
   text-decoration: none;
   transition: color 0.2s ease 0s;
   margin: -8px -20px;
   padding: 8px 20px;
+  transition: .2s color ease, .2s background ease;
+  &:hover {
+    color: ${props => props.theme.header.menu.hover.color};
+    background: ${props => props.theme.header.menu.hover.background};
+  }
 `;
 
 export const Menu: React.SFC<IProps> = ({

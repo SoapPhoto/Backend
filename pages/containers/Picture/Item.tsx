@@ -20,15 +20,17 @@ export const PictureItem = withRouter<IProps>(({
     });
   };
   return (
-    <a
-      href={`/picture/${detail.id}`}
-      onClick={onClick}
-    >
-      <ItemWapper>
-        <ImageBox height={height} background={detail.color}>
-          <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
-        </ImageBox>
-      </ItemWapper>
-    </a>
+    <span>
+      <a
+        href={`/picture/${detail.id}`}
+        onClick={onClick}
+      >
+        <ItemWapper>
+          <ImageBox height={height} background={detail.color}>
+            <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
+          </ImageBox>
+        </ItemWapper>
+      </a>
+    </span>
   );
 });

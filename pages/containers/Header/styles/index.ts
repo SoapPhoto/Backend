@@ -28,11 +28,15 @@ export const MenuWapper = styled.nav`
 `;
 
 export const RightWarpper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   margin-right: 22px;
 `;
 
 export const Href = styled.a`
-  ${_ => href(_.theme.href.color)}
+  ${_ => href(_.theme.link.color)}
 `;
 
 export const MenuProfile = styled.div`

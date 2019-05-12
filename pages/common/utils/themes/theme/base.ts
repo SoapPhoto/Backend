@@ -21,11 +21,15 @@ const theme: DefaultTheme =  {
     borderColor,
     background: '#fff',
     menu: {
-      color: '#555',
+      color: '#666',
+      hover: {
+        color: darken(.3, '#666'),
+        background: '#fafafa',
+      },
     },
     logo: colors.blue,
   },
-  href: {
+  link: {
     hover: lighten(.2, colors.blue),
     active: darken(.2, colors.blue),
     color: colors.blue,

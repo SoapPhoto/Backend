@@ -53,15 +53,17 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
               {state => (
                 <Menu style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
                   <MenuItem>
-                    <MenuProfile>
-                      <Avatar
-                        size={48}
-                        src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
-                      />
-                      <UserName>
-                        <span>{userInfo.username}</span>
-                      </UserName>
-                    </MenuProfile>
+                    <MenuItemLink onClick={closeMenu} route={`/user/${userInfo.username}`}>
+                      <MenuProfile>
+                        <Avatar
+                          size={48}
+                          src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+                        />
+                        <UserName>
+                          <span>{userInfo.username}</span>
+                        </UserName>
+                      </MenuProfile>
+                    </MenuItemLink>
                   </MenuItem>
                   <MenuItem>
                     <MenuItemLink onClick={closeMenu} route="/setting/user">
