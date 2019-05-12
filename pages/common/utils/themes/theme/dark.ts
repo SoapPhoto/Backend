@@ -33,9 +33,9 @@ const theme: DefaultTheme =  {
     logo: '#e8e8e8',
   },
   link: {
-    hover: lighten(.2, hoverColor),
-    active: lighten(.2, hoverColor),
-    color: hoverColor,
+    hover: lighten(.2, colors.fontColor),
+    active: darken(.2, colors.fontColor),
+    color: colors.fontColor,
   },
   box: {
     background: '#1e1e1e',

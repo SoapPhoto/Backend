@@ -8,11 +8,19 @@ interface IProps {
   detail: PictureEntity;
 }
 
+export const PictureImage: React.SFC<{detail: PictureEntity}> = ({ detail }) => {
+  const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
+  return (
+  <ImageBox height={height} background={detail.color}>
+    <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
+  </ImageBox>
+  );
+};
+
 export const PictureItem = withRouter<IProps>(({
   detail,
   router,
 }) => {
-  const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     Router.push(`${router!.route}?picture=${detail.id}`, `/picture/${detail.id}`, {
@@ -26,9 +34,7 @@ export const PictureItem = withRouter<IProps>(({
         onClick={onClick}
       >
         <ItemWapper>
-          <ImageBox height={height} background={detail.color}>
-            <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
-          </ImageBox>
+          <PictureImage detail={detail} />
         </ItemWapper>
       </a>
     </span>

@@ -32,6 +32,7 @@ export const ItemWapper = styled.div`
 `;
 
 export const ImageBox = styled.div<{height: number; background: string}>`
+  position: relative;
   display: block;
   padding-bottom: ${props => props.height}%;
   background-color: ${props => props.background};

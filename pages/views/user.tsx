@@ -1,10 +1,10 @@
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
-import { observer } from 'mobx-react';
-import { computed } from 'mobx';
 
 interface IProps {
   username: string;

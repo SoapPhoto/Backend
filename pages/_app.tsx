@@ -9,6 +9,7 @@ import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
 import { Router } from './routes';
 import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
+import { PictureModal } from './components';
 
 interface IPageProps {
   initialStore: IInitialStore;
@@ -75,7 +76,7 @@ export default class MyApp extends App {
             <BodyLayout header={!pageProps.error}>
               {
                 picture &&
-                <div>{picture}</div>
+                <PictureModal pictureId={picture} />
               }
               <Component
                 {...pageProps}
