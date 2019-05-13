@@ -2,6 +2,7 @@ import Router, { withRouter, WithRouterProps } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import { store } from '@pages/stores/init';
 import { ImageBox, ItemImage, ItemWapper } from './styles';
 
 interface IProps {
@@ -23,8 +24,14 @@ export const PictureItem = withRouter<IProps>(({
 }) => {
   const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
+    store.appStore.setRoute({
+      as: `${router!.route}?picture=${detail.id}`,
+      href: `/picture/${detail.id}`,
+      action: 'PUSH',
+    });
     Router.push(`${router!.route}?picture=${detail.id}`, `/picture/${detail.id}`, {
       shallow: true,
+      action: 'PUSH',
     });
   };
   return (

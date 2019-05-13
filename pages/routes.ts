@@ -1,6 +1,8 @@
 import Routes, * as routes from 'next-routes';
 import { ComponentType } from 'react';
 
+import { Link as BaseLink } from '@pages/components';
+
 interface IRouteObject {
   [key: string]: string;
 }
@@ -14,7 +16,9 @@ export const routeObject: IRouteObject = {
   'views/user': '/user/:username',
 };
 
-const router = (routes as any)() as Routes;
+const router = (routes as any)({
+  Link: BaseLink,
+}) as Routes;
 
 for (const route in routeObject) {
   if (route) {

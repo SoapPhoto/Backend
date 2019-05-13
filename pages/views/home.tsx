@@ -2,12 +2,11 @@ import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
 import * as React from 'react';
 
+import { CustomNextContext } from '@pages/common/interfaces/global';
 import { IPictureListRequest } from '@pages/common/interfaces/picture';
-import { UserEntity } from '@pages/common/interfaces/user';
-import { request } from '@pages/common/utils/request';
 import { PictureList } from '@pages/containers/Picture/List';
 import { AccountStore } from '@pages/stores/AccountStore';
-import { IInitialStore } from '@pages/stores/init';
+import { IMyMobxStore } from '@pages/stores/init';
 
 interface InitialProps extends NextContext {
   screenData: IPictureListRequest;
@@ -15,22 +14,26 @@ interface InitialProps extends NextContext {
 
 interface IProps extends InitialProps {
   accountStore: AccountStore;
+  initialStore: IMyMobxStore;
 }
 
-// @inject('accountStore')
-// @observer
 export default class Index extends React.Component<IProps> {
-  public static async getInitialProps(_: NextContext<any, { user: UserEntity }>) {
-    const { data } = await request.get<IPictureListRequest>('/api/picture');
-    return {
-      screenData: data,
-    };
+  public static async getInitialProps(_: CustomNextContext) {
+    if (
+      _.mobxStore.appStore.location &&
+      _.mobxStore.appStore.location.action === 'POP' &&
+      _.mobxStore.homeStore.init
+    ) {
+      return {};
+    }
+    await _.mobxStore.homeStore.getList();
+    return {};
   }
   public render() {
-    const { screenData } = this.props;
+    const { list } = this.props.initialStore.homeStore;
     return (
       <div>
-        <PictureList data={screenData} />
+        <PictureList data={list} />
       </div>
     );
   }

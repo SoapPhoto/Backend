@@ -1,21 +1,21 @@
 import * as React from 'react';
 
-import { IPictureListRequest } from '@pages/common/interfaces/picture';
+import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
 import { PictureItem } from './Item';
 import { Col, ColItem, Wapper } from './styles';
 
 interface IProps {
-  data: IPictureListRequest;
+  data: PictureEntity[];
 }
 
 export const PictureList: React.SFC<IProps> = ({
   data,
 }) => {
-  const [list, setList] = React.useState(listParse(data.data, 4));
+  const [list, setList] = React.useState(listParse(data, 4));
   React.useEffect(
     () => {
-      setList(listParse(data.data, 4));
+      setList(listParse(data, 4));
     },
     [data],
   );

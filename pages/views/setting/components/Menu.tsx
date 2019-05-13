@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { href } from '@pages/common/utils/themes/common';
 import { Link } from '@pages/routes';
-import { darken, lighten } from 'polished';
+import { darken } from 'polished';
 import { Content } from '../style';
 
 interface IData {

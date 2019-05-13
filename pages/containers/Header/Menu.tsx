@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { box } from '@pages/common/utils/themes/common';
 import { Link } from '@pages/routes';
-import { darken } from 'polished';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 

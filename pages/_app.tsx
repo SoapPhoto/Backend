@@ -5,11 +5,11 @@ import * as React from 'react';
 
 import { parsePath, server } from '@pages/common/utils';
 import { CustomNextAppContext } from './common/interfaces/global';
+import { PictureModal } from './components';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
 import { Router } from './routes';
 import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
-import { PictureModal } from './components';
 
 interface IPageProps {
   initialStore: IInitialStore;
@@ -65,6 +65,17 @@ export default class MyApp extends App {
   constructor(props: any) {
     super(props);
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
+  }
+  public componentDidMount() {
+    Router.beforePopState(({ url, as, options }) => {
+      store.appStore.setRoute({
+        as,
+        options,
+        href: url,
+        action: 'POP',
+      });
+      return true;
+    });
   }
   public render() {
     const { Component, pageProps, router } = this.props;

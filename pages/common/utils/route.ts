@@ -1,5 +1,7 @@
-import { routeObject } from '@pages/routes';
+import { routeObject, Router } from '@pages/routes';
 import { pick } from 'lodash';
+import { RouteParams } from 'next-routes';
+import { EventChangeOptions } from 'next/router';
 import * as pathToRegexp from 'path-to-regexp';
 import parse from 'url-parse';
 
@@ -44,3 +46,28 @@ function setUrlPath(url: string) {
   }
   return undefined;
 }
+
+class Route {
+  public push(
+    route: string,
+    params?: RouteParams,
+    options?: EventChangeOptions,
+  ) {
+    return Router.pushRoute(route, params, { ...options || {}, action: 'PUSH' });
+  }
+  public back() {
+    Router.back();
+  }
+  public replace(
+    route: string,
+    params?: RouteParams,
+    options?: EventChangeOptions,
+  ) {
+    return Router.replaceRoute(route, params, { ...options || {}, action: 'REPLACE' });
+  }
+  public reload(route: string) {
+    return Router.reload(route);
+  }
+}
+
+export default new Route;

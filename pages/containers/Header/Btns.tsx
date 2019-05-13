@@ -3,11 +3,10 @@ import * as React from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 
-import { Link } from '@pages/routes';
-
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Popper } from '@pages/components/Popper';
+import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
