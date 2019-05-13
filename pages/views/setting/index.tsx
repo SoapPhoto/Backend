@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { parsePath } from '@pages/common/utils';
+import { withAuth } from '@pages/components/router/withAuth';
 import { Menu } from './components/Menu';
 import { Content, Warpper } from './style';
 
@@ -56,4 +57,6 @@ class Setting extends React.Component<IProps> {
   }
 }
 
-export default withRouter(Setting);
+export default withRouter(
+  withAuth<IProps>('user')(Setting),
+);

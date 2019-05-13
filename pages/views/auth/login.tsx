@@ -48,9 +48,9 @@ const Login: React.SFC<IProps> = ({ accountStore, router }) => {
   );
 };
 
-export default inject('accountStore')(
-  observer(
-    withAuth('guest')(
+export default withAuth<IProps>('guest')(
+  inject('accountStore')(
+    observer(
       withRouter(
         Login,
       ),

@@ -9,7 +9,7 @@ import { store } from '@pages/stores/init';
 
 type component<P> = React.ComponentClass<P> | React.SFC<P>;
 
-type Props = object & {accountStore: AccountStore};
+type Props = object & {accountStore?: AccountStore};
 
 const getDisplayName = <P extends Props>(Component: component<P>) =>
   Component.displayName || Component.name || 'Component';
