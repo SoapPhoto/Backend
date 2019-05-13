@@ -1,12 +1,29 @@
 import * as React from 'react';
 import { StyleInput } from './styles';
 
-type Component = React.SFC<React.InputHTMLAttributes<HTMLInputElement>>;
+export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  onPressEnter?(e: React.KeyboardEvent<HTMLInputElement>): void;
+}
 
-export const Input: Component = (props) => {
+type Component = React.SFC<IInputProps>;
+
+export const Input: Component = ({
+  onPressEnter,
+  onKeyDown,
+  ...restProps
+}) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 13 && onPressEnter) {
+      onPressEnter(e);
+    }
+    if (onKeyDown) {
+      onKeyDown(e);
+    }
+  };
   return (
     <StyleInput
-      {...props}
+      onKeyDown={handleKeyDown}
+      {...restProps}
     />
   );
 };

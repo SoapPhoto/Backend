@@ -1,6 +1,9 @@
 {
-  "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-config-airbnb"],
+  "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-config-airbnb", "tslint-react"],
   "rules": {
+    "jsx-no-lambda": [false],
+    "jsx-no-multiline-js": [false],
+    "jsx-boolean-value": ["never"],
     "max-classes-per-file": [true, 4],
     "variable-name": [true, "allow-leading-underscore", "allow-pascal-case", "allow-snake-case"],
     "object-literal-sort-keys": false,

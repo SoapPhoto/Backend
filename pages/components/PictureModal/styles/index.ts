@@ -1,6 +1,8 @@
 import { box } from '@pages/common/utils/themes/common';
 import styled from 'styled-components';
 
+const padding = 48;
+
 export const Warpper = styled.div`
   position: fixed;
   top: 0;
@@ -25,13 +27,18 @@ export const Mask = styled.div`
 export const Content = styled.div`
   width: 100%;
   max-width: 1024px;
-  padding-top: 48px 0;
+  padding: ${padding}px 0;
   margin: 0 auto;
 `;
 
-export const Box  = styled.div`
+export const Box = styled.div`
   ${props => box(props.theme, '100%', true)}
+  position: relative;
+  width: 100%;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 32px 0px;
   padding: 0;
   border: none;
+`;
+
+export const ImgBox = styled.div`
 `;

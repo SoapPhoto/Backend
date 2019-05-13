@@ -20,7 +20,7 @@ export const Header = withRouter(
         <Wrapper login={isLog}>
           <Logo>
             <Link route="/">
-              <a href="/" onClick={() => console.log(4214124)}>
+              <a href="/">
                 <Icon
                   color={themeStore!.themeData.header.logo}
                 />

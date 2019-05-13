@@ -8,7 +8,7 @@ import { PictureImage } from '@pages/containers/Picture/Item';
 import { Router } from '@pages/routes';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Box, Content, Mask, Warpper } from './styles';
+import { Box, Content, ImgBox, Mask, Warpper } from './styles';
 
 interface IProps {
   pictureId: string;
@@ -49,20 +49,26 @@ export class PictureModal extends React.Component<IProps> {
   }
   public render() {
     return ReactDOM.createPortal(
-      <div>
-        <Mask />
-        <Warpper ref={this.wrapperRef as any} onClick={this.handleClick}>
-          {
-            this.detail &&
-            <Content>
-              <Box style={{ width: '100%', position: 'relative' }}>
-                <span>{this.detail.user.username}</span>
-                <PictureImage detail={this.detail} />
-              </Box>
-            </Content>
-          }
-        </Warpper>
-      </div>,
+      (
+        <div>
+          <Mask />
+          <Warpper ref={this.wrapperRef as any} onClick={this.handleClick}>
+            {
+              this.detail &&
+              <Content>
+                <Box>
+                  <ImgBox>
+                    <div>
+                      <PictureImage detail={this.detail} />
+                    </div>
+                  </ImgBox>
+                  {/* <span>{this.detail.user.username}</span> */}
+                </Box>
+              </Content>
+            }
+          </Warpper>
+        </div>
+      ),
       document.querySelector('body')!,
     );
   }

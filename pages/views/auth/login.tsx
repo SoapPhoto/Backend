@@ -41,6 +41,7 @@ const Login: React.SFC<IProps> = ({ accountStore, router }) => {
         value={password}
         placeholder="密码"
         style={{ marginTop: '18px' }}
+        onPressEnter={handleOk}
         onChange={e => setPassword(e.target.value)}
       />
       <Button style={{ marginTop: '24px' }} onClick={handleOk}>登录</Button>
