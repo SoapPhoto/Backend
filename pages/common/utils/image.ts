@@ -1,3 +1,4 @@
+import { extname } from 'path';
 import { changeToDu } from './gps';
 
 declare global {
@@ -103,4 +104,13 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
       resolve([info, imgSrc]);
     });
   });
+}
+
+export function isImage(fileName: string) {
+  const imgType = [
+    '.jpg',
+    '.png',
+  ];
+  const ext = extname(fileName);
+  return imgType.indexOf(ext) >= 0;
 }

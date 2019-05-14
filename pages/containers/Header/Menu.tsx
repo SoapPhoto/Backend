@@ -34,6 +34,7 @@ const ItemWrapper = styled.div`
 `;
 
 const MenuLink = styled.a`
+  position: relative;
   display: flex;
   align-items: center;
   color: ${props => props.theme.header.menu.color};
@@ -45,21 +46,34 @@ const MenuLink = styled.a`
   &:hover {
     color: ${props => props.theme.header.menu.hover.color};
     background: ${props => props.theme.header.menu.hover.background};
+    & svg {
+      stroke: ${props => props.theme.header.menu.hover.color};
+    }
+  }
+  & svg {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 20px;
+    height: 37px;
+    stroke: ${props => props.theme.header.menu.color};
+    transition: .2s stroke ease, .2s background ease;
   }
 `;
 
 export const MenuArrow = styled.span`
   position: absolute;
   z-index: 1;
-  width: 14px;
-  height: 14px;
+  margin-left: 1px;
+  width: 12px;
+  height: 12px;
   transform: rotate(45deg);
   background-color: ${props => props.theme.box.background};
   border: 1px solid ${props => props.theme.box.borderColor};
-  margin-top: -7px;
+  margin-top: -6px;
   border-right-color: transparent;
   border-bottom-color: transparent;
-`
+`;
 
 export const Menu: React.SFC<IProps> = ({
   children,

@@ -6,10 +6,11 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Popper } from '@pages/components/Popper';
+import { Upload } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
-import { Menu, MenuItem, MenuItemLink, MenuArrow } from './Menu';
+import { Menu, MenuArrow, MenuItem, MenuItemLink } from './Menu';
 import { Href, MenuProfile, RightWarpper, UserName } from './styles';
 
 export interface IProps {
@@ -45,15 +46,15 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
           modifiers={{
             offset: {
               enabled: true,
-              offset: '0, 10'
+              offset: '0, 10',
             },
             preventOverflow: {
               boundariesElement: 'scrollParent',
             },
             arrow: {
               enabled: true,
-              element: arrowRef
-            }
+              element: arrowRef,
+            },
           }}
           visible={data}
           onClose={() => setData(false)}
@@ -79,6 +80,12 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
                             <span>{userInfo.username}</span>
                           </UserName>
                         </MenuProfile>
+                      </MenuItemLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink onClick={closeMenu} route="/upload">
+                        上传图片
+                        <Upload size={18} />
                       </MenuItemLink>
                     </MenuItem>
                     <MenuItem>
