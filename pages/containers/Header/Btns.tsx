@@ -9,7 +9,7 @@ import { Popper } from '@pages/components/Popper';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
-import { Menu, MenuItem, MenuItemLink } from './Menu';
+import { Menu, MenuItem, MenuItemLink, MenuArrow } from './Menu';
 import { Href, MenuProfile, RightWarpper, UserName } from './styles';
 
 export interface IProps {
@@ -29,6 +29,7 @@ const transitionStyles: {
 export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
   ({ accountStore, themeStore }) => {
     const [data, setData] = React.useState(false);
+    const [arrowRef, setArrowRef] = React.useState();
     const { isLogin, userInfo } = accountStore!;
     const closeMenu = () => setData(false);
     let content = (
@@ -40,6 +41,20 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
       content = (
         <Popper
           transition
+          placement="bottom-start"
+          modifiers={{
+            offset: {
+              enabled: true,
+              offset: '0, 10'
+            },
+            preventOverflow: {
+              boundariesElement: 'scrollParent',
+            },
+            arrow: {
+              enabled: true,
+              element: arrowRef
+            }
+          }}
           visible={data}
           onClose={() => setData(false)}
           content={({ visible, close }) => (
@@ -50,39 +65,42 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
               timeout={200}
             >
               {state => (
-                <Menu style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
-                  <MenuItem>
-                    <MenuItemLink onClick={closeMenu} route={`/user/${userInfo.username}`}>
-                      <MenuProfile>
-                        <Avatar
-                          size={48}
-                          src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
-                        />
-                        <UserName>
-                          <span>{userInfo.username}</span>
-                        </UserName>
-                      </MenuProfile>
-                    </MenuItemLink>
-                  </MenuItem>
-                  <MenuItem>
-                    <MenuItemLink onClick={closeMenu} route="/setting/user">
-                      设置
-                    </MenuItemLink>
-                  </MenuItem>
-                  <MenuItem>
-                    <MenuItemLink onClick={closeMenu} route="/setting/user">
-                      退出
-                    </MenuItemLink>
-                  </MenuItem>
-                </Menu>
+                <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
+                  <MenuArrow ref={(e: any) => setArrowRef(e)}/>
+                  <Menu>
+                    <MenuItem>
+                      <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
+                        <MenuProfile>
+                          <Avatar
+                            size={48}
+                            src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+                          />
+                          <UserName>
+                            <span>{userInfo.username}</span>
+                          </UserName>
+                        </MenuProfile>
+                      </MenuItemLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink onClick={closeMenu} route="/setting/user">
+                        设置
+                      </MenuItemLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <MenuItemLink onClick={closeMenu} route="/setting/user">
+                        退出
+                      </MenuItemLink>
+                    </MenuItem>
+                  </Menu>
+                </div>
               )}
             </Transition>
           )}
         >
-          <Avatar
-            src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
-            onClick={() => setData(true)}
-          />
+        <Avatar
+          src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+          onClick={() => setData(true)}
+        />
         </Popper>
       );
     }

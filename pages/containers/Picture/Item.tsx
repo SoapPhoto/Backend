@@ -4,6 +4,7 @@ import * as React from 'react';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { store } from '@pages/stores/init';
 import { ImageBox, ItemImage, ItemWapper } from './styles';
+import { Link } from '@pages/routes';
 
 interface IProps {
   detail: PictureEntity;
@@ -20,30 +21,18 @@ export const PictureImage: React.SFC<{detail: PictureEntity}> = ({ detail }) => 
 
 export const PictureItem = withRouter<IProps>(({
   detail,
-  router,
 }) => {
-  const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    e.preventDefault();
-    store.appStore.setRoute({
-      as: `${router!.route}?picture=${detail.id}`,
-      href: `/picture/${detail.id}`,
-      action: 'PUSH',
-    });
-    Router.push(`${router!.route}?picture=${detail.id}`, `/picture/${detail.id}`, {
-      shallow: true,
-      action: 'PUSH',
-    });
-  };
   return (
     <span>
-      <a
-        href={`/picture/${detail.id}`}
-        onClick={onClick}
-      >
-        <ItemWapper>
-          <PictureImage detail={detail} />
-        </ItemWapper>
-      </a>
+      <Link route={`/picture/${detail.id}`}>
+        <a
+          href={`/picture/${detail.id}`}
+        >
+          <ItemWapper>
+            <PictureImage detail={detail} />
+          </ItemWapper>
+        </a>
+      </Link>
     </span>
   );
 });

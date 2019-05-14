@@ -10,6 +10,7 @@ const normalize = `
   body {
     font-size: 14px !important;
     line-height: 1.5;
+    overflow-y: scroll;
     font-family: ${font};
   }
   html,body{

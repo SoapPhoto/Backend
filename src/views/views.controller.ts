@@ -12,7 +12,7 @@ export class ViewsController {
     return {};
   }
 
-  @Get('user/:username')
+  @Get('@(:username)')
   @Render('user')
   public async user() {
     return {};

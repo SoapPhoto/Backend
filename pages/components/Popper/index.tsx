@@ -1,4 +1,4 @@
-import PopperJS from 'popper.js';
+import PopperJS, { Modifiers, Placement } from 'popper.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import NoSSR from 'react-no-ssr';
@@ -15,10 +15,12 @@ type ContentFuncType = (props: IChildProps) => React.ReactNode;
 type ContentType = React.ReactNode | ContentFuncType;
 
 export interface IPopperProps {
+  placement: Placement;
   visible: boolean;
   content: ContentType;
-  transition ? : boolean;
-  getContainer ? : Element;
+  transition? : boolean;
+  getContainer? : Element;
+  modifiers?: Modifiers;
   onClose(): void;
 }
 
@@ -78,7 +80,17 @@ export class Popper extends React.Component<IPopperProps> {
     document.addEventListener('mousedown', this.ifEl);
     const referenceNode = ReactDOM.findDOMNode(this) as Element;
     this.popper = new PopperJS(referenceNode, this.popperRef.current!, {
-      placement: 'bottom-start',
+      placement: this.props.placement,
+      modifiers: {
+        preventOverflow: {
+          boundariesElement: document.querySelector('body')!,
+        },
+        ...this.props.modifiers || {},
+        // arrow: {
+        //   enabled: false,
+        // },
+        // keepTogether: { enabled: false }
+      }
     });
   }
   public handleClose = () => {
@@ -119,7 +131,7 @@ export class Popper extends React.Component<IPopperProps> {
         <NoSSR>
           {!server && ReactDOM.createPortal(
             this.renderContent(),
-            this.props.getContainer || document.querySelector('body')!,
+            this.props.getContainer || document.querySelector('#__next')!,
           )}
         </NoSSR>
       </>

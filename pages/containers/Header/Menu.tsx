@@ -48,6 +48,19 @@ const MenuLink = styled.a`
   }
 `;
 
+export const MenuArrow = styled.span`
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  background-color: ${props => props.theme.box.background};
+  border: 1px solid ${props => props.theme.box.borderColor};
+  margin-top: -7px;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+`
+
 export const Menu: React.SFC<IProps> = ({
   children,
   ...restProps
