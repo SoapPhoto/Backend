@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-const User = () => {
+const Basic = () => {
   return (
     <div>basic</div>
   );
 };
 
-export default User;
+export default Basic;
