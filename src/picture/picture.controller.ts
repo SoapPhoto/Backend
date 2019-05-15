@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -34,12 +35,15 @@ export class PictureController {
 
   @Post('upload')
   @Roles('user')
-  @UseInterceptors(photoUpload)
+  @UseInterceptors(photoUpload('photo'))
   public async upload(
     @UploadedFile() file: File,
     @Body('info') infoStr: string,
     @User() user: UserEntity,
   ) {
+    if (!file) {
+      throw new BadRequestException('error file');
+    }
     try {
       let info = {};
       if (infoStr) {

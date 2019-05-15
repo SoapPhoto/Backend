@@ -7,7 +7,7 @@ interface IProps {
   header: boolean;
 }
 
-export const BodyLayout: React.SFC<IProps> = ({ children, header = true }) => {
+export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
   return (
     <Wapper>
       {

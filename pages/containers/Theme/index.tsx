@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export const ThemeWrapper = inject('themeStore')(
-  observer<React.SFC<IProps>>(
+  observer<React.FC<IProps>>(
     ({ children, themeStore }) => (
       <ThemeProvider theme={themeStore!.themeData}>
         <React.Fragment>

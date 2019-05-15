@@ -24,7 +24,7 @@ const Img = styled.img`
   height: 100%;
 `;
 
-export const Avatar: React.SFC<IAvatarProps> = ({
+export const Avatar: React.FC<IAvatarProps> = ({
   src,
   size = 40,
   onClick,

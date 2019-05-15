@@ -1,10 +1,11 @@
-import { Exclude, Type } from 'class-transformer';
+import { Exclude, Transform, Type } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
 import { IsEmail } from 'class-validator';
 
+import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
 
 @Entity('user')
@@ -75,7 +76,7 @@ export class UserEntity extends BaseEntity {
   @Column({
     default: 'user',
   })
-  public readonly role: string = 'user';
+  public readonly role!: string;
 
   /**
    * 用户头像
@@ -83,11 +84,11 @@ export class UserEntity extends BaseEntity {
    * @type {string}
    * @memberof UserEntity
    */
-  @Exclude()
+  @Transform(transformAvatar)
   @Column({
-    default: '//cdn.soapphoto.com/default.svg',
+    default: `${process.env.CDN_URL}/default.svg`,
   })
-  public readonly avatar: string = '//cdn.soapphoto.com/default.svg';
+  public readonly avatar!: string;
 
   /**
    * 用户的picture

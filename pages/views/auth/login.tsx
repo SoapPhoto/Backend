@@ -14,17 +14,23 @@ interface IProps extends WithRouterProps {
   accountStore: AccountStore;
 }
 
-const Login: React.SFC<IProps> = ({ accountStore, router }) => {
+const Login: React.FC<IProps> = ({ accountStore, router }) => {
   const { query } = parsePath(router!.asPath!);
   const { login } = accountStore;
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
   const handleOk = async () => {
-    await login(username, password);
-    if (query.redirectUrl) {
-      Router.replaceRoute(query.redirectUrl);
-    } else {
-      Router.replaceRoute('/');
+    setConfirmLoading(true);
+    try {
+      await login(username, password);
+      if (query.redirectUrl) {
+        Router.replaceRoute(query.redirectUrl);
+      } else {
+        Router.replaceRoute('/');
+      }
+    } finally {
+      setConfirmLoading(false);
     }
   };
   return (
@@ -44,7 +50,13 @@ const Login: React.SFC<IProps> = ({ accountStore, router }) => {
         onPressEnter={handleOk}
         onChange={e => setPassword(e.target.value)}
       />
-      <Button style={{ marginTop: '24px' }} onClick={handleOk}>登录</Button>
+      <Button
+        loading={confirmLoading}
+        style={{ marginTop: '24px' }}
+        onClick={handleOk}
+      >
+        登录
+      </Button>
     </Wrapper>
   );
 };

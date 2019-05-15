@@ -1,16 +1,15 @@
-import Router, { withRouter, WithRouterProps } from 'next/router';
+import { withRouter } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
-import { store } from '@pages/stores/init';
-import { ImageBox, ItemImage, ItemWapper } from './styles';
 import { Link } from '@pages/routes';
+import { ImageBox, ItemImage, ItemWapper } from './styles';
 
 interface IProps {
   detail: PictureEntity;
 }
 
-export const PictureImage: React.SFC<{detail: PictureEntity}> = ({ detail }) => {
+export const PictureImage: React.FC<{detail: PictureEntity}> = ({ detail }) => {
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   return (
   <ImageBox height={height} background={detail.color}>

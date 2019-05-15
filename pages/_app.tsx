@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { parsePath, server } from '@pages/common/utils';
 import { CustomNextAppContext } from './common/interfaces/global';
+import { getCurrentTheme, ThemeType } from './common/utils/themes';
 import { PictureModal } from './components';
 import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
@@ -29,11 +30,15 @@ export default class MyApp extends App {
   public static async getInitialProps(data: CustomNextAppContext<any>) {
     const { ctx, Component } = data;
     const { req } = ctx;
+    const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;
     const route = parsePath(data.ctx.asPath);
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
           userInfo: req ? req.user : undefined,
+        },
+        themeStore: {
+          theme,
         },
       },
     };

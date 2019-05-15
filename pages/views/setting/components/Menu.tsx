@@ -32,7 +32,7 @@ export const Href = styled.a<{active?: boolean}>`
   display: block;
 `;
 
-export const Menu: React.SFC<IUserProps> = ({
+export const Menu: React.FC<IUserProps> = ({
   data,
   value,
 }) => {

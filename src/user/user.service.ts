@@ -8,7 +8,7 @@ import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
 import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
-import { CreateUserDto } from './dto/user.dto';
+import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -73,5 +73,17 @@ export class UserService {
 
   public async getUserPicture(id: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserPicture(id, query, user);
+  }
+
+  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto, avatar?: string) {
+    const data = await this.userEntity.save(
+      this.userEntity.merge(
+        user,
+        body,
+        avatar ? { avatar } : {},
+      ),
+    );
+    console.log(data);
+    return plainToClass(UserEntity, data);
   }
 }

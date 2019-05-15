@@ -6,7 +6,7 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   onPressEnter?(e: React.KeyboardEvent<HTMLInputElement>): void;
 }
 
-type Component = React.SFC<IInputProps>;
+type Component = React.FC<IInputProps>;
 
 export const Input: Component = ({
   onPressEnter,

@@ -75,7 +75,7 @@ export const MenuArrow = styled.span`
   border-bottom-color: transparent;
 `;
 
-export const Menu: React.SFC<IProps> = ({
+export const Menu: React.FC<IProps> = ({
   children,
   ...restProps
 }) => {
@@ -86,7 +86,7 @@ export const Menu: React.SFC<IProps> = ({
   );
 };
 
-export const MenuItem: React.SFC = ({
+export const MenuItem: React.FC = ({
   children,
 }) => {
   return (
@@ -96,7 +96,7 @@ export const MenuItem: React.SFC = ({
   );
 };
 
-export const MenuItemLink: React.SFC<ILinkProps> = ({
+export const MenuItemLink: React.FC<ILinkProps> = ({
   route,
   onClick,
   children,

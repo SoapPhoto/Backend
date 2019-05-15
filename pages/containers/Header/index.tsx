@@ -13,7 +13,7 @@ interface IProps extends WithRouterProps {
 }
 
 export const Header = withRouter(
-  connect<React.SFC<IProps>>('themeStore')(
+  connect<React.FC<IProps>>('themeStore')(
     ({ router, themeStore }) => {
       const isLog = /^\/views\/auth\//.test(router!.pathname);
       return (

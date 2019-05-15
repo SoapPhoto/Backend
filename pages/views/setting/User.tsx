@@ -11,8 +11,17 @@ interface IUserProps {
   accountStore?: AccountStore;
 }
 
-const User: React.SFC<IUserProps> = ({ accountStore }) => {
-  const { userInfo } = accountStore!;
+const User: React.FC<IUserProps> = ({ accountStore }) => {
+  const { userInfo, updateProfile } = accountStore!;
+  const [name, setName] = React.useState(userInfo!.name || userInfo!.username);
+  const [btnLoading, setBtnLoading] = React.useState(false);
+  const handleOk = async () => {
+    setBtnLoading(true);
+    await updateProfile({
+      name,
+    });
+    setBtnLoading(false);
+  };
   return (
     <Grid columns="1lf" rowGap="24px">
       <Cell>
@@ -29,18 +38,18 @@ const User: React.SFC<IUserProps> = ({ accountStore }) => {
       </Cell>
       <Cell>
         <Grid gap="24px" columns={2}>
-          <Cell width={1} center>
-            <Input label="昵称（显示的名称）" value={userInfo!.name || userInfo!.username} />
-          </Cell>
           <Cell width={1} middle>
-            <Input label="用户名（登录名）" disabled value={userInfo!.username} />
+            <Input label="用户名（登录名）" disabled defaultValue={userInfo!.username} />
+          </Cell>
+          <Cell width={1} center>
+            <Input label="昵称（显示的名称）" value={name} onChange={e => setName(e.target.value)} />
           </Cell>
         </Grid>
       </Cell>
       <Cell>
         <Grid columns="auto" justifyContent="right">
           <Cell>
-            <Button>上传头像</Button>
+            <Button loading={btnLoading} onClick={handleOk}>更新设置</Button>
           </Cell>
         </Grid>
       </Cell>

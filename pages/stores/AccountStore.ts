@@ -1,6 +1,6 @@
 import { action, computed, observable } from 'mobx';
 
-import { UserEntity } from '@pages/common/interfaces/user';
+import { UpdateProfileSettingDto, UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
 
 export class AccountStore {
@@ -28,6 +28,18 @@ export class AccountStore {
   @action
   public setUserInfo = (userInfo?: UserEntity) => {
     this.userInfo = userInfo;
+  }
+
+  @action
+  public updateProfile = async (userInfo: UpdateProfileSettingDto) => {
+    const params = new FormData();
+    for (const key in userInfo) {
+      if (key) {
+        params.append(key, (userInfo as any)[key]);
+      }
+    }
+    const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, params);
+    this.setUserInfo(data);
   }
   /**
    * 登录

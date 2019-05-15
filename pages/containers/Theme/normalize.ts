@@ -1,7 +1,9 @@
+import { css, DefaultTheme, ThemedStyledProps } from 'styled-components';
+
 // tslint:disable: max-line-length
 const font = `-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue","Helvetica",'Noto Sans SC', PingFang SC,PingFang TC, Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,"WenQuanYi Micro Hei",sans-serif`;
 
-const normalize = `
+const normalize = (_: ThemedStyledProps<{}, DefaultTheme>) => css`
   html {
     line-height: 1.15; /* 1 */
     -ms-text-size-adjust: 100%; /* 2 */

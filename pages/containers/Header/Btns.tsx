@@ -27,7 +27,7 @@ const transitionStyles: {
   exited: { opacity: 0, transform: 'scale(.98)' },
 };
 
-export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
+export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
   ({ accountStore, themeStore }) => {
     const [data, setData] = React.useState(false);
     const [arrowRef, setArrowRef] = React.useState();
@@ -77,7 +77,7 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
                             src={userInfo!.avatar}
                           />
                           <UserName>
-                            <span>{userInfo.username}</span>
+                            <span>{userInfo.name || userInfo.username}</span>
                           </UserName>
                         </MenuProfile>
                       </MenuItemLink>

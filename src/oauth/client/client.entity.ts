@@ -15,7 +15,7 @@ export class ClientEntity extends BaseEntity {
   })
   public readonly grants: string[] = ['authorization_code', 'password'];
 
-  @Column({ nullable: false, default: 3600 })
+  @Column({ nullable: false, default: 60480 })
   public readonly accessTokenLifetime!: number;
 
   @Column({ nullable: false, default: 1209600 })

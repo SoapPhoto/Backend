@@ -7,7 +7,7 @@ import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { store } from '@pages/stores/init';
 
-type component<P> = React.ComponentClass<P> | React.SFC<P>;
+type component<P> = React.ComponentClass<P> | React.FC<P>;
 
 type Props = object & {accountStore?: AccountStore};
 

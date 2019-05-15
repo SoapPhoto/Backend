@@ -1,12 +1,35 @@
 import * as React from 'react';
-import { StyleButton } from './styles';
+import { Loading, StyleButton } from './styles';
 
-type Component = React.SFC<React.ButtonHTMLAttributes<HTMLButtonElement>>;
+interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+}
 
-export const Button: Component = (props) => {
+type Component = React.FC<IButtonProps>;
+
+export const Button: Component = ({
+  children,
+  loading = false,
+  ...restProps
+}) => {
+  const loadingRender = (
+    <Loading>
+      <span />
+      <span />
+      <span />
+    </Loading>
+  );
   return (
     <StyleButton
-      {...props}
-    />
+      {...restProps}
+      loading={loading}
+    >
+      <>
+        {
+          loading && loadingRender
+        }
+        {children}
+      </>
+    </StyleButton>
   );
 };

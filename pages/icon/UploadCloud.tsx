@@ -5,7 +5,7 @@ export interface IUploadCloudProps {
   size?: string | number;
 }
 
-export const UploadCloud: React.SFC<IUploadCloudProps> = ({
+export const UploadCloud: React.FC<IUploadCloudProps> = ({
   color = 'currentColor',
   size = '24',
   ...restProps

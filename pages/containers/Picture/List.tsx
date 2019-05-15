@@ -9,7 +9,7 @@ interface IProps {
   data: PictureEntity[];
 }
 
-export const PictureList: React.SFC<IProps> = ({
+export const PictureList: React.FC<IProps> = ({
   data,
 }) => {
   const [list, setList] = React.useState(listParse(data, 4));

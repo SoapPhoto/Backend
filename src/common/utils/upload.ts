@@ -4,7 +4,7 @@ import * as mime from 'mime-types';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 
-export const photoUpload = FileInterceptor('photo', {
+export const photoUpload = (type = 'photo') => FileInterceptor(type, {
   storage: diskStorage({
     destination: './photo',
     filename: (req, file, cb) => {

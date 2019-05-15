@@ -20,7 +20,7 @@
     "strictNullChecks": true,
     "strict": true,
     "pretty": true,
-    "types": ["react"],
+    "types": ["react", "node"],
     "lib": ["es6", "es2015", "es2017", "dom"],
     "paths": {
       "@server/*": ["src/*"],

@@ -11,6 +11,7 @@ export interface IMyMobxStore {
 }
 export interface IInitialStore {
   accountStore?: Partial<AccountStore>;
+  themeStore?: Partial<ThemeStore>;
 }
 
 export let store: IMyMobxStore = {
@@ -22,5 +23,6 @@ export let store: IMyMobxStore = {
 
 export const initStore = (initialState: IInitialStore): IMyMobxStore => {
   store.accountStore.update(initialState.accountStore);
+  store.themeStore.update(initialState.themeStore);
   return store;
 };
