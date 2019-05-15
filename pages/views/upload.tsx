@@ -40,6 +40,17 @@ const UploadBox = styled.div`
   }
 `;
 
+const ImageBox = styled.div<{bg: string}>`
+  height: 350px;
+  max-width: 1000px;
+  width: 100%;
+  border-radius: 3px;
+  background-image: url(${_ => _.bg});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
 const Upload = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<File>();
@@ -106,7 +117,7 @@ const Upload = () => {
       </Head>
       {
         imageUrl ? (
-          <Image src={imageUrl} />
+          <ImageBox bg={imageUrl} />
         ) : (
           <UploadBox
             onClick={uploadImage}

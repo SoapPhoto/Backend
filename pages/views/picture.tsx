@@ -5,8 +5,8 @@ import * as React from 'react';
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
-import { AccountStore } from '@pages/stores/AccountStore';
 import { PictureImage } from '@pages/containers/Picture/Item';
+import { AccountStore } from '@pages/stores/AccountStore';
 
 interface InitialProps extends NextContext {
   screenData: PictureEntity;
@@ -19,9 +19,8 @@ interface IProps extends InitialProps {
 @inject('accountStore')
 @observer
 class Picture extends React.Component<IProps> {
-  static getInitialProps: (ctx: CustomNextContext) => any;
+  public static getInitialProps: (ctx: CustomNextContext) => any;
   public render() {
-    console.log(this.props)
     return (
       <div>
         <PictureImage detail={this.props.screenData} />
@@ -43,6 +42,6 @@ Picture.getInitialProps = async (ctx: CustomNextContext) => {
   return {
     screenData: data,
   };
-}
+};
 
-export default Picture
+export default Picture;
