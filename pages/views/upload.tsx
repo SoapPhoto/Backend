@@ -31,11 +31,11 @@ const UploadBox = styled.div`
   max-width: 1000px;
   width: 100%;
   border-radius: 3px;
-  border: 2px dashed #ccc;
-  background-color: #fff;
-  color: ${props => props.theme.colors.fontColor};
+  border: 2px dashed ${_ => _.theme.styles.box.borderColor};
+  background-color: ${_ => _.theme.styles.box.background};
+  color: ${props => props.theme.colors.text};
   & svg {
-    color: ${props => props.theme.colors.fontColor};
+    color: ${props => props.theme.colors.text};
     margin-bottom: 12px;
   }
 `;
@@ -92,11 +92,9 @@ const Upload = () => {
       });
       e.addEventListener('dragover', (event) => {
         event.preventDefault();
-        console.log(2);
       });
       e.addEventListener('dragend', (event) => {
         event.preventDefault();
-        console.log(3);
       });
     }
   };

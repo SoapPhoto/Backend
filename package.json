@@ -66,6 +66,7 @@
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
     "styled-components": "^4.2.0",
+    "styled-css-grid": "^1.2.1",
     "swagger-ui-express": "^4.0.2",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",

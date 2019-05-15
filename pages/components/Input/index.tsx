@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { StyleInput } from './styles';
+import { Label, LabelBox, StyleInput } from './styles';
 
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   onPressEnter?(e: React.KeyboardEvent<HTMLInputElement>): void;
 }
 
@@ -10,6 +11,7 @@ type Component = React.SFC<IInputProps>;
 export const Input: Component = ({
   onPressEnter,
   onKeyDown,
+  label,
   ...restProps
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -21,9 +23,15 @@ export const Input: Component = ({
     }
   };
   return (
-    <StyleInput
-      onKeyDown={handleKeyDown}
-      {...restProps}
-    />
+    <LabelBox>
+      {
+        label &&
+        <Label>{label}</Label>
+      }
+      <StyleInput
+        onKeyDown={handleKeyDown}
+        {...restProps}
+      />
+    </LabelBox>
   );
 };

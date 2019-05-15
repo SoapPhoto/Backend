@@ -14,16 +14,16 @@ interface IProps extends WithRouterProps {
 
 const menu = [
   {
+    value: 'profile',
+    name: '用户设置',
+    path: '/setting/profile',
+    component: dynamic(() => import('./User')),
+  },
+  {
     value: 'basic',
     name: '基本设置',
     path: '/setting/basic',
     component: dynamic(() => import('./Basic')),
-  },
-  {
-    value: 'user',
-    name: '用户设置',
-    path: '/setting/user',
-    component: dynamic(() => import('./User')),
   },
 ];
 class Setting extends React.Component<IProps> {

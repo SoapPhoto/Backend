@@ -27,7 +27,7 @@ const ItemWrapper = styled.div`
     padding-bottom: 16px;
   }
   &:not(:first-child) {
-    border-top: 1px solid ${props => props.theme.box.borderColor};
+    border-top: 1px solid ${props => props.theme.styles.box.borderColor};
     padding-top: 16px;
     padding-bottom: 16px;
   }
@@ -37,17 +37,17 @@ const MenuLink = styled.a`
   position: relative;
   display: flex;
   align-items: center;
-  color: ${props => props.theme.header.menu.color};
+  color: ${props => props.theme.layout.header.menu.color};
   text-decoration: none;
   transition: color 0.2s ease 0s;
   margin: -8px -20px;
   padding: 8px 20px;
   transition: .2s color ease, .2s background ease;
   &:hover {
-    color: ${props => props.theme.header.menu.hover.color};
-    background: ${props => props.theme.header.menu.hover.background};
+    color: ${props => props.theme.layout.header.menu.hover.color};
+    background: ${props => props.theme.layout.header.menu.hover.background};
     & svg {
-      stroke: ${props => props.theme.header.menu.hover.color};
+      stroke: ${props => props.theme.layout.header.menu.hover.color};
     }
   }
   & svg {
@@ -56,7 +56,7 @@ const MenuLink = styled.a`
     bottom: 0px;
     right: 20px;
     height: 37px;
-    stroke: ${props => props.theme.header.menu.color};
+    stroke: ${props => props.theme.layout.header.menu.color};
     transition: .2s stroke ease, .2s background ease;
   }
 `;
@@ -65,12 +65,12 @@ export const MenuArrow = styled.span`
   position: absolute;
   z-index: 1;
   margin-left: 1px;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   transform: rotate(45deg);
-  background-color: ${props => props.theme.box.background};
-  border: 1px solid ${props => props.theme.box.borderColor};
-  margin-top: -6px;
+  background-color: ${props => props.theme.styles.box.background};
+  border: 1px solid ${props => props.theme.styles.box.borderColor};
+  margin-top: -5px;
   border-right-color: transparent;
   border-bottom-color: transparent;
 `;

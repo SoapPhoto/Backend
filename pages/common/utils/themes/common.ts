@@ -17,9 +17,9 @@ export const box = (theme: DefaultTheme, width: string, wrapper = false) => `
   width: 100%;
   max-width: ${width};
   border-radius: 4px;
-  background-color: ${theme.box.background};
+  background-color: ${theme.styles.box.background};
   box-shadow: ${theme.colors.shadowColor} 0px 6px 20px;
-  border: 1px solid ${theme.box.borderColor};
+  border: 1px solid ${theme.styles.box.borderColor};
   ${wrapper ? 'margin: 0 auto' : ''}
   padding: 32px;
   overflow: hidden;

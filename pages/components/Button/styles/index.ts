@@ -15,10 +15,9 @@ export const StyleButton = styled.button`
   white-space: nowrap;
   box-sizing: border-box;
   padding: 0 17px;
-  font-size: 14px;
+  font-size: ${_ => _.theme.fontSizes[1]}px;
   border-radius: 4px;
   border-color: #007aff;
   background-color: #007aff;
-  width: 100%;
   color: #fff;
 `;

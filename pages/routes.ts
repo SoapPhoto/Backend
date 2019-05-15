@@ -12,7 +12,7 @@ export const routeObject: IRouteObject = {
   'views/auth/login': '/login',
   'views/upload': '/upload',
   'views/picture': '/picture/:id([0-9]+)',
-  'views/setting': '/setting/:type(user|basic)',
+  'views/setting': '/setting/:type(profile|basic)',
   'views/user': '/@:username',
 };
 

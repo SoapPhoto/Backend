@@ -20,7 +20,7 @@ export interface IUserProps {
 }
 
 const Wrapper = styled.ul`
-  border-right: 1px solid ${props => props.theme.box.borderColor};
+  border-right: 1px solid ${props => props.theme.styles.box.borderColor};
 `;
 
 const Item = styled.ul`
@@ -28,7 +28,7 @@ const Item = styled.ul`
 `;
 
 export const Href = styled.a<{active?: boolean}>`
-  ${_ => href(_.active ? _.theme.link.color : darken(.6, _.theme.colors.fontColor))}
+  ${_ => href(_.active ? _.theme.styles.link.color : darken(.6, _.theme.colors.text))}
   display: block;
 `;
 

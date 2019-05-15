@@ -10,6 +10,6 @@ export const Wrapper = styled.section`
 export const Title = styled.h2`
   margin-bottom: 32px;
   font-weight: 500;
-  font-size: 32px;
-  color: ${props => props.theme.colors.fontColor};
+  font-size: ${_ => _.theme.fontSizes[4]}px;
+  color: ${props => props.theme.colors.text};
 `;

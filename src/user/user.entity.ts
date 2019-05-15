@@ -25,6 +25,15 @@ export class UserEntity extends BaseEntity {
   public readonly username!: string;
 
   /**
+   * 显示的名称
+   *
+   * @type {string}
+   * @memberof UserEntity
+   */
+  @Column()
+  public readonly name!: string;
+
+  /**
    * 邮箱
    *
    * @type {string}
@@ -67,6 +76,18 @@ export class UserEntity extends BaseEntity {
     default: 'user',
   })
   public readonly role: string = 'user';
+
+  /**
+   * 用户头像
+   *
+   * @type {string}
+   * @memberof UserEntity
+   */
+  @Exclude()
+  @Column({
+    default: '//cdn.soapphoto.com/default.svg',
+  })
+  public readonly avatar: string = '//cdn.soapphoto.com/default.svg';
 
   /**
    * 用户的picture

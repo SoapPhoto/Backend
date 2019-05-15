@@ -2,43 +2,60 @@ import { DefaultTheme } from 'styled-components';
 
 import { darken, lighten } from 'polished';
 
-const black = '#000';
-const shadowColor = 'rgba(0, 0, 0, 0.06)';
-const borderColor = '#eaeaea';
-
 const colors = {
-  shadowColor,
-  borderColor,
-  blue: '#05f',
-  fontColor: lighten(.1, black),
+  shadowColor: 'rgba(0, 0, 0, 0.06)',
+  secondary: '#666',
+  primary: '#05f',
+  text: lighten(.1, '#000'),
+  background: '#f8fafc',
+  gray: '#eaeaea',
+  lightgray: '#fafafa',
 };
 
 const theme: DefaultTheme =  {
   colors,
-  nprogress: colors.blue,
-  header: {
-    shadowColor,
-    borderColor,
-    background: '#fff',
-    menu: {
-      color: '#666',
-      hover: {
-        color: darken(.3, '#666'),
-        background: '#fafafa',
+  fontSizes: [
+    12, 14, 16, 18, 24, 32, 48, 64, 72,
+  ],
+  lineHeights: {
+    body: 1.75,
+    heading: 1.25,
+  },
+  styles: {
+    nprogress: colors.primary,
+    box: {
+      borderColor: colors.gray,
+      background: '#fff',
+    },
+    link: {
+      hover: lighten(.2, colors.primary),
+      active: darken(.2, colors.primary),
+      color: colors.primary,
+    },
+    input: {
+      borderColor: colors.gray,
+      shadow: `0 2px 6px ${colors.shadowColor}`,
+      disabled: {
+        color: colors.gray,
+        background: colors.gray,
       },
     },
-    logo: colors.blue,
   },
-  link: {
-    hover: lighten(.2, colors.blue),
-    active: darken(.2, colors.blue),
-    color: colors.blue,
+  layout: {
+    header: {
+      shadowColor: colors.shadowColor,
+      borderColor: colors.gray,
+      background: '#fff',
+      menu: {
+        color: colors.secondary,
+        hover: {
+          color: darken(.3, colors.secondary),
+          background: colors.lightgray,
+        },
+      },
+      logo: colors.primary,
+    },
   },
-  box: {
-    borderColor,
-    background: '#fff',
-  },
-  background: '#f8fafc',
 };
 
 export default theme;

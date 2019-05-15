@@ -1,6 +1,7 @@
 import { CacheInterceptor, Controller, Get, Render, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
+import { Response } from 'express';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -37,9 +38,16 @@ export class ViewsController {
     return {};
   }
 
-  @Get('setting/:type(user|basic)')
+  @Get('setting/:type(profile|basic)')
   @Render('setting')
   public async setting() {
     return {};
+  }
+
+  @Get('setting')
+  public async settingIndex(
+    @Res() res: Response,
+  ) {
+    res.redirect('/setting/profile');
   }
 }

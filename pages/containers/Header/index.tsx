@@ -22,7 +22,7 @@ export const Header = withRouter(
             <Link route="/">
               <a href="/">
                 <Icon
-                  color={themeStore!.themeData.header.logo}
+                  color={themeStore!.themeData.layout.header.logo}
                 />
               </a>
             </Link>

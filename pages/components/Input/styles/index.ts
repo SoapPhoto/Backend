@@ -1,6 +1,17 @@
 import { darken } from 'polished';
 import styled from 'styled-components';
 
+export const LabelBox = styled.label`
+  text-align: left;
+  display: block;
+`;
+export const Label = styled.span`
+  display: inline-block;
+  font-size: ${_ => _.theme.fontSizes[0]}px;
+  margin-bottom: 8px;
+  color: ${_ => _.theme.colors.secondary};
+`;
+
 export const StyleInput = styled.input`
   line-height: 1;
   width: 100%;
@@ -9,26 +20,38 @@ export const StyleInput = styled.input`
   padding: 0 10px;
   transition: border .25s ease;
   text-align: left;
-  color: ${props => props.theme.colors.fontColor};
+  color: ${props => props.theme.colors.text};
   border: none;
   border-radius: 5px;
   outline: 0;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  background: ${props => props.theme.background};
+  border: 1px solid ${props => props.theme.colors.gray};
+  background: ${props => props.theme.colors.background};
   box-shadow: none;
   transition: border .2s,color .2s ease-out,box-shadow .2s ease;
   & + & {
     margin-top: 12px;
   }
   &:hover {
-    border-color: #ddd;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    border-color: ${_ => _.theme.styles.input.borderColor};
+    box-shadow: ${_ => _.theme.styles.input.shadow};
   }
   &:focus {
-    border-color: #ddd;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    border-color: ${_ => _.theme.styles.input.borderColor};
+    box-shadow: ${_ => _.theme.styles.input.shadow};
   }
   &::placeholder {
-    /* color: ${props => darken(.4, props.theme.colors.fontColor)}; */
+  }
+  &[disabled] {
+    background-color: ${_ => _.theme.styles.input.disabled.background};
+    cursor: not-allowed;
+    opacity: 1;
+    &:hover {
+      border-color: #ddd;
+      box-shadow: none;
+    }
+    &:focus {
+      border-color: #ddd;
+      box-shadow: none;
+    }
   }
 `;

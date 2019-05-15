@@ -4,8 +4,8 @@ import { nprogress } from './nprogress';
 
 export const GlobalStyle = createGlobalStyle`
   body {
-    background-color: ${props => props.theme.background};
-    color: ${props => props.theme.colors.fontColor};
+    background-color: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.text};
   }
   ${props => nprogress(props.theme)}
   ${normalize};

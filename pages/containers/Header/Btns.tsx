@@ -74,7 +74,7 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
                         <MenuProfile>
                           <Avatar
                             size={48}
-                            src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+                            src={userInfo!.avatar}
                           />
                           <UserName>
                             <span>{userInfo.username}</span>
@@ -89,7 +89,7 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
                       </MenuItemLink>
                     </MenuItem>
                     <MenuItem>
-                      <MenuItemLink onClick={closeMenu} route="/setting/user">
+                      <MenuItemLink onClick={closeMenu} route="/setting/profile">
                         设置
                       </MenuItemLink>
                     </MenuItem>
@@ -105,7 +105,7 @@ export const Btns = connect<React.SFC<IProps>>('accountStore', 'themeStore')(
           )}
         >
         <Avatar
-          src="https://zeit.co/api/www/avatar/lifQEaQ6gWoTbqSa6WVzWwZo?&s=96"
+          src={userInfo!.avatar}
           onClick={() => setData(true)}
         />
         </Popper>

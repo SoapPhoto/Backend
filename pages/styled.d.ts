@@ -1,42 +1,53 @@
-import 'styled-components'
+import 'styled-components';
 
 declare module 'styled-components' {
+  // tslint:disable-next-line:interface-name
   export interface DefaultTheme {
-    nprogress: string;
-    /**
-     * body背景颜色
-     */
-    background: string;
-    // 一些主色调
+    fontSizes: number[];
+    lineHeights: {[key: string]: number};
     colors: {
       shadowColor: string;
-      borderColor: string;
-      blue: string;
-      fontColor: string;
-    }
-    // 链接默认theme
-    link: {
-      color: string;
-      hover: string;
-      active: string;
-    }
-    box: {
+      secondary: string;
+      primary: string;
+      text: string;
       background: string;
-      borderColor: string;
-    }
-    // header的theme
-    header: {
-      background: string;
-      borderColor: string;
-      shadowColor: string;
-      logo: string;
-      menu: {
+      gray: string;
+      lightgray: string;
+    };
+    styles: {
+      nprogress: string;
+      link: {
         color: string;
-        hover: {
+        hover: string;
+        active: string;
+      }
+      box: {
+        background: string;
+        borderColor: string;
+      }
+      input: {
+        borderColor: string;
+        shadow: string;
+        disabled: {
           color: string;
           background: string;
         }
       }
-    }
+    };
+    layout: {
+      header: {
+        background: string;
+        borderColor: string;
+        shadowColor: string;
+        logo: string;
+        menu: {
+          color: string;
+          hover: {
+            color: string;
+            background: string;
+          }
+        }
+      };
+    };
   }
 }
