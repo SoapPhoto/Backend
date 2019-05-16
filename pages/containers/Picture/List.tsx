@@ -15,38 +15,50 @@ interface IProps {
 
 @observer
 export class PictureList extends React.Component<IProps> {
-  @observable public col = 4;
-  @observable public list = listParse(this.props.data, this.col);
+  @observable public colArr = [4, 3, 2];
+  @observable public colList: PictureEntity[][][] = [];
 
   constructor(props: IProps) {
     super(props);
+    this.formatList(props.data);
     reaction(
-      () => this.col,
-      (col) => {
-        this.list = listParse(this.props.data, col);
+      () => this.props.data,
+      (list) => {
+        this.formatList(list);
       },
     );
   }
-
-  public componentDidMount() {
-    this.col = 4;
+  public formatList = (data: PictureEntity[]) => {
+    this.colList = this.colArr.map(col => listParse(data, col));
   }
-
   public render() {
     return (
       <Wapper>
-        <Col col={this.col}>
-          {
-            this.list.map((col, index) => (
-              <ColItem key={index}>
-                {
-                  col.map(picture => (
-                    <PictureItem key={picture.id} detail={picture} />
-                  ))
-                }
-              </ColItem>
-            ))
-          }
+        {
+          this.colList.map((mainCol, i) => (
+            <Col col={this.colArr[i]} key={this.colArr[i]}>
+              {
+                mainCol.map((col, index) => (
+                  <ColItem key={index}>
+                    {
+                      col.map(picture => (
+                        <PictureItem key={picture.id} detail={picture} />
+                      ))
+                    }
+                  </ColItem>
+                ))
+              }
+            </Col>
+          ))
+        }
+        <Col col={1}>
+          <ColItem>
+            {
+              this.props.data.map(picture => (
+                <PictureItem key={picture.id} detail={picture} />
+              ))
+            }
+          </ColItem>
         </Col>
       </Wapper>
     );

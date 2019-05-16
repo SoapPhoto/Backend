@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import media from 'styled-media-query';
 
 const padding = 24;
 
@@ -7,10 +8,35 @@ export const Wapper = styled.section`
   max-width: 1800px;
   margin: ${padding}px auto;
   padding: 0 24px;
+
+
+  ${media.lessThan('small')`
+    &>div:nth-child(4) {
+      display: grid;
+    }
+  `}
+
+  ${media.between('small', 'medium')`
+    &>div:nth-child(3) {
+      display: grid;
+    }
+  `}
+
+  ${media.between('medium', 'large')`
+    &>div:nth-child(2) {
+      display: grid;
+    }
+  `}
+
+  ${media.greaterThan('large')`
+    &>div:first-child {
+      display: grid;
+    }
+  `}
 `;
 
 export const Col = styled.div<{col: number}>`
-  display: grid;
+  display: none;
   grid-gap: ${padding}px;
   grid-template-columns: repeat(${props => props.col}, 1fr);
 `;

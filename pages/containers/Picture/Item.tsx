@@ -1,5 +1,6 @@
 import { withRouter } from 'next/router';
 import * as React from 'react';
+import LazyLoad from 'react-lazyload';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { Link } from '@pages/routes';
@@ -12,9 +13,11 @@ interface IProps {
 export const PictureImage: React.FC<{detail: PictureEntity}> = ({ detail }) => {
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   return (
-  <ImageBox height={height} background={detail.color}>
-    <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
-  </ImageBox>
+    <ImageBox height={height} background={detail.color}>
+      <LazyLoad height="100%" offset={100}>
+        <ItemImage src={`//cdn.soapphoto.com/${detail.key}`} />
+      </LazyLoad>
+    </ImageBox>
   );
 };
 
@@ -28,7 +31,7 @@ export const PictureItem = withRouter<IProps>(({
           href={`/picture/${detail.id}`}
         >
           <ItemWapper>
-            <PictureImage detail={detail} />
+              <PictureImage detail={detail} />
           </ItemWapper>
         </a>
       </Link>
