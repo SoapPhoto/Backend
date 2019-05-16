@@ -8,12 +8,12 @@ interface IRouteObject {
 }
 
 export const routeObject: IRouteObject = {
-  'views/home': '/',
-  'views/auth/login': '/login',
-  'views/upload': '/upload',
-  'views/picture': '/picture/:id([0-9]+)',
-  'views/setting': '/setting/:type(profile|basic)',
-  'views/user': '/@:username',
+  '/': 'views/home',
+  '/login': 'views/auth/login',
+  '/upload': 'views/upload',
+  '/picture/:id([0-9]+)': 'views/picture',
+  '/setting/:type(profile|basic)': 'views/setting',
+  '/@:username': 'views/user',
 };
 
 const router = (routes as any)({
@@ -22,7 +22,7 @@ const router = (routes as any)({
 
 for (const route in routeObject) {
   if (route) {
-    router.add(route, routeObject[route]);
+    router.add(routeObject[route], route);
   }
 }
 

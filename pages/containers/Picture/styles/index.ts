@@ -5,7 +5,7 @@ const padding = 24;
 
 export const Wapper = styled.section`
   width: 100%;
-  max-width: 1800px;
+  max-width: 1300px;
   margin: ${padding}px auto;
   padding: 0 24px;
 
@@ -42,15 +42,19 @@ export const Col = styled.div<{col: number}>`
 `;
 
 export const ColItem = styled.div`
-  display: grid;
-  grid-row-gap: 24px;
-  grid-template-rows: max-content;
+  &>div {
+    margin-bottom: 24px;
+  }
+  &:last-child {
+    margin-bottom: 0px;
+  }
 `;
 
 export const ItemWapper = styled.div`
   position: relative;
   border-radius: 4px;
   overflow: hidden;
+  box-shadow: ${_ => _.theme.colors.shadowColor} 0px 6px 20px;
   &:active {
     transform: scale(0.98);
     transition: transform 0.1s;

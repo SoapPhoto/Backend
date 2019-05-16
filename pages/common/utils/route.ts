@@ -38,9 +38,9 @@ export const parsePath = (asPath: string) => {
 function setUrlPath(url: string) {
   for (const key in routeObject) {
     if (key) {
-      const regexp = pathToRegexp(routeObject[key]);
+      const regexp = pathToRegexp(key);
       if (regexp.test(url)) {
-        return routeObject[key];
+        return key;
       }
     }
   }

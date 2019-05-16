@@ -64,22 +64,3 @@ export class PictureList extends React.Component<IProps> {
     );
   }
 }
-
-// export const PictureList: React.FC<IProps> = ({
-//   data,
-// }) => {
-//   const columnCount =  useMedia(
-//     ['(min-width: 1440px)', '(min-width: 1170px)', '(min-width: 768px)', '(min-width: 450px)'],
-//     [5, 4, 3, 2, 2],
-//     2,
-//   );
-//   const [list, setList] = React.useState(listParse(data, server ? 5 : columnCount));
-//   React.useEffect(
-//     () => {
-//       setList(listParse(data, columnCount));
-//     },
-//     [data, columnCount],
-//   );
-//   return (
-//   );
-// };
