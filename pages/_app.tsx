@@ -40,6 +40,7 @@ export default class MyApp extends App {
         themeStore: {
           theme,
         },
+        screen: {},
       },
     };
     if (ctx.query.error) {

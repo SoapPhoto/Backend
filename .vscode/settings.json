@@ -1,7 +1,6 @@
 {
-  "prettier.tslintIntegration": true,
   "editor.codeActionsOnSave": {
-      "source.fixAll.tslint": true
+    "source.fixAll.tslint": true
   },
   "typescript.tsdk": "node_modules/typescript/lib"
 }
