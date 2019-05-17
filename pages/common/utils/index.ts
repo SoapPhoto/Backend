@@ -20,6 +20,13 @@ export function getScrollWidth() {
   return noScroll - scroll;
 }
 
+/**
+ * 设置 body 上的 style
+ *
+ * @export
+ * @param {Partial<CSSStyleDeclaration>} css
+ * @returns
+ */
 export function setBodyCss(css: Partial<CSSStyleDeclaration>) {
   const body = document.querySelector('body')!;
   const init = body.getAttribute('style')!;

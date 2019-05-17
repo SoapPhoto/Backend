@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsEmail, IsString, IsUrl, Length } from 'class-validator';
 
 import { IsUserName } from '@server/common/validator';
 import { Exclude, Expose } from 'class-transformer';
@@ -53,13 +53,18 @@ export class CreateUserDto {
  */
 @Exclude()
 export class UpdateProfileSettingDto {
-  /**
-   * 昵称
-   *
-   * @type {string}
-   * @memberof UpdateProfileSettingDto
-   */
+  /** 昵称 */
   @IsString()
   @Expose()
   public readonly name!: string;
+
+  /** 个人简介 */
+  @IsString()
+  @Expose()
+  public readonly bio!: string;
+
+  /** 个人网站 */
+  @IsUrl()
+  @Expose()
+  public readonly website!: string;
 }

@@ -33,6 +33,13 @@ function parse(num: number) {
 
 type GetData = (image: File, cb: (this: any) => void) => void;
 
+/**
+ * 获取图片详细信息
+ *
+ * @export
+ * @param {File} image
+ * @returns {Promise<[IImageInfo, string]>}
+ */
 export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   return new Promise((resolve) => {
     (window.EXIF.getData as GetData)(image, async function () {
@@ -106,6 +113,13 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   });
 }
 
+/**
+ * 判断文件是否是图片格式
+ *
+ * @export
+ * @param {string} fileName
+ * @returns
+ */
 export function isImage(fileName: string) {
   const imgType = [
     '.jpg',

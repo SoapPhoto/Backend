@@ -13,14 +13,19 @@ interface IUserProps {
 
 const User: React.FC<IUserProps> = ({ accountStore }) => {
   const { userInfo, updateProfile } = accountStore!;
-  const [name, setName] = React.useState(userInfo!.name || userInfo!.username);
+  const [data, setData] = React.useState({
+    name: userInfo!.name || userInfo!.username,
+    website: userInfo!.website,
+    bio: userInfo!.bio,
+  });
   const [btnLoading, setBtnLoading] = React.useState(false);
   const handleOk = async () => {
     setBtnLoading(true);
-    await updateProfile({
-      name,
-    });
-    setBtnLoading(false);
+    try {
+      await updateProfile(data);
+    } finally {
+      setBtnLoading(false);
+    }
   };
   return (
     <Grid columns="1lf" rowGap="24px">
@@ -42,8 +47,31 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
             <Input label="用户名（登录名）" disabled defaultValue={userInfo!.username} />
           </Cell>
           <Cell width={1} center>
-            <Input label="昵称（显示的名称）" value={name} onChange={e => setName(e.target.value)} />
+            <Input
+              label="昵称（显示的名称）"
+              value={data.name}
+              onChange={e => setData({ ...data, name: e.target.value })}
+            />
           </Cell>
+        </Grid>
+      </Cell>
+      <Cell>
+        <Grid columns={1} gap="24px">
+          <Input
+            label="个人网站"
+            placeholder="https://"
+            value={data.website}
+            onChange={e => setData({ ...data, website: e.target.value })}
+          />
+        </Grid>
+      </Cell>
+      <Cell>
+        <Grid columns={1} gap="24px">
+          <Input
+            label="简介"
+            value={data.bio}
+            onChange={e => setData({ ...data, bio: e.target.value })}
+          />
         </Grid>
       </Cell>
       <Cell>

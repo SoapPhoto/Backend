@@ -3,20 +3,12 @@ import { action, observable } from 'mobx';
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
-import { mergeStore } from '@pages/common/utils/store';
+import { BaseStore } from '../BaseStore';
 
-export class UserScreenStore {
+export class UserScreenStore extends BaseStore {
   @observable public init = false;
   @observable public pictureList: PictureEntity[] = [] ;
   @observable public user!: UserEntity;
-
-  // 用来初始化
-  @action
-  public update = (store?: Partial<UserScreenStore>) => {
-    if (store) {
-      mergeStore(this, store);
-    }
-  }
 
   @action
   public getDetail = async (username: string) => {

@@ -2,6 +2,7 @@ import { action, observable } from 'mobx';
 
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
+import { BaseStore } from './BaseStore';
 
 interface IBaseQuery {
   page: number;
@@ -10,7 +11,7 @@ interface IBaseQuery {
   [key: string]: number | string;
 }
 
-export class PictureStore {
+export class PictureStore extends BaseStore {
   @observable public loading = true;
   @observable public init = false;
   @observable public list: PictureEntity[] = [];

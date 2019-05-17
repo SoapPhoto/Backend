@@ -1,16 +1,13 @@
-import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React from 'react';
 import styled from 'styled-components';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
-import { UserEntity } from '@pages/common/interfaces/user';
-import { request } from '@pages/common/utils/request';
 import { Avatar } from '@pages/components';
-import { Button } from '@pages/components/Button';
 import { PictureList } from '@pages/containers/Picture/List';
-import { IMyMobxStore, store } from '@pages/stores/init';
-import { UserScreenStore } from '@pages/stores/UserScreenStore';
+import { Link } from '@pages/icon';
+import { IMyMobxStore } from '@pages/stores/init';
+import { UserScreenStore } from '@pages/stores/screen/User';
 import { Cell, Grid } from 'styled-css-grid';
 
 interface IProps {
@@ -32,6 +29,19 @@ const UserName = styled.h2`
   margin-top: 18px;
 `;
 
+const Profile = styled.div`
+  display: flex;
+`;
+
+const ProfileItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  margin-right: 24px;
+  min-width: 0;
+  font-family: Rubik;
+`;
+
 @inject((stores: IMyMobxStore) => ({
   userStore: stores.screen.userStore,
 }))
@@ -49,6 +59,10 @@ class User extends React.Component<IProps> {
             </Cell>
             <Cell>
               <UserName>{user.name || user.username}</UserName>
+              <Profile>
+                <ProfileItem><Link size={16}/>{user.website}</ProfileItem>
+                <ProfileItem>{user.bio}</ProfileItem>
+              </Profile>
             </Cell>
           </Grid>
         </UserHeader>
