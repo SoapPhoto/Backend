@@ -72,6 +72,9 @@ export const ImageBox = styled.div<{height: number; background: string}>`
 export const ItemImage = styled.img`
   position: absolute;
   top: 0;
+  user-select: none;
+  pointer-events: none;
   display: block;
   width: 100%;
+  transition: .2s opacity ease-in;
 `;

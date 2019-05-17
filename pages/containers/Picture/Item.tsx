@@ -25,16 +25,34 @@ export const PictureImage: React.FC<IProps> = ({
   lazyload = true,
   size = 'regular',
 }) => {
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const [ok, setOk] = React.useState(true);
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
+  const onLoad = () => {
+    setTimeout(() => setOk(true), 200);
+  };
+  const ref = (e: HTMLImageElement) => {
+    if (e) {
+      setOk(e.complete);
+    }
+  };
+  const imgRender = (
+    <ItemImage
+      ref={ref as any}
+      onLoad={onLoad}
+      style={{ opacity: ok ? 1 : 0 }}
+      src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
+    />
+  );
   return (
     <ImageBox height={height} background={detail.color}>
       {
         lazyload ? (
-          <LazyLoad height="100%" offset={300}>
-            <ItemImage src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`} />
+          <LazyLoad resize={true} height="100%" offset={300}>
+            {imgRender}
           </LazyLoad>
         ) : (
-          <ItemImage src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`} />
+          imgRender
         )
       }
     </ImageBox>
