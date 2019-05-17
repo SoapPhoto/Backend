@@ -31,12 +31,15 @@ export class AccountStore {
   }
 
   @action
-  public updateProfile = async (userInfo: UpdateProfileSettingDto) => {
+  public updateProfile = async (userInfo: UpdateProfileSettingDto, avatar?: File) => {
     const params = new FormData();
     for (const key in userInfo) {
       if (key) {
         params.append(key, (userInfo as any)[key]);
       }
+    }
+    if (avatar) {
+      params.append('avatar', avatar);
     }
     const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, params);
     this.setUserInfo(data);
@@ -60,4 +63,8 @@ export class AccountStore {
     this.setUserInfo(data.data.user);
   }
 
+  public logout = async () => {
+    await request.post('auth/logout');
+    window.location.href = '/';
+  }
 }

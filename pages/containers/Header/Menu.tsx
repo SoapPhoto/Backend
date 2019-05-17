@@ -9,7 +9,7 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 interface ILinkProps {
-  route: string;
+  route?: string;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
@@ -34,6 +34,7 @@ const ItemWrapper = styled.div`
 `;
 
 const MenuLink = styled.a`
+  cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
@@ -101,11 +102,15 @@ export const MenuItemLink: React.FC<ILinkProps> = ({
   onClick,
   children,
 }) => {
-  return (
+  return route ? (
     <Link route={route}>
       <MenuLink onClick={onClick} href={route}>
         {children}
       </MenuLink>
     </Link>
+  ) : (
+    <MenuLink onClick={onClick} href={route}>
+      {children}
+    </MenuLink>
   );
 };

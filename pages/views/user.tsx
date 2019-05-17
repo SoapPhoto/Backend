@@ -1,8 +1,11 @@
 import { inject, observer } from 'mobx-react';
+import Head from 'next/Head';
 import React from 'react';
 import styled from 'styled-components';
+import parse from 'url-parse';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
+import { href } from '@pages/common/utils/themes/common';
 import { Avatar } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
 import { Link } from '@pages/icon';
@@ -21,16 +24,19 @@ const UserHeader = styled.div`
   max-width: 700px;
   width: 100%;
   margin: 64px auto;
+  padding: 0 20px;
 `;
 
 const UserName = styled.h2`
   font-family: Rubik;
   font-size: 2em;
-  margin-top: 18px;
+  margin-top: 6px;
+  margin-bottom: 12px;
 `;
 
 const Profile = styled.div`
   display: flex;
+  margin-bottom: 4px;
 `;
 
 const ProfileItem = styled.div`
@@ -40,6 +46,21 @@ const ProfileItem = styled.div`
   margin-right: 24px;
   min-width: 0;
   font-family: Rubik;
+  color: ${_ => _.theme.colors.secondary};
+  & svg {
+    margin-right: 4px;
+  }
+`;
+
+const ProfileItemLink = styled.a`
+  display: flex;
+  align-items: center;
+  ${_ => href(_.theme.colors.secondary)}
+`;
+
+const Bio = styled.p`
+  font-size: 14px;
+  font-family: Rubik;
 `;
 
 @inject((stores: IMyMobxStore) => ({
@@ -48,21 +69,41 @@ const ProfileItem = styled.div`
 @observer
 class User extends React.Component<IProps> {
   public static getInitialProps: (_: CustomNextContext) => any;
+  get name () {
+    const { user } = this.props.userStore;
+    return user.name || user.username;
+  }
+  public parseWebsite = (url: string) => {
+    const data = parse(url);
+    return data.hostname;
+  }
   public render() {
     const { user, pictureList } = this.props.userStore;
     return (
       <Wrapper>
+        <Head>
+          <title>{`${this.name} (@${user.username}) - 肥皂`}</title>
+        </Head>
         <UserHeader>
           <Grid columns="140px auto" gap="32px">
             <Cell>
               <Avatar src={user.avatar} size={140} />
             </Cell>
             <Cell>
-              <UserName>{user.name || user.username}</UserName>
+              <UserName>{this.name}</UserName>
               <Profile>
-                <ProfileItem><Link size={16}/>{user.website}</ProfileItem>
-                <ProfileItem>{user.bio}</ProfileItem>
+                {
+                  user.website &&
+                  <ProfileItem>
+                    <ProfileItemLink href={user.website} target="__blank">
+                      <Link size={14}/>{this.parseWebsite(user.website)}
+                    </ProfileItemLink>
+                  </ProfileItem>
+                }
               </Profile>
+              <Bio>
+                {user.bio}
+              </Bio>
             </Cell>
           </Grid>
         </UserHeader>

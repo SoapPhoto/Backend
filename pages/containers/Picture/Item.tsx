@@ -43,6 +43,7 @@ export const PictureImage: React.FC<IProps> = ({
 
 export const PictureItem = withRouter<IProps>(({
   detail,
+  ...restProps
 }) => {
   return (
     <div>
@@ -51,7 +52,7 @@ export const PictureItem = withRouter<IProps>(({
           href={`/picture/${detail.id}`}
         >
           <ItemWapper>
-            <PictureImage detail={detail} />
+            <PictureImage detail={detail} {...restProps} />
           </ItemWapper>
         </a>
       </Link>

@@ -7,7 +7,7 @@ export function IsUserName() {
   return (object: object, propertyName: string) => {
     registerDecorator({
       propertyName,
-      name: 'isLongerThan',
+      name: 'isUserName',
       target: object.constructor,
       options: {},
       validator: {
@@ -21,3 +21,27 @@ export function IsUserName() {
     });
   };
 }
+
+// tslint:disable-next-line: function-name
+export function IsWebsite() {
+  return (object: object, propertyName: string) => {
+    registerDecorator({
+      propertyName,
+      name: 'isWebsite',
+      target: object.constructor,
+      options: {},
+      validator: {
+        validate(value: any, _: ValidationArguments) {
+          if (!!value) {
+            return validator.isURL(value);
+          }
+          return true;
+        },
+        defaultMessage(_: ValidationArguments) {
+          return 'Text ($value) is no url!';
+        },
+      },
+    });
+  };
+}
+

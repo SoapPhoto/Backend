@@ -1,9 +1,9 @@
 import { inject, observer } from 'mobx-react';
+import Head from 'next/Head';
 import * as React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureList } from '@pages/containers/Picture/List';
-import { AccountStore } from '@pages/stores/AccountStore';
 import { IMyMobxStore } from '@pages/stores/init';
 import { HomeScreenStore } from '@pages/stores/screen/Home';
 
@@ -21,6 +21,9 @@ class Index extends React.Component<IProps> {
     const { list } = this.props.homeStore;
     return (
       <div>
+        <Head>
+          <title>肥皂</title>
+        </Head>
         <PictureList data={list} />
       </div>
     );

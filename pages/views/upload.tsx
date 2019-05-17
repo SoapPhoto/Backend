@@ -3,7 +3,9 @@ import * as React from 'react';
 
 import { getImageInfo, IImageInfo, isImage } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
+import { Button } from '@pages/components/Button';
 import { withAuth } from '@pages/components/router/withAuth';
+import { Upload as RCUpload } from '@pages/components/Upload';
 import { UploadCloud } from '@pages/icon';
 import styled from 'styled-components';
 
@@ -20,7 +22,7 @@ const Image = styled.img`
   max-height: 600px;
 `;
 
-const UploadBox = styled.div`
+const UploadBox = styled(RCUpload)`
   cursor: pointer;
   user-select: none;
   display: flex;
@@ -52,12 +54,9 @@ const ImageBox = styled.div<{bg: string}>`
 `;
 
 const Upload = () => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const imageRef = React.useRef<File>();
-  const dragRef = React.useRef<HTMLDivElement>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
-  const [dragState, setDragState] = React.useState('close');
   const addPicture = () => {
     if (imageRef.current) {
       const form = new FormData();
@@ -66,12 +65,9 @@ const Upload = () => {
       request.post('/api/picture/upload', form);
     }
   };
-  const uploadImage = () => {
-    inputRef.current!.click();
-  };
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+  const handleChange = async (files: FileList | null) => {
+    if (files && files[0]) {
+      setFile(files[0]);
     }
   };
   const setFile = async (file: File) => {
@@ -82,31 +78,6 @@ const Upload = () => {
       setImageInfo(info);
     } else {
       console.info('图片格式错误');
-    }
-  };
-  const uploadRef = (e: HTMLDivElement | null) => {
-    if (e && !dragRef.current) {
-      dragRef.current = e;
-      e.addEventListener('dragenter', () => {
-        setDragState('on');
-      });
-      e.addEventListener('dragleave', () => {
-        setDragState('close');
-      });
-      e.addEventListener('drop', (event) => {
-        event.preventDefault();
-        setDragState('close');
-        const files = event.dataTransfer!.files;
-        if (files && files[0]) {
-          setFile(files[0]);
-        }
-      });
-      e.addEventListener('dragover', (event) => {
-        event.preventDefault();
-      });
-      e.addEventListener('dragend', (event) => {
-        event.preventDefault();
-      });
     }
   };
   return (
@@ -120,27 +91,26 @@ const Upload = () => {
           <ImageBox bg={imageUrl} />
         ) : (
           <UploadBox
-            onClick={uploadImage}
-            ref={uploadRef as any}
+            onFileChange={handleChange}
+            drag
           >
-            <UploadCloud size={34} />
-            <span>{dragState === 'on' ? '松开上传' : '拖拽照片到这里'}</span>
+            {
+              type => (
+                <>
+                  <UploadCloud size={34} style={{ pointerEvents: 'none' }} />
+                  <span style={{ pointerEvents: 'none' }} >{type === 'drop' ? '松开上传' : '拖拽照片到这里'}</span>
+                </>
+              )
+            }
           </UploadBox>
         )
       }
-      <input
-        accept="image/*"
-        type="file"
-        ref={inputRef}
-        onChange={handleChange}
-        style={{ visibility: 'hidden' }}
-      />
       <div>
-        <button
+        <Button
           onClick={addPicture}
         >
           <span>上传</span>
-        </button>
+        </Button>
       </div>
     </Wapper>
   );

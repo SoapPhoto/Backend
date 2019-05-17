@@ -40,6 +40,11 @@ export const StyleButton = styled.button<{loading: boolean}>`
   color: #fff;
   transition: .2s color ease, .2s background ease;
   ${loadingCss}
+  &:disabled {
+    cursor: not-allowed;
+    opacity: .25;
+    pointer-events: none;
+  }
 `;
 
 export const Loading = styled.div`

@@ -27,6 +27,8 @@ Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 
 export default class MyApp extends App {
+
+  // 初始化页面数据，初始化store
   public static async getInitialProps(data: CustomNextAppContext<any>) {
     const { ctx, Component } = data;
     const { req } = ctx;

@@ -6,6 +6,7 @@ import { server } from '@pages/common/utils';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { store } from '@pages/stores/init';
+import { reaction } from 'mobx';
 
 type component<P> = React.ComponentClass<P> | React.FC<P>;
 
@@ -32,8 +33,8 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
           break;
         case 'user':
           if (!isLogin) {
-            if (server && ctx.res) {
-              ctx.res.redirect('/login');
+            if (server && ctx.res && ctx.req) {
+              ctx.res.redirect(`/login?redirectUrl=${ctx.req.url}`);
             } else {
               Router.replaceRoute('/login');
             }
@@ -48,8 +49,26 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
 
       return { ...componentProps };
     }
+    public state = {
+      isOk: true,
+    };
+    constructor(props: P) {
+      super(props);
+      reaction(
+        () => store.accountStore.isLogin,
+        (isLogin) => {
+          // 假如登录之后退出登录，退回到首页
+          if (role === 'user' && !isLogin) {
+            window.location.href = '/';
+          }
+        },
+      );
+    }
     public render () {
-      return <WrappedComponent {...this.props} />;
+      if (this.state.isOk) {
+        return <WrappedComponent {...this.props} />;
+      }
+      return null;
     }
   };
 };

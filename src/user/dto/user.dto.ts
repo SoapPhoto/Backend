@@ -1,6 +1,6 @@
-import { IsEmail, IsString, IsUrl, Length } from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 
-import { IsUserName } from '@server/common/validator';
+import { IsUserName, IsWebsite } from '@server/common/validator';
 import { Exclude, Expose } from 'class-transformer';
 
 /**
@@ -64,7 +64,7 @@ export class UpdateProfileSettingDto {
   public readonly bio!: string;
 
   /** 个人网站 */
-  @IsUrl()
+  @IsWebsite()
   @Expose()
   public readonly website!: string;
 }

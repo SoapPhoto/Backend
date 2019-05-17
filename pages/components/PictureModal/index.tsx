@@ -43,7 +43,7 @@ export class PictureModal extends React.Component<IProps> {
   }
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
   　e.stopPropagation();
-    if (e.target === (this.wrapperRef.current as any)) {
+    if (e.target === this.wrapperRef.current) {
       Router.back();
     }
   }
@@ -52,6 +52,7 @@ export class PictureModal extends React.Component<IProps> {
       (
         <div>
           <Mask />
+          {/* TODO: @types/styled-components 最新版导致vscode反应极其慢，暂时使用旧版types */}
           <Warpper ref={this.wrapperRef as any} onClick={this.handleClick}>
             {
               this.detail &&

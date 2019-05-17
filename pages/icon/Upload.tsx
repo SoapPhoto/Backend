@@ -1,11 +1,8 @@
 import * as React from 'react';
 
-export interface IUploadProps {
-  color?: string;
-  size?: string | number;
-}
+import { IIconProps } from '.';
 
-export const Upload: React.FC<IUploadProps> = ({
+export const Upload: React.FC<IIconProps> = ({
   color = 'currentColor',
   size = '24',
   ...restProps

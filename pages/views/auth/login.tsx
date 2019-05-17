@@ -16,7 +16,7 @@ interface IProps extends WithRouterProps {
 
 const Login: React.FC<IProps> = ({ accountStore, router }) => {
   const { query } = parsePath(router!.asPath!);
-  const { login } = accountStore;
+  const { login, isLogin } = accountStore;
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -52,8 +52,9 @@ const Login: React.FC<IProps> = ({ accountStore, router }) => {
       />
       <Button
         loading={confirmLoading}
-        style={{ marginTop: '24px' }}
+        style={{ marginTop: '24px', width: '100%' }}
         onClick={handleOk}
+        disabled={isLogin}
       >
         登录
       </Button>

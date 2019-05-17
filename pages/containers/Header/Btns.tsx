@@ -33,6 +33,10 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
     const [arrowRef, setArrowRef] = React.useState();
     const { isLogin, userInfo } = accountStore!;
     const closeMenu = () => setData(false);
+    const logout = () => {
+      closeMenu();
+      accountStore!.logout();
+    };
     let content = (
       <Link route="/login">
         <Href href="/login">登录</Href>
@@ -94,7 +98,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
                       </MenuItemLink>
                     </MenuItem>
                     <MenuItem>
-                      <MenuItemLink onClick={closeMenu} route="/setting/user">
+                      <MenuItemLink onClick={logout}>
                         退出
                       </MenuItemLink>
                     </MenuItem>

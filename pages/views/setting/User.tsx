@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
+import { getImageUrl } from '@pages/common/utils/image';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
+import { Upload } from '@pages/components/Upload';
 import { AccountStore } from '@pages/stores/AccountStore';
 
 interface IUserProps {
@@ -13,18 +15,30 @@ interface IUserProps {
 
 const User: React.FC<IUserProps> = ({ accountStore }) => {
   const { userInfo, updateProfile } = accountStore!;
+
   const [data, setData] = React.useState({
     name: userInfo!.name || userInfo!.username,
     website: userInfo!.website,
     bio: userInfo!.bio,
   });
   const [btnLoading, setBtnLoading] = React.useState(false);
+
+  const [avatarUrl, setAvatarUrl] = React.useState(userInfo!.avatar);
+  const avatarFile = React.useRef<File>();
+
   const handleOk = async () => {
     setBtnLoading(true);
     try {
-      await updateProfile(data);
+      await updateProfile(data, avatarFile.current);
     } finally {
       setBtnLoading(false);
+    }
+  };
+  const handleAvatarChange = (files: FileList | null) => {
+    if (files) {
+      avatarFile.current = files[0];
+      const url = getImageUrl(files[0]);
+      setAvatarUrl(url);
     }
   };
   return (
@@ -32,12 +46,12 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
       <Cell>
         <Grid columns="96px auto" gap="24px">
           <Cell width={1} center>
-            <Avatar size={96} src={userInfo!.avatar} />
+            <Avatar size={96} src={avatarUrl} />
           </Cell>
           <Cell width={1} middle>
-            <div>
+            <Upload onFileChange={handleAvatarChange}>
               <Button>上传头像</Button>
-            </div>
+            </Upload>
           </Cell>
         </Grid>
       </Cell>

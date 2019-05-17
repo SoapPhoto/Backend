@@ -31,6 +31,15 @@ export class PictureList extends React.Component<IProps> {
   public formatList = (data: PictureEntity[]) => {
     this.colList = this.colArr.map(col => listParse(data, col));
   }
+  public colRender = (col: PictureEntity[], key?: number | string) => (
+    <ColItem key={key}>
+      {
+        col.map((picture, index) => (
+          <PictureItem lazyload={index > 4} key={picture.id} detail={picture} />
+        ))
+      }
+    </ColItem>
+  )
   public render() {
     return (
       <Wapper>
@@ -38,27 +47,13 @@ export class PictureList extends React.Component<IProps> {
           this.colList.map((mainCol, i) => (
             <Col col={this.colArr[i]} key={this.colArr[i]}>
               {
-                mainCol.map((col, index) => (
-                  <ColItem key={index}>
-                    {
-                      col.map(picture => (
-                        <PictureItem key={picture.id} detail={picture} />
-                      ))
-                    }
-                  </ColItem>
-                ))
+                mainCol.map((col, index) => this.colRender(col, index))
               }
             </Col>
           ))
         }
         <Col col={1}>
-          <ColItem>
-            {
-              this.props.data.map(picture => (
-                <PictureItem key={picture.id} detail={picture} />
-              ))
-            }
-          </ColItem>
+          {this.colRender(this.props.data)}
         </Col>
       </Wapper>
     );

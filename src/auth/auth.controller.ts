@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 import { CreateUserDto } from '@server/user/dto/user.dto';
 import { UserService } from '@server/user/user.service';
@@ -14,5 +15,12 @@ export class AuthController {
   ) {
     const data = await this.userService.createUser(body);
     return data;
+  }
+  @Post('logout')
+  public async logout(
+    @Res() res: Response,
+  ) {
+    res.clearCookie('Authorization');
+    res.json();
   }
 }

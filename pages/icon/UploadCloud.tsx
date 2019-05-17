@@ -1,11 +1,8 @@
 import * as React from 'react';
 
-export interface IUploadCloudProps {
-  color?: string;
-  size?: string | number;
-}
+import { IIconProps } from '.';
 
-export const UploadCloud: React.FC<IUploadCloudProps> = ({
+export const UploadCloud: React.FC<IIconProps> = ({
   color = 'currentColor',
   size = '24',
   ...restProps

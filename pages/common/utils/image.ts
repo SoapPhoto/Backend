@@ -33,6 +33,10 @@ function parse(num: number) {
 
 type GetData = (image: File, cb: (this: any) => void) => void;
 
+export function getImageUrl(image: File) {
+  return window.URL.createObjectURL(image);
+}
+
 /**
  * 获取图片详细信息
  *
