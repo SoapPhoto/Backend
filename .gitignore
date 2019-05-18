@@ -43,7 +43,6 @@ jspm_packages
 
 .env
 photo/
-upload/
 
 .DS_Store
 node_modules/
