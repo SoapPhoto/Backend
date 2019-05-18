@@ -37,10 +37,18 @@ export class PictureService {
     };
   }
 
-  public getOnePicture = async (id: string, user: UserEntity) => {
+  public addViewCount(id: number) {
+    return this.pictureRepository.manager.query(`UPDATE picture SET views = views + 1 WHERE id = ${id}`);
+  }
+
+  public getOnePicture = async (id: string, user: UserEntity, view: boolean = false) => {
     const q = this.select(user);
     q.andWhere('picture.id=:id', { id });
     const data = await q.cache(3000).getOne();
+    if (view && data) {
+      this.addViewCount(data.id);
+      data.views += 1;
+    }
     return plainToClass(PictureEntity, data);
   }
 
@@ -77,7 +85,6 @@ export class PictureService {
     }
     if (data.user.id === user.id) {
       await getManager().transaction(async (entityManager) => {
-        await this.activityService.deleteByPicture(data, entityManager);
         await Promise.all([
           entityManager.remove(data),
           this.qiniuService.deleteFile(data.key),

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { InstagramService } from './instagram.service';
 
 @Controller('api/instagram')
@@ -8,7 +8,14 @@ export class InstagramController {
   ) {}
 
   @Get()
-  public test() {
-    this.instagramService.test();
+  public async test() {
+    return this.instagramService.test();
+  }
+
+  @Get(':id')
+  public async test1(
+    @Param('id') id: string,
+  ) {
+    return this.instagramService.test1(id);
   }
 }

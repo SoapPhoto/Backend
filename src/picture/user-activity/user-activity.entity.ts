@@ -12,7 +12,7 @@ export class PictureUserActivityEntity extends BaseEntity {
   @ManyToOne(type => UserEntity)
   public readonly user!: UserEntity;
 
-  @ManyToOne(type => PictureEntity)
+  @ManyToOne(type => PictureEntity, { onDelete: 'CASCADE', cascade: true })
   public readonly picture!: PictureEntity;
 
   @Column({ default: false })

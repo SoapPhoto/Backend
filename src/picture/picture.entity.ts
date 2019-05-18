@@ -26,6 +26,12 @@ export class PictureEntity extends BaseEntity {
   @Column()
   public readonly bio!: string;
 
+  /** 浏览次数 */
+  @Column({
+    default: 0,
+  })
+  public views!: number;
+
   /** 图片原始文件名 */
   @Column()
   public readonly originalname!: string;

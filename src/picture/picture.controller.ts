@@ -86,7 +86,7 @@ export class PictureController {
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.getOnePicture(id, user);
+    return this.pictureService.getOnePicture(id, user, true);
   }
 
   @Put('like/:id([0-9]+)')

@@ -5,6 +5,7 @@ import { NotificationModule } from './notification/notification.module';
 import { PictureModule } from './picture/picture.module';
 import { UserModule } from './user/user.module';
 import { InstagramModule } from './instagram/instagram.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { InstagramModule } from './instagram/instagram.module';
     UserModule,
     NotificationModule,
     InstagramModule,
+    TagModule,
   ],
   // providers: [
   //   {
