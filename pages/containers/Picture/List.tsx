@@ -35,7 +35,7 @@ export class PictureList extends React.Component<IProps> {
     <ColItem key={key}>
       {
         col.map((picture, index) => (
-          <PictureItem lazyload={index > 2} key={picture.id} detail={picture} />
+          <PictureItem lazyload={index > 10} key={picture.id} detail={picture} />
         ))
       }
     </ColItem>

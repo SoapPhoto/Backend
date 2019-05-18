@@ -6,7 +6,7 @@ import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
 import { Avatar } from '@pages/components';
-import { PictureImage } from '@pages/containers/Picture/Item';
+import { PictureImage } from '@pages/containers/Picture/Image';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import styled from 'styled-components';

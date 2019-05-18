@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { getScrollWidth, setBodyCss } from '@pages/common/utils';
 import { request } from '@pages/common/utils/request';
-import { PictureImage } from '@pages/containers/Picture/Item';
+import { PictureImage } from '@pages/containers/Picture/Image';
 import { Router } from '@pages/routes';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';

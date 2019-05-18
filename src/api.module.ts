@@ -4,6 +4,7 @@ import { QiniuModule } from './common/qiniu/qiniu.module';
 import { NotificationModule } from './notification/notification.module';
 import { PictureModule } from './picture/picture.module';
 import { UserModule } from './user/user.module';
+import { InstagramModule } from './instagram/instagram.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { UserModule } from './user/user.module';
     QiniuModule,
     UserModule,
     NotificationModule,
+    InstagramModule,
   ],
   // providers: [
   //   {
