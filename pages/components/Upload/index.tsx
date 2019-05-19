@@ -4,7 +4,7 @@ type DragType = 'leave' | 'drop' | 'over';
 
 export type UploadChildren = React.ReactNode | ((type: DragType) => React.ReactNode);
 
-interface IUploadProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface IUploadProps extends React.HTMLAttributes<HTMLSpanElement> {
   onFileChange: (files: FileList | null) => void;
   wrapperRef?: React.LegacyRef<HTMLSpanElement>;
   drag?: boolean;
