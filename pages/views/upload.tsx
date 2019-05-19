@@ -4,6 +4,7 @@ import * as React from 'react';
 import { getImageInfo, IImageInfo, isImage } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
 import { Button } from '@pages/components/Button';
+import { Input } from '@pages/components/Input';
 import { withAuth } from '@pages/components/router/withAuth';
 import { Upload as RCUpload } from '@pages/components/Upload';
 import { UploadCloud } from '@pages/icon';
@@ -105,6 +106,9 @@ const Upload = () => {
           </UploadBox>
         )
       }
+      <div>
+        <Input />
+      </div>
       <div>
         <Button
           onClick={addPicture}

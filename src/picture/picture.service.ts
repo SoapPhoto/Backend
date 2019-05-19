@@ -4,6 +4,7 @@ import { getManager, Repository } from 'typeorm';
 
 import { QiniuService } from '@server/common/qiniu/qiniu.service';
 import { validator } from '@server/common/utils/validator';
+import { TagService } from '@server/tag/tag.service';
 import { UserEntity } from '@server/user/user.entity';
 import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
@@ -17,10 +18,14 @@ export class PictureService {
   constructor(
     private readonly activityService: PictureUserActivityService,
     private readonly qiniuService: QiniuService,
+    private readonly tagService: TagService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
   ) {}
   public create = async (data: Partial<PictureEntity>) => {
+    if (Array.isArray(data.tags)) {
+      data.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
+    }
     const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );

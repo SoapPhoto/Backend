@@ -1,8 +1,10 @@
 import { Type } from 'class-transformer';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
+import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
+import { IEXIF } from './picture.interface';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')
@@ -19,11 +21,15 @@ export class PictureEntity extends BaseEntity {
   public readonly hash!: string;
 
   /** 图片标题 */
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public readonly title!: string;
 
   /** 图片介绍 */
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public readonly bio!: string;
 
   /** 浏览次数 */
@@ -43,15 +49,6 @@ export class PictureEntity extends BaseEntity {
   /** 图片大小 */
   @Column()
   public readonly size!: number;
-
-  /** 图片作者 */
-  @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.pictures)
-  public readonly user!: UserEntity;
-
-  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
-  public readonly activitys!: PictureUserActivityEntity[];
-
   /** 当前登录用户是否喜欢 */
   @Type(() => Boolean)
   public isLike: boolean = false;
@@ -91,12 +88,18 @@ export class PictureEntity extends BaseEntity {
   @Column('simple-json', {
     nullable: true,
   })
-  public readonly exif?: {
-    aperture?: number;
-    exposureTime?: string;
-    focalLength?: number;
-    iso?: number;
-    gps?: [number, number];
-  };
+  public readonly exif?: IEXIF;
 
+  /** 图片作者 */
+  @Type(() => UserEntity)
+  @ManyToOne(() => UserEntity, user => user.pictures)
+  public readonly user!: UserEntity;
+
+  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
+  public readonly activitys!: PictureUserActivityEntity[];
+
+  /* tagId */
+  @ManyToMany(type => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
+  @JoinTable()
+  public tags!: TagEntity[];
 }

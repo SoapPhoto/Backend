@@ -22,7 +22,7 @@ import { QiniuService } from '@server/common/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
 import { UserEntity } from '@server/user/user.entity';
 import { Maybe } from '@typings/index';
-import { GetPictureListDto } from './dto/picture.dto';
+import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 
 @Controller('api/picture')
@@ -38,24 +38,25 @@ export class PictureController {
   @UseInterceptors(photoUpload('photo'))
   public async upload(
     @UploadedFile() file: File,
-    @Body('info') infoStr: string,
+    @Body() body: CreatePictureAddDot,
     @User() user: UserEntity,
   ) {
     if (!file) {
       throw new BadRequestException('error file');
     }
     try {
-      let info = {};
-      if (infoStr) {
-        info = JSON.parse(infoStr);
-      }
+      const { info, tags, ...restInfo } = body;
+      const infoObj = JSON.parse(info);
+      const tagObj = JSON.parse(tags);
       const data = await this.qiniuService.uploadFile(file);
       const picture = await this.pictureService.create({
         user,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
-        ...info,
+        tags: tagObj,
+        ...infoObj,
+        ...restInfo,
         ...data,
       });
       return picture;
