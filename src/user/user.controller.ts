@@ -41,22 +41,12 @@ export class UserController {
     private readonly qiniuService: QiniuService,
   ) {}
 
-  @Get('me')
-  public async getAccountInfo(
-    @Req() req: Request,
-    @Res() res: Response,
+  @Get('whoami')
+  @Roles('user')
+  public async getMyInfo(
+    @User() user: UserEntity,
   ) {
-    if (req.cookies.Authorization) {
-      req.headers.Authorization = req.cookies.Authorization;
-    }
-    const request = new OAuth2Server.Request(req);
-    const response = new OAuth2Server.Response(res);
-    try {
-      const token = await this.oauthServerService.server.authenticate(request, response);
-      res.json(plainToClass(UserEntity, token.user));
-    } catch (err) {
-      res.json(null);
-    }
+    return plainToClass(UserEntity, user);
   }
   @Get(':id([0-9]+)/picture')
   public async getUserIdPicture(

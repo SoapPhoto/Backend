@@ -1,10 +1,11 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { PictureModule } from '@server/picture/picture.module';
 import { UserController } from './user.controller';
 import { UserEntity } from './user.entity';
+import { UserResolver } from './user.resolvers';
 import { UserService } from './user.service';
 
 @Module({
@@ -12,7 +13,7 @@ import { UserService } from './user.service';
     TypeOrmModule.forFeature([UserEntity]),
     PictureModule,
   ],
-  providers: [UserService],
+  providers: [UserService, UserResolver],
   exports: [UserService],
   controllers: [UserController],
 })

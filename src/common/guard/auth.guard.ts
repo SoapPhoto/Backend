@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -12,7 +13,15 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    if (request.user) return true;
+    let user;
+    if (request) {
+      user = request.user;
+    } else {
+      // graphql
+      const ctx = GqlExecutionContext.create(context).getContext();
+      user = ctx.user;
+    }
+    if (user) return true;
     throw new UnauthorizedException();
   }
 }

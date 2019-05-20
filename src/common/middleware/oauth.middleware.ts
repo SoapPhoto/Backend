@@ -7,6 +7,7 @@ import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.serv
 import { UserEntity } from '@server/user/user.entity';
 import { plainToClass } from 'class-transformer';
 
+import { NextFunction } from 'express';
 import * as OAuth2Server from 'oauth2-server';
 
 @Injectable()

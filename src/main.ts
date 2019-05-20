@@ -4,7 +4,6 @@ require('dotenv').config();
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';
@@ -25,15 +24,12 @@ async function bootstrap() {
     transform: true,
   }));
   server.useWebSocketAdapter(new WsAdapter(server));
-
-  // swagger 文档
-  const options = new DocumentBuilder()
-    .setTitle('Soap')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(server, options);
-  SwaggerModule.setup('docs', server, document);
+  server.enableCors({
+    origin: [
+      'http://localhost:3001',
+      'http://localhost.com:3001',
+    ],
+  });
 
   const renderer = server.get(RenderModule);
   renderer.register(server, app, {
