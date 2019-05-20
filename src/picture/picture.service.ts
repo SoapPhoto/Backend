@@ -46,7 +46,7 @@ export class PictureService {
     return this.pictureRepository.manager.query(`UPDATE picture SET views = views + 1 WHERE id = ${id}`);
   }
 
-  public getOnePicture = async (id: string, user: UserEntity, view: boolean = false) => {
+  public getOnePicture = async (id: string, user: Maybe<UserEntity>, view: boolean = false) => {
     const q = this.select(user);
     q.andWhere('picture.id=:id', { id });
     const data = await q.cache(3000).getOne();

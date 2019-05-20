@@ -7,6 +7,7 @@ import { NotificationModule } from '@server/notification/notification.module';
 import { TagModule } from '@server/tag/tag.module';
 import { PictureController } from './picture.controller';
 import { PictureEntity } from './picture.entity';
+import { PictureResolver } from './picture.resolvers';
 import { PictureService } from './picture.service';
 import { PictureUserActivityModule } from './user-activity/user-activity.module';
 
@@ -18,7 +19,7 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
     PictureUserActivityModule,
     TagModule,
   ],
-  providers: [PictureService],
+  providers: [PictureService, PictureResolver],
   controllers: [PictureController],
   exports: [PictureService],
 })

@@ -7,6 +7,12 @@ export class GetPictureListDto extends PaginationDto {
 
 }
 
+export class GetUserPictureListDto extends GetPictureListDto {
+  public readonly id!: string;
+
+  public readonly username!: string;
+}
+
 @Exclude()
 export class CreatePictureAddDot {
   /**

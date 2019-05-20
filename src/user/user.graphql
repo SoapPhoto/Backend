@@ -1,5 +1,12 @@
 type Query {
+  "获取登录用户信息"
   whoami: User
+
+  "获取单个用户信息"
+  user(
+    id: ID
+    username: String
+  ): User
 }
 
 """
@@ -8,6 +15,7 @@ type Query {
 type User {
   "id"
   id: ID!
+
   "用户名"
   username: String
 
