@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 
+import { EmailService } from '@server/common/modules/email/email.service';
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
@@ -15,22 +16,39 @@ import { UserEntity } from './user.entity';
 export class UserService {
   constructor(
     private pictureService: PictureService,
+    private EmailService: EmailService,
     @InjectRepository(UserEntity)
     private userEntity: Repository<UserEntity>,
   ) {}
 
-  public async createUser(data: CreateUserDto): Promise<UserEntity> {
+  public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
     const salt = await crypto.randomBytes(32).toString('hex');
     const hash = await crypto.pbkdf2Sync(data.password, salt, 20, 32, 'sha512').toString('hex');
     const user = await this.userEntity.save(
       this.userEntity.create({
         salt,
         hash,
+        ...data,
         username: data.username,
         email: data.email,
       }),
     );
     return user;
+  }
+
+  public async signup(data: CreateUserDto, isEmail: boolean = true) {
+    const user = await this.userEntity.findOne({ email: data.email });
+    if (user) {
+      throw new BadGatewayException('email is registered');
+    }
+    const identifier = data.email;
+    const verificationToken = Math.random().toString(35).substr(2, 6);
+    // this.createUser({
+    //   ...data,
+    //   identifier,
+    //   verificationToken,
+    // });
+    this.EmailService.sendSignupEmail(identifier, verificationToken);
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {

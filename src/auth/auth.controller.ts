@@ -13,7 +13,7 @@ export class AuthController {
   public async signup(
     @Body() body: CreateUserDto,
   ) {
-    const data = await this.userService.createUser(body);
+    const data = await this.userService.signup(body);
     return data;
   }
   @Post('logout')

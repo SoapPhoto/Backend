@@ -9,6 +9,6 @@ export class EmailController {
   ) {}
   @Get()
   public async test() {
-    return this.emailService.sendEmail('1103307414@qq.com');
+    // return this.emailService.sendSignupEmail('a1103307414@live.com');
   }
 }
