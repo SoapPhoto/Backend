@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { box } from '@pages/common/utils/themes/common';
 import { Input as BaseInput } from '@pages/components/Input';
 import { Upload as RCUpload } from '@pages/components/Upload';
 
@@ -37,6 +38,7 @@ export const UploadBox = styled(RCUpload)`
 `;
 
 export const Box = styled.div`
+  ${props => box(props.theme, '100%', true)}
   max-width: 1000px;
   width: 100%;
   margin: 0 auto;

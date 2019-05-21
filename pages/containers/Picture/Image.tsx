@@ -51,7 +51,7 @@ export class PictureImage extends React.Component<IPictureImage> {
         style={{
           opacity: this.opacity,
         }}
-        ref={this.imgRef as any}
+        ref={this.imgRef}
         src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
         onLoad={this.onLoad}
       />

@@ -52,8 +52,7 @@ export class PictureModal extends React.Component<IProps> {
       (
         <div>
           <Mask />
-          {/* TODO: @types/styled-components 最新版导致vscode反应极其慢，暂时使用旧版types */}
-          <Warpper ref={this.wrapperRef as any} onClick={this.handleClick}>
+          <Warpper ref={this.wrapperRef} onClick={this.handleClick}>
             {
               this.detail &&
               <Content>

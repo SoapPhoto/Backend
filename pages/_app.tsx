@@ -4,6 +4,7 @@ import App, { Container } from 'next/app';
 import * as React from 'react';
 
 import { parsePath, server } from '@pages/common/utils';
+import { DefaultQuery } from 'next/router';
 import { CustomNextAppContext } from './common/interfaces/global';
 import { getCurrentTheme, ThemeType } from './common/utils/themes';
 import { PictureModal } from './components';
@@ -12,14 +13,17 @@ import { ThemeWrapper } from './containers/Theme';
 import { Router } from './routes';
 import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
 
+interface IPageError {
+  error?: string;
+  statusCode: number;
+  message?: string;
+}
+
 interface IPageProps {
   initialStore: IInitialStore;
-  error?: {
-    error?: string;
-    statusCode: number;
-    message?: string;
-  };
+  error?: IPageError;
 }
+
 Router.events.on('routeChangeStart', (url: string) => {
   store.appStore.setLoading(true);
 });
@@ -29,7 +33,7 @@ Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 export default class MyApp extends App {
 
   // 初始化页面数据，初始化store
-  public static async getInitialProps(data: CustomNextAppContext<any>) {
+  public static async getInitialProps(data: CustomNextAppContext) {
     const { ctx, Component } = data;
     const { req } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;
@@ -46,7 +50,7 @@ export default class MyApp extends App {
       },
     };
     if (ctx.query.error) {
-      basePageProps.error = ctx.query.error;
+      basePageProps.error = (ctx.query.error as any) as IPageError;
     }
     let pageProps = {
       ...basePageProps,
@@ -87,7 +91,7 @@ export default class MyApp extends App {
   }
   public render() {
     const { Component, pageProps, router } = this.props;
-    const { picture } = router.query as any;
+    const { picture } = router.query!;
     return (
       <Container>
         <Provider {...this.mobxStore}>
@@ -95,7 +99,7 @@ export default class MyApp extends App {
             <BodyLayout header={!pageProps.error}>
               {
                 picture &&
-                <PictureModal pictureId={picture} />
+                <PictureModal pictureId={picture.toString()} />
               }
               <Component
                 {...pageProps}

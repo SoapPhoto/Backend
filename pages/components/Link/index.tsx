@@ -8,7 +8,7 @@ export class Link extends React.Component<LinkProps> {
     const { children } = this.props;
     const child: any = Children.only(children);
     return (
-      <BaseLink {...this.props as any} >
+      <BaseLink {...this.props} >
         {React.cloneElement(child, {
           onClick: (e: any) => {
             store.appStore.setRoute({

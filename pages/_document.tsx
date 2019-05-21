@@ -23,8 +23,7 @@ export default class MyDocument extends Document {
         ),
       };
     } finally {
-      // TODO: @types/styled-components 最新版导致vscode反应极其慢，暂时使用旧版types
-      (sheet as any).seal();
+      sheet.seal();
     }
   }
   public render() {

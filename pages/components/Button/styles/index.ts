@@ -57,7 +57,7 @@ export const Loading = styled.div`
   align-items: center;
   justify-content: center;
   & span {
-    animation-name: ${animate as any};
+    animation-name: ${animate};
     animation-duration: 1.4s;
     animation-iteration-count: infinite;
     animation-fill-mode: both;
