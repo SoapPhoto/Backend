@@ -22,7 +22,8 @@
           "./pages"
         ],
         "alias": {
-          "@src": "./pages"
+          "@pages": "./pages",
+          "@server": "./.next/production-server"
         },
         "extensions": [
           ".ts",

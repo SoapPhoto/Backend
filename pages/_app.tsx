@@ -79,6 +79,16 @@ export default class MyApp extends App {
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
   public componentDidMount() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((_) => {
+          console.log('service worker registration successful');
+        })
+        .catch((err) => {
+          console.warn('service worker registration failed', err.message);
+        });
+    }
     Router.beforePopState(({ url, as, options }) => {
       store.appStore.setRoute({
         as,

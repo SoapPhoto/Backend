@@ -3,10 +3,12 @@ import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
-import { IsEmail } from 'class-validator';
+import { IsEmail, ValidateIf } from 'class-validator';
 
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
+
+type SignupType = 'email' | 'oauth';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -24,10 +26,33 @@ export class UserEntity extends BaseEntity {
   @Column()
   public readonly name!: string;
 
+  /** 是否验证 */
+  @Column({ default: false })
+  public readonly verified!: boolean;
+
+  /** 识别码:一般是邮箱 */
+  @Column({
+    nullable: true,
+  })
+  public readonly identifier!: string;
+
+  /** 邮箱验证的随机验证码 */
+  @Column({
+    nullable: true,
+  })
+  public readonly verificationToken!: string;
+
+  /** 注册的类型 */
+  @Column({
+    default: 'email',
+  })
+  public readonly signupType!: SignupType;
+
   /** 邮箱 */
+  @ValidateIf(o => !!o.email)
   @IsEmail()
   @Column({
-    unique: true,
+    unique: false,
   })
   public readonly email!: string;
 

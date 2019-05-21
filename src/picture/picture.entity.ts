@@ -40,6 +40,11 @@ export class PictureEntity extends BaseEntity {
   })
   public readonly bio!: string;
 
+  @Column({
+    default: false,
+  })
+  public readonly isPrivate!: boolean;
+
   /** 浏览次数 */
   @Column({
     default: 0,
@@ -100,7 +105,7 @@ export class PictureEntity extends BaseEntity {
 
   /** 图片作者 */
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.pictures)
+  @ManyToOne(() => UserEntity, user => user.pictures, { eager: true })
   public readonly user!: UserEntity;
 
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)

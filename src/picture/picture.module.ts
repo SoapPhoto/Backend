@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
-import { QiniuModule } from '@server/common/qiniu/qiniu.module';
+import { QiniuModule } from '@server/common/modules/qiniu/qiniu.module';
 import { NotificationModule } from '@server/notification/notification.module';
 import { TagModule } from '@server/tag/tag.module';
 import { PictureController } from './picture.controller';

@@ -18,7 +18,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
-import { QiniuService } from '@server/common/qiniu/qiniu.service';
+import { QiniuService } from '@server/common/modules/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
 import { UserEntity } from '@server/user/user.entity';
 import { Maybe } from '@typings/index';

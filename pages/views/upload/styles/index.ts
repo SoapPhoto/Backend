@@ -58,9 +58,6 @@ export const FormBox = styled.div`
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`
-  border: none;
-  box-shadow: none !important;
   font-size: ${_ => _.isTitle ? 34 : 16}px;
-  text-align: center;
   margin-bottom: 12px;
 `;

@@ -15,6 +15,7 @@ import { ViewsModule } from './views/views.module';
 
 import { Request, Response } from 'express';
 import { GraphQLError } from 'graphql';
+import { EmailModule } from './common/modules/email/email.module';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { NotificationEntity } from './notification/notification.entity';
 import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
@@ -72,6 +73,7 @@ import { UserEntity } from './user/user.entity';
     ViewsModule,
     CacheModule,
     ApiModule,
+    EmailModule,
     // EventsModule,
   ],
   providers: [

@@ -1,4 +1,5 @@
 import { CacheInterceptor, Controller, Get, Render, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import path from 'path';
 
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
 import { Response } from 'express';
@@ -49,5 +50,13 @@ export class ViewsController {
     @Res() res: Response,
   ) {
     res.redirect('/setting/profile');
+  }
+
+  @Get('service-worker.js')
+  public async serviceWorker(
+    @Res() res: Response,
+  ) {
+    const data = path.join(process.cwd(), '.next', 'service-worker.js');
+    res.sendFile(data);
   }
 }

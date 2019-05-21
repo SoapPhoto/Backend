@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 
-import { QiniuService } from '@server/common/qiniu/qiniu.service';
+import { QiniuService } from '@server/common/modules/qiniu/qiniu.service';
 import { validator } from '@server/common/utils/validator';
 import { TagService } from '@server/tag/tag.service';
 import { UserEntity } from '@server/user/user.entity';

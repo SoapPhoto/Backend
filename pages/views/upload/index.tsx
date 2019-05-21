@@ -44,7 +44,20 @@ const Upload = () => {
       <Box>
         {
           imageUrl ? (
-            <ImageBox bg={imageUrl} />
+            <>
+              <ImageBox bg={imageUrl} />
+              <FormBox>
+                <Input isTitle placeholder="标题" />
+                <Input placeholder="简介" />
+              </FormBox>
+              <div>
+                <Button
+                  onClick={addPicture}
+                >
+                  <span>上传</span>
+                </Button>
+              </div>
+            </>
           ) : (
             <UploadBox
               onFileChange={handleChange}
@@ -61,17 +74,6 @@ const Upload = () => {
             </UploadBox>
           )
         }
-        <FormBox>
-          <Input isTitle placeholder="标题" />
-          <Input placeholder="简介" />
-        </FormBox>
-        <div>
-          <Button
-            onClick={addPicture}
-          >
-            <span>上传</span>
-          </Button>
-        </div>
       </Box>
     </Wapper>
   );

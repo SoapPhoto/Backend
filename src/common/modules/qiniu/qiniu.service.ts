@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as qiniu from 'qiniu';
 
-import { File } from '../interface/file.interface';
+import { File } from '../../interface/file.interface';
 
 @Injectable()
 export class QiniuService {
