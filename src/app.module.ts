@@ -15,8 +15,8 @@ import { ViewsModule } from './views/views.module';
 
 import { Request, Response } from 'express';
 import { GraphQLError } from 'graphql';
-import { EmailModule } from './common/modules/email/email.module';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
+import { EmailModule } from './common/modules/email/email.module';
 import { NotificationEntity } from './notification/notification.entity';
 import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
 import { AccessTokenEntity } from './oauth/access-token/access-token.entity';

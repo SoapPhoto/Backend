@@ -1,4 +1,4 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
@@ -7,7 +7,7 @@ import { EmailService } from '@server/common/modules/email/email.service';
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
-import { Maybe } from '@typings/index';
+import { Maybe, MutablePartial, MutableRequired } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
@@ -16,7 +16,7 @@ import { UserEntity } from './user.entity';
 export class UserService {
   constructor(
     private pictureService: PictureService,
-    private EmailService: EmailService,
+    private emailService: EmailService,
     @InjectRepository(UserEntity)
     private userEntity: Repository<UserEntity>,
   ) {}
@@ -39,16 +39,29 @@ export class UserService {
   public async signup(data: CreateUserDto, isEmail: boolean = true) {
     const user = await this.userEntity.findOne({ email: data.email });
     if (user) {
-      throw new BadGatewayException('email is registered');
+      throw new BadRequestException('email is registered');
     }
-    const identifier = data.email;
-    const verificationToken = Math.random().toString(35).substr(2, 6);
-    // this.createUser({
-    //   ...data,
-    //   identifier,
-    //   verificationToken,
-    // });
-    this.EmailService.sendSignupEmail(identifier, verificationToken);
+    const info: MutablePartial<UserEntity> = {};
+    if (isEmail) {
+      info.identifier = data.email;
+      info.verificationToken = Math.random().toString(35).substr(2, 6);
+    }
+    const userInfo = await this.createUser({
+      ...data,
+      ...info,
+    });
+    // 发送email验证邮件
+    if (isEmail) {
+      try {
+        await this.emailService.sendSignupEmail(info.identifier!, info.verificationToken!, userInfo);
+      } catch (err) {
+        Logger.error(err);
+        throw new BadRequestException('email failed to send');
+      }
+    }
+    return {
+      message: 'email is send',
+    };
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
@@ -57,14 +70,18 @@ export class UserService {
       .getOne();
     if (user) {
       const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
-      if (hash === user.hash) {
-        return plainToClass(UserEntity, user);
+      if (hash !== user.hash) {
+        return undefined;
       }
+      if (!user.verified) {
+        throw new UnauthorizedException('email is not activated');
+      }
+      return plainToClass(UserEntity, user);
     }
     return undefined;
   }
 
-  public async getUser(query: string, user: Maybe<UserEntity>): Promise<UserEntity> {
+  public async getUser(query: string, user: Maybe<UserEntity>, groups?: string[]): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user')
       .loadRelationCountAndMap(
         'user.pictureCount', 'user.pictures',
@@ -86,14 +103,28 @@ export class UserService {
         );
     }
     const data = await q.cache(true).getOne();
-    return plainToClass(UserEntity, data);
+    return plainToClass(UserEntity, data, {
+      groups,
+    });
   }
 
   public async getUserPicture(id: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserPicture(id, query, user);
   }
 
-  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto, avatar?: string) {
+  public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {
+    const data = await this.userEntity.save(
+      this.userEntity.merge(
+        user,
+        body,
+      ),
+    );
+    return plainToClass(UserEntity, data, {
+      groups,
+    });
+  }
+
+  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto, avatar?: string, groups?: string[]) {
     const data = await this.userEntity.save(
       this.userEntity.merge(
         user,
@@ -101,7 +132,8 @@ export class UserService {
         avatar ? { avatar } : {},
       ),
     );
-    console.log(data);
-    return plainToClass(UserEntity, data);
+    return plainToClass(UserEntity, data, {
+      groups,
+    });
   }
 }

@@ -1,0 +1,23 @@
+<mjml>
+  <mj-body>
+    <mj-section
+      background-color="#fff"
+      border-radius="12px"
+      border="thin solid #dadce0"
+      full-width="full-width"
+    >
+      <mj-column>
+        <mj-text font-size="24px" align="center" color="#05f" font-family="helvetica">${username}，欢迎注册Soap</mj-text>
+        <mj-button
+          font-family="Helvetica"
+          href="${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}"
+          background-color="#05f"
+          color="white"
+        >
+          验证邮箱
+         </mj-button>
+        <mj-divider border-color="#05f" border-style="dashed" border-width="1px"></mj-divider>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

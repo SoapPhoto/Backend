@@ -1,6 +1,8 @@
-import { CacheInterceptor, Controller, Get, Render, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, Controller, Get, Query, Render, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import path from 'path';
 
+import { AuthService } from '@server/auth/auth.service';
+import { ValidatorEmailDto } from '@server/auth/dto/auth.dto';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
 import { Response } from 'express';
 
@@ -8,6 +10,10 @@ import { Response } from 'express';
 @UseInterceptors(CacheInterceptor)
 @UseGuards(ViewAuthGuard)
 export class ViewsController {
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
+
   @Get()
   @Render('home')
   public async index() {
@@ -25,6 +31,14 @@ export class ViewsController {
     @Res() res: any,
   ) {
     res.render('picture', {});
+  }
+
+  @Get('validatoremail')
+  @Render('auth/validatoremail')
+  public async validatoremail(
+    @Query() query: ValidatorEmailDto,
+  ) {
+    return this.authService.validatoremail(query);
   }
 
   @Get('login')

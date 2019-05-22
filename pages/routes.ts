@@ -10,6 +10,7 @@ interface IRouteObject {
 export const routeObject: IRouteObject = {
   '/': 'views/home',
   '/login': 'views/auth/login',
+  '/validatoremail': 'views/auth/validatoremail',
   '/upload': 'views/upload',
   '/picture/:id([0-9]+)': 'views/picture',
   '/setting/:type(profile|basic)': 'views/setting',
