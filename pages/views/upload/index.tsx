@@ -6,7 +6,8 @@ import { request } from '@pages/common/utils/request';
 import { Button } from '@pages/components/Button';
 import { withAuth } from '@pages/components/router/withAuth';
 import { UploadCloud } from '@pages/icon';
-import { Box, FormBox, ImageBox, Input, UploadBox, Wapper } from './styles';
+import { Cell, Grid } from 'styled-css-grid';
+import { Box, Content, ImageBox, Input, UploadBox, Wapper } from './styles';
 
 const Upload = () => {
   const imageRef = React.useRef<File>();
@@ -43,21 +44,29 @@ const Upload = () => {
       </Head>
       <Box>
         {
-          imageUrl ? (
-            <>
-              <ImageBox bg={imageUrl} />
-              <FormBox>
-                <Input isTitle placeholder="标题" />
-                <Input placeholder="简介" />
-              </FormBox>
-              <div>
-                <Button
-                  onClick={addPicture}
-                >
-                  <span>上传</span>
-                </Button>
-              </div>
-            </>
+          true ? (
+            <Grid columns={10}>
+              <Cell width={4}>
+                <ImageBox bg={imageUrl} />
+              </Cell>
+              <Content width={6}>
+                <Grid columns={1}>
+                  <Cell>
+                    <Input isTitle placeholder="标题" />
+                    <Input placeholder="简介" />
+                  </Cell>
+                  <Cell>
+                    <div>
+                      <Button
+                        onClick={addPicture}
+                      >
+                        <span>上传</span>
+                      </Button>
+                    </div>
+                  </Cell>
+                </Grid>
+              </Content>
+            </Grid>
           ) : (
             <UploadBox
               onFileChange={handleChange}

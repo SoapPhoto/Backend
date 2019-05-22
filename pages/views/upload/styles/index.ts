@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { box } from '@pages/common/utils/themes/common';
 import { Input as BaseInput } from '@pages/components/Input';
 import { Upload as RCUpload } from '@pages/components/Upload';
+import { Cell } from 'styled-css-grid';
 
 export const Wapper = styled.div`
   display: flex;
@@ -53,11 +54,20 @@ export const ImageBox = styled.div<{bg: string}>`
   background-size: cover;
 `;
 
-export const FormBox = styled.div`
-  margin-top: 48px;
+export const Content = styled(Cell)`
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`
   font-size: ${_ => _.isTitle ? 34 : 16}px;
-  margin-bottom: 12px;
+  border: none;
+  background-color: transparent;
+  margin-bottom: 24px;
+  height: auto;
+  padding: 12px 0;
+  box-shadow: none !important;
+  border-bottom: 1px solid #ccc !important;
+  border-radius: 0;
+  &:focus {
+    border-color: ${_ => _.theme.colors.primary} !important;
+  }
 `;
