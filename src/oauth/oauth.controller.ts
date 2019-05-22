@@ -1,5 +1,6 @@
 import { BadRequestException, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
+import parserAgent from 'ua-parser-js';
 
 import { OauthServerService } from './oauth-server/oauth-server.service';
 
@@ -21,6 +22,7 @@ export class OauthController {
       const request = new OAuth2Server.Request(req);
       const response = new OAuth2Server.Response(res);
       const token = await this.oauthServerService.server.token(request, response);
+      console.log((parserAgent as any)(req.header('user-agent')));
       res.cookie('Authorization', `Bearer ${token.accessToken}`, {
         expires: token.accessTokenExpiresAt,
         httpOnly: true,

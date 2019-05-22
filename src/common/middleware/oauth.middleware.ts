@@ -7,7 +7,7 @@ import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.serv
 import { UserEntity } from '@server/user/user.entity';
 import { plainToClass } from 'class-transformer';
 
-import { NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as OAuth2Server from 'oauth2-server';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class OauthMiddleware implements NestMiddleware {
   constructor(
     private readonly oauthServerService: OauthServerService,
   ) {}
-  public async use(req: any, res: any, next: () => void) {
-    const isReq = /text\/html|application\/json/g.test(req.headers.accept);
+  public async use(req: Request, res: Response, next: () => void) {
+    const isReq = /text\/html|application\/json/g.test(req.headers.accept || '');
     if (!isReq) {
       next();
       return;

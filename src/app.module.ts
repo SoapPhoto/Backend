@@ -50,7 +50,7 @@ import { UserEntity } from './user/user.entity';
     }),
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
-      context: ({ req }: { req: Request & {user: UserEntity} }) => ({
+      context: ({ req }: { req: Request }) => ({
         headers: req.headers,
         cookies: req.cookies,
         user: req.user,
