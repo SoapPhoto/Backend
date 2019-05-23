@@ -5,19 +5,28 @@ import { getImageInfo, IImageInfo, isImage } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
 import { Button } from '@pages/components/Button';
 import { withAuth } from '@pages/components/router/withAuth';
+import Tag from '@pages/components/Tag';
 import { UploadCloud } from '@pages/icon';
 import { Cell, Grid } from 'styled-css-grid';
 import { Box, Content, ImageBox, Input, UploadBox, Wapper } from './styles';
 
 const Upload = () => {
   const imageRef = React.useRef<File>();
+  // 图片的一些参数
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
+  // 图片的一些信息
+  const [title, setTitle] = React.useState('');
+  const [bio, setBio] = React.useState('');
+  const [tags, setTags] = React.useState<string[]>([]);
   const [imageUrl, setImageUrl] = React.useState('');
   const addPicture = () => {
     if (imageRef.current) {
       const form = new FormData();
       form.append('photo', imageRef.current);
       form.append('info', JSON.stringify(imageInfo));
+      form.append('title', title);
+      form.append('bio', bio);
+      form.append('tags', JSON.stringify(tags.map(tag => ({ name: tag }))));
       request.post('/api/picture/upload', form);
     }
   };
@@ -44,25 +53,35 @@ const Upload = () => {
       </Head>
       <Box>
         {
-          true ? (
-            <Grid columns={10}>
-              <Cell width={4}>
+          imageUrl ? (
+            <Grid columns="40% 1fr" gap="36px">
+              <Cell>
                 <ImageBox bg={imageUrl} />
               </Cell>
-              <Content width={6}>
+              <Content>
                 <Grid columns={1}>
                   <Cell>
-                    <Input isTitle placeholder="标题" />
-                    <Input placeholder="简介" />
+                    <Input
+                      isTitle
+                      placeholder="标题"
+                      value={title}
+                      onChange={e => setTitle(e.target.value)}
+                    />
+                    <Input
+                      placeholder="简介"
+                      value={bio}
+                      onChange={e => setBio(e.target.value)}
+                    />
+                    <div>
+                      <Tag value={tags} onChange={setTags} />
+                    </div>
                   </Cell>
                   <Cell>
-                    <div>
-                      <Button
-                        onClick={addPicture}
-                      >
-                        <span>上传</span>
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={addPicture}
+                    >
+                      <span>上传</span>
+                    </Button>
                   </Cell>
                 </Grid>
               </Content>

@@ -65,7 +65,7 @@ export const Input = styled(BaseInput)<{isTitle?: boolean}>`
   height: auto;
   padding: 12px 0;
   box-shadow: none !important;
-  border-bottom: 1px solid #ccc !important;
+  border-bottom: 1px solid ${_ => _.theme.colors.gray} !important;
   border-radius: 0;
   &:focus {
     border-color: ${_ => _.theme.colors.primary} !important;

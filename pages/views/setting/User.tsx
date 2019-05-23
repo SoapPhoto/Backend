@@ -6,6 +6,7 @@ import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
+import Toast from '@pages/components/Toast';
 import { Upload } from '@pages/components/Upload';
 import { AccountStore } from '@pages/stores/AccountStore';
 
@@ -30,6 +31,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
     setBtnLoading(true);
     try {
       await updateProfile(data, avatarFile.current);
+      Toast.success('修改成功');
     } finally {
       setBtnLoading(false);
     }
