@@ -17,7 +17,7 @@ export class PictureStore extends BaseStore {
   @observable public list: PictureEntity[] = [];
   @observable public listQuery: IBaseQuery = {
     page: 1,
-    pageSize: 10,
+    pageSize: 30,
     timestamp: Number(new Date().toISOString()),
   };
   @observable public count: number = 0;
@@ -26,7 +26,7 @@ export class PictureStore extends BaseStore {
   public getList = async (query?: IBaseQuery) => {
     this.init = true;
     const { data } = await request.get<IPictureListRequest>('/api/picture', {
-      data: {
+      params: {
         ...this.listQuery,
         ...query,
       },

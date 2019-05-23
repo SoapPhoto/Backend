@@ -6,11 +6,13 @@ import { request } from '@pages/common/utils/request';
 import { Button } from '@pages/components/Button';
 import { withAuth } from '@pages/components/router/withAuth';
 import Tag from '@pages/components/Tag';
+import Toast from '@pages/components/Toast';
 import { UploadCloud } from '@pages/icon';
+import { Router } from '@pages/routes';
 import { Cell, Grid } from 'styled-css-grid';
 import { Box, Content, ImageBox, Input, UploadBox, Wapper } from './styles';
 
-const Upload = () => {
+const Upload: React.FC = () => {
   const imageRef = React.useRef<File>();
   // 图片的一些参数
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
@@ -19,7 +21,10 @@ const Upload = () => {
   const [bio, setBio] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
   const [imageUrl, setImageUrl] = React.useState('');
-  const addPicture = () => {
+  const [uploadLoading, setUploadLoading] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
+  const addPicture = async () => {
+    setUploadLoading(true);
     if (imageRef.current) {
       const form = new FormData();
       form.append('photo', imageRef.current);
@@ -27,7 +32,11 @@ const Upload = () => {
       form.append('title', title);
       form.append('bio', bio);
       form.append('tags', JSON.stringify(tags.map(tag => ({ name: tag }))));
-      request.post('/api/picture/upload', form);
+      await request.post('/api/picture/upload', form);
+      setUploadLoading(false);
+      setDisabled(true);
+      Toast.success('上传成功！');
+      Router.pushRoute('/');
     }
   };
   const handleChange = async (files: FileList | null) => {
@@ -76,9 +85,13 @@ const Upload = () => {
                       <Tag value={tags} onChange={setTags} />
                     </div>
                   </Cell>
-                  <Cell>
+                  <Cell
+                    style={{ textAlign: 'right' }}
+                  >
                     <Button
                       onClick={addPicture}
+                      loading={uploadLoading}
+                      disabled={disabled}
                     >
                       <span>上传</span>
                     </Button>

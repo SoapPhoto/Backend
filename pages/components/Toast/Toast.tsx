@@ -1,3 +1,4 @@
+import { ThemeWrapper } from '@pages/containers/Theme';
 import { IObservableArray, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -6,7 +7,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import styled from 'styled-components';
 import uniqid from 'uniqid';
 
-type ToastType = 'success' | 'warning' | 'danger' | 'base';
+type ToastType = 'success' | 'warning' | 'error' | 'danger' | 'base';
 
 interface IToastConfig  {
   key?: string | number;
@@ -17,26 +18,69 @@ interface IToastConfig  {
 
 const height = 72;
 
+const style: Record<ToastType, string> = {
+  success: '#007aff',
+  error: '#eb5757',
+  danger: '#eb5757',
+  warning: '#f5a623',
+  base: '#fff',
+};
+
+const styleColor: Record<ToastType, string> = {
+  success: '#fff',
+  error: '#fff',
+  danger: '#fff',
+  warning: '#fff',
+  base: '#000',
+};
+
 const form = [
-  'translate3d(0px, 72px, -1px)',
-  'translate3d(0, 0, 0) scale(1)',
-  'translate3d(0, -14px, 0) scale(0.95)',
-  'translate3d(0, -14px, 0) scale(0.95)',
+  {
+    transform: 'translate3d(0px, 100px, -1px)',
+    opacity: 0,
+  },
+  {
+    transform: 'translate3d(0, 0, 0) scale(1)',
+    opacity: 0,
+  },
+  {
+    transform: 'translate3d(0, -14px, 0) scale(0.95)',
+    opacity: 0,
+  },
+  {
+    transform: 'translate3d(0, -14px, 0) scale(0.95)',
+    opacity: 0,
+  },
 ];
 const to = [
-  'translate3d(0, 0, 0)',
-  'translate3d(0, -14px, 0) scale(.95)',
-  'translate3d(0, -28px, 0) scale(0.9)',
-  'translate3d(0, -28px, 0) scale(0.9)',
+  {
+    transform: 'translate3d(0, 0, 0)',
+    opacity: 1,
+  },
+  {
+    transform: 'translate3d(0, -14px, 0) scale(.95)',
+    filter: 'blur(.6px)',
+    opacity: 1,
+  },
+  {
+    transform: 'translate3d(0, -28px, 0) scale(0.9)',
+    filter: 'blur(.8px)',
+    opacity: 1,
+  },
+  {
+    transform: 'translate3d(0, -28px, 0) scale(0.9)',
+    filter: 'blur(1px)',
+    opacity: 1,
+  },
 ];
 
 const animate: {
-  [key in TransitionStatus]: string[]
+  [key in TransitionStatus]: React.CSSProperties[]
 } = {
   entering: form,
   entered: to,
   exiting: form,
-  exited: form,
+  exited: to,
   unmounted: [],
 };
 
@@ -55,6 +99,9 @@ const Area = styled.div`
   z-index: 2000;
   transition: transform 0.4s, opacity 0.4s ease;
   &:hover {
+    div {
+      filter: blur(0px) !important;
+    }
     div:nth-last-child(1) {
       transform: ${hover[0]} !important;
     }
@@ -82,14 +129,14 @@ const Container = styled.div`
   right: 0;
 `;
 
-const ToastBox = styled.div`
+const ToastBox = styled.div<{type?: ToastType}>`
   padding: 0 20px;
   border-radius: 5px;
   border: 0;
   width: 420px;
   height: 60px;
-  color: black;
-  background-color: #fff;
+  color: ${_ => styleColor[_.type || 'base']};
+  background-color: ${_ => style[_.type || 'base']};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -109,28 +156,34 @@ export class ToastComponent extends React.Component {
       ...config,
       key: uniqid(),
     };
-    const index = this.configList.push(newConfig);
-    // if (config.duration !== 0) {
-    //   setTimeout(() => {
-    //     const data = this.configList.find(item => item.key === newConfig.key);
-    //     if (data) this.configList.remove(data);
+    this.configList.push(newConfig);
+    if (config.duration !== 0) {
+      setTimeout(() => {
+        const data = this.configList.find(item => item.key === newConfig.key);
+        if (data) this.configList.remove(data);
 
-    //   },         config.duration || 5000);
-    // }
+      },         config.duration || 6000);
+    }
+  }
+  public animate = (state: TransitionStatus, key: number) => {
+    if (state === 'exiting') {
+      return animate[state][key];
+    }
+    return animate[state][this.configList.length - key - 1];
   }
   public render() {
     return (
       <TransitionGroup component={Area}>
         {this.configList.map((value, key) => (
-          <Transition key={value.key} appear timeout={10}>
+          <Transition key={value.key} appear timeout={400}>
             {state => (
               <Container
                 style={{
-                  // transform: animate[state][this.configList.length - key - 1],
-                  transform: animate[state][this.configList.length - key - 1],
+                  ...this.animate(state, key),
                 }}
               >
-                <ToastBox>{value.title}</ToastBox>
+                {console.log(state, this.configList.length - key - 1)}
+                <ToastBox type={value.type}>{value.title}</ToastBox>
               </Container>
             )}
           </Transition>
