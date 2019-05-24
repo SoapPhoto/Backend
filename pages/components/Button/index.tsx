@@ -2,6 +2,12 @@ import * as React from 'react';
 import { Loading, StyleButton } from './styles';
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * 加载中
+   *
+   * @type {boolean}
+   * @memberof IButtonProps
+   */
   loading?: boolean;
 }
 

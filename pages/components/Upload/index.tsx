@@ -5,9 +5,26 @@ type DragType = 'leave' | 'drop' | 'over';
 export type UploadChildren = React.ReactNode | ((type: DragType) => React.ReactNode);
 
 export interface IUploadProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /**
+   * 文件上传事件
+   *
+   * @memberof IUploadProps
+   */
   onFileChange: (files: FileList | null) => void;
   wrapperRef?: React.LegacyRef<HTMLSpanElement>;
+  /**
+   * 是否拖动上传
+   *
+   * @type {boolean}
+   * @memberof IUploadProps
+   */
   drag?: boolean;
+  /**
+   * 文件过滤
+   *
+   * @type {string}
+   * @memberof IUploadProps
+   */
   accept?: string;
   children?: UploadChildren;
 }

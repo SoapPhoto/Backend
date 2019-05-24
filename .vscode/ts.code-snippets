@@ -8,7 +8,7 @@
 	// Example:
 	"Print to console": {
 		"scope": "javascript,typescript,typescriptreact",
-		"prefix": "entry",
+		"prefix": "entity",
 		"body": [
 			"import { Entity, PrimaryGeneratedColumn } from 'typeorm';",
 			"",
@@ -23,13 +23,5 @@
 			""
 		],
 		"description": "默认entity"
-	},
-	"log": {
-		"scope": "javascript,typescript",
-		"prefix": "log",
-		"body": [
-			"console.log($1);"
-		],
-		"description": "默认log"
 	}
 }

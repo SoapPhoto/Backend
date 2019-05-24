@@ -137,6 +137,7 @@
     "tsconfig-paths": "^3.7.0",
     "tslint": "5.12.1",
     "tslint-react": "^4.0.0",
+    "tslint-react-hooks": "^2.1.0",
     "typescript": "^3.5.0-rc"
   },
   "jest": {

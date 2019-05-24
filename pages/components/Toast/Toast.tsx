@@ -7,7 +7,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import styled from 'styled-components';
 import uniqid from 'uniqid';
 
-type ToastType = 'success' | 'warning' | 'error' | 'danger' | 'base';
+type ToastType = 'success' | 'warning' | 'error' | 'base';
 
 interface IToastConfig  {
   key?: string | number;
@@ -21,7 +21,6 @@ const height = 72;
 const style: Record<ToastType, string> = {
   success: '#007aff',
   error: '#eb5757',
-  danger: '#eb5757',
   warning: '#f5a623',
   base: '#fff',
 };
@@ -29,7 +28,6 @@ const style: Record<ToastType, string> = {
 const styleColor: Record<ToastType, string> = {
   success: '#fff',
   error: '#fff',
-  danger: '#fff',
   warning: '#fff',
   base: '#000',
 };
@@ -162,7 +160,7 @@ export class ToastComponent extends React.Component {
         const data = this.configList.find(item => item.key === newConfig.key);
         if (data) this.configList.remove(data);
 
-      },         config.duration || 6000);
+      }, config.duration || 6000);
     }
   }
   public animate = (state: TransitionStatus, key: number) => {
@@ -182,7 +180,6 @@ export class ToastComponent extends React.Component {
                   ...this.animate(state, key),
                 }}
               >
-                {console.log(state, this.configList.length - key - 1)}
                 <ToastBox type={value.type}>{value.title}</ToastBox>
               </Container>
             )}

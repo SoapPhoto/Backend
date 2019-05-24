@@ -38,7 +38,6 @@ export class PictureImage extends React.Component<IPictureImage> {
       setTimeout(() => {
         this.isComplete = true;
         this.isLoad = true;
-      // tslint:disable-next-line: align
       }, 100);
     }
   }

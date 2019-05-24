@@ -2,7 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 
 export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /**
+   * 头像路径
+   *
+   * @type {string}
+   * @memberof IAvatarProps
+   */
   src: string;
+  /**
+   * 尺寸： 24 32 48
+   *
+   * @type {number}
+   * @memberof IAvatarProps
+   */
   size?: number;
 }
 

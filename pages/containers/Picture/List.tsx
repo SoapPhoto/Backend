@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
-import { server } from '@pages/common/utils';
-import useMedia from '@pages/common/utils/useMedia';
+import { PictureEntity } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
@@ -10,6 +8,12 @@ import { PictureItem } from './Item';
 import { Col, ColItem, Wapper } from './styles';
 
 interface IProps {
+  /**
+   * picture列表数据
+   *
+   * @type {PictureEntity[]}
+   * @memberof IProps
+   */
   data: PictureEntity[];
 }
 

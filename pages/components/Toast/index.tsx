@@ -38,10 +38,10 @@ class Toast {
       type: 'warning',
     });
   }
-  public danger = (title: string) => {
+  public error = (title: string) => {
     this.ref.add({
       title,
-      type: 'danger',
+      type: 'error',
     });
   }
 }

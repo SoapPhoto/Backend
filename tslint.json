@@ -1,6 +1,7 @@
 {
-  "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-config-airbnb", "tslint-react"],
+  "extends": ["tslint:recommended", "tslint-config-airbnb", "tslint-react", "tslint-react-hooks"],
   "rules": {
+    "align": [true, "parameters", "members", "elements"],
     "jsx-no-lambda": [false],
     "jsx-no-multiline-js": [false],
     "jsx-boolean-value": ["never"],
@@ -24,6 +25,8 @@
   "linterOptions": {
     "exclude": [
       "node_modules",
+      ".next",
+      "dist",
       "test"
     ]
   }

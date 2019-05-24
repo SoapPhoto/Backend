@@ -78,3 +78,38 @@ export const ItemImage = styled.img`
   width: 100%;
   transition: .2s opacity ease-in;
 `;
+
+export const InfoBox = styled.div`
+  z-index: 3;
+  pointer-events: none;
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  bottom: 0;
+  padding: 8px;
+  height: 40px;
+  width: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2));
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: .2s opacity ease, .2s transform ease;
+  ${ItemWapper}:hover & {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`;
+
+export const UserBox = styled.a`
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  pointer-events: all;
+`;
+
+export const UserName = styled.span`
+  margin-left: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
+`;

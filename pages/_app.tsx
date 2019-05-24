@@ -82,7 +82,7 @@ export default class MyApp extends App {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/service-worker.js')
-        .then((_) => {
+        .then((_reg) => {
           console.log('service worker registration successful');
         })
         .catch((err) => {

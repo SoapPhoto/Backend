@@ -18,8 +18,8 @@ export interface IPopperProps {
   placement: Placement;
   visible: boolean;
   content: ContentType;
-  transition? : boolean;
-  getContainer? : Element;
+  transition?: boolean;
+  getContainer?: Element;
   modifiers?: Modifiers;
   onClose(): void;
 }
@@ -90,7 +90,7 @@ export class Popper extends React.Component<IPopperProps> {
         //   enabled: false,
         // },
         // keepTogether: { enabled: false }
-      }
+      },
     });
   }
   public handleClose = () => {

@@ -9,20 +9,20 @@ import Tag from '@pages/components/Tag';
 import Toast from '@pages/components/Toast';
 import { UploadCloud } from '@pages/icon';
 import { Router } from '@pages/routes';
+import { Maybe } from '@typings/index';
 import { Cell, Grid } from 'styled-css-grid';
 import { Box, Content, ImageBox, Input, UploadBox, Wapper } from './styles';
 
 const Upload: React.FC = () => {
   const imageRef = React.useRef<File>();
-  // 图片的一些参数
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
-  // 图片的一些信息
   const [title, setTitle] = React.useState('');
   const [bio, setBio] = React.useState('');
   const [tags, setTags] = React.useState<string[]>([]);
   const [imageUrl, setImageUrl] = React.useState('');
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
+
   const addPicture = async () => {
     setUploadLoading(true);
     if (imageRef.current) {
@@ -39,7 +39,7 @@ const Upload: React.FC = () => {
       Router.pushRoute('/');
     }
   };
-  const handleChange = async (files: FileList | null) => {
+  const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);
     }
@@ -54,6 +54,7 @@ const Upload: React.FC = () => {
       console.info('图片格式错误');
     }
   };
+
   return (
     <Wapper>
       <Head>
