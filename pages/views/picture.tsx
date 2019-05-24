@@ -84,7 +84,9 @@ class Picture extends React.Component<IProps> {
 /// TODO: mobx-react@6 @inject 不执行 getInitialProps 的暂时解决方案
 Picture.getInitialProps = async (ctx: CustomNextContext) => {
   const { params } = ctx.route;
-  const { data } = await request.get<PictureEntity>(`/api/picture/${params.id}`);
+  const { data } = await request.get<PictureEntity>(`/api/picture/${params.id}`, {
+    headers: ctx.req ? ctx.req.headers : {},
+  });
   if (!data) {
     return {
       error: {

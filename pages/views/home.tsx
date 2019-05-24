@@ -18,13 +18,13 @@ interface IProps {
 class Index extends React.Component<IProps> {
   public static getInitialProps: (_: CustomNextContext) => any;
   public render() {
-    const { list } = this.props.homeStore;
+    const { list, like, updateKey } = this.props.homeStore;
     return (
       <div>
         <Head>
           <title>肥皂</title>
         </Head>
-        <PictureList data={list} />
+        <PictureList updateKey={updateKey} like={like} data={list} />
       </div>
     );
   }
@@ -38,7 +38,7 @@ Index.getInitialProps = async (_: CustomNextContext) => {
   ) {
     return {};
   }
-  await _.mobxStore.screen.homeStore.getList();
+  await _.mobxStore.screen.homeStore.getList(undefined, _.req ? _.req.headers : undefined);
   return {};
 };
 

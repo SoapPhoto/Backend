@@ -76,20 +76,12 @@ class User extends React.Component<IProps> {
     return user.name || user.username;
   }
   public static getInitialProps: (_: CustomNextContext) => any;
-  @observable public list: PictureClass[];
-  public constructor(props: IProps) {
-    super(props);
-    this.list = plainToClass(PictureClass, props.userStore.pictureList);
-    reaction(() => props.userStore.pictureList, (list) => {
-      this.list = plainToClass(PictureClass, list);
-    });
-  }
   public parseWebsite = (url: string) => {
     const data = parse(url);
     return data.hostname;
   }
   public render() {
-    const { user, pictureList } = this.props.userStore;
+    const { user, pictureList, like, updateKey } = this.props.userStore;
     return (
       <Wrapper>
         <Head>
@@ -118,7 +110,7 @@ class User extends React.Component<IProps> {
             </Cell>
           </Grid>
         </UserHeader>
-        <PictureList data={this.list} />
+        <PictureList updateKey={updateKey} data={pictureList} like={like} />
       </Wrapper>
     );
   }
@@ -135,7 +127,7 @@ User.getInitialProps = async (_: CustomNextContext) => {
   ) {
     return {};
   }
-  await _.mobxStore.screen.userStore.getDetail(params.username!);
+  await _.mobxStore.screen.userStore.getDetail(params.username!, _.req ? _.req.headers : undefined);
   return {
     username: params.username,
   };

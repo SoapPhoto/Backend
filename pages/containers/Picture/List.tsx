@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
-import { PictureClass } from '@pages/stores/class/Picture';
-import { observable, reaction } from 'mobx';
+import { autorun, observable, reaction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import { PictureItem } from './Item';
 import { Col, ColItem, Wapper } from './styles';
@@ -15,32 +14,36 @@ interface IProps {
    * @type {PictureEntity[]}
    * @memberof IProps
    */
-  data: PictureClass[];
+  data: PictureEntity[];
+
+  updateKey?: string;
+
+  like: (data: PictureEntity) => void;
 }
 
 @observer
 export class PictureList extends React.Component<IProps> {
   @observable public colArr = [4, 3, 2];
-  @observable public colList: PictureClass[][][] = [];
+  @observable public colList: PictureEntity[][][] = [];
 
   constructor(props: IProps) {
     super(props);
     this.formatList(props.data);
     reaction(
       () => this.props.data,
-      (list) => {
-        this.formatList(list);
+      () => {
+        this.formatList(this.props.data);
       },
     );
   }
-  public formatList = (data: PictureClass[]) => {
+  public formatList = (data: PictureEntity[]) => {
     this.colList = this.colArr.map(col => listParse(data, col));
   }
-  public colRender = (col: PictureClass[], key?: number | string) => (
+  public colRender = (col: PictureEntity[], key?: number | string) => (
     <ColItem key={key}>
       {
         col.map((picture, index) => (
-          <PictureItem lazyload={index > 10} key={picture.id} detail={picture} />
+          <PictureItem like={this.props.like} lazyload={index > 10} key={picture.id} detail={picture} />
         ))
       }
     </ColItem>

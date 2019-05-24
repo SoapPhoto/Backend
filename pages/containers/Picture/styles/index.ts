@@ -1,3 +1,4 @@
+import { Heart } from '@pages/icon';
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
@@ -121,4 +122,11 @@ export const HandleBox = styled.div`
   & svg {
     filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3));
   }
+`;
+
+export const LikeButton = styled(Heart)<{isLike: boolean}>`
+  cursor: pointer;
+  transition: .2s fill ease, .2s stroke ease;
+  fill: ${_ => _.isLike ? 'red' : 'none'};
+  stroke: ${_ => _.isLike ? 'red' : '#fff'};
 `;

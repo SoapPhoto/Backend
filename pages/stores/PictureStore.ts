@@ -1,8 +1,8 @@
 import { action, observable, reaction } from 'mobx';
+import uniqid from 'uniqid';
 
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
-import { plainToClass } from 'class-transformer';
 import { BaseStore } from './BaseStore';
 
 interface IBaseQuery {
@@ -16,6 +16,7 @@ export class PictureStore extends BaseStore {
   @observable public loading = true;
   @observable public init = false;
   @observable public list: PictureEntity[] = [];
+  @observable public updateKey = uniqid();
   @observable public listQuery: IBaseQuery = {
     page: 1,
     pageSize: 30,
@@ -23,14 +24,11 @@ export class PictureStore extends BaseStore {
   };
   @observable public count: number = 0;
 
-  constructor() {
-    super();
-  }
-
   @action
-  public getList = async (query?: IBaseQuery) => {
+  public getList = async (query?: IBaseQuery, headers?: any) => {
     this.init = true;
     const { data } = await request.get<IPictureListRequest>('/api/picture', {
+      headers: headers || {},
       params: {
         ...this.listQuery,
         ...query,
@@ -46,5 +44,18 @@ export class PictureStore extends BaseStore {
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
     this.count = data.count;
+  }
+
+  @action
+  public like = (data: PictureEntity) => {
+    const oldData = data.isLike;
+    data.isLike = !data.isLike;
+    request.put(`/api/picture/like/${data.id}`)
+      .catch((err) => {
+        data.isLike = oldData;
+        this.updateKey = uniqid();
+        console.error(err);
+      });
+    this.updateKey = uniqid();
   }
 }

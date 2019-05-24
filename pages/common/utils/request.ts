@@ -6,6 +6,7 @@ import axios from 'axios';
 // });
 const instance = axios.create({
   // adapter: cache.adapter,
+  withCredentials: true,
   baseURL: `http://localhost.com:${process.env.PORT}`,
   validateStatus (status: number) {
     return status < 500 && status !== 404;

@@ -2,12 +2,13 @@ import { withRouter } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { PictureClass } from '@pages/stores/class/Picture';
 import { PictureImage } from './Image';
-import { HandleBox, InfoBox, ItemWapper, UserBox, UserName } from './styles';
+import { HandleBox, InfoBox, ItemWapper, LikeButton, UserBox, UserName } from './styles';
 
 export const pictureStyle = {
   full: '-pictureFull',
@@ -18,18 +19,21 @@ export const pictureStyle = {
 };
 
 export interface IPictureItemProps {
-  detail: PictureClass;
+  detail: PictureEntity;
   lazyload?: boolean;
   size?: keyof typeof pictureStyle;
+  like?: (data: PictureEntity) => void;
 }
 
 export const PictureItem = withRouter<IPictureItemProps>(({
   detail,
+  like,
   ...restProps
 }) => {
-  console.log(detail.isLike);
-  const like = () => {
-    detail.like()
+  const onLike = () => {
+    if (like) {
+      like(detail);
+    }
   };
   return (
     <ItemWapper>
@@ -47,8 +51,8 @@ export const PictureItem = withRouter<IPictureItemProps>(({
           </UserBox>
         </Link>
         <HandleBox>
-          <div style={{ pointerEvents: 'auto' }} onClick={like}>
-            <Heart size={18} color="#fff" />
+          <div style={{ pointerEvents: 'auto' }}>
+            <LikeButton onClick={onLike} isLike={detail.isLike} size={18} color="#fff" />
           </div>
         </HandleBox>
       </InfoBox>
