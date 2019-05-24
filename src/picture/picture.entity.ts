@@ -12,7 +12,7 @@ import {
 import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
-import { IEXIF } from './picture.interface';
+import { IEXIF } from '@typings/index';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')

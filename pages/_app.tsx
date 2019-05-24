@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import * as _ from 'lodash';
 import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';

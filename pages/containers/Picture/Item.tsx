@@ -5,8 +5,9 @@ import { PictureEntity } from '@pages/common/interfaces/picture';
 import { Avatar } from '@pages/components';
 import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
+import { PictureClass } from '@pages/stores/class/Picture';
 import { PictureImage } from './Image';
-import { InfoBox, ItemWapper, UserBox, UserName } from './styles';
+import { HandleBox, InfoBox, ItemWapper, UserBox, UserName } from './styles';
 
 export const pictureStyle = {
   full: '-pictureFull',
@@ -17,7 +18,7 @@ export const pictureStyle = {
 };
 
 export interface IPictureItemProps {
-  detail: PictureEntity;
+  detail: PictureClass;
   lazyload?: boolean;
   size?: keyof typeof pictureStyle;
 }
@@ -26,6 +27,10 @@ export const PictureItem = withRouter<IPictureItemProps>(({
   detail,
   ...restProps
 }) => {
+  console.log(detail.isLike);
+  const like = () => {
+    detail.like()
+  };
   return (
     <ItemWapper>
       <Link route={`/picture/${detail.id}`}>
@@ -41,9 +46,11 @@ export const PictureItem = withRouter<IPictureItemProps>(({
             <UserName>{detail.user.username}</UserName>
           </UserBox>
         </Link>
-        <div>
-          <Heart style={{ filter: 'drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3))' }} size={16} color="#fff" />
-        </div>
+        <HandleBox>
+          <div style={{ pointerEvents: 'auto' }} onClick={like}>
+            <Heart size={18} color="#fff" />
+          </div>
+        </HandleBox>
       </InfoBox>
       <PictureImage detail={detail} {...restProps} />
     </ItemWapper>

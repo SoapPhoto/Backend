@@ -1,11 +1,4 @@
-
-export interface IEXIF {
-  aperture?: number;
-  exposureTime?: string;
-  focalLength?: number;
-  iso?: number;
-  gps?: [number, number];
-}
+import { IEXIF } from '@typings/index';
 
 export interface IImgInfo {
   exif: IEXIF;

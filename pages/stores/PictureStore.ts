@@ -1,7 +1,8 @@
-import { action, observable } from 'mobx';
+import { action, observable, reaction } from 'mobx';
 
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
+import { plainToClass } from 'class-transformer';
 import { BaseStore } from './BaseStore';
 
 interface IBaseQuery {
@@ -21,6 +22,10 @@ export class PictureStore extends BaseStore {
     timestamp: Number(new Date().toISOString()),
   };
   @observable public count: number = 0;
+
+  constructor() {
+    super();
+  }
 
   @action
   public getList = async (query?: IBaseQuery) => {

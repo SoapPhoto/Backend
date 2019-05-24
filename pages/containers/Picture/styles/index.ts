@@ -85,6 +85,7 @@ export const InfoBox = styled.div`
   position: absolute;
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
   bottom: 0;
   padding: 8px;
   height: 40px;
@@ -112,4 +113,12 @@ export const UserName = styled.span`
   font-weight: 700;
   font-size: 14px;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
+`;
+
+export const HandleBox = styled.div`
+  z-index: 3;
+  pointer-events: all;
+  & svg {
+    filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3));
+  }
 `;

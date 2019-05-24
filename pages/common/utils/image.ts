@@ -1,4 +1,6 @@
 import { extname } from 'path';
+
+import { IEXIF } from '@typings/index';
 import { changeToDu } from './gps';
 
 declare global {
@@ -7,14 +9,6 @@ declare global {
     EXIF: any;
     FastAverageColor: any;
   }
-}
-
-export interface IEXIF {
-  aperture?: number;
-  exposureTime?: string;
-  focalLength?: number;
-  iso?: string;
-  gps?: [number, number];
 }
 
 export interface IImageInfo {

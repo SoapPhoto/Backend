@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { listParse } from '@pages/common/utils/waterfall';
+import { PictureClass } from '@pages/stores/class/Picture';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { PictureItem } from './Item';
@@ -14,13 +15,13 @@ interface IProps {
    * @type {PictureEntity[]}
    * @memberof IProps
    */
-  data: PictureEntity[];
+  data: PictureClass[];
 }
 
 @observer
 export class PictureList extends React.Component<IProps> {
   @observable public colArr = [4, 3, 2];
-  @observable public colList: PictureEntity[][][] = [];
+  @observable public colList: PictureClass[][][] = [];
 
   constructor(props: IProps) {
     super(props);
@@ -32,10 +33,10 @@ export class PictureList extends React.Component<IProps> {
       },
     );
   }
-  public formatList = (data: PictureEntity[]) => {
+  public formatList = (data: PictureClass[]) => {
     this.colList = this.colArr.map(col => listParse(data, col));
   }
-  public colRender = (col: PictureEntity[], key?: number | string) => (
+  public colRender = (col: PictureClass[], key?: number | string) => (
     <ColItem key={key}>
       {
         col.map((picture, index) => (

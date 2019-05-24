@@ -9,8 +9,11 @@ import { href } from '@pages/common/utils/themes/common';
 import { Avatar } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
 import { Link } from '@pages/icon';
+import { PictureClass } from '@pages/stores/class/Picture';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
+import { plainToClass } from 'class-transformer';
+import { observable, reaction } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
 
 interface IProps {
@@ -68,10 +71,18 @@ const Bio = styled.p`
 }))
 @observer
 class User extends React.Component<IProps> {
-  public static getInitialProps: (_: CustomNextContext) => any;
   get name () {
     const { user } = this.props.userStore;
     return user.name || user.username;
+  }
+  public static getInitialProps: (_: CustomNextContext) => any;
+  @observable public list: PictureClass[];
+  public constructor(props: IProps) {
+    super(props);
+    this.list = plainToClass(PictureClass, props.userStore.pictureList);
+    reaction(() => props.userStore.pictureList, (list) => {
+      this.list = plainToClass(PictureClass, list);
+    });
   }
   public parseWebsite = (url: string) => {
     const data = parse(url);
@@ -107,7 +118,7 @@ class User extends React.Component<IProps> {
             </Cell>
           </Grid>
         </UserHeader>
-        <PictureList data={pictureList} />
+        <PictureList data={this.list} />
       </Wrapper>
     );
   }
