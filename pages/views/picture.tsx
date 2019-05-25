@@ -47,6 +47,15 @@ const PictureBox = styled.div`
   box-shadow: ${_ => _.theme.colors.shadowColor} 0px 6px 20px;
 `;
 
+const Content = styled.div`
+  max-width: 780px;
+  margin: 48px auto;
+`;
+
+const Title = styled.h2`
+font-size: 24px;
+`;
+
 interface InitialProps extends NextContext {
   screenData: PictureEntity;
 }
@@ -65,7 +74,7 @@ class Picture extends React.Component<IProps> {
     return (
       <Wrapper>
         <Head>
-          <title> - 肥皂</title>
+          <title>{picture.title} (@{user.username}) - 肥皂</title>
         </Head>
         <UserHeader columns={2}>
           <UserInfo width={1}>
@@ -81,6 +90,9 @@ class Picture extends React.Component<IProps> {
         <PictureBox>
           <PictureImage size="full" detail={picture} lazyload={false} />
         </PictureBox>
+        <Content>
+          <Title>{picture.title}</Title>
+        </Content>
       </Wrapper>
     );
   }
