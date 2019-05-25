@@ -4,6 +4,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Data, Placement } from 'popper.js';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
 
@@ -22,13 +23,25 @@ interface IPopoverProps {
   content: React.ReactElement;
   contentStyle?: React.CSSProperties;
   trigger?: Trigger;
-  onClose: () => void;
+  onClose?: () => void;
+  /**
+   * 是否有箭头，默认有
+   *
+   * @type {boolean}
+   * @memberof IPopoverProps
+   */
+  arrow?: boolean;
+  placement?: Placement;
+  openDelay?: number;
 }
 
 @observer
 export class Popover extends React.PureComponent<IPopoverProps> {
   @observable public visible = false;
+  @observable public placement: Placement = 'bottom';
+
   public delay?: NodeJS.Timeout;
+  public _timer?: NodeJS.Timeout;
 
   public arrow?: HTMLDivElement;
   public arrowRef = (ref: HTMLDivElement) => {
@@ -43,38 +56,58 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     }
     this.visible = false;
   }
+  public close = (isDelay = false) => {
+    clearTimeout(this._timer!);
+    if (isDelay) {
+      this._timer = setTimeout(() => {
+        this.visible = false;
+      }, 200);
+    } else {
+      this.visible = false;
+    }
+  }
+  public open = () => {
+    if (this.props.openDelay) {
+      clearTimeout(this._timer!);
+      this._timer = setTimeout(() => {
+        this.visible = true;
+      }, this.props.openDelay);
+    } else {
+      this.visible = true;
+    }
+  }
+  public selfEvents = (child: any, type: string, e: any) => {
+    if (child && child.props && typeof child.props[type] === 'function') {
+      child.props[type](e);
+    }
+  }
   public render() {
     const {
       children,
       content,
       contentStyle,
+      arrow = true,
+      placement = 'bottom',
       trigger = 'hover',
     } = this.props;
     const child: any = Children.only(children);
     const event = {
       onClick: (e: any) => {
         if (trigger === 'click') {
-          this.visible = true;
-        }
-        if (child && child.props && typeof child.props.onClick === 'function') {
-          child.props.onClick(e);
+          this.open();
         }
       },
       onMouseOver: (e: any) => {
         if (trigger === 'hover') {
-          this.visible = true;
+          this.open();
         }
-        if (child && child.props && typeof child.props.onMouseOver === 'function') {
-          child.props.onMouseOver(e);
-        }
+        this.selfEvents(child, 'onMouseOver', e);
       },
       onMouseOut: (e: any) => {
         if (trigger === 'hover') {
-          this.visible = false;
+          this.close(true);
         }
-        if (child && child.props && typeof child.props.onMouseOut === 'function') {
-          child.props.onMouseOut(e);
-        }
+        this.selfEvents(child, 'onMouseOut', e);
       },
     };
     const childrenRender = React.cloneElement(child, {
@@ -83,15 +116,24 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     const contentChild = Children.only(content);
     const cntentRender = React.cloneElement(contentChild, {
       onMouseOver: (e: any) => {
-        if (contentChild && contentChild.props && typeof contentChild.props.onMouseOver === 'function') {
-          contentChild.props.onMouseOver(e);
+        if (trigger === 'hover') {
+          clearTimeout(this._timer!);
+          this.visible = true;
         }
+        this.selfEvents(contentChild, 'onMouseOver', e);
+      },
+      onMouseOut: (e: any) => {
+        if (trigger === 'hover') {
+          this.close(true);
+        }
+        this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
+    console.log(this.placement);
     return (
       <Popper
         transition
-        placement="bottom-start"
+        placement={placement}
         modifiers={{
           offset: {
             enabled: true,
@@ -101,9 +143,23 @@ export class Popover extends React.PureComponent<IPopoverProps> {
             boundariesElement: 'scrollParent',
           },
           arrow: {
-            enabled: true,
+            enabled: arrow,
             element: this.arrow,
           },
+        }}
+        onCreate={(data: Data) => {
+          if (arrow) {
+            if (this.placement !== data.placement) {
+              this.placement = data.placement;
+            }
+          }
+        }}
+        onUpdate={(data: Data) => {
+          if (arrow) {
+            if (this.placement !== data.placement) {
+              this.placement = data.placement;
+            }
+          }
         }}
         visible={this.visible}
         onClose={this.onClose}
@@ -116,11 +172,13 @@ export class Popover extends React.PureComponent<IPopoverProps> {
           >
             {state => (
               <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
-                <Arrow ref={this.arrowRef}/>
+                {
+                  arrow &&
+                  <Arrow placement={this.placement} ref={this.arrowRef}/>
+                }
                 <Content style={contentStyle}>
                   {cntentRender}
                 </Content>
-                {/*  */}
               </div>
             )}
           </Transition>

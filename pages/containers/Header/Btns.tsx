@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Popover } from '@pages/components/Popover';
-import { Popper } from '@pages/components/Popper';
 import { Upload } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
-import { Menu, MenuArrow, MenuItem, MenuItemLink } from './Menu';
+import { Menu, MenuItem, MenuItemLink } from './Menu';
 import { Href, MenuProfile, RightWarpper, UserName } from './styles';
 
 export interface IProps {
@@ -30,9 +28,11 @@ const transitionStyles: {
 export const Btns = connect<React.FC<IProps>>('accountStore')(
   ({ accountStore }) => {
     const [data, setData] = React.useState(false);
-    const [arrowRef, setArrowRef] = React.useState();
+    const PopoverRef = React.useRef<Popover>(null);
     const { isLogin, userInfo } = accountStore!;
-    const closeMenu = () => setData(false);
+    const closeMenu = () => {
+      PopoverRef.current!.close();
+    };
     const logout = () => {
       closeMenu();
       accountStore!.logout();
@@ -45,7 +45,9 @@ export const Btns = connect<React.FC<IProps>>('accountStore')(
     if (isLogin && userInfo) {
       content = (
         <Popover
-          onClose={() => setData(false)}
+          ref={PopoverRef}
+          trigger="click"
+          contentStyle={{ padding: 0 }}
           content={
             <Menu>
               <MenuItem>

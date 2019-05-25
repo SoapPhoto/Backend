@@ -14,10 +14,7 @@ interface ILinkProps {
 }
 
 const Wrapper = styled.div`
-  ${props => box(props.theme, '100%', true)}
   width: 200px;
-  padding: 0;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 32px 0px;
 `;
 
 const ItemWrapper = styled.div`

@@ -1,4 +1,3 @@
-import { withRouter } from 'next/router';
 import * as React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';

@@ -1,4 +1,4 @@
-import PopperJS, { Modifiers, Placement } from 'popper.js';
+import PopperJS, { Data, Modifiers, Placement } from 'popper.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import NoSSR from 'react-no-ssr';
@@ -22,6 +22,8 @@ export interface IPopperProps {
   getContainer?: Element;
   modifiers?: Modifiers;
   onClose(): void;
+  onCreate?(data: Data): void;
+  onUpdate?(data: Data): void;
 }
 
 export function isIn(target: Node, parent: Element) {
@@ -86,11 +88,9 @@ export class Popper extends React.Component<IPopperProps> {
           boundariesElement: document.querySelector('body')!,
         },
         ...this.props.modifiers || {},
-        // arrow: {
-        //   enabled: false,
-        // },
-        // keepTogether: { enabled: false }
       },
+      onCreate: this.props.onCreate,
+      onUpdate: this.props.onUpdate,
     });
   }
   public handleClose = () => {
