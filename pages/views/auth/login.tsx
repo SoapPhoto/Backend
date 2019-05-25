@@ -8,6 +8,7 @@ import Toast from '@pages/components/Toast';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { inject, observer } from 'mobx-react';
+import Head from 'next/Head';
 import { withRouter, WithRouterProps } from 'next/router';
 import { Title, Wrapper } from './styles';
 
@@ -37,6 +38,9 @@ const Login: React.FC<IProps> = ({ accountStore, router }) => {
   };
   return (
     <Wrapper>
+      <Head>
+        <title>登录 - 肥皂</title>
+      </Head>
       <Title>登录</Title>
       <Input
         type="text"

@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Head from 'next/Head';
 import { withRouter, WithRouterProps } from 'next/router';
 import * as React from 'react';
 
@@ -46,6 +47,9 @@ class Setting extends React.Component<IProps> {
   public render() {
     return (
       <Warpper>
+        <Head>
+          <title>设置 - 肥皂</title>
+        </Head>
         <Menu
           value={this.state.type}
           data={menu}

@@ -2,6 +2,7 @@ import PopperJS, { Data, Modifiers, Placement } from 'popper.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import NoSSR from 'react-no-ssr';
+import styled from 'styled-components';
 
 import { server } from '@pages/common/utils';
 
@@ -25,6 +26,10 @@ export interface IPopperProps {
   onCreate?(data: Data): void;
   onUpdate?(data: Data): void;
 }
+
+export const PopperWrapper = styled.div`
+  z-index: 1100;
+`;
 
 export function isIn(target: Node, parent: Element) {
   const path: Node[] = [];
@@ -118,9 +123,9 @@ export class Popper extends React.Component<IPopperProps> {
       return null;
     }
     return (
-      <div ref={this.popperRef}>
+      <PopperWrapper ref={this.popperRef}>
         {typeof content === 'function' ? content(childProps) : content}
-      </div>
+      </PopperWrapper>
     );
   }
   public render() {

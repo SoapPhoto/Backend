@@ -3,9 +3,11 @@ import * as React from 'react';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
+import { Popover } from '@pages/components/Popover';
 import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
+import UserCard from './components/UserCard';
 import { PictureImage } from './Image';
 import { HandleBox, InfoBox, ItemWapper, LikeButton, UserBox, UserName } from './styles';
 
@@ -46,12 +48,21 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
         />
       </Link>
       <InfoBox>
-        <Link route={`/@${detail.user.username}`}>
-          <UserBox href={`/@${detail.user.username}`}>
+        <UserBox>
+          <Popover
+            openDelay={500}
+            trigger="hover"
+            placement="top"
+            content={<UserCard user={detail.user} />}
+          >
             <Avatar src={detail.user.avatar} size={30} />
-            <UserName>{detail.user.username}</UserName>
-          </UserBox>
-        </Link>
+          </Popover>
+          <Link route={`/@${detail.user.username}`}>
+            <UserName href={`/@${detail.user.username}`}>
+              {detail.user.username}
+            </UserName>
+          </Link>
+        </UserBox>
         <HandleBox>
           {
             isLogin &&

@@ -1,5 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
+import Head from 'next/Head';
 import * as React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
@@ -63,6 +64,9 @@ class Picture extends React.Component<IProps> {
     const { user } = picture;
     return (
       <Wrapper>
+        <Head>
+          <title> - 肥皂</title>
+        </Head>
         <UserHeader columns={2}>
           <UserInfo width={1}>
             <Link route={`/@${user.username}`}>

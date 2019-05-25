@@ -61,7 +61,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     if (isDelay) {
       this._timer = setTimeout(() => {
         this.visible = false;
-      }, 200);
+      }, 150);
     } else {
       this.visible = false;
     }
@@ -174,7 +174,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
               <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
                 {
                   arrow &&
-                  <Arrow placement={this.placement} ref={this.arrowRef}/>
+                  <Arrow x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
                 }
                 <Content style={contentStyle}>
                   {cntentRender}

@@ -58,6 +58,7 @@ const Upload: React.FC = () => {
   return (
     <Wapper>
       <Head>
+        <title>上传 - 肥皂</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
       </Head>

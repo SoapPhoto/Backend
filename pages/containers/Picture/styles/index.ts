@@ -1,8 +1,5 @@
-import { pick } from 'lodash';
 import styled from 'styled-components';
 import media from 'styled-media-query';
-
-import { Heart } from '@pages/icon';
 
 const padding = 24;
 
@@ -58,10 +55,10 @@ export const ItemWapper = styled.div`
   border-radius: 4px;
   overflow: hidden;
   box-shadow: ${_ => _.theme.colors.shadowColor} 0px 6px 20px;
-  &:active {
+  /* &:active {
     transform: scale(0.98);
     transition: transform 0.1s;
-  }
+  } */
 `;
 
 export const ImageBox = styled.div<{height: number; background: string}>`
@@ -103,19 +100,23 @@ export const InfoBox = styled.div`
   }
 `;
 
-export const UserBox = styled.a`
+export const UserBox = styled.div`
   display: flex;
   align-items: center;
-  color: #fff;
   text-decoration: none;
   pointer-events: all;
 `;
 
-export const UserName = styled.span`
+export const UserName = styled.a`
   margin-left: 12px;
   font-weight: 700;
   font-size: 14px;
+  color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
+  &:active {
+    transform: scale(0.96);
+    transition: transform 0.1s;
+  }
 `;
 
 export const HandleBox = styled.div`
@@ -130,7 +131,11 @@ export const LikeButton = styled.div<{like: boolean}>`
   cursor: pointer;
   transition: .2s fill ease, .2s stroke ease;
   & svg {
-    fill: ${_ => _.like ? 'red' : 'none'};
-    stroke: ${_ => _.like ? 'red' : '#fff'};
+    fill: ${_ => _.like ? '#f44336' : 'none'};
+    stroke: ${_ => _.like ? '#f44336' : '#fff'};
+  }
+  transition: transform 0.1s;
+  &:active {
+    transform: scale(0.7);
   }
 `;

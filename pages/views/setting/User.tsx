@@ -9,6 +9,7 @@ import { Input } from '@pages/components/Input';
 import Toast from '@pages/components/Toast';
 import { Upload } from '@pages/components/Upload';
 import { AccountStore } from '@pages/stores/AccountStore';
+import Head from 'next/Head';
 
 interface IUserProps {
   accountStore?: AccountStore;
@@ -45,6 +46,9 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
   };
   return (
     <Grid columns="1lf" rowGap="24px">
+      <Head>
+        <title>用户设置 - 肥皂</title>
+      </Head>
       <Cell>
         <Grid columns="96px auto" gap="24px">
           <Cell width={1} center>

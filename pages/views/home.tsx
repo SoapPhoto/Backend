@@ -22,7 +22,7 @@ class Index extends React.Component<IProps> {
     return (
       <div>
         <Head>
-          <title>肥皂</title>
+          <title>首页 - 肥皂</title>
         </Head>
         <PictureList updateKey={updateKey} like={like} data={list} />
       </div>
