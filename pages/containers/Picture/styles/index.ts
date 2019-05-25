@@ -1,6 +1,8 @@
-import { Heart } from '@pages/icon';
+import { pick } from 'lodash';
 import styled from 'styled-components';
 import media from 'styled-media-query';
+
+import { Heart } from '@pages/icon';
 
 const padding = 24;
 
@@ -124,9 +126,11 @@ export const HandleBox = styled.div`
   }
 `;
 
-export const LikeButton = styled(Heart)<{isLike: boolean}>`
+export const LikeButton = styled.div<{like: boolean}>`
   cursor: pointer;
   transition: .2s fill ease, .2s stroke ease;
-  fill: ${_ => _.isLike ? 'red' : 'none'};
-  stroke: ${_ => _.isLike ? 'red' : '#fff'};
+  & svg {
+    fill: ${_ => _.like ? 'red' : 'none'};
+    stroke: ${_ => _.like ? 'red' : '#fff'};
+  }
 `;

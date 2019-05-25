@@ -6,7 +6,7 @@ import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
-import { PictureClass } from '@pages/stores/class/Picture';
+import { AccountStore } from '@pages/stores/AccountStore';
 import { PictureImage } from './Image';
 import { HandleBox, InfoBox, ItemWapper, LikeButton, UserBox, UserName } from './styles';
 
@@ -23,13 +23,16 @@ export interface IPictureItemProps {
   lazyload?: boolean;
   size?: keyof typeof pictureStyle;
   like?: (data: PictureEntity) => void;
+  accountStore?: AccountStore;
 }
 
-export const PictureItem = withRouter<IPictureItemProps>(({
+export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(({
   detail,
   like,
+  accountStore,
   ...restProps
 }) => {
+  const { isLogin } = accountStore!;
   const onLike = () => {
     if (like) {
       like(detail);
@@ -51,9 +54,12 @@ export const PictureItem = withRouter<IPictureItemProps>(({
           </UserBox>
         </Link>
         <HandleBox>
-          <div style={{ pointerEvents: 'auto' }}>
-            <LikeButton onClick={onLike} isLike={detail.isLike} size={18} color="#fff" />
-          </div>
+          {
+            isLogin &&
+            <LikeButton onClick={onLike} like={detail.isLike} >
+              <Heart size={18} />
+            </LikeButton>
+          }
         </HandleBox>
       </InfoBox>
       <PictureImage detail={detail} {...restProps} />

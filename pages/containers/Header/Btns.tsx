@@ -1,10 +1,10 @@
-import { inject, observer } from 'mobx-react';
 import * as React from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
+import { Popover } from '@pages/components/Popover';
 import { Popper } from '@pages/components/Popper';
 import { Upload } from '@pages/icon';
 import { Link } from '@pages/routes';
@@ -27,8 +27,8 @@ const transitionStyles: {
   exited: { opacity: 0, transform: 'scale(.98)' },
 };
 
-export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
-  ({ accountStore, themeStore }) => {
+export const Btns = connect<React.FC<IProps>>('accountStore')(
+  ({ accountStore }) => {
     const [data, setData] = React.useState(false);
     const [arrowRef, setArrowRef] = React.useState();
     const { isLogin, userInfo } = accountStore!;
@@ -44,80 +44,51 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
     );
     if (isLogin && userInfo) {
       content = (
-        <Popper
-          transition
-          placement="bottom-start"
-          modifiers={{
-            offset: {
-              enabled: true,
-              offset: '0, 10',
-            },
-            preventOverflow: {
-              boundariesElement: 'scrollParent',
-            },
-            arrow: {
-              enabled: true,
-              element: arrowRef,
-            },
-          }}
-          visible={data}
+        <Popover
           onClose={() => setData(false)}
-          content={({ visible, close }) => (
-            <Transition
-              onExited={() => close()}
-              in={visible}
-              appear
-              timeout={200}
-            >
-              {state => (
-                <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
-                  <MenuArrow ref={(e: any) => setArrowRef(e)}/>
-                  <Menu>
-                    <MenuItem>
-                      <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
-                        <MenuProfile>
-                          <Avatar
-                            size={48}
-                            src={userInfo!.avatar}
-                          />
-                          <UserName>
-                            <span>{userInfo.name || userInfo.username}</span>
-                          </UserName>
-                        </MenuProfile>
-                      </MenuItemLink>
-                    </MenuItem>
-                    <MenuItem>
-                      <MenuItemLink onClick={closeMenu} route="/upload">
-                        上传图片
-                        <Upload size={18} />
-                      </MenuItemLink>
-                    </MenuItem>
-                    <MenuItem>
-                      <MenuItemLink onClick={closeMenu} route="/setting/profile">
-                        设置
-                      </MenuItemLink>
-                    </MenuItem>
-                    <MenuItem>
-                      <MenuItemLink onClick={logout}>
-                        退出
-                      </MenuItemLink>
-                    </MenuItem>
-                  </Menu>
-                </div>
-              )}
-            </Transition>
-          )}
+          content={
+            <Menu>
+              <MenuItem>
+                <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
+                  <MenuProfile>
+                    <Avatar
+                      size={48}
+                      src={userInfo!.avatar}
+                    />
+                    <UserName>
+                      <span>{userInfo.name || userInfo.username}</span>
+                    </UserName>
+                  </MenuProfile>
+                </MenuItemLink>
+              </MenuItem>
+              <MenuItem>
+                <MenuItemLink onClick={closeMenu} route="/upload">
+                  上传图片
+                  <Upload size={18} />
+                </MenuItemLink>
+              </MenuItem>
+              <MenuItem>
+                <MenuItemLink onClick={closeMenu} route="/setting/profile">
+                  设置
+                </MenuItemLink>
+              </MenuItem>
+              <MenuItem>
+                <MenuItemLink onClick={logout}>
+                  退出
+                </MenuItemLink>
+              </MenuItem>
+            </Menu>
+          }
         >
-        <Avatar
-          src={userInfo!.avatar}
-          onClick={() => setData(true)}
-        />
-        </Popper>
+          <Avatar
+            src={userInfo!.avatar}
+            onClick={() => setData(true)}
+          />
+        </Popover>
       );
     }
     return (
       <RightWarpper>
-        <Href onClick={e => themeStore!.setTheme(themeStore!.theme === 'dark' ? 'base' : 'dark')}>theme</Href>
         {content}
       </RightWarpper>
     );
