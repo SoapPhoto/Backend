@@ -133,10 +133,10 @@ export const LikeButton = styled.div<{like: boolean}>`
   height: 100%;
   align-items: center;
   pointer-events: auto;
-  transition: .2s fill ease, .2s stroke ease;
   & svg {
     fill: ${_ => _.like ? '#f44336' : 'none'};
     stroke: ${_ => _.like ? '#f44336' : '#fff'};
+    transition: .2s fill ease, .2s stroke ease, .2s transform ease;
   }
   transition: transform 0.1s;
   &:active {
