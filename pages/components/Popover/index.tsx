@@ -19,26 +19,47 @@ const transitionStyles: {
 
 type Trigger = 'hover' | 'click';
 
+export type PopoverTheme = 'dark' | 'light';
+
 interface IPopoverProps {
   content: React.ReactElement;
   contentStyle?: React.CSSProperties;
-  trigger?: Trigger;
+  /**
+   * 触发事件，默认`hover`
+   *
+   * @type {Trigger}
+   * @memberof IPopoverProps
+   */
+  trigger: Trigger;
   onClose?: () => void;
   /**
-   * 是否有箭头，默认有
+   * 是否有箭头，默认`true`
    *
    * @type {boolean}
    * @memberof IPopoverProps
    */
   arrow?: boolean;
-  placement?: Placement;
+  theme: PopoverTheme;
+  /**
+   * Popover 显示位置，默认`bottom`
+   *
+   * @type {Placement}
+   * @memberof IPopoverProps
+   */
+  placement: Placement;
   openDelay?: number;
 }
 
 @observer
 export class Popover extends React.PureComponent<IPopoverProps> {
+  public static defaultProps: Partial<IPopoverProps> = {
+    theme: 'light',
+    placement: 'bottom',
+    trigger: 'hover',
+  };
+
   @observable public visible = false;
-  @observable public placement: Placement = 'bottom';
+  @observable public placement: Placement = this.props.placement;
 
   public delay?: NodeJS.Timeout;
   public _timer?: NodeJS.Timeout;
@@ -87,8 +108,9 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       content,
       contentStyle,
       arrow = true,
-      placement = 'bottom',
-      trigger = 'hover',
+      theme,
+      placement,
+      trigger,
     } = this.props;
     const child: any = Children.only(children);
     const event = {
@@ -96,18 +118,19 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         if (trigger === 'click') {
           this.open();
         }
+        this.selfEvents(child, 'onClick', e);
       },
-      onMouseOver: (e: any) => {
+      onMouseEnter: (e: any) => {
         if (trigger === 'hover') {
           this.open();
         }
-        this.selfEvents(child, 'onMouseOver', e);
+        this.selfEvents(child, 'onMouseEnter', e);
       },
-      onMouseOut: (e: any) => {
+      onMouseLeave: (e: any) => {
         if (trigger === 'hover') {
           this.close(true);
         }
-        this.selfEvents(child, 'onMouseOut', e);
+        this.selfEvents(child, 'onMouseLeave', e);
       },
     };
     const childrenRender = React.cloneElement(child, {
@@ -129,7 +152,6 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
-    console.log(this.placement);
     return (
       <Popper
         transition
@@ -174,9 +196,9 @@ export class Popover extends React.PureComponent<IPopoverProps> {
               <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
                 {
                   arrow &&
-                  <Arrow x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
+                  <Arrow x-theme={theme} x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
                 }
-                <Content style={contentStyle}>
+                <Content x-theme={theme} style={contentStyle}>
                   {cntentRender}
                 </Content>
               </div>

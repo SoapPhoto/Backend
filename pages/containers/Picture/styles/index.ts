@@ -121,7 +121,6 @@ export const UserName = styled.a`
 
 export const HandleBox = styled.div`
   z-index: 3;
-  pointer-events: all;
   & svg {
     filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3));
   }
@@ -129,6 +128,11 @@ export const HandleBox = styled.div`
 
 export const LikeButton = styled.div<{like: boolean}>`
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  pointer-events: auto;
   transition: .2s fill ease, .2s stroke ease;
   & svg {
     fill: ${_ => _.like ? '#f44336' : 'none'};
@@ -136,6 +140,8 @@ export const LikeButton = styled.div<{like: boolean}>`
   }
   transition: transform 0.1s;
   &:active {
-    transform: scale(0.7);
+    & svg {
+      transform: scale(0.7);
+    }
   }
 `;

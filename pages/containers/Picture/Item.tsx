@@ -66,9 +66,17 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
         <HandleBox>
           {
             isLogin &&
-            <LikeButton onClick={onLike} like={detail.isLike} >
-              <Heart size={18} />
-            </LikeButton>
+            <Popover
+              trigger="hover"
+              placement="top"
+              theme="dark"
+              openDelay={100}
+              content={<span>{detail.isLike ? '取消喜欢' : '喜欢'}</span>}
+            >
+              <LikeButton onClick={onLike} like={detail.isLike} >
+                <Heart size={18} />
+              </LikeButton>
+            </Popover>
           }
         </HandleBox>
       </InfoBox>
