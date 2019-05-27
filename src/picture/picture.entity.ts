@@ -14,6 +14,7 @@ import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
 import { IEXIF } from '@typings/index';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
+import { CollectionEntity } from '@server/collection/collection.entity';
 
 @Entity('picture')
 export class PictureEntity extends BaseEntity {
@@ -115,4 +116,7 @@ export class PictureEntity extends BaseEntity {
   @ManyToMany(type => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
   @JoinTable()
   public tags!: TagEntity[];
+
+  @ManyToMany(type => CollectionEntity, item => item.pictures)
+  public readonly collections!: CollectionEntity[];
 }

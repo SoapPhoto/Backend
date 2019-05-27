@@ -74,7 +74,7 @@ export class PictureService {
     } else {
       q.andWhere('picture.userUsername=:id', { id });
     }
-    const data = await q.cache(3000).getManyAndCount();
+    const data = await q.cache(100).getManyAndCount();
     return {
       count: data[1],
       data: plainToClass(PictureEntity, data[0]),
@@ -118,6 +118,7 @@ export class PictureService {
           ),
         );
     }
+    q.orderBy('picture.createTime', 'DESC');
     return q;
   }
   private selectList = (user: Maybe<UserEntity>, query: GetPictureListDto) => {

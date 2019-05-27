@@ -5,6 +5,7 @@ import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
 import { IsEmail, ValidateIf } from 'class-validator';
 
+import { CollectionEntity } from '@server/collection/collection.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
 
@@ -112,6 +113,11 @@ export class UserEntity extends BaseEntity {
   @OneToMany(type => PictureEntity, photo => photo.user)
   @Expose()
   public readonly pictures!: PictureEntity[];
+
+  /** 用户的收藏夹 */
+  @OneToMany(type => CollectionEntity, collection => collection.user)
+  @Expose()
+  public readonly collections!: CollectionEntity[];
 
   /** 用户的picture操作 */
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
