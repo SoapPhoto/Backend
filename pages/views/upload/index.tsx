@@ -36,7 +36,9 @@ const Upload: React.FC = () => {
       setUploadLoading(false);
       setDisabled(true);
       Toast.success('上传成功！');
-      Router.pushRoute('/');
+      setTimeout(() => {
+        Router.pushRoute('/');
+      }, 100);
     }
   };
   const handleChange = async (files: Maybe<FileList>) => {

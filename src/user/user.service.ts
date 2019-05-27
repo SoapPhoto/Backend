@@ -102,7 +102,7 @@ export class UserService {
           ),
         );
     }
-    const data = await q.cache(true).getOne();
+    const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {
       groups,
     });

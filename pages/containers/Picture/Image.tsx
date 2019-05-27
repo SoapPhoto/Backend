@@ -59,7 +59,7 @@ export class PictureImage extends React.Component<IPictureImage> {
       <ImageBox height={height} background={detail.color}>
         {
           lazyload ? (
-            <LazyLoad resize={true} height="100%" offset={300}>
+            <LazyLoad resize={true} once height="100%" offset={10}>
               {imgRender}
             </LazyLoad>
           ) : (

@@ -28,7 +28,6 @@ export class PictureResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args() query: GetUserPictureListDto,
   ) {
-    console.log(query);
     return this.pictureService.getUserPicture(query.id || query.username, query, user);
   }
 

@@ -32,7 +32,7 @@ export class PictureService {
     return plainToClass(PictureEntity, createData);
   }
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const data = await this.selectList(user, query).cache(true).getManyAndCount();
+    const data = await this.selectList(user, query).getManyAndCount();
     return {
       data: plainToClass(PictureEntity, data[0]),
       count: data[1],
@@ -49,7 +49,7 @@ export class PictureService {
   public getOnePicture = async (id: string, user: Maybe<UserEntity>, view: boolean = false) => {
     const q = this.select(user);
     q.andWhere('picture.id=:id', { id });
-    const data = await q.cache(3000).getOne();
+    const data = await q.cache(100).getOne();
     if (view && data) {
       this.addViewCount(data.id);
       data.views += 1;

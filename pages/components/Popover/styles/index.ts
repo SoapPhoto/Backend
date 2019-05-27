@@ -22,7 +22,6 @@ export const Arrow = styled.span<{placement: Placement}>`
     top: -4px;
     border-top-color: ${_ => _.theme.styles.box.borderColor};
     border-left-color: ${_ => _.theme.styles.box.borderColor};
-    border: none;
   }
   &[x-placement^="top"] {
     bottom: -4px;

@@ -1,7 +1,6 @@
 export * from './route';
 
 export function indexOfSmallest(a: number[]): number {
-  console.log(a);
   return a.indexOf(Math.min.apply(Math, a));
 }
 /**

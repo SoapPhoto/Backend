@@ -20,12 +20,23 @@ export class PictureStore extends BaseStore {
   @observable public listQuery: IBaseQuery = {
     page: 1,
     pageSize: 30,
-    timestamp: Number(new Date().toISOString()),
+    timestamp: Number(Date.parse(new Date().toISOString())),
   };
   @observable public count: number = 0;
 
+  @action public initQuery = () => {
+    this.listQuery = {
+      page: 1,
+      pageSize: 30,
+      timestamp: Number(Date.parse(new Date().toISOString())),
+    };
+  }
+
   @action
   public getList = async (query?: IBaseQuery, headers?: any) => {
+    if (!query) {
+      this.initQuery();
+    }
     this.init = true;
     const { data } = await request.get<IPictureListRequest>('/api/picture', {
       headers: headers || {},
