@@ -1,5 +1,5 @@
 import { NextComponentClass } from 'next';
-import * as React from 'react';
+import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { server } from '@pages/common/utils';

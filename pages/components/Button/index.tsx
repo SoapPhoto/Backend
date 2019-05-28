@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { Loading, StyleButton } from './styles';
+import React from 'react';
+import { Loading } from '../Loading';
+import { LoadingBox, StyleButton } from './styles';
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
@@ -18,13 +19,6 @@ export const Button: Component = ({
   loading = false,
   ...restProps
 }) => {
-  const loadingRender = (
-    <Loading>
-      <span />
-      <span />
-      <span />
-    </Loading>
-  );
   return (
     <StyleButton
       {...restProps}
@@ -32,7 +26,7 @@ export const Button: Component = ({
     >
       <>
         {
-          loading && loadingRender
+          loading && <LoadingBox><Loading /></LoadingBox>
         }
         {children}
       </>

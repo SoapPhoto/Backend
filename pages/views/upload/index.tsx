@@ -1,5 +1,5 @@
 import Head from 'next/Head';
-import * as React from 'react';
+import React from 'react';
 
 import { getImageInfo, IImageInfo, isImage } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';

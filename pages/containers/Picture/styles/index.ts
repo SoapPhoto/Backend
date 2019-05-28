@@ -145,3 +145,14 @@ export const LikeButton = styled.div<{like: boolean}>`
     }
   }
 `;
+
+export const Footer = styled.div`
+  text-align: center;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: ${_ => _.theme.colors.secondary};
+  font-weight: 100;
+`;

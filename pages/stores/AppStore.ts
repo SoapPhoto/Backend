@@ -1,6 +1,6 @@
 import { action, observable, reaction } from 'mobx';
 
-import * as NProgress from 'nprogress';
+import NProgress from 'nprogress';
 
 export type RouterAction = 'POP' | 'PUSH' | 'REPLACE';
 

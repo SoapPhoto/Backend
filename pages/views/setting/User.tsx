@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
 import { getImageUrl } from '@pages/common/utils/image';

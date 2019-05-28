@@ -1,5 +1,5 @@
 import { withRouter, WithRouterProps } from 'next/router';
-import * as React from 'react';
+import React from 'react';
 
 import { connect } from '@pages/common/utils/store';
 import { Link } from '@pages/routes';

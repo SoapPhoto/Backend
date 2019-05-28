@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { connect } from '@pages/common/utils/store';

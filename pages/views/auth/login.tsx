@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { parsePath } from '@pages/common/utils';
 import { Button } from '@pages/components/Button';

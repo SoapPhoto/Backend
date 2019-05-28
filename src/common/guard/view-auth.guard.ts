@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as url from 'url';
 
 @Injectable()
 export class ViewAuthGuard implements CanActivate {

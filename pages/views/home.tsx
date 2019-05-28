@@ -1,6 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
-import * as React from 'react';
+import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureList } from '@pages/containers/Picture/List';
@@ -18,13 +18,13 @@ interface IProps {
 class Index extends React.Component<IProps> {
   public static getInitialProps: (_: CustomNextContext) => any;
   public render() {
-    const { list, like, updateKey } = this.props.homeStore;
+    const { list, like, getPageList, isNoMore } = this.props.homeStore;
     return (
       <div>
         <Head>
           <title>首页 - 肥皂</title>
         </Head>
-        <PictureList updateKey={updateKey} like={like} data={list} />
+        <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
       </div>
     );
   }

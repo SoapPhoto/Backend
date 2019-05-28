@@ -1,6 +1,6 @@
 import PopperJS, { Data, Modifiers, Placement } from 'popper.js';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import NoSSR from 'react-no-ssr';
 import styled from 'styled-components';
 

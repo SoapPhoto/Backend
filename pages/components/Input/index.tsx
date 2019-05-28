@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Label, LabelBox, StyleInput } from './styles';
 
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

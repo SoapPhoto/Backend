@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { LoadableComponent } from 'react-loadable';
 import styled from 'styled-components';
 

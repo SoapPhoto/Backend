@@ -2,7 +2,7 @@ import { routeObject, Router } from '@pages/routes';
 import { pick } from 'lodash';
 import { RouteParams } from 'next-routes';
 import { EventChangeOptions } from 'next/router';
-import * as pathToRegexp from 'path-to-regexp';
+import pathToRegexp from 'path-to-regexp';
 import parse from 'url-parse';
 
 interface IKey {

@@ -81,7 +81,7 @@ class User extends React.Component<IProps> {
     return data.hostname;
   }
   public render() {
-    const { user, pictureList, like, updateKey } = this.props.userStore;
+    const { user, like, list, isNoMore } = this.props.userStore;
     return (
       <Wrapper>
         <Head>
@@ -110,7 +110,7 @@ class User extends React.Component<IProps> {
             </Cell>
           </Grid>
         </UserHeader>
-        <PictureList updateKey={updateKey} data={pictureList} like={like} />
+        <PictureList noMore={isNoMore} data={list} like={like} />
       </Wrapper>
     );
   }
@@ -127,7 +127,7 @@ User.getInitialProps = async (_: CustomNextContext) => {
   ) {
     return {};
   }
-  await _.mobxStore.screen.userStore.getDetail(params.username!, _.req ? _.req.headers : undefined);
+  await _.mobxStore.screen.userStore.getInit(params.username!, _.req ? _.req.headers : undefined);
   return {
     username: params.username,
   };

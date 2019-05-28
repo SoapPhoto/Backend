@@ -1,6 +1,6 @@
 import { BadGatewayException, BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 import { Repository } from 'typeorm';
 
 import { EmailService } from '@server/common/modules/email/email.service';

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import * as path from 'path';
-import * as qiniu from 'qiniu';
+import path from 'path';
+import qiniu from 'qiniu';
 
 import { File } from '../../interface/file.interface';
 

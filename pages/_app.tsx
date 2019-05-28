@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { Provider } from 'mobx-react';
 import App, { Container } from 'next/app';
-import * as React from 'react';
+import React from 'react';
 
 import { parsePath, server } from '@pages/common/utils';
 import { DefaultQuery } from 'next/router';

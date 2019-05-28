@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { connect } from '@pages/common/utils/store';
@@ -31,6 +31,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
   detail,
   like,
   accountStore,
+  lazyload,
   ...restProps
 }) => {
   const { isLogin } = accountStore!;
@@ -80,7 +81,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
           }
         </HandleBox>
       </InfoBox>
-      <PictureImage detail={detail} {...restProps} />
+      <PictureImage lazyload={lazyload} detail={detail} {...restProps} />
     </ItemWapper>
   );
 });

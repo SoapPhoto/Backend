@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import * as mime from 'mime-types';
+import mime from 'mime-types';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 

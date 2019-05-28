@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
 import Head from 'next/Head';
-import * as React from 'react';
+import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';

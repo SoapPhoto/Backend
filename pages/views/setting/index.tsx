@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import Head from 'next/Head';
 import { withRouter, WithRouterProps } from 'next/router';
-import * as React from 'react';
+import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { parsePath } from '@pages/common/utils';
