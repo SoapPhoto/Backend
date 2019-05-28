@@ -36,7 +36,7 @@ export const Wapper = styled.section`
 `;
 
 export const Col = styled.div<{col: number}>`
-  display: none;
+  display: grid;
   grid-gap: ${padding}px;
   grid-template-columns: repeat(${props => props.col}, 1fr);
 `;

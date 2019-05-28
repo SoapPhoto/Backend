@@ -4,11 +4,13 @@ import { PictureEntity } from '@pages/common/interfaces/picture';
 import { getScrollHeight, getScrollTop, getWindowHeight, server } from '@pages/common/utils';
 import { listParse } from '@pages/common/utils/waterfall';
 import { Loading } from '@pages/components/Loading';
+import { NoSSR } from '@pages/components/SSR';
 import { debounce } from 'lodash';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import Col, { List } from './Col';
 import { PictureItem } from './Item';
-import { Col, ColItem, Footer, Wapper } from './styles';
+import { ColItem, Footer, Wapper } from './styles';
 
 interface IProps {
   /**
@@ -73,31 +75,21 @@ export class PictureList extends React.Component<IProps> {
   public formatList = (data: PictureEntity[]) => {
     this.colList = this.colArr.map(col => listParse(data, col));
   }
-  public colRender = (col: PictureEntity[], key?: number | string) => (
-    <ColItem key={key}>
-      {
-        col.map((picture, index) => (
-          <PictureItem like={this.props.like} lazyload={index > 2} key={picture.id} detail={picture} />
-        ))
-      }
-    </ColItem>
-  )
   public render() {
-    const { noMore, data } = this.props;
+    const { noMore } = this.props;
     return (
       <Wapper>
-        {
-          this.colList.map((mainCol, i) => (
-            <Col col={this.colArr[i]} key={this.colArr[i]}>
-              {
-                mainCol.map((col, index) => this.colRender(col, index))
-              }
-            </Col>
-          ))
-        }
-        <Col col={1}>
-          {this.colRender(data)}
-        </Col>
+        <NoSSR server={false}>
+          {
+            this.colList.map((mainCol, i) => (
+              <Col col={this.colArr[i]} key={this.colArr[i]} list={mainCol} />
+            ))
+          }
+        </NoSSR>
+        <NoSSR>
+          <div>123</div>
+          <Col col={4} list={this.colList[0]} />
+        </NoSSR>
         <Footer>
           {
             noMore ? (
