@@ -1,4 +1,4 @@
-import { darken, lighten } from 'polished';
+import { darken, lighten, rem } from 'polished';
 import { DefaultTheme } from 'styled-components';
 
 export const href = (color: string, hover?: string, active?: string) => `
@@ -16,11 +16,11 @@ export const href = (color: string, hover?: string, active?: string) => `
 export const box = (theme: DefaultTheme, width: string, wrapper = false) => `
   width: 100%;
   max-width: ${width};
-  border-radius: 4px;
+  border-radius: ${rem('4px')};
   background-color: ${theme.styles.box.background};
-  box-shadow: ${theme.colors.shadowColor} 0px 6px 20px;
+  box-shadow: ${theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   border: 1px solid ${theme.styles.box.borderColor};
   ${wrapper ? 'margin: 0 auto' : ''}
-  padding: 32px;
+  padding: ${rem('32px')};
   overflow: hidden;
 `;

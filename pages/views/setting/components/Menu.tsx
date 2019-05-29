@@ -1,10 +1,10 @@
+import { darken, rem } from 'polished';
 import React from 'react';
 import { LoadableComponent } from 'react-loadable';
 import styled from 'styled-components';
 
 import { href } from '@pages/common/utils/themes/common';
 import { Link } from '@pages/routes';
-import { darken } from 'polished';
 import { Content } from '../style';
 
 interface IData {
@@ -24,7 +24,7 @@ const Wrapper = styled.ul`
 `;
 
 const Item = styled.ul`
-  padding: 18px 24px;
+  padding: ${rem('18px')} ${rem('24px')};
 `;
 
 export const Href = styled.a<{active?: boolean}>`

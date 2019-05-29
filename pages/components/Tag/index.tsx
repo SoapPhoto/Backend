@@ -1,4 +1,5 @@
 import { Input as BaseInput } from '@pages/components/Input';
+import { rem } from 'polished';
 import React, { useEffect } from 'react';
 import { PlusCircle, X } from 'react-feather';
 import styled from 'styled-components';
@@ -20,32 +21,32 @@ const Tag = styled.span<{close?: boolean}>`
   padding: 0;
   color: ${_ => _.theme.colors.secondary};
   border: 1px solid ${_ => _.theme.colors.gray};
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: ${rem('4px')};
+  font-size: ${rem('12px')};
   font-variant: tabular-nums;
   display: flex;
   align-items: center;
   justify-content: center;
   height: auto;
-  padding: 0 7px;
-  font-size: 14px;
-  line-height: 30px;
+  padding: 0 ${rem('7px')};
+  font-size: ${rem('14px')};
+  line-height: ${rem('30px')};
   background: ${_ => _.theme.colors.lightgray};
-  border-radius: 2px;
-  margin-right: 12px;
-  margin-bottom: 12px;
+  border-radius: ${rem('2px')};
+  margin-right: ${rem('12px')};
+  margin-bottom: ${rem('12px')};
   & svg {
     stroke: ${_ => _.theme.colors.secondary};
   }
 `;
 
 const XIcon = styled(X)`
-  margin-left: 6px;
+  margin-left: ${rem('6px')};
   cursor: pointer;
 `;
 
 const PlusIcon = styled(PlusCircle)`
-  margin-right: 6px;
+  margin-right: ${rem('6px')};
 `;
 
 const Input = styled(BaseInput)`
@@ -53,8 +54,8 @@ const Input = styled(BaseInput)`
   border-color: transparent !important;
   box-shadow: none !important;
   height: auto;
-  line-height: 24px;
-  font-size: 14px;
+  line-height: ${rem('24px')};
+  font-size: ${rem('14px')};
   padding: 0;
 `;
 
@@ -69,7 +70,7 @@ export default function ({
     if (isClick && inputRef.current) {
       inputRef.current.focus();
     }
-  },        [isClick]);
+  }, [isClick]);
 
   const click = () => {
     setClick(true);

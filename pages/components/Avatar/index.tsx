@@ -1,3 +1,4 @@
+import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -27,8 +28,8 @@ const Box = styled.span<{size: number; isClick: boolean}>`
   line-height: 0;
   background: #fff;
   ${props => props.isClick && 'cursor: pointer;'}
-  width: ${props => props.size}px;
-  height: ${props => props.size}px;
+  width: ${props => rem(props.size)};
+  height: ${props => rem(props.size)};
 `;
 
 const Img = styled.img`

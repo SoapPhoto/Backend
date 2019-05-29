@@ -1,14 +1,15 @@
+import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 700px;
-  margin: 42px auto;
+  width: ${rem('700px')};
+  margin: ${rem('42px')} auto;
   text-align: center;
 `;
 
 const Title = styled.div`
-  font-size: 2.4em;
+  font-size: ${rem('26px')};
 `;
 
 export default () => {

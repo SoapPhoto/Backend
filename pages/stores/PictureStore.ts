@@ -22,13 +22,14 @@ export class PictureStore extends BaseStore {
   @observable public loading = true;
   @observable public init = false;
   @observable public list: PictureEntity[] = [];
-  @observable public listQuery: IBaseQuery = {
-    page: 1,
-    pageSize: 30,
-    timestamp: Number(Date.parse(new Date().toISOString())),
-  };
+  @observable public listQuery!: IBaseQuery;
   @observable public count: number = 0;
   @observable private reqUrl = '/api/picture';
+
+  constructor() {
+    super();
+    this.initQuery();
+  }
 
   @computed get maxPage() {
     const { pageSize } = this.listQuery;
@@ -48,7 +49,7 @@ export class PictureStore extends BaseStore {
   @action public initQuery = () => {
     this.listQuery = {
       page: 1,
-      pageSize: 5,
+      pageSize: 30,
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
   }

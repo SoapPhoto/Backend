@@ -1,3 +1,4 @@
+import { rem } from 'polished';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
@@ -26,12 +27,12 @@ export const Box = styled.div<{size: number}>`
     animation-duration: 1.4s;
     animation-iteration-count: infinite;
     animation-fill-mode: both;
-    width: ${_ => _.size}px;
-    height: ${_ => _.size}px;
+    width: ${_ => rem(_.size)};
+    height: ${_ => rem(_.size)};
     background-color: rgb(68, 68, 68);
     display: inline-block;
     border-radius: 50%;
-    margin: 0px ${_ => _.size / 2}px;
+    margin: 0px ${_ => rem(_.size / 2)};
     &:nth-child(2) {
       animation-delay: 0.2s;
     }

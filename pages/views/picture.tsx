@@ -1,6 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import { NextContext } from 'next';
 import Head from 'next/Head';
+import { rem } from 'polished';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
@@ -14,15 +15,15 @@ import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 
 const Wrapper = styled.div`
-  max-width: 1040px;
+  max-width: ${rem('1040px')};
   width: 100%;
   margin: 0 auto;
-  margin-top: 40px;
-  padding: 0 20px;
+  margin-top: ${rem('40px')};
+  padding: 0 ${rem('20px')};
 `;
 
 const UserHeader = styled(Grid)`
-  margin-bottom: 20px;
+  margin-bottom: ${rem('20px')};
 `;
 
 const UserLink = styled.a`
@@ -33,7 +34,7 @@ const UserLink = styled.a`
 `;
 
 const UserName = styled.h3`
-  font-size: 14px;
+  font-size: ${rem('16px')};
 `;
 
 const UserInfo = styled(Cell)`
@@ -42,18 +43,18 @@ const UserInfo = styled(Cell)`
 `;
 
 const PictureBox = styled.div`
-  border-radius: 3px;
+  border-radius: ${rem('3px')};
   overflow: hidden;
-  box-shadow: ${_ => _.theme.colors.shadowColor} 0px 6px 20px;
+  box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
 `;
 
 const Content = styled.div`
-  max-width: 780px;
-  margin: 48px auto;
+  max-width: ${rem('780px')};
+  margin: ${rem('48px')} auto;
 `;
 
 const Title = styled.h2`
-font-size: 24px;
+font-size: ${rem('24px')};
 `;
 
 interface InitialProps extends NextContext {

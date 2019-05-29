@@ -1,3 +1,4 @@
+import { rem } from 'polished';
 import { css, DefaultTheme, ThemedStyledProps } from 'styled-components';
 
 export const nprogress = (props: ThemedStyledProps<{}, DefaultTheme>) => css`
@@ -14,22 +15,19 @@ export const nprogress = (props: ThemedStyledProps<{}, DefaultTheme>) => css`
     left: 0;
 
     width: 100%;
-    height: 2px;
+    height: ${rem('2px')};
   }
 
   /* Fancy blur effect */
   #nprogress .peg {
     display: block;
     position: absolute;
-    right: 0px;
-    width: 100px;
+    right: ${rem('0px')};
+    width: ${rem('100px')};
     height: 100%;
     box-shadow: 0 0 10px ${props.theme.styles.nprogress}, 0 0 5px ${props.theme.styles.nprogress};
     opacity: 1.0;
-
-    -webkit-transform: rotate(3deg) translate(0px, -4px);
-        -ms-transform: rotate(3deg) translate(0px, -4px);
-            transform: rotate(3deg) translate(0px, -4px);
+    transform: rotate(3deg) translate(0px, -4px);
   }
 
   /* Remove these to get rid of the spinner */
@@ -37,22 +35,20 @@ export const nprogress = (props: ThemedStyledProps<{}, DefaultTheme>) => css`
     display: block;
     position: fixed;
     z-index: 1031;
-    top: 15px;
-    right: 15px;
+    top: ${rem('15px')};
+    right: ${rem('15px')};
   }
 
   #nprogress .spinner-icon {
-    width: 18px;
-    height: 18px;
+    width: ${rem('18px')};
+    height: ${rem('18px')};
     box-sizing: border-box;
 
     border: solid 2px transparent;
     border-top-color: ${props.theme.styles.nprogress};
     border-left-color: ${props.theme.styles.nprogress};
     border-radius: 50%;
-
-    -webkit-animation: nprogress-spinner 400ms linear infinite;
-            animation: nprogress-spinner 400ms linear infinite;
+    animation: nprogress-spinner 400ms linear infinite;
   }
 
   .nprogress-custom-parent {

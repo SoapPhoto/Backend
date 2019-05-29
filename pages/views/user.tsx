@@ -1,5 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
+import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
 import parse from 'url-parse';
@@ -9,11 +10,8 @@ import { href } from '@pages/common/utils/themes/common';
 import { Avatar } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
 import { Link } from '@pages/icon';
-import { PictureClass } from '@pages/stores/class/Picture';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
-import { plainToClass } from 'class-transformer';
-import { observable, reaction } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
 
 interface IProps {
@@ -24,34 +22,34 @@ interface IProps {
 const Wrapper = styled.div``;
 
 const UserHeader = styled.div`
-  max-width: 700px;
+  max-width: ${rem('700px')};
   width: 100%;
   margin: 64px auto;
-  padding: 0 20px;
+  padding: 0 ${rem('20px')};
 `;
 
 const UserName = styled.h2`
   font-family: Rubik;
-  font-size: 2em;
-  margin-top: 6px;
-  margin-bottom: 12px;
+  font-size: ${rem('32px')};
+  margin-top: ${rem('6px')};
+  margin-bottom: ${rem('12px')};
 `;
 
 const Profile = styled.div`
   display: flex;
-  margin-bottom: 4px;
+  margin-bottom: ${rem('4px')};
 `;
 
 const ProfileItem = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: 8px;
-  margin-right: 24px;
+  padding-bottom: ${rem('8px')};
+  margin-right: ${rem('24px')};
   min-width: 0;
   font-family: Rubik;
   color: ${_ => _.theme.colors.secondary};
   & svg {
-    margin-right: 4px;
+    margin-right: ${rem('4px')};
   }
 `;
 
@@ -62,7 +60,7 @@ const ProfileItemLink = styled.a`
 `;
 
 const Bio = styled.p`
-  font-size: 14px;
+  font-size: ${rem('14px')};
   font-family: Rubik;
 `;
 

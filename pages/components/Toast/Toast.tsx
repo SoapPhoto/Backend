@@ -1,6 +1,7 @@
 import { ThemeWrapper } from '@pages/containers/Theme';
 import { IObservableArray, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { rem } from 'polished';
 import React from 'react';
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
@@ -91,9 +92,9 @@ const hover = [
 
 const Area = styled.div`
   position: fixed;
-  bottom: 10px;
-  right: 20px;
-  max-width: 420px;
+  bottom: ${rem('10px')};
+  right: ${rem('20px')};
+  max-width: ${rem('420px')};
   z-index: 2000;
   transition: transform 0.4s, opacity 0.4s ease;
   &:hover {
@@ -123,23 +124,23 @@ const Container = styled.div`
   transition: all 0.4s ease;
   position: absolute;
   bottom: 0;
-  height: ${height}px;
+  height: ${rem(height)};
   right: 0;
 `;
 
 const ToastBox = styled.div<{type?: ToastType}>`
-  padding: 0 20px;
-  border-radius: 5px;
+  padding: 0 ${rem('20px')};
+  border-radius: ${rem('5px')};
   border: 0;
-  width: 420px;
-  height: 60px;
+  width: ${rem('420px')};
+  height: ${rem('60px')};
   color: ${_ => styleColor[_.type || 'base']};
   background-color: ${_ => style[_.type || 'base']};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 9px rgba(0, 0, 0, 0.12);
-  font-size: 14px;
+  box-shadow: 0 ${rem('4px')} ${rem('9px')} rgba(0, 0, 0, 0.12);
+  font-size: ${rem('14px')};
   transition: transform 0.4s, opacity 0.4s ease;
 `;
 

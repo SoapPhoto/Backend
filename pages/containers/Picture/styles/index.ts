@@ -1,3 +1,4 @@
+import { rem } from 'polished';
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
@@ -5,10 +6,9 @@ const padding = 24;
 
 export const Wapper = styled.section`
   width: 100%;
-  max-width: 1300px;
-  margin: ${padding}px auto;
-  padding: 0 24px;
-
+  max-width: ${rem('1300px')};
+  margin: ${rem(padding)} auto;
+  padding: 0 ${rem('24px')};
 
   ${media.lessThan('small')`
     &>div:nth-child(4) {
@@ -37,24 +37,24 @@ export const Wapper = styled.section`
 
 export const Col = styled.div<{col: number; ssr: boolean}>`
   display: ${_ => _.ssr ? 'none' : 'grid'};
-  grid-gap: ${padding}px;
+  grid-gap: ${rem(padding)};
   grid-template-columns: repeat(${props => props.col}, 1fr);
 `;
 
 export const ColItem = styled.div`
   &>div {
-    margin-bottom: 24px;
+    margin-bottom: ${rem('24px')};
   }
   &:last-child {
-    margin-bottom: 0px;
+    margin-bottom: ${rem('0px')};
   }
 `;
 
 export const ItemWapper = styled.div`
   position: relative;
-  border-radius: 4px;
+  border-radius: ${rem('4px')};
   overflow: hidden;
-  box-shadow: ${_ => _.theme.colors.shadowColor} 0px 6px 20px;
+  box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   /* &:active {
     transform: scale(0.98);
     transition: transform 0.1s;
@@ -87,8 +87,8 @@ export const InfoBox = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   bottom: 0;
-  padding: 8px;
-  height: 40px;
+  padding: ${rem('8px')};
+  height: ${rem('40px')};
   width: 100%;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2));
   opacity: 0;
@@ -108,9 +108,9 @@ export const UserBox = styled.div`
 `;
 
 export const UserName = styled.a`
-  margin-left: 12px;
+  margin-left: ${rem('12px')};
   font-weight: 700;
-  font-size: 14px;
+  font-size: ${rem('14px')};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
   &:active {
@@ -148,11 +148,11 @@ export const LikeButton = styled.div<{like: boolean}>`
 
 export const Footer = styled.div`
   text-align: center;
-  height: 120px;
+  height: ${rem('120px')};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: ${rem('26px')};
   color: ${_ => _.theme.colors.secondary};
   font-weight: 100;
 `;
