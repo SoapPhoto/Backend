@@ -30,16 +30,9 @@ export class PictureStore extends BaseStore {
   @observable public count: number = 0;
   @observable private reqUrl = '/api/picture';
 
-  constructor(type: 'home')
-  constructor(type: 'user', options: IUserPictureListOptions)
-  constructor(type: PictureListType, options?: IUserPictureListOptions) {
-    super();
-    if (type === 'user') {
-      const { userName } = options!;
-      this.reqUrl = `/api/user/${userName}/picture`;
-    } else if (type === 'home') {
-      this.reqUrl = '/api/picture';
-    }
+  @computed get maxPage() {
+    const { pageSize } = this.listQuery;
+    return Math.ceil(this.count / pageSize);
   }
 
   @computed get isNoMore() {
@@ -77,6 +70,10 @@ export class PictureStore extends BaseStore {
   }
   @action
   public getPageList = async() => {
+    const page = this.listQuery.page + 1;
+    if (page > this.maxPage) {
+      return;
+    }
     return this.getList({
       page: this.listQuery.page + 1,
     }, undefined, true);

@@ -10,65 +10,30 @@ interface IPictureImage extends IPictureItemProps {
   blur?: boolean;
 }
 
-@observer
-export class PictureImage extends React.Component<IPictureImage> {
-  @computed get opacity() {
-    if (this.isComplete && this.isLoad) {
-      return 1;
-    }
-    return 0;
-  }
-  @observable public isComplete = true;
-  @observable public isLoad = true;
-
-  public imgRef = React.createRef<HTMLImageElement>();
-
-  public componentDidMount() {
-    if (this.imgRef.current) {
-      if (!this.imgRef.current.complete) {
-        this.isComplete = false;
-      } else {
-        this.isLoad = true;
+export const PictureImage: React.FC<IPictureImage> = ({
+  detail,
+  lazyload,
+  size = 'regular',
+}) => {
+  const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
+  const imgRender = (
+    <ItemImage
+      src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
+    />
+  );
+  return (
+    <ImageBox height={height} background={detail.color}>
+      {
+        lazyload ? (
+          <LazyLoad resize={true} once height="100%" offset={10}>
+            {imgRender}
+          </LazyLoad>
+        ) : (
+          <div>
+            {imgRender}
+          </div>
+        )
       }
-    }
-  }
-  // 31536000
-  public onLoad = () => {
-    if (!this.isComplete) {
-      setTimeout(() => {
-        this.isComplete = true;
-        this.isLoad = true;
-      }, 100);
-    }
-  }
-
-  public render() {
-    const { detail, lazyload, size = 'regular' } = this.props;
-    const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
-    const imgRender = (
-      <ItemImage
-        style={{
-          opacity: this.opacity,
-        }}
-        ref={this.imgRef}
-        src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
-        onLoad={this.onLoad}
-      />
-    );
-    return (
-      <ImageBox height={height} background={detail.color}>
-        {
-          lazyload ? (
-            <LazyLoad resize={true} once height="100%" offset={10}>
-              {imgRender}
-            </LazyLoad>
-          ) : (
-            <div>
-              {imgRender}
-            </div>
-          )
-        }
-      </ImageBox>
-    );
-  }
-}
+    </ImageBox>
+  );
+};
