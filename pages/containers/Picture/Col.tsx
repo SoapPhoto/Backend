@@ -8,20 +8,24 @@ import { Col, ColItem } from './styles';
 interface IProps {
   list: PictureEntity[][];
   col: number;
+  ssr?: boolean;
+  like?: (data: PictureEntity) => void;
 }
 
 interface IListProps {
   list: PictureEntity[];
+  like?: (data: PictureEntity) => void;
 }
 
 export const List = connect<React.FC<IListProps>>()(({
   list,
+  like,
 }: IListProps) => {
   return (
     <>
       {
         list.map(picture => (
-          <PictureItem key={picture.id} detail={picture} />
+          <PictureItem like={like} key={picture.id} detail={picture} />
         ))
       }
     </>
@@ -31,20 +35,24 @@ export const List = connect<React.FC<IListProps>>()(({
 export default connect<React.FC<IProps>>()(({
   list,
   col,
+  like,
+  ssr = false,
 }) => {
   if (list.length === 1) {
     return (
-      <ColItem>
-        <List list={list[0]} />
-      </ColItem>
+      <Col col={col} ssr={ssr}>
+        <ColItem>
+          <List like={like} list={list[0]} />
+        </ColItem>
+      </Col>
     );
   }
   return (
-    <Col col={col}>
+    <Col col={col} ssr={ssr}>
       {
         list.map((pictureList, index) => (
           <ColItem key={index} >
-            <List list={pictureList} />
+            <List like={like} list={pictureList} />
           </ColItem>
         ))
       }

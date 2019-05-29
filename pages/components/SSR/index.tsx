@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DefaultOnSSR = () => (<span/>);
+const DefaultOnSSR = () => (<></>);
 
 interface INoSSRProps {
   /**

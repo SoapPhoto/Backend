@@ -8,9 +8,10 @@ import { NoSSR } from '@pages/components/SSR';
 import { debounce } from 'lodash';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import Col, { List } from './Col';
-import { PictureItem } from './Item';
-import { ColItem, Footer, Wapper } from './styles';
+import Col from './Col';
+import { Footer, Wapper } from './styles';
+
+import { defaultBreakpoints } from 'styled-media-query';
 
 interface IProps {
   /**
@@ -33,8 +34,13 @@ export class PictureList extends React.Component<IProps> {
   public static defaultProps: Partial<IProps> = {
     noMore: false,
   };
-  @observable public colArr = [4, 3, 2];
+  @observable public col = 4;
+  @observable public colArr = [4, 3, 2, 1];
+  // 这是给服务端渲染用的
   @observable public colList: PictureEntity[][][] = [];
+
+  // 浏览器时使用这个数据
+  @observable public pictureList: PictureEntity[][] = [];
 
   public _pageLock = false;
 
@@ -55,7 +61,7 @@ export class PictureList extends React.Component<IProps> {
     reaction(
       () => this.props.data,
       () => {
-        this.formatList(this.props.data);
+        this.pictureFormat();
       },
     );
     reaction(
@@ -66,10 +72,54 @@ export class PictureList extends React.Component<IProps> {
         }
       },
     );
+    reaction(
+      () => this.col,
+      (col) => {
+        this.pictureFormat(col);
+      },
+    );
   }
-  public componentDidMount() {
-    if (!this.props.noMore) {
-      window.addEventListener('scroll', this.eventScroll);
+  public componentWillMount() {
+    if (!server) {
+      if (!this.props.noMore) {
+        window.addEventListener('scroll', this.eventScroll);
+      }
+      this.media();
+      this.pictureFormat();
+    }
+  }
+  public pictureFormat = (col = this.col) => {
+    this.pictureList = listParse(this.props.data, col);
+  }
+  public media = () => {
+    const mediaArr = [
+      {
+        media: `(min-width: ${defaultBreakpoints.large})`,
+        col: 4,
+      },
+      {
+        media: `(min-width: ${defaultBreakpoints.medium}) and (max-width: ${defaultBreakpoints.large})`,
+        col: 3,
+      },
+      {
+        media: `(min-width: ${defaultBreakpoints.small}) and (max-width: ${defaultBreakpoints.medium})`,
+        col: 2,
+      },
+      {
+        media: `(max-width: ${defaultBreakpoints.small})`,
+        col: 1,
+      },
+    ];
+    for (const info of mediaArr) {
+      const media = window.matchMedia(info.media);
+      media.addEventListener('change', (data) => {
+        if (data.matches) {
+          this.col = info.col;
+        }
+      });
+      if (media.matches) {
+        this.col = info.col;
+      }
     }
   }
   public formatList = (data: PictureEntity[]) => {
@@ -82,13 +132,12 @@ export class PictureList extends React.Component<IProps> {
         <NoSSR server={false}>
           {
             this.colList.map((mainCol, i) => (
-              <Col col={this.colArr[i]} key={this.colArr[i]} list={mainCol} />
+              <Col ssr={true} col={this.colArr[i]} key={this.colArr[i]} list={mainCol} />
             ))
           }
         </NoSSR>
         <NoSSR>
-          <div>123</div>
-          <Col col={4} list={this.colList[0]} />
+          <Col like={this.props.like} col={this.col} list={this.pictureList} />
         </NoSSR>
         <Footer>
           {
