@@ -16,3 +16,5 @@ export const getCurrentTheme = (data?: any) => {
   }
   return cookies.theme;
 };
+
+export default themeData;

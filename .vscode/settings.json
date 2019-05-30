@@ -11,5 +11,6 @@
   ],
   "editor.fontFamily": " 'Dank Mono', 'FiraCode-Retina',  'Fira Code Retina', 'Iosevka Term', Consolas, 'M+ 1m', 'Courier New', monospace, 微软雅黑",
   "editor.tabSize": 2,
-  "editor.fontSize": 16
+  "editor.fontSize": 16,
+  "vsicons.presets.nestjs": true
 }

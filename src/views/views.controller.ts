@@ -73,4 +73,12 @@ export class ViewsController {
     const data = path.join(process.cwd(), '.next', 'service-worker.js');
     res.sendFile(data);
   }
+
+  @Get('favicon.ico')
+  public async favicon(
+    @Res() res: Response,
+  ) {
+    const data = path.join(process.cwd(), '/public/favicon.ico');
+    res.sendFile(data);
+  }
 }
