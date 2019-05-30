@@ -34,7 +34,7 @@ const UserLink = styled.a`
 `;
 
 const UserName = styled.h3`
-  font-size: ${rem('16px')};
+  font-size: ${_ => rem(_.theme.fontSizes[2])};
 `;
 
 const UserInfo = styled(Cell)`
@@ -54,7 +54,7 @@ const Content = styled.div`
 `;
 
 const Title = styled.h2`
-font-size: ${rem('24px')};
+font-size: ${_ => rem(_.theme.fontSizes[4])};
 `;
 
 interface InitialProps extends NextContext {

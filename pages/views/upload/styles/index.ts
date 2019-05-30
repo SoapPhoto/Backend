@@ -59,7 +59,7 @@ export const Content = styled(Cell)`
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`
-  font-size: ${_ => rem(_.isTitle ? 34 : 16)};
+  font-size: ${_ => rem(_.isTitle ? _.theme.fontSizes[5] : _.theme.fontSizes[2])};
   border: none;
   background-color: transparent;
   margin-bottom: ${rem('24px')};

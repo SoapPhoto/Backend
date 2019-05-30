@@ -34,7 +34,7 @@ export const Arrow = styled.span<{placement: Placement}>`
 export const Content = styled.div`
   ${props => box(props.theme, '100%', true)}
   padding: ${rem('4px')} ${rem('12px')};
-  font-size: ${rem('12px')};
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
   &[x-theme^="light"] {
     box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('32px')} ${rem('0px')};
     background-color: ${_ => _.theme.styles.box.background};

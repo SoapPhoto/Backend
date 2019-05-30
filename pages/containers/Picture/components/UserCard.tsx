@@ -25,13 +25,13 @@ const UserBox = styled.div`
 `;
 
 const UserName = styled.p`
-  font-size: ${rem('18px')};
+  font-size: ${_ => rem(_.theme.fontSizes[3])};
   font-weight: 500;
   margin-bottom: ${rem('4px')};
 `;
 
 const Bio = styled.p`
-  font-size: ${rem('12px')};
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
   font-weight: 400;
   color: ${_ => _.theme.colors.secondary}
 `;

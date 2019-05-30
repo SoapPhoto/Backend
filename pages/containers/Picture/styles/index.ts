@@ -110,7 +110,7 @@ export const UserBox = styled.div`
 export const UserName = styled.a`
   margin-left: ${rem('12px')};
   font-weight: 700;
-  font-size: ${rem('14px')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
   &:active {
@@ -152,7 +152,7 @@ export const Footer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${rem('26px')};
+  font-size: ${_ => rem(_.theme.fontSizes[4])};
   color: ${_ => _.theme.colors.secondary};
   font-weight: 100;
 `;

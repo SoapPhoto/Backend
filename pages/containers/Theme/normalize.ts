@@ -10,7 +10,7 @@ const normalize = (_: ThemedStyledProps<{}, DefaultTheme>) => css`
     -webkit-text-size-adjust: 100%; /* 2 */
   }
   body {
-    font-size: 14px !important;
+    font-size: ${prop => prop.theme.fontSizes[1]} !important;
     line-height: 1.5;
     overflow-y: scroll;
     font-family: ${font};

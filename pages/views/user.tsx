@@ -30,7 +30,7 @@ const UserHeader = styled.div`
 
 const UserName = styled.h2`
   font-family: Rubik;
-  font-size: ${rem('32px')};
+  font-size: ${_ => rem(_.theme.fontSizes[5])};
   margin-top: ${rem('6px')};
   margin-bottom: ${rem('12px')};
 `;
@@ -60,7 +60,7 @@ const ProfileItemLink = styled.a`
 `;
 
 const Bio = styled.p`
-  font-size: ${rem('14px')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   font-family: Rubik;
 `;
 

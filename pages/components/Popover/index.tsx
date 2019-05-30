@@ -1,3 +1,4 @@
+import { isFunction } from 'lodash';
 import React, { Children } from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
@@ -72,7 +73,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     }
   }
   public onClose = () => {
-    if (typeof this.props.onClose === 'function') {
+    if (isFunction(this.props.onClose)) {
       this.props.onClose();
     }
     this.visible = false;
@@ -98,7 +99,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     }
   }
   public selfEvents = (child: any, type: string, e: any) => {
-    if (child && child.props && typeof child.props[type] === 'function') {
+    if (child && child.props && isFunction(child.props[type])) {
       child.props[type](e);
     }
   }

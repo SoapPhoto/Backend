@@ -22,7 +22,6 @@ export class OauthController {
       const request = new OAuth2Server.Request(req);
       const response = new OAuth2Server.Response(res);
       const token = await this.oauthServerService.server.token(request, response);
-      console.log((parserAgent as any)(req.header('user-agent')));
       res.cookie('Authorization', `Bearer ${token.accessToken}`, {
         expires: token.accessTokenExpiresAt,
         httpOnly: true,

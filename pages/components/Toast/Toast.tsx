@@ -140,16 +140,13 @@ const ToastBox = styled.div<{type?: ToastType}>`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 ${rem('4px')} ${rem('9px')} rgba(0, 0, 0, 0.12);
-  font-size: ${rem('14px')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   transition: transform 0.4s, opacity 0.4s ease;
 `;
 
 @observer
 export class ToastComponent extends React.Component {
-  @observable public configList: IObservableArray<IToastConfig> = ([] as any);
-  public state = {
-    arr: [],
-  };
+  @observable public configList: IObservableArray<IToastConfig> = observable.array([]);
   public add = (config: IToastConfig) => {
     const newConfig = {
       ...config,
@@ -160,7 +157,6 @@ export class ToastComponent extends React.Component {
       setTimeout(() => {
         const data = this.configList.find(item => item.key === newConfig.key);
         if (data) this.configList.remove(data);
-
       }, config.duration || 6000);
     }
   }

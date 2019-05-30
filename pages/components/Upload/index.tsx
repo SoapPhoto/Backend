@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import { isFunction } from 'lodash';
+import React from 'react';
 
 type DragType = 'leave' | 'drop' | 'over';
 
@@ -26,7 +27,7 @@ export interface IUploadProps extends React.HTMLAttributes<HTMLSpanElement> {
    * @memberof IUploadProps
    */
   accept?: string;
-  children?: UploadChildren;
+  children: UploadChildren;
 }
 
 export const Upload: React.FC<IUploadProps> = ({
@@ -46,7 +47,7 @@ export const Upload: React.FC<IUploadProps> = ({
   };
   const uploadImage = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     inputRef.current!.click();
-    if (onClick && typeof onClick === 'function') {
+    if (isFunction(onClick)) {
       onClick(e);
     }
   };
@@ -88,7 +89,7 @@ export const Upload: React.FC<IUploadProps> = ({
         onChange={handleChange}
         style={{ visibility: 'hidden', width: '0px', height: '0px' }}
       />
-      {typeof children === 'function' ? (children as any)(dragType) : children}
+      {isFunction(children) ? children(dragType) : children}
     </span>
   );
 };

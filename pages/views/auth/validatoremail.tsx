@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: ${rem('26px')};
+  font-size: ${_ => rem(_.theme.fontSizes[4])};
 `;
 
 export default () => {

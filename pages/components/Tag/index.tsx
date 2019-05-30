@@ -22,14 +22,14 @@ const Tag = styled.span<{close?: boolean}>`
   color: ${_ => _.theme.colors.secondary};
   border: 1px solid ${_ => _.theme.colors.gray};
   border-radius: ${rem('4px')};
-  font-size: ${rem('12px')};
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
   font-variant: tabular-nums;
   display: flex;
   align-items: center;
   justify-content: center;
   height: auto;
   padding: 0 ${rem('7px')};
-  font-size: ${rem('14px')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   line-height: ${rem('30px')};
   background: ${_ => _.theme.colors.lightgray};
   border-radius: ${rem('2px')};
@@ -55,7 +55,7 @@ const Input = styled(BaseInput)`
   box-shadow: none !important;
   height: auto;
   line-height: ${rem('24px')};
-  font-size: ${rem('14px')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   padding: 0;
 `;
 

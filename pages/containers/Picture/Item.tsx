@@ -50,14 +50,18 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
       </Link>
       <InfoBox>
         <UserBox>
-          <Popover
-            openDelay={500}
-            trigger="hover"
-            placement="top"
-            content={<UserCard user={detail.user} />}
-          >
-            <Avatar src={detail.user.avatar} size={30} />
-          </Popover>
+            <Popover
+              openDelay={500}
+              trigger="hover"
+              placement="top"
+              content={<UserCard user={detail.user} />}
+            >
+              <Link route={`/@${detail.user.username}`}>
+                <a href={`/@${detail.user.username}`}>
+                  <Avatar src={detail.user.avatar} size={30} />
+                </a>
+              </Link>
+            </Popover>
           <Link route={`/@${detail.user.username}`}>
             <UserName href={`/@${detail.user.username}`}>
               {detail.user.username}
