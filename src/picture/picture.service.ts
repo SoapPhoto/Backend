@@ -67,14 +67,28 @@ export class PictureService {
     };
   }
 
-  public getUserPicture = async (id: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+  public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const q = this.selectList(user, query);
-    if (validator.isNumberString(id)) {
-      q.andWhere('picture.userId=:id', { id });
+    if (validator.isNumberString(idOrName)) {
+      q.andWhere('picture.userId=:id', { id: idOrName });
     } else {
-      q.andWhere('picture.userUsername=:id', { id });
+      q.andWhere('picture.userUsername=:id', { id: idOrName });
     }
     const data = await q.cache(100).getManyAndCount();
+    return {
+      count: data[1],
+      data: plainToClass(PictureEntity, data[0]),
+      page: query.page,
+      pageSize: query.pageSize,
+      timestamp: new Date().getTime(),
+    };
+  }
+
+  public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+    const ids = await this.activityService.getLikeList(idOrName);
+    const q = this.selectList(user, query);
+    q.andWhere('picture.id IN (:...ids)', { ids });
+    const data = await q.getManyAndCount();
     return {
       count: data[1],
       data: plainToClass(PictureEntity, data[0]),

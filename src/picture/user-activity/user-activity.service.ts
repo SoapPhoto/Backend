@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, getManager, Repository } from 'typeorm';
 
+import { validator } from '@server/common/utils/validator';
 import { NotificationService } from '@server/notification/notification.service';
 import { UserEntity } from '@server/user/user.entity';
 import { PictureEntity } from '../picture.entity';
@@ -78,5 +79,23 @@ export class PictureUserActivityService {
       .from(PictureUserActivityEntity)
       .where('pictureId=:id', { id: picture.id })
       .execute();
+  }
+
+  public getLikeList = async (userIdOrName: string) => {
+    const q = this.activityRepository.createQueryBuilder('activity')
+      .where('activity.like=:like', { like: true });
+    if (validator.isNumberString(userIdOrName)) {
+      q.andWhere('activity.userId=:id', { id: userIdOrName });
+    } else {
+      q.andWhere('activity.userUsername=:id', { id: userIdOrName });
+    }
+    const data = await q.getRawMany();
+    return data.map(activity => activity.activity_pictureId as string);
+    // return this.activityRepository.createQueryBuilder('activity')
+      // .where('activity.pictureId=:pictureId', { pictureId })
+      // .leftJoinAndSelect('activity.user', 'user')
+      // .leftJoinAndSelect('activity.picture', 'picture')
+      // .andWhere('activity.userId=:userId', { userId })
+      // .getOne();
   }
 }

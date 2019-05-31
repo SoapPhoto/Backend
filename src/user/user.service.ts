@@ -108,8 +108,12 @@ export class UserService {
     });
   }
 
-  public async getUserPicture(id: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
-    return this.pictureService.getUserPicture(id, query, user);
+  public async getUserPicture(idOrName: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
+    return this.pictureService.getUserPicture(idOrName, query, user);
+  }
+
+  public async getUserLikePicture(idOrName: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
+    return this.pictureService.getUserLikePicture(idOrName, query, user);
   }
 
   public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {

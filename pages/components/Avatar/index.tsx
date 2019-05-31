@@ -11,7 +11,7 @@ export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
    */
   src: string;
   /**
-   * 尺寸： 24 32 48
+   * 尺寸： `24` `32` `48`
    *
    * @type {number}
    * @memberof IAvatarProps

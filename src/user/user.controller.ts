@@ -48,22 +48,23 @@ export class UserController {
   ) {
     return plainToClass(UserEntity, user);
   }
-  @Get(':id([0-9]+)/picture')
-  public async getUserIdPicture(
-    @Param('id') id: string,
+
+  @Get(':idOrName/picture')
+  public async getUserPicture(
+    @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
-    return this.userService.getUserPicture(id, query, user);
+    return this.userService.getUserPicture(idOrName, query, user);
   }
 
-  @Get(':name/picture')
-  public async getUserNamePicture(
-    @Param('name') username: string,
+  @Get(':idOrName/picture/like')
+  public async getUserLikePicture(
+    @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
-    return this.userService.getUserPicture(username, query, user);
+    return this.userService.getUserLikePicture(idOrName, query, user);
   }
 
   @Post(':name/setting/profile')

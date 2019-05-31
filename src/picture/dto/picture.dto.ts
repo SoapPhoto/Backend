@@ -4,7 +4,6 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { IsArray, IsJSON, IsString } from 'class-validator';
 
 export class GetPictureListDto extends PaginationDto {
-
 }
 
 export class GetUserPictureListDto extends GetPictureListDto {
