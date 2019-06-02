@@ -140,7 +140,7 @@ const ToastBox = styled.div<{type?: ToastType}>`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 ${rem('4px')} ${rem('9px')} rgba(0, 0, 0, 0.12);
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${_ => rem(14)};
   transition: transform 0.4s, opacity 0.4s ease;
 `;
 

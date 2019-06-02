@@ -1,6 +1,7 @@
 import { action, computed, observable, reaction } from 'mobx';
 import uniqid from 'uniqid';
 
+import { IBaseQuery } from '@pages/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
 import { BaseStore } from './BaseStore';
@@ -9,13 +10,6 @@ type PictureListType = 'user' | 'home';
 
 interface IUserPictureListOptions {
   userName: string;
-}
-
-interface IBaseQuery {
-  page: number;
-  pageSize: number;
-  timestamp: number;
-  [key: string]: number | string;
 }
 
 export class PictureStore extends BaseStore {

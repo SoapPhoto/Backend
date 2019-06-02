@@ -7,11 +7,13 @@ import parse from 'url-parse';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { href } from '@pages/common/utils/themes/common';
-import { Avatar } from '@pages/components';
+import { Avatar, Nav, NavItem } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
-import { Link } from '@pages/icon';
+import { Link as LinkIcon } from '@pages/icon';
+import { Link } from '@pages/routes';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
+import { computed } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
 
 interface IProps {
@@ -74,12 +76,15 @@ class User extends React.Component<IProps> {
     return user.name || user.username;
   }
   public static getInitialProps: (_: CustomNextContext) => any;
+  @computed get type () {
+    return this.props.userStore.type;
+  }
   public parseWebsite = (url: string) => {
     const data = parse(url);
     return data.hostname;
   }
   public render() {
-    const { user, like, list, isNoMore } = this.props.userStore;
+    const { user, like, list, likeList, isNoMore, type } = this.props.userStore;
     return (
       <Wrapper>
         <Head>
@@ -97,7 +102,7 @@ class User extends React.Component<IProps> {
                   user.website &&
                   <ProfileItem>
                     <ProfileItemLink href={user.website} target="__blank">
-                      <Link size={14}/>{this.parseWebsite(user.website)}
+                      <LinkIcon size={14}/>{this.parseWebsite(user.website)}
                     </ProfileItemLink>
                   </ProfileItem>
                 }
@@ -108,7 +113,15 @@ class User extends React.Component<IProps> {
             </Cell>
           </Grid>
         </UserHeader>
-        <PictureList noMore={isNoMore} data={list} like={like} />
+        <Nav>
+          <NavItem route={`/@${user.username}`}>
+            照片
+          </NavItem>
+          <NavItem route={`/@${user.username}/like`}>
+            喜欢
+          </NavItem>
+        </Nav>
+        <PictureList noMore={isNoMore} data={type === 'like' ? likeList : list} like={like} />
       </Wrapper>
     );
   }
@@ -121,11 +134,12 @@ User.getInitialProps = async (_: CustomNextContext) => {
     _.mobxStore.appStore.location.action === 'POP' &&
     _.mobxStore.screen.userStore.init &&
     _.mobxStore.screen.userStore.user &&
-    _.mobxStore.screen.userStore.user.username === params.username
+    _.mobxStore.screen.userStore.user.username === params.username &&
+    _.mobxStore.screen.userStore.type === params.type
   ) {
     return {};
   }
-  await _.mobxStore.screen.userStore.getInit(params.username!, _.req ? _.req.headers : undefined);
+  await _.mobxStore.screen.userStore.getInit(params.username!, params.type!, _.req ? _.req.headers : undefined);
   return {
     username: params.username,
   };

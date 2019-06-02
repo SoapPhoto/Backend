@@ -26,6 +26,12 @@ export class ViewsController {
     return {};
   }
 
+  @Get('@(:username)/:type(like)')
+  @Render('user')
+  public async userType() {
+    return {};
+  }
+
   @Get('picture/:id([0-9]+)')
   public async pictureDetail(
     @Res() res: any,

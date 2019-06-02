@@ -11,6 +11,9 @@ const instance = axios.create({
   validateStatus (status: number) {
     return status < 500 && status !== 404;
   },
+  headers: {
+    Accept: 'application/json',
+  },
 });
 
 instance.interceptors.response.use(

@@ -30,3 +30,10 @@ export interface PaginationList {
   page: number;
   count: number;
 }
+
+export interface IBaseQuery {
+  page: number;
+  pageSize: number;
+  timestamp: number;
+  [key: string]: number | string;
+}
