@@ -5,18 +5,18 @@ import React from 'react';
 import styled from 'styled-components';
 import parse from 'url-parse';
 
-import { CustomNextContext } from '@pages/common/interfaces/global';
+import { CustomNextContext, IBaseScreenProps } from '@pages/common/interfaces/global';
 import { href } from '@pages/common/utils/themes/common';
 import { Avatar, Nav, NavItem } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
 import { Link as LinkIcon } from '@pages/icon';
-import { Link } from '@pages/routes';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
 import { computed } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
+import Error from '../_error';
 
-interface IProps {
+interface IProps extends IBaseScreenProps {
   username: string;
   userStore: UserScreenStore;
 }
@@ -85,6 +85,9 @@ class User extends React.Component<IProps> {
   }
   public render() {
     const { user, like, list, likeList, isNoMore, type } = this.props.userStore;
+    if (this.props.error) {
+      return <Error status={this.props.error.statusCode} />;
+    }
     return (
       <Wrapper>
         <Head>
@@ -127,20 +130,29 @@ class User extends React.Component<IProps> {
   }
 }
 
-User.getInitialProps = async (_: CustomNextContext) => {
-  const { params } = _.route;
+User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
+  const { params } = route;
   if (
-    _.mobxStore.appStore.location &&
-    _.mobxStore.appStore.location.action === 'POP' &&
-    _.mobxStore.screen.userStore.init &&
-    _.mobxStore.screen.userStore.user &&
-    _.mobxStore.screen.userStore.user.username === params.username &&
-    _.mobxStore.screen.userStore.type === params.type
+    mobxStore.appStore.location &&
+    mobxStore.appStore.location.action === 'POP' &&
+    mobxStore.screen.userStore.init &&
+    mobxStore.screen.userStore.user &&
+    mobxStore.screen.userStore.user.username === params.username &&
+    mobxStore.screen.userStore.type === params.type
   ) {
     return {};
   }
-  await _.mobxStore.screen.userStore.getInit(params.username!, params.type!, _.req ? _.req.headers : undefined);
+  let error: {
+    message: string,
+    status: number,
+  } | undefined;
+  try {
+    await mobxStore.screen.userStore.getInit(params.username!, params.type!, req ? req.headers : undefined);
+  } catch (err) {
+    error = err;
+  }
   return {
+    error,
     username: params.username,
   };
 };

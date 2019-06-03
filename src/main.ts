@@ -38,31 +38,28 @@ async function bootstrap() {
 
   const service = server.get(RenderService);
   service.setErrorHandler(async (err, req, res) => {
-    Logger.error(err);
+    Logger.error(err.response);
     const isJSON = /application\/json/g.test(req.headers.accept);
     if (isJSON) {
       if (err.response) {
-        res.json(err.response);
-      } else {
-        res
-          .status(500)
-          .json({
-            statusCode: 500,
-            timestamp: new Date().toISOString(),
-            message: err.message,
-          });
+        return res.json(err.response);
       }
-    } else {
-      if (err.response) {
-        if (err.response.statusCode === 404) {
-          res.render('404', { error: err.response });
-        } else {
-          res.render('500', { error: err.response });
-        }
-      } else {
-        res.render('500', {  error: err });
-      }
+      return res
+        .status(500)
+        .json({
+          statusCode: 500,
+          timestamp: new Date().toISOString(),
+          message: err.message,
+        });
     }
+    if (err.response) {
+      if (err.response.statusCode === 404) {
+        return res.render('404', { error: err.response });
+      }
+      return res.render('500', { error: err.response });
+    }
+    return res.render('500', {  error: err });
+
   });
 
   await server.listen(process.env.PORT!);

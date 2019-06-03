@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 
+import { NotFoundException } from '@nestjs/common';
 import { IBaseQuery } from '@pages/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { UserEntity } from '@pages/common/interfaces/user';
@@ -12,6 +13,7 @@ export class UserScreenStore extends PictureStore {
   @observable public user!: UserEntity;
   @observable public username = '';
 
+  // 喜欢列表的一些数据
   @observable public likeList: PictureEntity[] = [];
   @observable public likeListQuery!: IBaseQuery;
   @observable public likeInit = false;
@@ -21,10 +23,8 @@ export class UserScreenStore extends PictureStore {
 
   @action
   public getInit = async (username: string, type: string, headers?: any) => {
-    console.log(type);
     this.init = true;
     this.username = username;
-    this.type = type;
     this.setUrl(`/api/user/${username}/picture`);
     let getList;
     if (type === 'like') {
@@ -32,10 +32,14 @@ export class UserScreenStore extends PictureStore {
     } else {
       getList = this.getList(undefined, headers);
     }
-    await Promise.all([
-      this.getUserInfo(username, headers),
-      getList,
-    ]);
+    try {
+      await Promise.all([
+        this.getUserInfo(username, headers),
+        getList,
+      ]);
+    } finally {
+      this.type = type;
+    }
   }
 
   @action
@@ -86,5 +90,9 @@ export class UserScreenStore extends PictureStore {
   @action public getUserInfo = async (username: string, headers?: any) => {
     const { data } = await request.get<UserEntity>(`/api/user/${username}`, { headers: headers || {} });
     this.user = data;
+    throw {
+      status: 404,
+      message: 'no user',
+    };
   }
 }

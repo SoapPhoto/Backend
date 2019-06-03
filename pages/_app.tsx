@@ -104,11 +104,12 @@ export default class MyApp extends App {
   public render() {
     const { Component, pageProps, router } = this.props;
     const { picture } = router.query!;
+    const isError = pageProps.error || ['/views/404'].indexOf(router.route) >= 0;
     return (
       <Container>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
-            <BodyLayout header={!pageProps.error}>
+            <BodyLayout header={!isError}>
               {
                 picture &&
                 <PictureModal pictureId={picture.toString()} />

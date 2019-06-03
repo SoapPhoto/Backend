@@ -15,7 +15,7 @@ export interface CustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   asPath: string;
   req?: Request & { user?: UserEntity };
   res?: Response;
-  err?: Error;
+  err?: any;
 }
 
 export interface CustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
@@ -36,4 +36,11 @@ export interface IBaseQuery {
   pageSize: number;
   timestamp: number;
   [key: string]: number | string;
+}
+
+export interface IBaseScreenProps {
+  error: {
+    message?: string;
+    statusCode: number;
+  }
 }

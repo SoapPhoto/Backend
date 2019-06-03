@@ -1,5 +1,5 @@
 import React from 'react';
 
 export default () => (
-  <div>404</div>
+  <div>4041</div>
 );
