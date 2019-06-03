@@ -1,4 +1,4 @@
-import { NextComponentClass } from 'next';
+import { NextComponentType } from 'next';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
@@ -44,8 +44,8 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
           break;
       }
       const componentProps =
-        ((WrappedComponent as any) as NextComponentClass).getInitialProps &&
-        (await ((WrappedComponent as any) as NextComponentClass).getInitialProps!(ctx));
+        ((WrappedComponent as any) as NextComponentType).getInitialProps &&
+        (await ((WrappedComponent as any) as NextComponentType).getInitialProps!(ctx));
 
       return { ...componentProps };
     }

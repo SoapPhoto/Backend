@@ -144,7 +144,7 @@ User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
   }
   let error: {
     message: string,
-    status: number,
+    statusCode: number,
   } | undefined;
   try {
     await mobxStore.screen.userStore.getInit(params.username!, params.type!, req ? req.headers : undefined);

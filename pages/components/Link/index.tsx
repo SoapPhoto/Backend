@@ -1,11 +1,27 @@
 import { isFunction } from 'lodash';
-import { LinkProps } from 'next-routes';
 import BaseLink from 'next/link';
 import React, { Children } from 'react';
+import { UrlObject } from 'url';
 
 import { store } from '@pages/stores/init';
 
-export class Link extends React.Component<LinkProps> {
+type Url = string | UrlObject;
+
+interface ILinkProps {
+  href: Url;
+  as?: Url | undefined;
+  replace?: boolean;
+  scroll?: boolean;
+  shallow?: boolean;
+  passHref?: boolean;
+  onError?: (error: Error) => void;
+  /**
+   * @deprecated since version 8.1.1-canary.20
+   */
+  prefetch?: boolean;
+}
+
+export class Link extends React.Component<ILinkProps> {
   public render() {
     const { children, href, as, ...restProps } = this.props;
     const child: any = Children.only(children);

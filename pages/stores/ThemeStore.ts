@@ -21,7 +21,7 @@ export class ThemeStore {
     return getTheme(this.theme);
   }
 
-  @action public setTheme(theme: ThemeType) {
+  @action public setTheme = (theme: ThemeType) => {
     if (!server) {
       document.cookie = `theme=${theme};`;
     }

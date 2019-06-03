@@ -26,7 +26,7 @@ export class ViewsController {
     return {};
   }
 
-  @Get('@(:username)/:type(like)')
+  @Get('@:username/:type(like)?')
   @Render('user')
   public async userType() {
     return {};

@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 import { Data, Placement } from 'popper.js';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
+import { ThemeWrapper } from '@pages/containers/Theme';
 
 const transitionStyles: {
   [key in TransitionStatus]?: any
@@ -154,61 +155,63 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       },
     });
     return (
-      <Popper
-        transition
-        placement={placement}
-        modifiers={{
-          offset: {
-            enabled: true,
-            offset: '0, 10',
-          },
-          preventOverflow: {
-            boundariesElement: 'scrollParent',
-          },
-          arrow: {
-            enabled: arrow,
-            element: this.arrow,
-          },
-        }}
-        onCreate={(data: Data) => {
-          if (arrow) {
-            if (this.placement !== data.placement) {
-              this.placement = data.placement;
+      <ThemeWrapper>
+        <Popper
+          transition
+          placement={placement}
+          modifiers={{
+            offset: {
+              enabled: true,
+              offset: '0, 10',
+            },
+            preventOverflow: {
+              boundariesElement: 'scrollParent',
+            },
+            arrow: {
+              enabled: arrow,
+              element: this.arrow,
+            },
+          }}
+          onCreate={(data: Data) => {
+            if (arrow) {
+              if (this.placement !== data.placement) {
+                this.placement = data.placement;
+              }
             }
-          }
-        }}
-        onUpdate={(data: Data) => {
-          if (arrow) {
-            if (this.placement !== data.placement) {
-              this.placement = data.placement;
+          }}
+          onUpdate={(data: Data) => {
+            if (arrow) {
+              if (this.placement !== data.placement) {
+                this.placement = data.placement;
+              }
             }
-          }
-        }}
-        visible={this.visible}
-        onClose={this.onClose}
-        content={({ visible, close }) => (
-          <Transition
-            onExited={() => close()}
-            in={visible}
-            appear
-            timeout={200}
-          >
-            {state => (
-              <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
-                {
-                  arrow &&
-                  <Arrow x-theme={theme} x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
-                }
-                <Content x-theme={theme} style={contentStyle}>
-                  {cntentRender}
-                </Content>
-              </div>
-            )}
-          </Transition>
-        )}
-      >
-        {childrenRender}
-      </Popper>
+          }}
+          visible={this.visible}
+          onClose={this.onClose}
+          content={({ visible, close }) => (
+            <Transition
+              onExited={() => close()}
+              in={visible}
+              appear
+              timeout={200}
+            >
+              {state => (
+                <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
+                  {
+                    arrow &&
+                    <Arrow x-theme={theme} x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
+                  }
+                  <Content x-theme={theme} style={contentStyle}>
+                    {cntentRender}
+                  </Content>
+                </div>
+              )}
+            </Transition>
+          )}
+        >
+          {childrenRender}
+        </Popper>
+      </ThemeWrapper>
     );
   }
 }

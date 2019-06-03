@@ -7,13 +7,14 @@ import { WsAdapter } from '@nestjs/platform-ws';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';
+
 import Next from 'next';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
-  const app = Next({ dev });
+  const app = (Next as any)({ dev });
 
   await app.prepare();
 

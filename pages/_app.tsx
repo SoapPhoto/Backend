@@ -6,8 +6,6 @@ import App, { Container } from 'next/app';
 import React from 'react';
 
 import { parsePath, server } from '@pages/common/utils';
-import { DefaultQuery } from 'next/router';
-import { CustomNextAppContext } from './common/interfaces/global';
 import { getCurrentTheme, ThemeType } from './common/utils/themes';
 import { PictureModal } from './components';
 import { BodyLayout } from './containers/BodyLayout';
@@ -35,7 +33,7 @@ Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 export default class MyApp extends App {
 
   // 初始化页面数据，初始化store
-  public static async getInitialProps(data: CustomNextAppContext) {
+  public static async getInitialProps(data: any) {
     const { ctx, Component } = data;
     const { req } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;

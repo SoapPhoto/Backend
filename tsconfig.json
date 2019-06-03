@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "jsx": "react",
-    "declaration": true,
+    "module": "esnext",
+    "jsx": "preserve",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
@@ -20,13 +19,32 @@
     "strictNullChecks": true,
     "strict": true,
     "pretty": true,
-    "types": ["react", "node"],
-    "lib": ["es6", "es2015", "es2017", "dom"],
+    "types": [
+      "react",
+      "node"
+    ],
+    "lib": [
+      "es6",
+      "es2015",
+      "es2017",
+      "dom"
+    ],
     "paths": {
-      "@server/*": ["src/*"],
-      "@pages/*": ["pages/*"],
-      "@typings/*": ["typings/*"]
-    }
+      "@server/*": [
+        "src/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@typings/*": [
+        "typings/*"
+      ]
+    },
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": [
     "src/**/*",

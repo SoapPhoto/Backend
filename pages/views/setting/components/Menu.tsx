@@ -11,7 +11,7 @@ interface IData {
   value: string;
   name: string;
   path: string;
-  component: React.ComponentType & LoadableComponent;
+  component: React.ComponentType;
 }
 
 export interface IUserProps {
@@ -42,7 +42,7 @@ export const Menu: React.FC<IUserProps> = ({
       <Wrapper>
         {
           data.map(menu => (
-            <Link key={menu.value} route={menu.path} shallow>
+            <Link key={menu.value} route={menu.path}>
               <Href href={menu.path} active={menu.value === value}>
                 <Item>
                   {menu.name}

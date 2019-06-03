@@ -1,5 +1,5 @@
 import { inject, observer } from 'mobx-react';
-import { NextContext } from 'next';
+import { NextPageContext } from 'next';
 import Head from 'next/Head';
 import { rem } from 'polished';
 import React from 'react';
@@ -57,7 +57,7 @@ const Title = styled.h2`
 font-size: ${_ => rem(_.theme.fontSizes[4])};
 `;
 
-interface InitialProps extends NextContext {
+interface InitialProps extends NextPageContext {
   screenData: PictureEntity;
 }
 

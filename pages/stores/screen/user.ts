@@ -89,10 +89,12 @@ export class UserScreenStore extends PictureStore {
 
   @action public getUserInfo = async (username: string, headers?: any) => {
     const { data } = await request.get<UserEntity>(`/api/user/${username}`, { headers: headers || {} });
+    if (!data) {
+      throw {
+        statusCode: 404,
+        message: 'no user',
+      };
+    }
     this.user = data;
-    throw {
-      status: 404,
-      message: 'no user',
-    };
   }
 }

@@ -25,17 +25,20 @@ const transitionStyles: {
   exited: { opacity: 0, transform: 'scale(.98)' },
 };
 
-export const Btns = connect<React.FC<IProps>>('accountStore')(
-  ({ accountStore }) => {
-    const [data, setData] = React.useState(false);
+export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
+  ({ accountStore, themeStore }) => {
     const PopoverRef = React.useRef<Popover>(null);
     const { isLogin, userInfo } = accountStore!;
+    const { theme, setTheme } = themeStore!;
     const closeMenu = () => {
       PopoverRef.current!.close();
     };
     const logout = () => {
       closeMenu();
       accountStore!.logout();
+    };
+    const switchTheme = () => {
+      setTheme(theme === 'dark' ? 'base' : 'dark');
     };
     let content = (
       <Link route="/login">
@@ -75,6 +78,11 @@ export const Btns = connect<React.FC<IProps>>('accountStore')(
                 </MenuItemLink>
               </MenuItem>
               <MenuItem>
+                <MenuItemLink onClick={switchTheme}>
+                  {theme === 'dark' ? '日间模式' : '夜间模式'}
+                </MenuItemLink>
+              </MenuItem>
+              <MenuItem>
                 <MenuItemLink onClick={logout}>
                   退出
                 </MenuItemLink>
@@ -84,7 +92,6 @@ export const Btns = connect<React.FC<IProps>>('accountStore')(
         >
           <Avatar
             src={userInfo!.avatar}
-            onClick={() => setData(true)}
           />
         </Popover>
       );

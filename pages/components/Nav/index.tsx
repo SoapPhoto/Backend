@@ -1,10 +1,11 @@
-import { Link, Router } from '@pages/routes';
-import { withRouter, WithRouterProps } from 'next/router';
+import { Router } from '@pages/routes';
+import { WithRouterProps } from 'next/dist/client/with-router';
+import { withRouter } from 'next/router';
 import React from 'react';
 
 import { Item, ItemLink, Wrapper } from './styles';
 
-export interface INavItemProps {
+export interface INavItemProps extends WithRouterProps {
   route: string;
 }
 

@@ -1,6 +1,7 @@
+import { WithRouterProps } from 'next/dist/client/with-router';
 import dynamic from 'next/dynamic';
 import Head from 'next/Head';
-import { withRouter, WithRouterProps } from 'next/router';
+import { withRouter } from 'next/router';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';

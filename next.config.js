@@ -70,6 +70,6 @@ const nextConfig = {
 
 
 module.exports = composePlugins(
-  [withOffline, withTypescript, withBundleAnalyzer],
+  [withOffline, withBundleAnalyzer],
   nextConfig
 )

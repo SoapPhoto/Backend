@@ -1,4 +1,5 @@
-import { withRouter, WithRouterProps } from 'next/router';
+import { WithRouterProps } from 'next/dist/client/with-router';
+import { withRouter } from 'next/router';
 import React from 'react';
 
 import { connect } from '@pages/common/utils/store';
@@ -12,8 +13,8 @@ interface IProps extends WithRouterProps {
   themeStore?: ThemeStore;
 }
 
-export const Header = withRouter(
-  connect<React.FC<IProps>>('themeStore')(
+export const Header = withRouter<IProps>(
+  connect('themeStore')(
     ({ router, themeStore }) => {
       const isLog = /^\/views\/auth\//.test(router!.pathname);
       return (
