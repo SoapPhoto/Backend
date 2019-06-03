@@ -56,13 +56,13 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
               placement="top"
               content={<UserCard user={detail.user} />}
             >
-              <span style={{ fontSize: 0 }}>
+              <div style={{ fontSize: 0 }}>
                 <Link route={`/@${detail.user.username}`}>
                   <a href={`/@${detail.user.username}`}>
                     <Avatar src={detail.user.avatar} size={30} />
                   </a>
                 </Link>
-              </span>
+              </div>
             </Popover>
           <Link route={`/@${detail.user.username}`}>
             <UserName href={`/@${detail.user.username}`}>
