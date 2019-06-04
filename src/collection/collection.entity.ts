@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -10,10 +10,21 @@ export class CollectionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: string;
 
-  @PrimaryColumn({
+  @Column({
     unique: true,
   })
   public readonly name!: string;
+
+  /** 收藏介绍 */
+  @Column({
+    nullable: true,
+  })
+  public readonly bio!: string;
+
+  @Column({
+    default: false,
+  })
+  public readonly isPrivate!: boolean;
 
   /** 收藏夹作者 */
   @Type(() => UserEntity)

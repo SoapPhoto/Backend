@@ -1,7 +1,5 @@
 import { action, observable } from 'mobx';
 
-import { IBaseQuery, ScreenState } from '@pages/common/interfaces/global';
-import { PictureEntity } from '@pages/common/interfaces/picture';
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
 import { BaseStore } from '../base/BaseStore';
