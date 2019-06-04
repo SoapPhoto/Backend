@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 
-import { IBaseQuery } from '@pages/common/interfaces/global';
+import { IBaseQuery, ScreenState } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
@@ -13,34 +13,30 @@ export class UserScreenStore extends BaseStore {
   @observable public init = false;
   @observable public user!: UserEntity;
   @observable public username = '';
+  @observable public actived = false;
 
   @observable public pictureInfo?: PictureStore;
   @observable public likeInfo?: UserLikeStore;
 
-  // 喜欢列表的一些数据
-  @observable public likeList: PictureEntity[] = [];
-  @observable public likeListQuery!: IBaseQuery;
-  @observable public likeInit = false;
-
   @action
   public getInit = async (username: string, type: string, headers?: any) => {
+    const runList = [];
+    if (!(this.init && this.username === username && this.actived)) {
+      runList.push(this.getUserInfo(username, headers));
+    }
     this.init = true;
     this.username = username;
 
-    let getList;
     if (type === 'like') {
       this.likeInfo = new UserLikeStore();
-      getList = this.likeInfo.getList(username, undefined, headers);
+      runList.push(this.likeInfo.getList(username, undefined, headers));
     } else {
       this.pictureInfo = new PictureStore();
       this.pictureInfo.setUrl(`/api/user/${username}/picture`);
-      getList = this.pictureInfo.getList(undefined, headers);
+      runList.push(this.pictureInfo.getList(undefined, headers));
     }
     try {
-      await Promise.all([
-        this.getUserInfo(username, headers),
-        getList,
-      ]);
+      await Promise.all(runList);
     } finally {
       this.type = type;
     }
@@ -56,4 +52,13 @@ export class UserScreenStore extends BaseStore {
     }
     this.user = data;
   }
+
+  /**
+   * 是否处于活跃状态
+   *
+   * @memberof UserScreenStore
+   */
+  @action public active = () => this.actived = true;
+  @action public deactive = () => this.actived = false;
+
 }

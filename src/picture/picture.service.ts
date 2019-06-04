@@ -85,13 +85,22 @@ export class PictureService {
   }
 
   public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
-    const ids = await this.activityService.getLikeList(idOrName);
-    const q = this.selectList(user, query);
+    const [count, ids] = await this.activityService.getLikeList(idOrName, query);
+    if (count === 0) {
+      return {
+        count,
+        data: [],
+        page: query.page,
+        pageSize: query.pageSize,
+        timestamp: new Date().getTime(),
+      };
+    }
+    const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });
-    const data = await q.getManyAndCount();
+    const data = await q.getMany();
     return {
-      count: data[1],
-      data: plainToClass(PictureEntity, data[0]),
+      count,
+      data: plainToClass(PictureEntity, data),
       page: query.page,
       pageSize: query.pageSize,
       timestamp: new Date().getTime(),
@@ -135,12 +144,15 @@ export class PictureService {
     q.orderBy('picture.createTime', 'DESC');
     return q;
   }
-  private selectList = (user: Maybe<UserEntity>, query: GetPictureListDto) => {
+  private selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
     const q = this.select(user);
-    if (query.timestamp) {
-      q.where('picture.createTime <= :time', { time: query.time });
+    if (query) {
+      if (query.timestamp) {
+        q.where('picture.createTime <= :time', { time: query.time });
+      }
+      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
     }
-    return q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+    return q;
   }
 
   private getOne = async (id: string | number) => {

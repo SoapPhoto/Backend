@@ -76,6 +76,12 @@ class User extends React.Component<IProps> {
     return user.name || user.username;
   }
   public static getInitialProps: (_: CustomNextContext) => any;
+  public componentDidMount() {
+    this.props.userStore.active();
+  }
+  public componentWillUnmount() {
+    this.props.userStore.deactive();
+  }
   @computed get type () {
     return this.props.userStore.type;
   }
@@ -94,6 +100,7 @@ class User extends React.Component<IProps> {
     } else {
       info = pictureInfo!;
     }
+    console.log(likeInfo);
     return (
       <Wrapper>
         <Head>

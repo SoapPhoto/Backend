@@ -9,12 +9,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { CollectionEntity } from '@server/collection/collection.entity';
 import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
 import { IEXIF } from '@typings/index';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
-import { CollectionEntity } from '@server/collection/collection.entity';
 
 @Entity('picture')
 export class PictureEntity extends BaseEntity {

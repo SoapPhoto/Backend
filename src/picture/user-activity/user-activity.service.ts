@@ -5,6 +5,7 @@ import { EntityManager, getManager, Repository } from 'typeorm';
 import { validator } from '@server/common/utils/validator';
 import { NotificationService } from '@server/notification/notification.service';
 import { UserEntity } from '@server/user/user.entity';
+import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
 
@@ -81,7 +82,7 @@ export class PictureUserActivityService {
       .execute();
   }
 
-  public getLikeList = async (userIdOrName: string) => {
+  public getLikeList = async (userIdOrName: string, query: GetPictureListDto) => {
     const q = this.activityRepository.createQueryBuilder('activity')
       .where('activity.like=:like', { like: true });
     if (validator.isNumberString(userIdOrName)) {
@@ -89,13 +90,12 @@ export class PictureUserActivityService {
     } else {
       q.andWhere('activity.userUsername=:id', { id: userIdOrName });
     }
-    const data = await q.getRawMany();
-    return data.map(activity => activity.activity_pictureId as string);
-    // return this.activityRepository.createQueryBuilder('activity')
-      // .where('activity.pictureId=:pictureId', { pictureId })
-      // .leftJoinAndSelect('activity.user', 'user')
-      // .leftJoinAndSelect('activity.picture', 'picture')
-      // .andWhere('activity.userId=:userId', { userId })
-      // .getOne();
+    // 分页
+    q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+    const data = await Promise.all([
+      q.getCount(),
+      q.getRawMany(),
+    ]);
+    return [data[0], data[1].map(activity => activity.activity_pictureId as string)];
   }
 }
