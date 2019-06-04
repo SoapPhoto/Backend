@@ -1,37 +1,32 @@
 import { action, observable } from 'mobx';
 
 import { IBaseQuery } from '@pages/common/interfaces/global';
-import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
+import { IPictureListRequest } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
-import { ListStore } from './base/ListStore';
+import { PictureEntity } from '@server/picture/picture.entity';
+import { ListStore } from '../base/ListStore';
 
-export class PictureStore extends ListStore<PictureEntity> {
-  @observable private reqUrl = '/api/picture';
+export class UserLikeStore extends ListStore<PictureEntity> {
+  @observable public username = '';
 
   constructor() {
     super();
     this.initQuery();
   }
 
-  @action public setUrl = (url: string) => {
-    this.reqUrl = url;
-  }
-
-  @action public initQuery = () => {
-    this.listQuery = {
-      page: 1,
-      pageSize: 30,
-      timestamp: Number(Date.parse(new Date().toISOString())),
-    };
-  }
-
   @action
-  public getList = async (query?: Partial<IBaseQuery>, headers?: any, plus = false) => {
+  public getList = async (
+    username: string,
+    query?: Partial<IBaseQuery>,
+    headers?: any,
+    plus = false,
+  ) => {
+    this.username = username;
     if (!query) {
       this.initQuery();
     }
     this.init = true;
-    const { data } = await request.get<IPictureListRequest>(this.reqUrl, {
+    const { data } = await request.get<IPictureListRequest>(`/api/user/${username}/picture/like`, {
       headers: headers || {},
       params: {
         ...this.listQuery,
@@ -40,15 +35,14 @@ export class PictureStore extends ListStore<PictureEntity> {
     });
     this.setData(data, plus);
   }
+
   @action
-  public getPageList = async() => {
-    const page = this.listQuery.page + 1;
-    if (page > this.maxPage) {
-      return;
-    }
-    return this.getList({
-      page: this.listQuery.page + 1,
-    }, undefined, true);
+  public initQuery = () => {
+    this.listQuery = {
+      page: 1,
+      pageSize: 30,
+      timestamp: Number(Date.parse(new Date().toISOString())),
+    };
   }
 
   @action

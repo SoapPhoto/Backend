@@ -84,9 +84,15 @@ class User extends React.Component<IProps> {
     return data.hostname;
   }
   public render() {
-    const { user, like, list, likeList, isNoMore, type } = this.props.userStore;
+    const { user, likeInfo, type, pictureInfo } = this.props.userStore;
     if (this.props.error) {
       return <Error status={this.props.error.statusCode} />;
+    }
+    let info: typeof likeInfo | typeof pictureInfo;
+    if (type === 'like') {
+      info = likeInfo!;
+    } else {
+      info = pictureInfo!;
     }
     return (
       <Wrapper>
@@ -124,7 +130,11 @@ class User extends React.Component<IProps> {
             喜欢
           </NavItem>
         </Nav>
-        <PictureList noMore={isNoMore} data={type === 'like' ? likeList : list} like={like} />
+        <PictureList
+          noMore={info.isNoMore}
+          data={info.list}
+          like={info.like}
+        />
       </Wrapper>
     );
   }
