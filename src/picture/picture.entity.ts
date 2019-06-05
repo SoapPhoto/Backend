@@ -116,7 +116,4 @@ export class PictureEntity extends BaseEntity {
   @ManyToMany(type => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
   @JoinTable()
   public tags!: TagEntity[];
-
-  @ManyToMany(type => CollectionEntity, item => item.pictures)
-  public readonly collections!: CollectionEntity[];
 }

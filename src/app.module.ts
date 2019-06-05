@@ -16,6 +16,7 @@ import { ViewsModule } from './views/views.module';
 import { Request, Response } from 'express';
 import { GraphQLError } from 'graphql';
 import { CollectionEntity } from './collection/collection.entity';
+import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { EmailModule } from './common/modules/email/email.module';
 import { NotificationEntity } from './notification/notification.entity';
@@ -48,6 +49,7 @@ import { UserEntity } from './user/user.entity';
         TagEntity,
         AccessTokenEntity,
         CollectionEntity,
+        CollectionPictureEntity,
       ],
     }),
     GraphQLModule.forRoot({

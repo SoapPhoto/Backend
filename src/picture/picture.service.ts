@@ -32,7 +32,9 @@ export class PictureService {
     return plainToClass(PictureEntity, createData);
   }
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const data = await this.selectList(user, query).getManyAndCount();
+    const data = await this.selectList(user, query)
+      .andWhere('picture.isPrivate=:private', { private: false })
+      .getManyAndCount();
     return {
       data: plainToClass(PictureEntity, data[0]),
       count: data[1],
@@ -69,10 +71,20 @@ export class PictureService {
 
   public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const q = this.selectList(user, query);
+    let isMe = false;
     if (validator.isNumberString(idOrName)) {
+      if (user && user.id === idOrName) {
+        isMe = true;
+      }
       q.andWhere('picture.userId=:id', { id: idOrName });
     } else {
+      if (user && user.username === idOrName) {
+        isMe = true;
+      }
       q.andWhere('picture.userUsername=:id', { id: idOrName });
+    }
+    if (!isMe) {
+      q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const data = await q.cache(100).getManyAndCount();
     return {

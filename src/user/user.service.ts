@@ -65,9 +65,7 @@ export class UserService {
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
-    const user = await this.userEntity.createQueryBuilder('user')
-      .where('user.username=:username', { username })
-      .getOne();
+    const user = await this.getUser(username, true, ['admin']);
     if (user) {
       const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
       if (hash !== user.hash) {
@@ -81,7 +79,7 @@ export class UserService {
     return undefined;
   }
 
-  public async getUser(query: string, user: Maybe<UserEntity>, groups?: string[]): Promise<UserEntity> {
+  public async getUser(query: string, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user')
       .loadRelationCountAndMap(
         'user.pictureCount', 'user.pictures',
@@ -92,16 +90,14 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: query });
     }
-    if (user) {
-      q
-        .loadRelationCountAndMap(
-          'user.likes', 'user.pictureActivitys', 'activity',
-          qb => qb.andWhere(
-            `activity.${isId ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
-            { query, like: true },
-          ),
-        );
-    }
+    q
+      .loadRelationCountAndMap(
+        'user.likes', 'user.pictureActivitys', 'activity',
+        qb => qb.andWhere(
+          `activity.${isId ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
+          { query, like: true },
+        ),
+      );
     const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {
       groups,

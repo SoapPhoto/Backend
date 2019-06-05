@@ -26,7 +26,7 @@ export class AccessTokenEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity)
   @JoinColumn()
-  public readonly user!: UserEntity;
+  public user!: UserEntity;
 
   @ManyToOne(() => ClientEntity)
   @JoinColumn()

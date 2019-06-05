@@ -14,7 +14,9 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
-  const app = (Next as any)({ dev });
+  const app = (Next as any)({
+    dev,
+  });
 
   await app.prepare();
 

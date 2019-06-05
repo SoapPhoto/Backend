@@ -16,7 +16,7 @@ type SignupType = 'email' | 'oauth';
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Expose()
-  public readonly id!: number;
+  public readonly id!: string;
 
   /** 用户名 */
   @Expose()
