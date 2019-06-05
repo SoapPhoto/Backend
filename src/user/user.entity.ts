@@ -75,7 +75,6 @@ export class UserEntity extends BaseEntity {
   public hash!: string;
 
   /** 密码盐 */
-  @Exclude()
   @Column()
   @Expose({ groups: ['admin'] })
   public readonly salt!: string;
