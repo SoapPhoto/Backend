@@ -1,7 +1,7 @@
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { TagEntity } from '@server/tag/tag.entity';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { IsArray, IsJSON, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsBooleanString, IsJSON, IsString } from 'class-validator';
 
 export class GetPictureListDto extends PaginationDto {
 }
@@ -46,6 +46,10 @@ export class CreatePictureAddDot {
 
   @Expose()
   @IsJSON()
-// tslint:disable-next-line: prefer-array-literal
   public readonly tags!: string;
+
+  @IsBoolean()
+  @Type(type => Boolean)
+  @Expose()
+  public readonly isPrivate!: boolean;
 }

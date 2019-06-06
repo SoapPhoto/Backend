@@ -26,6 +26,7 @@ export class PictureService {
     if (Array.isArray(data.tags)) {
       data.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
     }
+    console.log(data);
     const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );

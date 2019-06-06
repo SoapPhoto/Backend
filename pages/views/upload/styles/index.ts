@@ -72,3 +72,29 @@ export const Input = styled(BaseInput)<{isTitle?: boolean}>`
     border-color: ${_ => _.theme.colors.primary} !important;
   }
 `;
+
+export const FormInfo = styled(Cell)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: ${_ => rem('12px')};
+`;
+
+export const FormLabel = styled.div`
+
+`;
+
+export const FormTitle = styled.p`
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  color: ${_ => _.theme.colors.text};
+  margin-bottom: 4px;
+`;
+
+export const FormMessage = styled.p`
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  color: ${_ => _.theme.colors.secondary};
+`;
+
+export const FormTag = styled(Cell)`
+  margin-top: ${_ => rem('24px')};
+`;

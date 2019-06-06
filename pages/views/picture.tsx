@@ -7,7 +7,7 @@ import React from 'react';
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
-import { Avatar } from '@pages/components';
+import { Avatar, GpsImage } from '@pages/components';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
@@ -94,6 +94,10 @@ class Picture extends React.Component<IProps> {
         <Content>
           <Title>{picture.title}</Title>
         </Content>
+        {
+
+        }
+        {/* <GpsImage /> */}
       </Wrapper>
     );
   }

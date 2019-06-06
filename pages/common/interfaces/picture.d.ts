@@ -5,3 +5,5 @@ export type PictureEntity = import('@server/picture/picture.entity').PictureEnti
 export interface IPictureListRequest extends PaginationList {
   data: PictureEntity[];
 }
+
+export type CreatePictureAddDot = import('@server/picture/dto/picture.dto').CreatePictureAddDot
