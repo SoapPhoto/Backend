@@ -1,6 +1,6 @@
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { TagEntity } from '@server/tag/tag.entity';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose, Type, Transform } from 'class-transformer';
 import { IsArray, IsBoolean, IsBooleanString, IsJSON, IsString } from 'class-validator';
 
 export class GetPictureListDto extends PaginationDto {
@@ -49,7 +49,7 @@ export class CreatePictureAddDot {
   public readonly tags!: string;
 
   @IsBoolean()
-  @Type(type => Boolean)
+  @Transform(value => value === '0' ? false : true)
   @Expose()
   public readonly isPrivate!: boolean;
 }

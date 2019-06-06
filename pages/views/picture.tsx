@@ -11,6 +11,7 @@ import { Avatar, GpsImage } from '@pages/components';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
+import { computed } from 'mobx';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 
@@ -23,7 +24,9 @@ const Wrapper = styled.div`
 `;
 
 const UserHeader = styled(Grid)`
+  margin: 0 auto;
   margin-bottom: ${rem('20px')};
+  max-width: ${rem('780px')};
 `;
 
 const UserLink = styled.a`
@@ -54,7 +57,11 @@ const Content = styled.div`
 `;
 
 const Title = styled.h2`
-font-size: ${_ => rem(_.theme.fontSizes[4])};
+  font-size: ${_ => rem(_.theme.fontSizes[4])};
+`;
+
+const GpsCotent = styled.div`
+  margin: ${rem('24px')} 0;
 `;
 
 interface InitialProps extends NextPageContext {
@@ -69,6 +76,10 @@ interface IProps extends InitialProps {
 @observer
 class Picture extends React.Component<IProps> {
   public static getInitialProps: (ctx: CustomNextContext) => any;
+  @computed get isGps() {
+    const picture = this.props.screenData;
+    return picture.exif && picture.exif.gps && picture.exif.gps.length > 0;
+  }
   public render() {
     const picture = this.props.screenData;
     const { user } = picture;
@@ -93,11 +104,14 @@ class Picture extends React.Component<IProps> {
         </PictureBox>
         <Content>
           <Title>{picture.title}</Title>
+          {
+            this.isGps && (
+              <GpsCotent>
+                <GpsImage gps={picture!.exif!.gps!} />
+              </GpsCotent>
+            )
+          }
         </Content>
-        {
-
-        }
-        {/* <GpsImage /> */}
       </Wrapper>
     );
   }

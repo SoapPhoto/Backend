@@ -61,7 +61,7 @@ const Upload: React.FC = () => {
       form.append('info', JSON.stringify(info));
       form.append('title', data.title);
       form.append('bio', data.bio);
-      form.append('isPrivate', data.isPrivate ? 'true' : 'false');
+      form.append('isPrivate', data.isPrivate ? '1' : '0');
       form.append('tags', JSON.stringify(data.tags.map(tag => ({ name: tag }))));
       try {
         await request.post('/api/picture/upload', form);
