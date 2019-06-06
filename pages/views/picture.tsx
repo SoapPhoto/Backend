@@ -1,4 +1,5 @@
 import { inject, observer } from 'mobx-react';
+import moment from 'moment';
 import { NextPageContext } from 'next';
 import Head from 'next/Head';
 import { rem } from 'polished';
@@ -8,10 +9,15 @@ import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
 import { Avatar, GpsImage } from '@pages/components';
+import { LikeButton } from '@pages/components/LikeButton';
+import { Popover } from '@pages/components/Popover';
 import { PictureImage } from '@pages/containers/Picture/Image';
+import { Calendar } from '@pages/icon';
 import { Link } from '@pages/routes';
+import { likePicture } from '@pages/services/picture';
 import { AccountStore } from '@pages/stores/AccountStore';
-import { computed } from 'mobx';
+import { ThemeStore } from '@pages/stores/ThemeStore';
+import { action, computed, observable, set } from 'mobx';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 
@@ -57,11 +63,32 @@ const Content = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: ${_ => rem(_.theme.fontSizes[4])};
+  font-size: ${_ => rem(_.theme.fontSizes[5])};
+  margin-bottom: ${rem('18px')};
 `;
 
 const GpsCotent = styled.div`
   margin: ${rem('24px')} 0;
+`;
+
+const PictureBaseInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: ${_ => _.theme.colors.secondary};
+`;
+const BaseInfoItem = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  & svg {
+    margin-right: ${rem('6px')};
+    margin-top: -${rem('4px')};
+  }
+`;
+
+const Bio = styled.div`
+  font-size: ${_ => rem(_.theme.fontSizes[2])};
+  margin-top: ${rem('18px')};
 `;
 
 interface InitialProps extends NextPageContext {
@@ -70,18 +97,27 @@ interface InitialProps extends NextPageContext {
 
 interface IProps extends InitialProps {
   accountStore: AccountStore;
+  themeStore: ThemeStore;
 }
 
-@inject('accountStore')
+@inject('accountStore', 'themeStore')
 @observer
 class Picture extends React.Component<IProps> {
   public static getInitialProps: (ctx: CustomNextContext) => any;
+  @observable public picture = this.props.screenData;
+
   @computed get isGps() {
-    const picture = this.props.screenData;
-    return picture.exif && picture.exif.gps && picture.exif.gps.length > 0;
+    return this.picture.exif && this.picture.exif.gps && this.picture.exif.gps.length > 0;
+  }
+  @action public like = async () => {
+    set(this.picture, 'isLike', !this.picture.isLike);
+    await likePicture(this.picture.id);
   }
   public render() {
-    const picture = this.props.screenData;
+    const { isLogin } = this.props.accountStore;
+    const { themeData } = this.props.themeStore;
+    // tslint:disable-next-line: no-this-assignment
+    const { picture } = this;
     const { user } = picture;
     return (
       <Wrapper>
@@ -104,6 +140,40 @@ class Picture extends React.Component<IProps> {
         </PictureBox>
         <Content>
           <Title>{picture.title}</Title>
+          <PictureBaseInfo>
+            <div>
+              <Popover
+                openDelay={100}
+                trigger="hover"
+                placement="top"
+                theme="dark"
+                content={<span>{moment(picture.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+              >
+                <BaseInfoItem>
+                  <Calendar size={20} />
+                  <p>{moment(picture.createTime).from()}</p>
+                </BaseInfoItem>
+              </Popover>
+            </div>
+            <div>
+              {
+                isLogin &&
+                <LikeButton
+                  color={themeData.colors.secondary}
+                  isLike={picture.isLike}
+                  size={22}
+                  onLike={this.like}
+                />
+              }
+            </div>
+          </PictureBaseInfo>
+          {
+            picture.bio && (
+              <Bio>
+                {picture.bio}
+              </Bio>
+            )
+          }
           {
             this.isGps && (
               <GpsCotent>

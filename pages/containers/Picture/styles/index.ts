@@ -126,26 +126,6 @@ export const HandleBox = styled.div`
   }
 `;
 
-export const LikeButton = styled.div<{like: boolean}>`
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  align-items: center;
-  pointer-events: auto;
-  & svg {
-    fill: ${_ => _.like ? '#f44336' : 'none'};
-    stroke: ${_ => _.like ? '#f44336' : '#fff'};
-    transition: .2s fill ease, .2s stroke ease, .2s transform ease;
-  }
-  transition: transform 0.1s;
-  &:active {
-    & svg {
-      transform: scale(0.7);
-    }
-  }
-`;
-
 export const Footer = styled.div`
   text-align: center;
   height: ${rem('120px')};

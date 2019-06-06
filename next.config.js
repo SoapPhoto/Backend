@@ -28,7 +28,7 @@ const nextConfig = {
   webpack(config, options) {
     if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin())
     config.plugins.push(
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en)/)
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(zh-cn)/)
     )
     // config.plugins.push(
     //   new SWPrecacheWebpackPlugin({

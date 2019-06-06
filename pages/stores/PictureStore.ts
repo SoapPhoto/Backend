@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { IBaseQuery } from '@pages/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
+import { likePicture } from '@pages/services/picture';
 import { ListStore } from './base/ListStore';
 
 export class PictureStore extends ListStore<PictureEntity> {
@@ -65,13 +66,14 @@ export class PictureStore extends ListStore<PictureEntity> {
   }
 
   @action
-  public like = (data: PictureEntity) => {
+  public like = async (data: PictureEntity) => {
     const oldData = data.isLike;
     data.isLike = !data.isLike;
-    request.put(`/api/picture/like/${data.id}`)
-      .catch((err) => {
-        data.isLike = oldData;
-        console.error(err);
-      });
+    try {
+      await likePicture(data.id);
+    } catch (err) {
+      data.isLike = oldData;
+      console.error(err);
+    }
   }
 }

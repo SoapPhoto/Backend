@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import _ from 'lodash';
 import { Provider } from 'mobx-react';
+import moment from 'moment';
 import App, { Container } from 'next/app';
 import React from 'react';
 
@@ -12,6 +13,8 @@ import { BodyLayout } from './containers/BodyLayout';
 import { ThemeWrapper } from './containers/Theme';
 import { Router } from './routes';
 import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
+
+moment.locale('zh-cn');
 
 interface IPageError {
   error?: string;

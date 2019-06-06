@@ -3,13 +3,14 @@ import React from 'react';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
+import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
 import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import UserCard from './components/UserCard';
 import { PictureImage } from './Image';
-import { HandleBox, InfoBox, ItemWapper, LikeButton, UserBox, UserName } from './styles';
+import { HandleBox, InfoBox, ItemWapper, UserBox, UserName } from './styles';
 
 export const pictureStyle = {
   full: '-pictureFull',
@@ -50,20 +51,20 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
       </Link>
       <InfoBox>
         <UserBox>
-            <Popover
-              openDelay={500}
-              trigger="hover"
-              placement="top"
-              content={<UserCard user={detail.user} />}
-            >
-              <div style={{ fontSize: 0 }}>
-                <Link route={`/@${detail.user.username}`}>
-                  <a href={`/@${detail.user.username}`}>
-                    <Avatar src={detail.user.avatar} size={30} />
-                  </a>
-                </Link>
-              </div>
-            </Popover>
+          <Popover
+            openDelay={500}
+            trigger="hover"
+            placement="top"
+            content={<UserCard user={detail.user} />}
+          >
+            <div style={{ fontSize: 0 }}>
+              <Link route={`/@${detail.user.username}`}>
+                <a href={`/@${detail.user.username}`}>
+                  <Avatar src={detail.user.avatar} size={30} />
+                </a>
+              </Link>
+            </div>
+          </Popover>
           <Link route={`/@${detail.user.username}`}>
             <UserName href={`/@${detail.user.username}`}>
               {detail.user.username}
@@ -73,17 +74,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
         <HandleBox>
           {
             isLogin &&
-            <Popover
-              trigger="hover"
-              placement="top"
-              theme="dark"
-              openDelay={100}
-              content={<span>{detail.isLike ? '取消喜欢' : '喜欢'}</span>}
-            >
-              <LikeButton onClick={onLike} like={detail.isLike} >
-                <Heart size={18} />
-              </LikeButton>
-            </Popover>
+            <LikeButton isLike={detail.isLike} onLike={onLike} />
           }
         </HandleBox>
       </InfoBox>
