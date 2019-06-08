@@ -12,6 +12,7 @@ import { Avatar, GpsImage } from '@pages/components';
 import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
+import { NoSSR } from '@pages/components/SSR';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Calendar, Info } from '@pages/icon';
 import { Link } from '@pages/routes';
@@ -197,7 +198,12 @@ class Picture extends React.Component<IProps> {
             )
           }
         </Content>
-       <EXIFModal picture={this.picture} />
+        <NoSSR>
+          {
+            this.EXIFVisible &&
+            <EXIFModal onClose={() => this.EXIFVisible = false} picture={this.picture} />
+          }
+        </NoSSR>
       </Wrapper>
     );
   }

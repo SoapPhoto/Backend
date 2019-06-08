@@ -20,6 +20,17 @@ export interface IImageInfo {
   make: string | null;
   model: string | null;
 }
+
+export const pictureStyle = {
+  full: '-pictureFull',
+  raw: '',
+  regular: '-pictureRegular',
+  thumb: '-pictureThumb',
+  blur: '-pictureBlur',
+};
+
+export type PictureStyle = keyof typeof pictureStyle;
+
 function parse(num: number) {
   // tslint:disable-next-line:radix
   return parseInt((num * 10).toString()) / 10;
@@ -125,4 +136,8 @@ export function isImage(fileName: string) {
   ];
   const ext = extname(fileName);
   return imgType.indexOf(ext) >= 0;
+}
+
+export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
+  return `//cdn.soapphoto.com/${key}${pictureStyle[style]}`;
 }

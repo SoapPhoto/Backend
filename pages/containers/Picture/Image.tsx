@@ -1,7 +1,8 @@
 import React from 'react';
 import LazyLoad from 'react-lazyload';
 
-import { IPictureItemProps, pictureStyle } from './Item';
+import { pictureStyle } from '@pages/common/utils/image';
+import { IPictureItemProps } from './Item';
 import { ImageBox, ItemImage } from './styles';
 
 interface IPictureImage extends IPictureItemProps {

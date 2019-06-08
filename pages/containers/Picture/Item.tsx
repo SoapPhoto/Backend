@@ -1,29 +1,21 @@
 import React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import { PictureStyle } from '@pages/common/utils/image';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
-import { Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import UserCard from './components/UserCard';
 import { PictureImage } from './Image';
 import { HandleBox, InfoBox, ItemWapper, UserBox, UserName } from './styles';
 
-export const pictureStyle = {
-  full: '-pictureFull',
-  raw: '',
-  regular: '-pictureRegular',
-  thumb: '-pictureThumb',
-  blur: '-pictureBlur',
-};
-
 export interface IPictureItemProps {
   detail: PictureEntity;
   lazyload?: boolean;
-  size?: keyof typeof pictureStyle;
+  size?: PictureStyle;
   like?: (data: PictureEntity) => void;
   accountStore?: AccountStore;
 }
