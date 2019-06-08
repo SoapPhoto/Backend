@@ -24,7 +24,7 @@ export class EXIFModal extends React.Component<IProps> {
     const { key } = this.props.picture;
     const { themeData } = this.props.themeStore!;
   // tslint:disable-next-line: max-line-length
-    return `linear-gradient(${rgba(themeData.colors.pure, .8)}, ${themeData.colors.pure} 150px), url("${getPictureUrl(key, 'blur')}")`;
+    return `linear-gradient(${rgba(themeData.colors.pure, .8)}, ${themeData.colors.pure} 150px), url("${getPictureUrl(key)}")`;
   }
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
   　e.stopPropagation();
@@ -45,27 +45,27 @@ export class EXIFModal extends React.Component<IProps> {
                 <EXIFBox columns="repeat(3, 1fr)">
                   <Cell>
                     <EXIFTitle>设备</EXIFTitle>
-                    <EXIFInfo>{make}</EXIFInfo>
+                    <EXIFInfo>{make || '--'}</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>型号</EXIFTitle>
-                    <EXIFInfo>{model}</EXIFInfo>
+                    <EXIFInfo>{model || '--'}</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>焦距</EXIFTitle>
-                    <EXIFInfo>{focalLength}mm</EXIFInfo>
+                    <EXIFInfo>{focalLength ? `${focalLength}mm` : '--'}</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>光圈</EXIFTitle>
-                    <EXIFInfo>f/{aperture}</EXIFInfo>
+                    <EXIFInfo>{aperture ? `f/${aperture}` : '--'}</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>快门速度</EXIFTitle>
-                    <EXIFInfo>{exposureTime}</EXIFInfo>
+                    <EXIFInfo>{exposureTime || '--'}</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>ISO</EXIFTitle>
-                    <EXIFInfo>{iso}</EXIFInfo>
+                    <EXIFInfo>{iso || '--'}</EXIFInfo>
                   </Cell>
                 </EXIFBox>
               </Info>
