@@ -9,6 +9,7 @@ const colors = {
   secondary: '#666',
   lightgray: 'rgb(51, 51, 51)',
   gray: '#1e1e1e',
+  pure: '#000',
   background: '#121212',
 };
 

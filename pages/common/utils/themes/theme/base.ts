@@ -9,6 +9,7 @@ const colors = {
   text: lighten(.1, '#000'),
   background: '#f8fafc',
   gray: '#eaeaea',
+  pure: '#fff',
   lightgray: '#fafafa',
 };
 

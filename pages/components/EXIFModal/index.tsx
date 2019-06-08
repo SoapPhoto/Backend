@@ -1,22 +1,30 @@
+import { inject, observer } from 'mobx-react';
+import { opacify, rgba } from 'polished';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { getPictureUrl } from '@pages/common/utils/image';
-import { computed } from 'mobx';
+import { ThemeStore } from '@pages/stores/ThemeStore';
+import { computed, observable } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
 import { Box, Content, EXIFBox, EXIFInfo, EXIFTitle, Info, Title, Warpper } from './styles';
 
 interface IProps {
   onClose: () => void;
+  themeStore?: ThemeStore;
   picture: PictureEntity;
 }
 
+@inject('themeStore')
+@observer
 export class EXIFModal extends React.Component<IProps> {
   public contentRef = React.createRef<HTMLDivElement>();
   @computed get background() {
     const { key } = this.props.picture;
-    return `linear-gradient(rgba(255, 255, 255, 0.8), white 150px), url("${getPictureUrl(key)}")`;
+    const { themeData } = this.props.themeStore!;
+  // tslint:disable-next-line: max-line-length
+    return `linear-gradient(${rgba(themeData.colors.pure, .8)}, ${themeData.colors.pure} 150px), url("${getPictureUrl(key, 'blur')}")`;
   }
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
   　e.stopPropagation();

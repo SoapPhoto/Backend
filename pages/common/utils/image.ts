@@ -26,7 +26,7 @@ export const pictureStyle = {
   raw: '',
   regular: '-pictureRegular',
   thumb: '-pictureThumb',
-  blur: '-pictureBlur',
+  blur: '-pictureThumbBlur',
 };
 
 export type PictureStyle = keyof typeof pictureStyle;

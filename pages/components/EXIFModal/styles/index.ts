@@ -16,6 +16,9 @@ export const Warpper = styled.div`
 
 export const Box = styled.div`
   ${props => box(props.theme, '100%', true)}
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
   max-width: ${rem('560px')};
   padding: 0;
   border: none;
