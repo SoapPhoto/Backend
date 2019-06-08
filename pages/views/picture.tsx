@@ -9,10 +9,11 @@ import { CustomNextContext } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
 import { Avatar, GpsImage } from '@pages/components';
+import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
 import { PictureImage } from '@pages/containers/Picture/Image';
-import { Calendar } from '@pages/icon';
+import { Calendar, Info } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { likePicture } from '@pages/services/picture';
 import { AccountStore } from '@pages/stores/AccountStore';
@@ -74,8 +75,10 @@ const GpsCotent = styled.div`
 const PictureBaseInfo = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: ${_ => _.theme.colors.secondary};
 `;
+
 const BaseInfoItem = styled.div`
   display: flex;
   align-items: center;
@@ -84,6 +87,13 @@ const BaseInfoItem = styled.div`
     margin-right: ${rem('6px')};
     margin-top: -${rem('4px')};
   }
+`;
+
+const BaseInfoHandleBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  grid-gap: ${rem('6px')};
 `;
 
 const Bio = styled.div`
@@ -105,6 +115,7 @@ interface IProps extends InitialProps {
 class Picture extends React.Component<IProps> {
   public static getInitialProps: (ctx: CustomNextContext) => any;
   @observable public picture = this.props.screenData;
+  @observable public EXIFVisible = false;
 
   @computed get isGps() {
     return this.picture.exif && this.picture.exif.gps && this.picture.exif.gps.length > 0;
@@ -112,6 +123,9 @@ class Picture extends React.Component<IProps> {
   @action public like = async () => {
     set(this.picture, 'isLike', !this.picture.isLike);
     await likePicture(this.picture.id);
+  }
+  public openPicture = () => {
+    this.EXIFVisible = true;
   }
   public render() {
     const { isLogin } = this.props.accountStore;
@@ -155,7 +169,8 @@ class Picture extends React.Component<IProps> {
                 </BaseInfoItem>
               </Popover>
             </div>
-            <div>
+            <BaseInfoHandleBox>
+              <Info onClick={this.openPicture}/>
               {
                 isLogin &&
                 <LikeButton
@@ -165,7 +180,7 @@ class Picture extends React.Component<IProps> {
                   onLike={this.like}
                 />
               }
-            </div>
+            </BaseInfoHandleBox>
           </PictureBaseInfo>
           {
             picture.bio && (
@@ -182,6 +197,7 @@ class Picture extends React.Component<IProps> {
             )
           }
         </Content>
+       <EXIFModal picture={this.picture} />
       </Wrapper>
     );
   }
