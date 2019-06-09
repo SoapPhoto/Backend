@@ -32,13 +32,7 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
-          <meta
-            name="viewport"
-            content="initial-scale=1.2, width=device-width"
-            key="viewport"
-          />
-          <link href="//fonts.loli.net/css?family=Rubik" rel="stylesheet"/>
-          <link href="//fonts.loli.net/css?family=Noto+Sans+SC" rel="stylesheet"/>
+          <link href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" rel="stylesheet"/>
         </Head>
         <body id="body">
           <Main />

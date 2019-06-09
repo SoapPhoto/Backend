@@ -59,7 +59,7 @@ export class EXIFModal extends React.Component<IProps> {
             </Cell>
             <Cell>
               <EXIFTitle>快门速度</EXIFTitle>
-              <EXIFInfo>{exposureTime || '--'}s</EXIFInfo>
+              <EXIFInfo>{`${exposureTime}s` || '--'}</EXIFInfo>
             </Cell>
             <Cell>
               <EXIFTitle>ISO</EXIFTitle>

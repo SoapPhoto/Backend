@@ -2,7 +2,6 @@ import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import { NextPageContext } from 'next';
 import Head from 'next/Head';
-import { rem } from 'polished';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
@@ -13,101 +12,29 @@ import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
 import { PictureImage } from '@pages/containers/Picture/Image';
-import { Calendar, Info } from '@pages/icon';
+import { Calendar } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { likePicture } from '@pages/services/picture';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
 import { action, computed, observable, set } from 'mobx';
-import styled from 'styled-components';
-import { Cell, Grid } from 'styled-css-grid';
-
-const Wrapper = styled.div`
-  max-width: ${rem('1040px')};
-  width: 100%;
-  margin: 0 auto;
-  margin-top: ${rem('40px')};
-  padding: 0 ${rem('20px')};
-`;
-
-const UserHeader = styled(Grid)`
-  margin: 0 auto;
-  margin-bottom: ${rem('20px')};
-  max-width: ${rem('780px')};
-`;
-
-const UserLink = styled.a`
-  display: flex;
-  text-decoration: none;
-  align-items: center;
-  color: ${_ => _.theme.colors.text};
-`;
-
-const UserName = styled.h3`
-  font-size: ${_ => rem(_.theme.fontSizes[2])};
-`;
-
-const UserInfo = styled(Cell)`
-  display: flex;
-  align-items: center;
-`;
-
-const PictureBox = styled.div`
-  border-radius: ${rem('3px')};
-  overflow: hidden;
-  box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
-`;
-
-const Content = styled.div`
-  max-width: ${rem('780px')};
-  margin: ${rem('48px')} auto;
-`;
-
-const Title = styled.h2`
-  font-size: ${_ => rem(_.theme.fontSizes[5])};
-  margin-bottom: ${rem('18px')};
-`;
-
-const GpsCotent = styled.div`
-  margin: ${rem('24px')} 0;
-`;
-
-const PictureBaseInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: ${_ => _.theme.colors.secondary};
-`;
-
-const BaseInfoItem = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
-  & svg {
-    margin-right: ${rem('6px')};
-    margin-top: -${rem('4px')};
-  }
-`;
-
-const BaseInfoHandleBox = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  grid-gap: ${rem('6px')};
-`;
-
-const Bio = styled.div`
-  font-size: ${_ => rem(_.theme.fontSizes[2])};
-  margin-top: ${rem('18px')};
-`;
-
-const InfoButton = styled(Info)`
-  cursor: pointer;
-  transition: transform 0.1s;
-  &:active {
-    transform: scale(0.7);
-  }
-`
+import { Cell } from 'styled-css-grid';
+import {
+  BaseInfoHandleBox,
+  BaseInfoItem,
+  Bio,
+  Content,
+  GpsCotent,
+  InfoButton,
+  PictureBaseInfo,
+  PictureBox,
+  Title,
+  UserHeader,
+  UserInfo,
+  UserLink,
+  UserName,
+  Wrapper,
+} from './styles';
 
 interface InitialProps extends NextPageContext {
   screenData: PictureEntity;
@@ -145,6 +72,10 @@ class Picture extends React.Component<IProps> {
       <Wrapper>
         <Head>
           <title>{picture.title} (@{user.username}) - 肥皂</title>
+          <script
+            type="text/javascript"
+            src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
+          />
         </Head>
         <UserHeader columns={2}>
           <UserInfo width={1}>

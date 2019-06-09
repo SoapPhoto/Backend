@@ -20,7 +20,7 @@ export const EXIFTitle = styled.div`
 `;
 
 export const EXIFInfo = styled.div`
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${_ => rem(_.theme.fontSizes[2])};
 `;
 
 export const EXIFBox = styled(Grid)`
