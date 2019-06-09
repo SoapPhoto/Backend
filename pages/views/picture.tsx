@@ -12,7 +12,6 @@ import { Avatar, GpsImage } from '@pages/components';
 import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
-import { NoSSR } from '@pages/components/SSR';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Calendar, Info } from '@pages/icon';
 import { Link } from '@pages/routes';
@@ -102,6 +101,14 @@ const Bio = styled.div`
   margin-top: ${rem('18px')};
 `;
 
+const InfoButton = styled(Info)`
+  cursor: pointer;
+  transition: transform 0.1s;
+  &:active {
+    transform: scale(0.7);
+  }
+`
+
 interface InitialProps extends NextPageContext {
   screenData: PictureEntity;
 }
@@ -171,7 +178,15 @@ class Picture extends React.Component<IProps> {
               </Popover>
             </div>
             <BaseInfoHandleBox>
-              <Info onClick={this.openPicture}/>
+              <Popover
+                trigger="hover"
+                placement="top"
+                theme="dark"
+                openDelay={100}
+                content={<span>图片信息</span>}
+              >
+                <InfoButton style={{ cursor: 'pointer' }} onClick={this.openPicture}/>
+              </Popover>
               {
                 isLogin &&
                 <LikeButton
@@ -198,12 +213,11 @@ class Picture extends React.Component<IProps> {
             )
           }
         </Content>
-        <NoSSR>
-          {
-            this.EXIFVisible &&
-            <EXIFModal onClose={() => this.EXIFVisible = false} picture={this.picture} />
-          }
-        </NoSSR>
+        <EXIFModal
+          visible={this.EXIFVisible}
+          onClose={() => this.EXIFVisible = false}
+          picture={this.picture}
+        />
       </Wrapper>
     );
   }

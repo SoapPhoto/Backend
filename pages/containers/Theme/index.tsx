@@ -14,7 +14,7 @@ export const ThemeWrapper = inject('themeStore')(
     ({ children, themeStore }) => (
       <ThemeProvider theme={themeStore!.themeData}>
         <React.Fragment>
-          <div>{children}</div>
+          {children}
           <GlobalStyle />
         </React.Fragment>
       </ThemeProvider>

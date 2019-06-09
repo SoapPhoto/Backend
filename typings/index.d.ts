@@ -11,7 +11,8 @@ export interface IEXIF {
   date?: string;
   software?: string;
   location?: number[];
-  camera?: string;
+  make?: string;
+  model?: string;
   focalLength?: string;
   aperture?: string;
   exposureTime?: string;

@@ -3,12 +3,12 @@ import React, { Children } from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 
+import { ThemeWrapper } from '@pages/containers/Theme';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Data, Placement } from 'popper.js';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
-import { ThemeWrapper } from '@pages/containers/Theme';
 
 const transitionStyles: {
   [key in TransitionStatus]?: any

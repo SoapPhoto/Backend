@@ -170,7 +170,14 @@ export class ToastComponent extends React.Component {
     return (
       <TransitionGroup component={Area}>
         {this.configList.map((value, key) => (
-          <Transition key={value.key} appear timeout={400}>
+          <Transition
+            key={value.key}
+            appear
+            timeout={{
+              enter: 0,
+              exit: 400,
+            }}
+          >
             {state => (
               <Container
                 style={{

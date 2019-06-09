@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { extname } from 'path';
 
 import { IEXIF } from '@typings/index';
@@ -43,8 +44,8 @@ export interface IImageInfo {
   isDark: boolean;
   height: number;
   width: number;
-  make: string | null;
-  model: string | null;
+  make?: string;
+  model?: string;
 }
 
 export const pictureStyle = {
@@ -78,6 +79,9 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
     case ExifProperties.ExposureTime:
       return round(value >= 1 ? value : 1 / value, 1);
     case ExifProperties._Location:
+      if (!exifData.GPSLatitude) {
+        return undefined;
+      }
       return [
         changeToDu(
           exifData.GPSLatitude[0],
@@ -103,14 +107,10 @@ export function formatEXIFValue(label: ExifProperties, value: any, originalValue
     }
 
     switch (label) {
-      case ExifProperties.FocalLength:
-        return resolve(value);
-      case ExifProperties.FNumber:
-        return resolve(value);
       case ExifProperties.ExposureTime:
-        return resolve(value);
+        return resolve(`${originalValue >= 1 ? value : `1/${value}`}`);
       case ExifProperties.ExposureBias:
-        return resolve(value);
+        return resolve(`${value >= 0 ? '+' : ''}${value}`);
       case ExifProperties.DateTimeOriginal:
         return resolve(
           (([date, hour]) => [
@@ -121,8 +121,6 @@ export function formatEXIFValue(label: ExifProperties, value: any, originalValue
               .join(':'),
           ])(value.split(' ')).join(' '),
         );
-      case ExifProperties._Location:
-        return resolve(value);
       default:
         return resolve(value);
     }
@@ -150,7 +148,9 @@ export function getImageEXIF(image: File) {
       );
       const newData: {[key in ExifProperties]?: any} = {};
       exifData
-        .filter(_ => _.value !== null && _.value !== 'NaN' && !isNaN(_.value))
+        .filter(_data =>
+          (typeof _data.value === 'number' && !isNaN(_data.value)) || (_data.value !== null && _data.value !== 'NaN'),
+        )
         .forEach(exif => newData[exif.title] = exif.value);
       resolve(newData);
     });
@@ -173,8 +173,8 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
         isDark: false,
         height: 0,
         width: 0,
-        make: null,
-        model: null,
+        make: undefined,
+        model: undefined,
       };
       const imgSrc = window.URL.createObjectURL(image);
       const imgHtml = document.createElement('img');
@@ -192,7 +192,10 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
           };
         });
       })();
-      info.exif = await getImageEXIF(image);
+      const exif = await getImageEXIF(image);
+      info.make = exif.make;
+      info.model = exif.model;
+      info.exif = _.omit(exif, ['model', 'make']);
       resolve([info, imgSrc]);
     });
   });
