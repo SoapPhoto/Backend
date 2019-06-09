@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { extname } from 'path';
+import { $enum } from 'ts-enum-util';
 
 import { IEXIF } from '@typings/index';
 import { changeToDu } from './gps';
@@ -13,16 +14,13 @@ declare global {
   }
 }
 
-export enum DefaultExifProperties {
+export enum ExifProperties {
   Model = 'model',
   Make = 'make',
   FocalLength = 'focalLength',
   FNumber = 'aperture',
   ExposureTime = 'exposureTime',
   ISOSpeedRatings = 'ISO',
-}
-
-export enum OptionalExifProperties {
   MeteringMode = 'meteringMode',
   ExposureProgram = 'exposureMode',
   ExposureBias = 'exposureBias',
@@ -30,13 +28,6 @@ export enum OptionalExifProperties {
   Software = 'software',
   _Location = 'location',
 }
-
-export const ExifProperties = {
-  ...DefaultExifProperties,
-  ...OptionalExifProperties,
-};
-
-export type ExifProperties = DefaultExifProperties | OptionalExifProperties;
 
 export interface IImageInfo {
   exif: IEXIF;
@@ -129,24 +120,23 @@ export function formatEXIFValue(label: ExifProperties, value: any, originalValue
 
 export function getImageEXIF(image: File) {
   return new Promise<IEXIF>((resolve, reject) => {
-    (window.EXIF.getData as GetData)(image, async () => {
+    window.EXIF.getData(image, async () => {
       const data = (image as any).exifdata;
       const exifData = await Promise.all(
-        Object.keys(ExifProperties).map(async (value) => {
-          const label = (value as any) as ExifProperties;
+        $enum(ExifProperties).map(async (value, content) => {
           const formatValue = await formatEXIFValue(
-            ExifProperties[(label as any)] as any,
-            convertEXIFValue(ExifProperties[(label as any)] as any, data[value], data),
-            data[value],
+            value,
+            convertEXIFValue(value, data[content], data),
+            data[content],
           );
           return {
-            key: label,
-            title: ExifProperties[(label as any)] as ExifProperties,
+            key: content,
+            title: value,
             value: formatValue,
           };
         }),
       );
-      const newData: {[key in ExifProperties]?: any} = {};
+      const newData: Partial<Record<ExifProperties, any>> = {};
       exifData
         .filter(_data =>
           (typeof _data.value === 'number' && !isNaN(_data.value)) || (_data.value !== null && _data.value !== 'NaN'),
