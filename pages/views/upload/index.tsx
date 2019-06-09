@@ -39,7 +39,7 @@ const Upload: React.FC = () => {
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
-  const [isGps, setIsGps] = React.useState(true);
+  const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
   const data = useObservable<ICreatePictureData>({
@@ -54,8 +54,8 @@ const Upload: React.FC = () => {
     if (imageRef.current) {
       const form = new FormData();
       const info = imageInfo;
-      if (!isGps && info && info.exif && info.exif.gps) {
-        delete info.exif.gps;
+      if (!isLocation && info && info.exif && info.exif.location) {
+        delete info.exif.location;
       }
       form.append('photo', imageRef.current);
       form.append('info', JSON.stringify(info));
@@ -84,6 +84,7 @@ const Upload: React.FC = () => {
     if (isImage(file.name)) {
       imageRef.current = file;
       const [info, url] = await getImageInfo(file);
+      console.log(info);
       setImageUrl(url);
       setImageInfo(info);
     } else {
@@ -139,15 +140,15 @@ const Upload: React.FC = () => {
                     />
                   </FormInfo>
                   {
-                    imageInfo && imageInfo.exif && imageInfo.exif.gps && (
+                    imageInfo && imageInfo.exif && imageInfo.exif.location && (
                       <FormInfo>
                         <FormLabel>
                           <FormTitle>分享位置信息</FormTitle>
                           <FormMessage>所有人都可以看到你图片拍摄的位置信息</FormMessage>
                         </FormLabel>
                         <Switch
-                          checked={isGps}
-                          onChange={checked => setIsGps(checked)}
+                          checked={isLocation}
+                          onChange={checked => setIsLocation(checked)}
                           onColor="#05f"
                           onHandleColor="#fff"
                           handleDiameter={18}

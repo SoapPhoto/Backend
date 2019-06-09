@@ -118,8 +118,8 @@ class Picture extends React.Component<IProps> {
   @observable public picture = this.props.screenData;
   @observable public EXIFVisible = false;
 
-  @computed get isGps() {
-    return this.picture.exif && this.picture.exif.gps && this.picture.exif.gps.length > 0;
+  @computed get isLocation() {
+    return this.picture.exif && this.picture.exif.location && this.picture.exif.location.length > 0;
   }
   @action public like = async () => {
     set(this.picture, 'isLike', !this.picture.isLike);
@@ -191,9 +191,9 @@ class Picture extends React.Component<IProps> {
             )
           }
           {
-            this.isGps && (
+            this.isLocation && (
               <GpsCotent>
-                <GpsImage gps={picture!.exif!.gps!} />
+                <GpsImage gps={picture!.exif!.location!} />
               </GpsCotent>
             )
           }

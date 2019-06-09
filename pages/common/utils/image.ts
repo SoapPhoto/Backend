@@ -2,6 +2,7 @@ import { extname } from 'path';
 
 import { IEXIF } from '@typings/index';
 import { changeToDu } from './gps';
+import { round } from './math';
 
 declare global {
 // tslint:disable-next-line: interface-name
@@ -10,6 +11,31 @@ declare global {
     FastAverageColor: any;
   }
 }
+
+export enum DefaultExifProperties {
+  Model = 'model',
+  Make = 'make',
+  FocalLength = 'focalLength',
+  FNumber = 'aperture',
+  ExposureTime = 'exposureTime',
+  ISOSpeedRatings = 'ISO',
+}
+
+export enum OptionalExifProperties {
+  MeteringMode = 'meteringMode',
+  ExposureProgram = 'exposureMode',
+  ExposureBias = 'exposureBias',
+  DateTimeOriginal = 'date',
+  Software = 'software',
+  _Location = 'location',
+}
+
+export const ExifProperties = {
+  ...DefaultExifProperties,
+  ...OptionalExifProperties,
+};
+
+export type ExifProperties = DefaultExifProperties | OptionalExifProperties;
 
 export interface IImageInfo {
   exif: IEXIF;
@@ -42,6 +68,95 @@ export function getImageUrl(image: File) {
   return window.URL.createObjectURL(image);
 }
 
+export function convertEXIFValue(label: ExifProperties, value: any, exifData: any) {
+  switch (label) {
+    case ExifProperties.FocalLength:
+      return round(value, 2);
+    case ExifProperties.FNumber:
+    case ExifProperties.ExposureBias:
+      return round(value, 1);
+    case ExifProperties.ExposureTime:
+      return round(value >= 1 ? value : 1 / value, 1);
+    case ExifProperties._Location:
+      return [
+        changeToDu(
+          exifData.GPSLatitude[0],
+          exifData.GPSLatitude[1],
+          exifData.GPSLatitude[2],
+        ),
+        changeToDu(
+          exifData.GPSLongitude[0],
+          exifData.GPSLongitude[1],
+          exifData.GPSLongitude[2],
+        ),
+      ];
+    default:
+      return value;
+  }
+}
+
+export function formatEXIFValue(label: ExifProperties, value: any, originalValue: any) {
+  return new Promise<any>((resolve) => {
+    if (typeof value === 'undefined') {
+      resolve(null);
+      return;
+    }
+
+    switch (label) {
+      case ExifProperties.FocalLength:
+        return resolve(value);
+      case ExifProperties.FNumber:
+        return resolve(value);
+      case ExifProperties.ExposureTime:
+        return resolve(value);
+      case ExifProperties.ExposureBias:
+        return resolve(value);
+      case ExifProperties.DateTimeOriginal:
+        return resolve(
+          (([date, hour]) => [
+            date.replace(/\:/g, '/'),
+            hour
+              .split(':')
+              .splice(0, 2)
+              .join(':'),
+          ])(value.split(' ')).join(' '),
+        );
+      case ExifProperties._Location:
+        return resolve(value);
+      default:
+        return resolve(value);
+    }
+  });
+}
+
+export function getImageEXIF(image: File) {
+  return new Promise<IEXIF>((resolve, reject) => {
+    (window.EXIF.getData as GetData)(image, async () => {
+      const data = (image as any).exifdata;
+      const exifData = await Promise.all(
+        Object.keys(ExifProperties).map(async (value) => {
+          const label = (value as any) as ExifProperties;
+          const formatValue = await formatEXIFValue(
+            ExifProperties[(label as any)] as any,
+            convertEXIFValue(ExifProperties[(label as any)] as any, data[value], data),
+            data[value],
+          );
+          return {
+            key: label,
+            title: ExifProperties[(label as any)] as ExifProperties,
+            value: formatValue,
+          };
+        }),
+      );
+      const newData: {[key in ExifProperties]?: any} = {};
+      exifData
+        .filter(_ => _.value !== null && _.value !== 'NaN' && !isNaN(_.value))
+        .forEach(exif => newData[exif.title] = exif.value);
+      resolve(newData);
+    });
+  });
+}
+
 /**
  * 获取图片详细信息
  *
@@ -51,8 +166,7 @@ export function getImageUrl(image: File) {
  */
 export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   return new Promise((resolve) => {
-    (window.EXIF.getData as GetData)(image, async function () {
-      const allMetaData = window.EXIF.getAllTags(this);
+    window.EXIF.getData(image, async () => {
       const info: IImageInfo = {
         exif: {},
         color: '#fff',
@@ -62,7 +176,6 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
         make: null,
         model: null,
       };
-      const exifData: IEXIF = {};
       const imgSrc = window.URL.createObjectURL(image);
       const imgHtml = document.createElement('img');
       imgHtml.src = imgSrc;
@@ -79,44 +192,7 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
           };
         });
       })();
-      if (allMetaData.ApertureValue) {
-        exifData.aperture = parse(allMetaData.ApertureValue);
-      }
-      if (allMetaData.FNumber) {
-        exifData.aperture = parse(allMetaData.FNumber);
-      }
-      if (allMetaData.ExposureTime) {
-        exifData.exposureTime = `${allMetaData.ExposureTime.numerator}/${
-          allMetaData.ExposureTime.denominator
-        }`;
-      }
-      if (allMetaData.FocalLength) {
-        exifData.focalLength = parse(allMetaData.FocalLength);
-      }
-      if (allMetaData.ISOSpeedRatings) {
-        exifData.iso = allMetaData.ISOSpeedRatings;
-      }
-      if (allMetaData.Make) {
-        info.make = allMetaData.Make;
-      }
-      if (allMetaData.Model) {
-        info.model = allMetaData.Model;
-      }
-      if (allMetaData.GPSLatitude && allMetaData.GPSLatitude.length === 3) {
-        exifData.gps = [
-          changeToDu(
-            allMetaData.GPSLatitude[0],
-            allMetaData.GPSLatitude[1],
-            allMetaData.GPSLatitude[2],
-          ),
-          changeToDu(
-            allMetaData.GPSLongitude[0],
-            allMetaData.GPSLongitude[1],
-            allMetaData.GPSLongitude[2],
-          ),
-        ];
-      }
-      info.exif = exifData;
+      info.exif = await getImageEXIF(image);
       resolve([info, imgSrc]);
     });
   });
@@ -132,6 +208,7 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
 export function isImage(fileName: string) {
   const imgType = [
     '.jpg',
+    '.JPG',
     '.png',
   ];
   const ext = extname(fileName);

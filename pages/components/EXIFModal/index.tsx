@@ -34,7 +34,7 @@ export class EXIFModal extends React.Component<IProps> {
   }
   public render() {
     const { make, model, exif } = this.props.picture;
-    const { focalLength, aperture, exposureTime, iso } = exif!;
+    const { focalLength, aperture, exposureTime, ISO } = exif!;
     return ReactDOM.createPortal(
       (
         <Warpper onClick={this.handleClick}>
@@ -61,11 +61,11 @@ export class EXIFModal extends React.Component<IProps> {
                   </Cell>
                   <Cell>
                     <EXIFTitle>快门速度</EXIFTitle>
-                    <EXIFInfo>{exposureTime || '--'}</EXIFInfo>
+                    <EXIFInfo>{exposureTime || '--'}s</EXIFInfo>
                   </Cell>
                   <Cell>
                     <EXIFTitle>ISO</EXIFTitle>
-                    <EXIFInfo>{iso || '--'}</EXIFInfo>
+                    <EXIFInfo>{ISO || '--'}</EXIFInfo>
                   </Cell>
                 </EXIFBox>
               </Info>
