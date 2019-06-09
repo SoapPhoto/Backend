@@ -19,7 +19,6 @@ export const Box = styled.div`
   background-position: top;
   background-size: cover;
   max-width: ${rem('560px')};
-  padding: 0;
   border: none;
   margin: ${rem('24px')} auto;
 `;

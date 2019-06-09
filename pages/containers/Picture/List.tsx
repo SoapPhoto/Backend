@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
-import { getScrollHeight, getScrollTop, getWindowHeight, server } from '@pages/common/utils';
+import { getScrollHeight, getScrollTop, getWindowHeight, isSafari, server } from '@pages/common/utils';
 import { listParse } from '@pages/common/utils/waterfall';
 import { Loading } from '@pages/components/Loading';
 import { NoSSR } from '@pages/components/SSR';
@@ -29,6 +29,25 @@ interface IProps {
   noMore: boolean;
 }
 
+const mediaArr = [
+  {
+    media: `(min-width: ${defaultBreakpoints.large})`,
+    col: 4,
+  },
+  {
+    media: `(min-width: ${defaultBreakpoints.medium}) and (max-width: ${defaultBreakpoints.large})`,
+    col: 3,
+  },
+  {
+    media: `(min-width: ${defaultBreakpoints.small}) and (max-width: ${defaultBreakpoints.medium})`,
+    col: 2,
+  },
+  {
+    media: `(max-width: ${defaultBreakpoints.small})`,
+    col: 1,
+  },
+];
+
 @observer
 export class PictureList extends React.Component<IProps> {
   public static defaultProps: Partial<IProps> = {
@@ -51,6 +70,15 @@ export class PictureList extends React.Component<IProps> {
         this._pageLock = true;
         await this.props.onPage();
         this._pageLock = false;
+      }
+    }
+  }, 50);
+
+  public onresize = debounce(() => {
+    for (const info of mediaArr) {
+      const mediaData = window.matchMedia(info.media);
+      if (mediaData.matches) {
+        this.col = info.col;
       }
     }
   }, 50);
@@ -88,36 +116,30 @@ export class PictureList extends React.Component<IProps> {
       this.pictureFormat();
     }
   }
+  public componentWillUnmount() {
+    window.removeEventListener('resize', this.onresize);
+  }
   public pictureFormat = (col = this.col) => {
     this.pictureList = listParse(this.props.data, col);
   }
   public media = () => {
-    const mediaArr = [
-      {
-        media: `(min-width: ${defaultBreakpoints.large})`,
-        col: 4,
-      },
-      {
-        media: `(min-width: ${defaultBreakpoints.medium}) and (max-width: ${defaultBreakpoints.large})`,
-        col: 3,
-      },
-      {
-        media: `(min-width: ${defaultBreakpoints.small}) and (max-width: ${defaultBreakpoints.medium})`,
-        col: 2,
-      },
-      {
-        media: `(max-width: ${defaultBreakpoints.small})`,
-        col: 1,
-      },
-    ];
     for (const info of mediaArr) {
-      const media = window.matchMedia(info.media);
-      media.addEventListener('change', (data) => {
-        if (data.matches) {
-          this.col = info.col;
-        }
-      });
-      if (media.matches) {
+      const mediaData = window.matchMedia(info.media);
+      if (isSafari) {
+        window.addEventListener('resize', this.onresize);
+        // (mediaData as any).addEventListener((data: any) => {
+        //   if (data.matches) {
+        //     this.col = info.col;
+        //   }
+        // });
+      } else {
+        mediaData.addEventListener('change', (data) => {
+          if (data.matches) {
+            this.col = info.col;
+          }
+        });
+      }
+      if (mediaData.matches) {
         this.col = info.col;
       }
     }

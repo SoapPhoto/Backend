@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import keydown, { Keys } from 'react-keydown';
 
+import { StateTreeModal } from '@pages/components/StateTreeModal';
 import { Header } from '../Header';
 import { Wapper } from './styles';
 
@@ -8,6 +10,21 @@ interface IProps {
 }
 
 export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
+  const [treeVisible, setTreeVisible] = React.useState(false);
+  useEffect(() => {
+    const func = (e: KeyboardEvent) => {
+      if (e.code === 'KeyD') {
+        setTreeVisible(true);
+      }
+    };
+    document.addEventListener('keydown', func);
+    return () => {
+      document.removeEventListener('keydown', func);
+    };
+  }, []);
+  keydown(Keys.ENTER)((props: any) => {
+    console.log(props);
+  });
   return (
     <Wapper>
       {
@@ -16,6 +33,10 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
         <div />
       }
       {children}
+      <StateTreeModal
+        visible={treeVisible}
+        onClose={() => setTreeVisible(false)}
+      />
     </Wapper>
   );
 };

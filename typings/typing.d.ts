@@ -5,6 +5,8 @@ declare module 'styled-media-query'
 
 declare module 'react-simple-img';
 
+declare module 'react-keydown';
+
 declare namespace Express {
   export interface Request {
     user: import('@server/user/user.entity').UserEntity | null

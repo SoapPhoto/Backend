@@ -38,6 +38,8 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
+        <script src="//unpkg.com/matchmedia-polyfill@0.3.2/matchMedia.js" />
+        <script src="//unpkg.com/matchmedia-polyfill@0.3.2/matchMedia.addListener" />
       </html>
     );
   }

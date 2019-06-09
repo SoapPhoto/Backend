@@ -33,41 +33,57 @@ const styleColor: Record<ToastType, string> = {
   base: '#000',
 };
 
+/// TODO: safari 用 translate3d 图层会闪一下
+
 const form = [
   {
-    transform: 'translate3d(0px, 100px, -1px)',
+    marginBottom: '-100px',
+    // transform: 'translate3d(0px, 100px, -1px)',
     opacity: 0,
   },
   {
-    transform: 'translate3d(0, 0, 0) scale(1)',
+    marginBottom: '0px',
+    transform: 'scale(1)',
+    // transform: 'translate3d(0, 0, 0) scale(1)',
     opacity: 0,
   },
   {
-    transform: 'translate3d(0, -14px, 0) scale(0.95)',
+    marginBottom: '14px',
+    transform: 'scale(.95)',
+    // transform: 'translate3d(0, -14px, 0) scale(0.95)',
     opacity: 0,
   },
   {
-    transform: 'translate3d(0, -14px, 0) scale(0.95)',
+    marginBottom: '14px',
+    transform: 'scale(.95)',
+    // transform: 'translate3d(0, -14px, 0) scale(0.95)',
     opacity: 0,
   },
 ];
 const to = [
   {
-    transform: 'translate3d(0, 0, 0)',
+    marginBottom: '0',
+    // transform: 'translate3d(0, 0, 0)',
     opacity: 1,
   },
   {
-    transform: 'translate3d(0, -14px, 0) scale(.95)',
+    marginBottom: '14px',
+    transform: 'scale(.95)',
+    // transform: 'translate3d(0, -14px, 0) scale(.95)',
     filter: 'blur(.6px)',
     opacity: 1,
   },
   {
-    transform: 'translate3d(0, -28px, 0) scale(0.9)',
+    marginBottom: '28px',
+    transform: 'scale(.9)',
+    // transform: 'translate3d(0, -28px, 0) scale(0.9)',
     filter: 'blur(.8px)',
     opacity: 1,
   },
   {
-    transform: 'translate3d(0, -28px, 0) scale(0.9)',
+    marginBottom: '28px',
+    transform: 'scale(.8)',
+    // transform: 'translate3d(0, -28px, 0) scale(0.9)',
     filter: 'blur(1px)',
     opacity: 1,
   },
@@ -182,6 +198,7 @@ export class ToastComponent extends React.Component {
               <Container
                 style={{
                   ...this.animate(state, key),
+                  zIndex: 1000 + key,
                 }}
               >
                 <ToastBox type={value.type}>{value.title}</ToastBox>

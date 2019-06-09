@@ -79,3 +79,7 @@ export function getWindowHeight() {
   }
   return windowHeight;
 }
+
+export const ua = server ? '' : window.navigator.userAgent;
+
+export const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !== -1;
