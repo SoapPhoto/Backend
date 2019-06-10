@@ -27,4 +27,10 @@ export class TagService {
     }
     return tagData!;
   }
+  public async getTagPicture(name: string) {
+    console.log(name);
+    const data = await this.tagRepository.createQueryBuilder('picture_tags')
+      .getMany();
+    console.log(data);
+  }
 }

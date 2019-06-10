@@ -89,3 +89,11 @@ export const InfoButton = styled(Info)`
     transform: scale(0.7);
   }
 `;
+
+export const TagBox = styled.div`
+  display: grid;
+  grid-template-columns: max-content;
+  margin-top: ${rem('18px')};
+  grid-gap: ${rem('6px')};
+  grid-row-gap: ${rem('6px')};
+`;

@@ -49,8 +49,9 @@ export class PictureService {
   }
 
   public getOnePicture = async (id: string, user: Maybe<UserEntity>, view: boolean = false) => {
-    const q = this.select(user);
-    q.andWhere('picture.id=:id', { id });
+    const q = this.select(user)
+      .andWhere('picture.id=:id', { id })
+      .leftJoinAndSelect('picture.tags', 'tag');
     const data = await q.cache(100).getOne();
     if (view && data) {
       this.addViewCount(data.id);

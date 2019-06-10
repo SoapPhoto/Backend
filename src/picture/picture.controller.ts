@@ -45,17 +45,15 @@ export class PictureController {
       throw new BadRequestException('error file');
     }
     try {
-      const { info, tags, ...restInfo } = body;
-      const infoObj = JSON.parse(info);
-      const tagObj = JSON.parse(tags);
+      const { info, tags = [], ...restInfo } = body;
       const data = await this.qiniuService.uploadFile(file);
       const picture = await this.pictureService.create({
+        tags,
         user,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
-        tags: tagObj,
-        ...infoObj,
+        ...info,
         ...restInfo,
         ...data,
       });

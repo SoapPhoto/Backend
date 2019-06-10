@@ -72,6 +72,14 @@ export class ViewsController {
     res.redirect('/setting/profile');
   }
 
+  @Get('tag/:name')
+  @Render('tag')
+  public async tagsIndex(
+    @Res() res: Response,
+  ) {
+    return {};
+  }
+
   @Get('service-worker.js')
   public async serviceWorker(
     @Res() res: Response,

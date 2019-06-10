@@ -11,6 +11,7 @@ import { Avatar, GpsImage } from '@pages/components';
 import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
+import { Tag } from '@pages/components/Tag';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Calendar } from '@pages/icon';
 import { Link } from '@pages/routes';
@@ -28,6 +29,7 @@ import {
   InfoButton,
   PictureBaseInfo,
   PictureBox,
+  TagBox,
   Title,
   UserHeader,
   UserInfo,
@@ -67,7 +69,7 @@ class Picture extends React.Component<IProps> {
     const { themeData } = this.props.themeStore;
     // tslint:disable-next-line: no-this-assignment
     const { picture } = this;
-    const { user } = picture;
+    const { user, tags } = picture;
     return (
       <Wrapper>
         <Head>
@@ -116,7 +118,9 @@ class Picture extends React.Component<IProps> {
                 openDelay={100}
                 content={<span>图片信息</span>}
               >
-                <InfoButton style={{ cursor: 'pointer' }} onClick={this.openPicture}/>
+                <span>
+                  <InfoButton style={{ cursor: 'pointer' }} onClick={this.openPicture}/>
+                </span>
               </Popover>
               {
                 isLogin &&
@@ -129,6 +133,22 @@ class Picture extends React.Component<IProps> {
               }
             </BaseInfoHandleBox>
           </PictureBaseInfo>
+          {
+            tags.length > 0 &&
+            <TagBox>
+              {
+                tags.map(tag => (
+                  <Link route={`/tag/${tag.name}`} key={tag.id}>
+                    <a href={`/tag/${tag.name}`}>
+                      <Tag>
+                        {tag.name}
+                      </Tag>
+                    </a>
+                  </Link>
+                ))
+              }
+            </TagBox>
+          }
           {
             picture.bio && (
               <Bio>

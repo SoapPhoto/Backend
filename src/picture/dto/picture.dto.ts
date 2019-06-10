@@ -24,7 +24,7 @@ export class CreatePictureAddDot {
   @Transform(transformJson)
   @Expose()
   @IsNotEmpty()
-  public readonly info!: string;
+  public readonly info!: any;
 
   /**
    * picture标题

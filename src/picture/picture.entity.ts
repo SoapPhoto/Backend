@@ -114,6 +114,6 @@ export class PictureEntity extends BaseEntity {
 
   /* tagId */
   @ManyToMany(type => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
-  @JoinTable()
+  @JoinTable({ name: 'picture_tags' })
   public tags!: TagEntity[];
 }

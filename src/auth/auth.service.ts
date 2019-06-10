@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserService } from '@server/user/user.service';
-import { ValidatorEmailDto } from './dto/auth.dto';
-import { plainToClass } from 'class-transformer';
 import { UserEntity } from '@server/user/user.entity';
+import { UserService } from '@server/user/user.service';
+import { plainToClass } from 'class-transformer';
+import { ValidatorEmailDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {

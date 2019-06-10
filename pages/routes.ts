@@ -15,6 +15,7 @@ export const routeObject: IRouteObject = {
   '/picture/:id([0-9]+)': 'views/picture',
   '/setting/:type(profile|basic)': 'views/setting',
   '/@:username/:type(like)?': 'views/user',
+  '/tag/:name': 'views/tag',
 };
 
 const router = (routes as any)({
