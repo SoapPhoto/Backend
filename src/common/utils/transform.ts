@@ -7,3 +7,15 @@ export const transformAvatar = (value: string) => {
   }
   return value;
 };
+
+export const transformJson = (value: string) => {
+  try {
+    if (value) {
+      return JSON.parse(value);
+    }
+    return undefined;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+};

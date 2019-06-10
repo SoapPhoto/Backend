@@ -1,7 +1,8 @@
+import { Exclude, Expose, Transform } from 'class-transformer';
+import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+
 import { PaginationDto } from '@server/common/dto/pagination.dto';
-import { TagEntity } from '@server/tag/tag.entity';
-import { Exclude, Expose, Type, Transform } from 'class-transformer';
-import { IsArray, IsBoolean, IsBooleanString, IsJSON, IsString } from 'class-validator';
+import { transformJson } from '@server/common/utils/transform';
 
 export class GetPictureListDto extends PaginationDto {
 }
@@ -20,8 +21,9 @@ export class CreatePictureAddDot {
    * @type {string}
    * @memberof CreateUserDto
    */
-  @IsJSON()
+  @Transform(transformJson)
   @Expose()
+  @IsNotEmpty()
   public readonly info!: string;
 
   /**
@@ -45,7 +47,9 @@ export class CreatePictureAddDot {
   public readonly bio!: string;
 
   @Expose()
-  @IsJSON()
+  @Transform(transformJson)
+  @IsNotEmpty()
+  @IsArray()
   public readonly tags!: string;
 
   @IsBoolean()

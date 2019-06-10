@@ -1,7 +1,9 @@
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUrl, Length, ValidateIf } from 'class-validator';
 
+import { validator } from '@server/common/utils/validator';
 import { IsUserName, IsWebsite } from '@server/common/validator';
 import { Exclude, Expose } from 'class-transformer';
+import { UserEntity } from '../user.entity';
 
 /**
  * 注册管道
@@ -52,19 +54,21 @@ export class CreateUserDto {
  * @class UpdateProfileSettingDto
  */
 @Exclude()
-export class UpdateProfileSettingDto {
+export class UpdateProfileSettingDto implements Partial<UserEntity> {
   /** 昵称 */
   @IsString()
   @Expose()
   public readonly name!: string;
 
   /** 个人简介 */
+  @IsOptional()
   @IsString()
   @Expose()
   public readonly bio!: string;
 
   /** 个人网站 */
-  @IsWebsite()
+  @IsOptional()
+  @IsUrl()
   @Expose()
   public readonly website!: string;
 }

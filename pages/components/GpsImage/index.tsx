@@ -14,6 +14,7 @@ interface IProps {
 const Wrapper = styled.div`
   width: 100%;
   border-radius: 3px;
+  overflow: hidden;
   &>img {
     display: block;
     width: 100%;
