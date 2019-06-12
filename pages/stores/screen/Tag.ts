@@ -2,10 +2,12 @@ import { action, observable } from 'mobx';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { GetTagPictureListDto, ITagPictureListRequest, TagEntity } from '@pages/common/interfaces/tag';
+import { likePicture } from '@pages/services/picture';
 import { tagInfo, tagPictureList } from '@pages/services/tag';
 import { ListStore } from '../base/ListStore';
 
 export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDto> {
+  @observable public name!: string;
   @observable public info!: TagEntity;
 
   constructor() {
@@ -14,18 +16,29 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
   }
 
   public getInit = async (name: string, headers?: any) => {
-    await Promise.all([this.getInfo(name, headers), this.getList(name, headers)]);
+    this.name = name;
+    await Promise.all([this.getInfo(headers), this.getList(headers)]);
   }
 
-  @action public getInfo = async (name: string, headers?: any) => {
-    const { data } = await tagInfo(name, headers);
+  @action public getInfo = async (headers?: any) => {
+    const { data } = await tagInfo(this.name, headers);
     this.info = data;
   }
 
-  @action public getList = async (name: string, headers?: any) => {
-    const { data } = await tagPictureList(name, this.listQuery, headers);
-    console.log(data);
-    this.setData(data, false);
+  @action public getList = async (headers?: any, plus = false) => {
+    const { data } = await tagPictureList(this.name, this.listQuery, headers);
+    this.init = true;
+    this.setData(data, plus);
+  }
+  @action
+  public getPageList = async() => {
+    const page = this.listQuery.page + 1;
+    if (page > this.maxPage) {
+      return;
+    }
+    // tslint:disable-next-line: no-increment-decrement
+    this.listQuery.page++;
+    return this.getList(undefined, true);
   }
 
   @action public setData = (data: ITagPictureListRequest, plus: boolean) => {
@@ -47,5 +60,15 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
   }
-
+  @action
+  public like = async (data: PictureEntity) => {
+    const oldData = data.isLike;
+    data.isLike = !data.isLike;
+    try {
+      await likePicture(data.id);
+    } catch (err) {
+      data.isLike = oldData;
+      console.error(err);
+    }
+  }
 }

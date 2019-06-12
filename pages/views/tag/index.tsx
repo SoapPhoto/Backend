@@ -6,6 +6,7 @@ import { connect } from '@pages/common/utils/store';
 import { PictureList } from '@pages/containers/Picture/List';
 import { IMyMobxStore } from '@pages/stores/init';
 import { TagScreenStore } from '@pages/stores/screen/Tag';
+import Head from 'next/Head';
 import { rem } from 'polished';
 
 interface IProps {
@@ -28,11 +29,15 @@ const TagDetail: React.FC<IProps> = ({
   const { info } = tagStore;
   return (
     <Wrapper>
-      <Title>{info.name}</Title>
+      <Head>
+        <title>#{info.name} - 肥皂</title>
+      </Head>
+      <Title>#{info.name}</Title>
       <PictureList
         noMore={tagStore.isNoMore}
+        onPage={tagStore.getPageList}
+        like={tagStore.like}
         data={tagStore.list}
-        // like={tagStore.like}
       />
     </Wrapper>
   );
@@ -43,7 +48,8 @@ const TagDetail: React.FC<IProps> = ({
   if (
     ctx.mobxStore.appStore.location &&
     ctx.mobxStore.appStore.location.action === 'POP' &&
-    ctx.mobxStore.screen.tagStore.init
+    ctx.mobxStore.screen.tagStore.init &&
+    ctx.mobxStore.screen.tagStore.name === params.name!
   ) {
     return {};
   }
