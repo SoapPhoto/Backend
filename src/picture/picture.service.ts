@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 
@@ -6,6 +6,7 @@ import { QiniuService } from '@server/common/modules/qiniu/qiniu.service';
 import { validator } from '@server/common/utils/validator';
 import { TagService } from '@server/tag/tag.service';
 import { UserEntity } from '@server/user/user.entity';
+import { UserService } from '@server/user/user.service';
 import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import moment from 'moment';
@@ -18,7 +19,10 @@ export class PictureService {
   constructor(
     private readonly activityService: PictureUserActivityService,
     private readonly qiniuService: QiniuService,
+    @Inject(forwardRef(() => TagService))
     private readonly tagService: TagService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
   ) {}
@@ -137,13 +141,14 @@ export class PictureService {
     }
     throw new UnauthorizedException();
   }
-  private select = (user: Maybe<UserEntity>) => {
+  public select = (user: Maybe<UserEntity>) => {
     const q = this.pictureRepository.createQueryBuilder('picture')
       .leftJoinAndSelect('picture.user', 'user')
       .loadRelationCountAndMap(
         'picture.likes', 'picture.activitys', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
+    this.userService.selectInfo<PictureEntity>(q);
     if (user) {
       q
         .loadRelationCountAndMap(
@@ -157,7 +162,7 @@ export class PictureService {
     q.orderBy('picture.createTime', 'DESC');
     return q;
   }
-  private selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
+  public selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
     const q = this.select(user);
     if (query) {
       if (query.timestamp) {

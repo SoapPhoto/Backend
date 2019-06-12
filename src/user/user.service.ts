@@ -1,7 +1,7 @@
-import { BadGatewayException, BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, forwardRef, Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { EmailService } from '@server/common/modules/email/email.service';
 import { validator } from '@server/common/utils/validator';
@@ -15,10 +15,11 @@ import { UserEntity } from './user.entity';
 @Injectable()
 export class UserService {
   constructor(
-    private pictureService: PictureService,
-    private emailService: EmailService,
+    @Inject(forwardRef(() => PictureService))
+    private readonly pictureService: PictureService,
+    private readonly emailService: EmailService,
     @InjectRepository(UserEntity)
-    private userEntity: Repository<UserEntity>,
+    private readonly userEntity: Repository<UserEntity>,
   ) {}
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
@@ -64,6 +65,25 @@ export class UserService {
     };
   }
 
+  /**
+   * 查询出用户的一些必要数据： `pictureCount`, `likes`
+   *
+   * @param {SelectQueryBuilder<UserEntity>} q
+   * @returns
+   * @memberof UserService
+   */
+  public selectInfo<E>(q: SelectQueryBuilder<E>) {
+    return q.loadRelationCountAndMap(
+      'user.pictureCount', 'user.pictures',
+    )
+    .loadRelationCountAndMap(
+      'user.likes', 'user.pictureActivitys', 'activity',
+      qb => qb.andWhere(
+        'activity.like=TRUE',
+      ),
+    );
+  }
+
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
     const user = await this.getUser(username, true, ['admin']);
     if (user) {
@@ -80,24 +100,14 @@ export class UserService {
   }
 
   public async getUser(query: string, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
-    const q = this.userEntity.createQueryBuilder('user')
-      .loadRelationCountAndMap(
-        'user.pictureCount', 'user.pictures',
-      );
+    const q = this.userEntity.createQueryBuilder('user');
+    this.selectInfo<UserEntity>(q);
     const isId = validator.isNumberString(query);
     if (isId) {
       q.where('user.id=:id', { id: query });
     } else {
       q.where('user.username=:username', { username: query });
     }
-    q
-      .loadRelationCountAndMap(
-        'user.likes', 'user.pictureActivitys', 'activity',
-        qb => qb.andWhere(
-          `activity.${isId ? 'userId' : 'userUserName'}=:query AND activity.like=:like`,
-          { query, like: true },
-        ),
-      );
     const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {
       groups,

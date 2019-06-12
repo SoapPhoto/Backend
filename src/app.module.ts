@@ -31,6 +31,7 @@ import { UserEntity } from './user/user.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
+      logging: true,
       keepConnectionAlive: true,
       type: 'mysql',
       port: 3306,

@@ -11,7 +11,7 @@ export const mergeStore = <T>(store: T, state: Partial<T>) => {
   }
 };
 
-export const connect = <T extends IReactComponent>(...stores: string[]) => (component: T) =>
+export const connect = <T extends IReactComponent>(...stores: any[]) => (component: T) =>
   inject(...stores)(
     observer(component),
   );
