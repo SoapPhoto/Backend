@@ -40,5 +40,6 @@ export const Mask = styled.div`
   left: 0;
   z-index: 1000;
   height: 100%;
+  user-select: none;
   background-color: rgba(0,0,0,0.4);
 `;

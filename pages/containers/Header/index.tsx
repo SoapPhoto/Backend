@@ -21,7 +21,7 @@ export const Header = withRouter<IProps>(
         <Wrapper login={isLog}>
           <Logo>
             <Link route="/">
-              <a href="/">
+              <a style={{ fontSize: 0 }} href="/">
                 <Icon
                   color={themeStore!.themeData.layout.header.logo}
                 />

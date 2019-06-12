@@ -71,8 +71,7 @@ export const BaseInfoItem = styled.div`
 `;
 
 export const BaseInfoHandleBox = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   align-items: center;
   grid-gap: ${rem('6px')};
 `;
@@ -84,6 +83,7 @@ export const Bio = styled.div`
 
 export const InfoButton = styled(Info)`
   cursor: pointer;
+  user-select: none;
   transition: transform 0.1s;
   &:active {
     transform: scale(0.7);

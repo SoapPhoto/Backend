@@ -26,8 +26,8 @@ export class UserScreenStore extends BaseStore {
     this.username = username;
 
     if (type === 'like') {
-      this.likeInfo = new UserLikeStore();
-      runList.push(this.likeInfo.getList(username, undefined, headers));
+      this.likeInfo = new UserLikeStore(username);
+      runList.push(this.likeInfo.getList(undefined, headers));
     } else {
       this.pictureInfo = new PictureStore();
       this.pictureInfo.setUrl(`/api/user/${username}/picture`);

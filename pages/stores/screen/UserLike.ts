@@ -9,24 +9,23 @@ import { ListStore } from '../base/ListStore';
 export class UserLikeStore extends ListStore<PictureEntity> {
   @observable public username = '';
 
-  constructor() {
+  constructor(username: string) {
     super();
+    this.username = username;
     this.initQuery();
   }
 
   @action
   public getList = async (
-    username: string,
     query?: Partial<IBaseQuery>,
     headers?: any,
     plus = false,
   ) => {
-    this.username = username;
     if (!query) {
       this.initQuery();
     }
     this.init = true;
-    const { data } = await request.get<IPictureListRequest>(`/api/user/${username}/picture/like`, {
+    const { data } = await request.get<IPictureListRequest>(`/api/user/${this.username}/picture/like`, {
       headers: headers || {},
       params: {
         ...this.listQuery,
@@ -40,7 +39,7 @@ export class UserLikeStore extends ListStore<PictureEntity> {
   public initQuery = () => {
     this.listQuery = {
       page: 1,
-      pageSize: 30,
+      pageSize: 10,
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
   }
@@ -67,5 +66,12 @@ export class UserLikeStore extends ListStore<PictureEntity> {
         data.isLike = oldData;
         console.error(err);
       });
+  }
+  public getPageList = async () => {
+    const page = this.listQuery.page + 1;
+    if (page > this.maxPage) {
+      return;
+    }
+    return this.getList(undefined, true);
   }
 }

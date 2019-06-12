@@ -19,11 +19,11 @@ export class PictureStore extends ListStore<PictureEntity> {
   }
 
   @action public initQuery = () => {
-    this.listQuery = {
+    this.listQuery = observable({
       page: 1,
-      pageSize: 30,
+      pageSize: 10,
       timestamp: Number(Date.parse(new Date().toISOString())),
-    };
+    });
   }
 
   @action
@@ -41,7 +41,7 @@ export class PictureStore extends ListStore<PictureEntity> {
     });
     this.setData(data, plus);
   }
-  @action
+
   public getPageList = async() => {
     const page = this.listQuery.page + 1;
     if (page > this.maxPage) {

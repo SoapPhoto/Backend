@@ -19,6 +19,7 @@ import { likePicture } from '@pages/services/picture';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
 import { action, computed, observable, set } from 'mobx';
+import { rem } from 'polished';
 import { Cell } from 'styled-css-grid';
 import {
   BaseInfoHandleBox,
@@ -118,9 +119,12 @@ class Picture extends React.Component<IProps> {
                 openDelay={100}
                 content={<span>图片信息</span>}
               >
-                <span>
-                  <InfoButton style={{ cursor: 'pointer' }} onClick={this.openPicture}/>
-                </span>
+                <div
+                  style={{ fontSize: 0, marginRight: rem('6px') }}
+                  onClick={this.openPicture}
+                >
+                  <InfoButton style={{ cursor: 'pointer' }}/>
+                </div>
               </Popover>
               {
                 isLogin &&
@@ -139,7 +143,7 @@ class Picture extends React.Component<IProps> {
               {
                 tags.map(tag => (
                   <Link route={`/tag/${tag.name}`} key={tag.id}>
-                    <a href={`/tag/${tag.name}`}>
+                    <a style={{ textDecoration: 'none' }} href={`/tag/${tag.name}`}>
                       <Tag>
                         {tag.name}
                       </Tag>

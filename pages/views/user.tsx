@@ -100,7 +100,6 @@ class User extends React.Component<IProps> {
     } else {
       info = pictureInfo!;
     }
-    console.log(likeInfo);
     return (
       <Wrapper>
         <Head>
@@ -141,6 +140,7 @@ class User extends React.Component<IProps> {
           noMore={info.isNoMore}
           data={info.list}
           like={info.like}
+          onPage={info.getPageList}
         />
       </Wrapper>
     );

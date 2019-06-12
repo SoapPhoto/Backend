@@ -30,9 +30,9 @@ const TagDetail: React.FC<IProps> = ({
   return (
     <Wrapper>
       <Head>
-        <title>#{info.name} - 肥皂</title>
+        <title># {info.name} - 肥皂</title>
       </Head>
-      <Title>#{info.name}</Title>
+      <Title># {info.name}</Title>
       <PictureList
         noMore={tagStore.isNoMore}
         onPage={tagStore.getPageList}

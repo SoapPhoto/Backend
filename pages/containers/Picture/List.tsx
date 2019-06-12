@@ -63,13 +63,17 @@ export class PictureList extends React.Component<IProps> {
 
   public _pageLock = false;
 
+  public _removeEvent = false;
+
   public eventScroll = debounce(async () => {
     const offset = getScrollHeight() - (getScrollTop() + getWindowHeight());
     if (offset <= 300 && !this._pageLock && !this.props.noMore) {
       if (this.props.onPage) {
         this._pageLock = true;
         await this.props.onPage();
-        this._pageLock = false;
+        setTimeout(() => {
+          this._pageLock = false;
+        }, 400);
       }
     }
   }, 50);
@@ -95,8 +99,16 @@ export class PictureList extends React.Component<IProps> {
     reaction(
       () => this.props.noMore,
       (noMore) => {
-        if (!server && noMore) {
-          window.removeEventListener('scroll', this.eventScroll);
+        if (!server) {
+          if (noMore) {
+            window.removeEventListener('scroll', this.eventScroll);
+            this._removeEvent = true;
+          } else {
+            if (this._removeEvent) {
+              window.addEventListener('scroll', this.eventScroll);
+              this._removeEvent = false;
+            }
+          }
         }
       },
     );
@@ -118,6 +130,7 @@ export class PictureList extends React.Component<IProps> {
   }
   public componentWillUnmount() {
     window.removeEventListener('resize', this.onresize);
+    this._removeEvent = true;
   }
   public pictureFormat = (col = this.col) => {
     this.pictureList = listParse(this.props.data, col);

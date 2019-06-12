@@ -56,7 +56,7 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
   @action public initQuery = () => {
     this.listQuery = {
       page: 1,
-      pageSize: 30,
+      pageSize: 10,
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
   }

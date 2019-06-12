@@ -18,6 +18,7 @@ const Button = styled.div<{like: boolean; color?: string}>`
   height: 100%;
   align-items: center;
   pointer-events: auto;
+  user-select: none;
   & svg {
     fill: ${_ => _.like ? '#f44336' : 'none'};
     stroke: ${_ => _.like ? '#f44336' : _.color || '#fff'};
