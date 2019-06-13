@@ -11,6 +11,7 @@ import { RenderModule, RenderService } from 'nest-next';
 import Next from 'next/dist/server/next';
 
 import { AppModule } from './app.module';
+import { LoggingService } from './shared/logging/logging.service';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
@@ -20,7 +21,9 @@ async function bootstrap() {
 
   await app.prepare();
 
-  const server = await NestFactory.create(AppModule);
+  const server = await NestFactory.create(AppModule, {
+    logger: new LoggingService(),
+  });
   server.use(compression());
   server.use(cookieParser());
   server.useGlobalPipes(new ValidationPipe({
@@ -41,19 +44,20 @@ async function bootstrap() {
 
   const service = server.get(RenderService);
   service.setErrorHandler(async (err, req, res) => {
-    Logger.error(err.response);
     const isJSON = /application\/json/g.test(req.headers.accept);
     if (isJSON) {
       if (err.response) {
         return res.json(err.response);
       }
+      const error = {
+        statusCode: 500,
+        timestamp: new Date().toISOString(),
+        message: err.message,
+      };
+      Logger.error(error);
       return res
         .status(500)
-        .json({
-          statusCode: 500,
-          timestamp: new Date().toISOString(),
-          message: err.message,
-        });
+        .json(error);
     }
     // if (err.response) {
     //   if (err.response.statusCode === 404) {
@@ -67,7 +71,7 @@ async function bootstrap() {
 
   await server.listen(process.env.PORT!);
 
-  Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
+  // Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
 }
 
 bootstrap();

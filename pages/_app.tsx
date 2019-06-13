@@ -25,6 +25,7 @@ interface IPageError {
 interface IPageProps {
   initialStore: IInitialStore;
   error?: IPageError;
+  statusCode?: number;
 }
 
 Router.events.on('routeChangeStart', (url: string) => {
@@ -41,6 +42,7 @@ export default class MyApp extends App {
     const { req } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;
     const route = parsePath(data.ctx.asPath);
+    let statusCode = 200;
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
@@ -52,8 +54,10 @@ export default class MyApp extends App {
         screen: {},
       },
     };
-    if (ctx.query.error) {
-      basePageProps.error = (ctx.query.error as any) as IPageError;
+    if (!!ctx.query.error) {
+      statusCode = ctx.query.error.statusCode || 500;
+    } else if (ctx.pathname === '/_error') {
+      statusCode = 404;
     }
     let pageProps = {
       ...basePageProps,
@@ -72,7 +76,10 @@ export default class MyApp extends App {
       ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
     }
     return {
-      pageProps,
+      pageProps: {
+        ...pageProps,
+        statusCode,
+      },
     };
   }
   public mobxStore: IMyMobxStore;
@@ -105,7 +112,7 @@ export default class MyApp extends App {
   public render() {
     const { Component, pageProps, router } = this.props;
     const { picture } = router.query!;
-    const isError = pageProps.error || ['/views/404'].indexOf(router.route) >= 0;
+    const isError = pageProps.error || pageProps.statusCode && pageProps.statusCode !== 200;
     return (
       <Container>
         <Provider {...this.mobxStore}>

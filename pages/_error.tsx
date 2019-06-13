@@ -4,8 +4,8 @@ import { computed } from 'mobx';
 import { observer, Provider } from 'mobx-react';
 import Head from 'next/Head';
 import styled from 'styled-components';
+import { getTitle } from './common/utils';
 import { href } from './common/utils/themes/common';
-import { HeadTitle } from './components';
 import { ThemeWrapper } from './containers/Theme';
 import { ArrowRight, CloudSnow } from './icon';
 import { Link } from './routes';
@@ -74,17 +74,17 @@ class Error extends React.Component<IErrorProps> {
         <ThemeWrapper>
           <Wrapper>
             <Head>
-              <HeadTitle>{statusCode}</HeadTitle>
+              <title>{getTitle(statusCode)}</title>
             </Head>
             <Box>
               <CloudSnowIcon />
               <Status>{statusCode}</Status>
-              <Link route="/">
+              {/* <Link route="/"> */}
                 <A href="/">
                   前往首页
                   <ArrowRight style={{ marginLeft: 4 }} size={14} />
                 </A>
-              </Link>
+              {/* </Link> */}
             </Box>
           </Wrapper>
         </ThemeWrapper>

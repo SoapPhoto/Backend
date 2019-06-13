@@ -3,7 +3,7 @@ import Head from 'next/Head';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
-import { HeadTitle } from '@pages/components';
+import { getTitle } from '@pages/common/utils';
 import { PictureList } from '@pages/containers/Picture/List';
 import { IMyMobxStore } from '@pages/stores/init';
 import { HomeScreenStore } from '@pages/stores/screen/Home';
@@ -23,7 +23,7 @@ class Index extends React.Component<IProps> {
     return (
       <div>
         <Head>
-          <HeadTitle>首页</HeadTitle>
+          <title>{getTitle('首页')}</title>
         </Head>
         <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
       </div>

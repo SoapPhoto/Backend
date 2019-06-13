@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
+import { getTitle } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
 import { PictureList } from '@pages/containers/Picture/List';
 import { IMyMobxStore } from '@pages/stores/init';
 import { TagScreenStore } from '@pages/stores/screen/Tag';
 import Head from 'next/Head';
 import { rem } from 'polished';
-import { HeadTitle } from '@pages/components';
 
 interface IProps {
   tagStore: TagScreenStore;
@@ -31,7 +31,7 @@ const TagDetail: React.FC<IProps> = ({
   return (
     <Wrapper>
       <Head>
-        <HeadTitle># {info.name}</HeadTitle>
+        <title>{getTitle(`# ${info.name}`)}</title>
       </Head>
       <Title># {info.name}</Title>
       <PictureList

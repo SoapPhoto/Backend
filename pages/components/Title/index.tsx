@@ -2,6 +2,9 @@ import React from 'react';
 
 import { title } from '@pages/common/constants/config';
 
-export const HeadTitle: React.FC = ({ children }) => (
-  <title>{children} - {title}</title>
-);
+export const HeadTitle: React.FC = ({ children }) => {
+  console.log(children, title);
+  return (
+    <title>{children} - {title}</title>
+  );
+};

@@ -7,18 +7,18 @@ import { RenderModule } from 'nest-next';
 
 import { AuthModule } from '@server/auth/auth.module';
 import { OauthModule } from '@server/oauth/oauth.module';
-import { LoggingInterceptor } from '@server/shared/logging.interceptor';
+import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
 import { CacheModule } from './common/cache/cache.module';
-import { EventsModule } from './events/events.module';
+import { EmailModule } from './common/modules/email/email.module';
+import { LoggingModule } from './shared/logging/logging.module';
 import { ViewsModule } from './views/views.module';
 
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { GraphQLError } from 'graphql';
 import { CollectionEntity } from './collection/collection.entity';
 import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
-import { EmailModule } from './common/modules/email/email.module';
 import { NotificationEntity } from './notification/notification.entity';
 import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
 import { AccessTokenEntity } from './oauth/access-token/access-token.entity';
@@ -72,6 +72,7 @@ import { UserEntity } from './user/user.entity';
         return error;
       },
     }),
+    LoggingModule,
     RenderModule,
     AuthModule,
     OauthModule,

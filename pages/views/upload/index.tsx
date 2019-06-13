@@ -2,6 +2,7 @@ import Head from 'next/Head';
 import React from 'react';
 import Switch from 'react-switch';
 
+import { getTitle } from '@pages/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@pages/common/utils/image';
 import { request } from '@pages/common/utils/request';
 import { Button } from '@pages/components/Button';
@@ -26,7 +27,6 @@ import {
   UploadBox,
   Wapper,
 } from './styles';
-import { HeadTitle } from '@pages/components';
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -94,7 +94,7 @@ const Upload: React.FC = () => {
   return useObserver(() => (
     <Wapper>
       <Head>
-        <HeadTitle>上传</HeadTitle>
+        <title>{getTitle('上传')}</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
       </Head>

@@ -83,3 +83,5 @@ export function getWindowHeight() {
 export const ua = server ? '' : window.navigator.userAgent;
 
 export const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !== -1;
+
+export const getTitle = (title: string | number) => `${title} - ${process.env.TITLE}`;

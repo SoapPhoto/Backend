@@ -61,5 +61,19 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     TITLE: string;
+    /**
+     * log文件夹
+     *
+     * @type {string}
+     * @memberof ProcessEnv
+     */
+    LOGGER_DIR: string;
+    /**
+     * log文件
+     *
+     * @type {string}
+     * @memberof ProcessEnv
+     */
+    LOGGER_FILE: string;
   }
 }

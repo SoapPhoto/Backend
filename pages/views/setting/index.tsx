@@ -5,8 +5,7 @@ import { withRouter } from 'next/router';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
-import { parsePath } from '@pages/common/utils';
-import { HeadTitle } from '@pages/components';
+import { getTitle, parsePath } from '@pages/common/utils';
 import { withAuth } from '@pages/components/router/withAuth';
 import { Menu } from './components/Menu';
 import { Warpper } from './style';
@@ -50,7 +49,7 @@ class Setting extends React.Component<IProps> {
     return (
       <Warpper>
         <Head>
-          <HeadTitle>设置</HeadTitle>
+          <title>{getTitle('设置')}</title>
         </Head>
         <Menu
           value={this.state.type}

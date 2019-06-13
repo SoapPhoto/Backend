@@ -1,9 +1,10 @@
 import React from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
+import { getTitle } from '@pages/common/utils';
 import { getImageUrl } from '@pages/common/utils/image';
 import { connect } from '@pages/common/utils/store';
-import { Avatar, HeadTitle } from '@pages/components';
+import { Avatar } from '@pages/components';
 import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
 import Toast from '@pages/components/Toast';
@@ -47,7 +48,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
   return (
     <Grid columns="1lf" rowGap="24px">
       <Head>
-        <HeadTitle>用户设置</HeadTitle>
+        <title>{getTitle('用户设置')}</title>
       </Head>
       <Cell>
         <Grid columns="96px auto" gap="24px">

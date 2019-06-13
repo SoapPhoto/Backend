@@ -1,13 +1,13 @@
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
-import { NextPageContext } from 'next';
 import Head from 'next/Head';
 import React from 'react';
 
 import { CustomNextContext, IBaseScreenProps } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import { getTitle } from '@pages/common/utils';
 import { request } from '@pages/common/utils/request';
-import { Avatar, GpsImage, HeadTitle } from '@pages/components';
+import { Avatar, GpsImage } from '@pages/components';
 import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
@@ -20,7 +20,6 @@ import { likePicture } from '@pages/services/picture';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
 import { action, computed, observable, set } from 'mobx';
-import { rem } from 'polished';
 import { Cell } from 'styled-css-grid';
 import {
   BaseInfoHandleBox,
@@ -75,7 +74,7 @@ class Picture extends React.Component<IProps> {
     return (
       <Wrapper>
         <Head>
-          <HeadTitle>{picture.title} (@{user.username})</HeadTitle>
+          <title>{getTitle(`${picture.title} (@${user.username})`)}</title>
           <script
             type="text/javascript"
             src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"

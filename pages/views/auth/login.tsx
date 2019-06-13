@@ -4,9 +4,8 @@ import Head from 'next/Head';
 import { withRouter } from 'next/router';
 import React from 'react';
 
-import { parsePath } from '@pages/common/utils';
+import { getTitle, parsePath } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
-import { HeadTitle } from '@pages/components';
 import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
 import { withAuth } from '@pages/components/router/withAuth';
@@ -43,7 +42,7 @@ const Login = withRouter<IProps>(
     return (
       <Wrapper>
         <Head>
-          <HeadTitle>登录</HeadTitle>
+          <title>{getTitle('登录')}</title>
         </Head>
         <Title>登录</Title>
         <Input
