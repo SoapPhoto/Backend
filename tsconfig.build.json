@@ -2,9 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": ".next/production-server",
-    "declaration": true,
     "target": "es6",
     "module": "commonjs",
+    "skipLibCheck": false,
     "moduleResolution": "node"
   },
   "include": ["src/**/*"],

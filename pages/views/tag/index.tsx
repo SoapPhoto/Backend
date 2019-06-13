@@ -8,6 +8,7 @@ import { IMyMobxStore } from '@pages/stores/init';
 import { TagScreenStore } from '@pages/stores/screen/Tag';
 import Head from 'next/Head';
 import { rem } from 'polished';
+import { HeadTitle } from '@pages/components';
 
 interface IProps {
   tagStore: TagScreenStore;
@@ -30,7 +31,7 @@ const TagDetail: React.FC<IProps> = ({
   return (
     <Wrapper>
       <Head>
-        <title># {info.name} - 肥皂</title>
+        <HeadTitle># {info.name}</HeadTitle>
       </Head>
       <Title># {info.name}</Title>
       <PictureList

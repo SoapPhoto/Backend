@@ -39,6 +39,7 @@ export interface IBaseQuery {
 }
 
 export interface IBaseScreenProps {
+  statusCode: number;
   error: {
     message?: string;
     statusCode: number;

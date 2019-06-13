@@ -4,14 +4,15 @@ import { NextPageContext } from 'next';
 import Head from 'next/Head';
 import React from 'react';
 
-import { CustomNextContext } from '@pages/common/interfaces/global';
+import { CustomNextContext, IBaseScreenProps } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
-import { Avatar, GpsImage } from '@pages/components';
+import { Avatar, GpsImage, HeadTitle } from '@pages/components';
 import { EXIFModal } from '@pages/components/EXIFModal';
 import { LikeButton } from '@pages/components/LikeButton';
 import { Popover } from '@pages/components/Popover';
 import { Tag } from '@pages/components/Tag';
+import { withError } from '@pages/components/withError';
 import { PictureImage } from '@pages/containers/Picture/Image';
 import { Calendar } from '@pages/icon';
 import { Link } from '@pages/routes';
@@ -39,7 +40,7 @@ import {
   Wrapper,
 } from './styles';
 
-interface InitialProps extends NextPageContext {
+interface InitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
 }
 
@@ -74,7 +75,7 @@ class Picture extends React.Component<IProps> {
     return (
       <Wrapper>
         <Head>
-          <title>{picture.title} (@{user.username}) - 肥皂</title>
+          <HeadTitle>{picture.title} (@{user.username})</HeadTitle>
           <script
             type="text/javascript"
             src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
@@ -186,7 +187,7 @@ Picture.getInitialProps = async (ctx: CustomNextContext) => {
   if (!data) {
     return {
       error: {
-        status: 404,
+        statusCode: 404,
       },
     };
   }
@@ -195,4 +196,4 @@ Picture.getInitialProps = async (ctx: CustomNextContext) => {
   };
 };
 
-export default Picture;
+export default withError<IProps>(Picture);

@@ -6,6 +6,7 @@ import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
 import { parsePath } from '@pages/common/utils';
+import { HeadTitle } from '@pages/components';
 import { withAuth } from '@pages/components/router/withAuth';
 import { Menu } from './components/Menu';
 import { Warpper } from './style';
@@ -49,7 +50,7 @@ class Setting extends React.Component<IProps> {
     return (
       <Warpper>
         <Head>
-          <title>设置 - 肥皂</title>
+          <HeadTitle>设置</HeadTitle>
         </Head>
         <Menu
           value={this.state.type}

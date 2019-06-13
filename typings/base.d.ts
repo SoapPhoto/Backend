@@ -53,5 +53,13 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     LIST_PAGE_SIZE: string;
+
+    /**
+     * 应用的名称
+     *
+     * @type {string}
+     * @memberof ProcessEnv
+     */
+    TITLE: string;
   }
 }

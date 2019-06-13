@@ -1,73 +1,30 @@
 import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
-import { rem } from 'polished';
 import React from 'react';
-import styled from 'styled-components';
 import parse from 'url-parse';
 
 import { CustomNextContext, IBaseScreenProps } from '@pages/common/interfaces/global';
-import { href } from '@pages/common/utils/themes/common';
-import { Avatar, Nav, NavItem } from '@pages/components';
+import { Avatar, Nav, NavItem, HeadTitle } from '@pages/components';
+import { withError } from '@pages/components/withError';
 import { PictureList } from '@pages/containers/Picture/List';
 import { Link as LinkIcon } from '@pages/icon';
+import { Link } from '@pages/routes';
+import { AccountStore } from '@pages/stores/AccountStore';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
 import { computed } from 'mobx';
 import { Cell, Grid } from 'styled-css-grid';
-import Error from '../_error';
+import { Bio, EditIcon, Profile, ProfileItem, ProfileItemLink, UserHeader, UserName, Wrapper } from './styles';
 
 interface IProps extends IBaseScreenProps {
   username: string;
   userStore: UserScreenStore;
+  accountStore: AccountStore;
 }
-
-const Wrapper = styled.div``;
-
-const UserHeader = styled.div`
-  max-width: ${rem('700px')};
-  width: 100%;
-  margin: 64px auto;
-  padding: 0 ${rem('20px')};
-`;
-
-const UserName = styled.h2`
-  font-family: Rubik;
-  font-size: ${_ => rem(_.theme.fontSizes[5])};
-  margin-top: ${rem('6px')};
-  margin-bottom: ${rem('12px')};
-`;
-
-const Profile = styled.div`
-  display: flex;
-  margin-bottom: ${rem('4px')};
-`;
-
-const ProfileItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: ${rem('8px')};
-  margin-right: ${rem('24px')};
-  min-width: 0;
-  font-family: Rubik;
-  color: ${_ => _.theme.colors.secondary};
-  & svg {
-    margin-right: ${rem('4px')};
-  }
-`;
-
-const ProfileItemLink = styled.a`
-  display: flex;
-  align-items: center;
-  ${_ => href(_.theme.colors.secondary)}
-`;
-
-const Bio = styled.p`
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
-  font-family: Rubik;
-`;
 
 @inject((stores: IMyMobxStore) => ({
   userStore: stores.screen.userStore,
+  accountStore: stores.accountStore,
 }))
 @observer
 class User extends React.Component<IProps> {
@@ -99,21 +56,18 @@ class User extends React.Component<IProps> {
   }
 
   public render() {
+    const { isLogin, userInfo } = this.props.accountStore;
     const { user, likeInfo, type, pictureInfo } = this.props.userStore;
-    if (this.props.error) {
-      return <Error status={this.props.error.statusCode} />;
-    }
     let info: typeof likeInfo | typeof pictureInfo;
     if (type === 'like') {
       info = likeInfo!;
     } else {
       info = pictureInfo!;
     }
-    console.log(likeInfo, pictureInfo);
     return (
       <Wrapper>
         <Head>
-          <title>{`${this.name} (@${user.username}) - 肥皂`}</title>
+          <HeadTitle>{`${this.name} (@${user.username})`}</HeadTitle>
         </Head>
         <UserHeader>
           <Grid columns="140px auto" gap="32px">
@@ -121,7 +75,17 @@ class User extends React.Component<IProps> {
               <Avatar src={user.avatar} size={140} />
             </Cell>
             <Cell>
-              <UserName>{this.name}</UserName>
+              <UserName>
+                {this.name}
+                {
+                  isLogin && userInfo && userInfo.username === user.username &&
+                  <Link route="/setting/profile">
+                    <a href="'/setting/profile">
+                      <EditIcon size={18} />
+                    </a>
+                  </Link>
+                }
+              </UserName>
               <Profile>
                 {
                   user.website &&
@@ -184,4 +148,4 @@ User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
   };
 };
 
-export default User;
+export default withError<IProps>(User);

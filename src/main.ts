@@ -8,13 +8,13 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';
 
-import Next from 'next';
+import Next from 'next/dist/server/next';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
-  const app = (Next as any)({
+  const app = Next({
     dev,
   });
 
@@ -55,13 +55,13 @@ async function bootstrap() {
           message: err.message,
         });
     }
-    if (err.response) {
-      if (err.response.statusCode === 404) {
-        return res.render('404', { error: err.response });
-      }
-      return res.render('500', { error: err.response });
-    }
-    return res.render('500', {  error: err });
+    // if (err.response) {
+    //   if (err.response.statusCode === 404) {
+    //     return res.render('error', { status: 404, error: err.response });
+    //   }
+    //   return res.render('error', { status: 500, error: err.response });
+    // }
+    // return res.render('error', {  status: 500, error: err });
 
   });
 

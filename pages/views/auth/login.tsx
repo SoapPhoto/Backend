@@ -6,6 +6,7 @@ import React from 'react';
 
 import { parsePath } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
+import { HeadTitle } from '@pages/components';
 import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
 import { withAuth } from '@pages/components/router/withAuth';
@@ -42,7 +43,7 @@ const Login = withRouter<IProps>(
     return (
       <Wrapper>
         <Head>
-          <title>登录 - 肥皂</title>
+          <HeadTitle>登录</HeadTitle>
         </Head>
         <Title>登录</Title>
         <Input
