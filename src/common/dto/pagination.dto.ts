@@ -11,7 +11,7 @@ export class PaginationDto {
 
   @IsNumber()
   @Type(() => Number)
-  public readonly pageSize: number = 30;
+  public readonly pageSize: number = Number(process.env.LIST_PAGE_SIZE);
 
   @Type(type => Number)
   public readonly timestamp?: number;

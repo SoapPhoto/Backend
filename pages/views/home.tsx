@@ -3,6 +3,7 @@ import Head from 'next/Head';
 import React from 'react';
 
 import { CustomNextContext } from '@pages/common/interfaces/global';
+import { Nav, NavItem } from '@pages/components';
 import { PictureList } from '@pages/containers/Picture/List';
 import { IMyMobxStore } from '@pages/stores/init';
 import { HomeScreenStore } from '@pages/stores/screen/Home';

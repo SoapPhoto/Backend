@@ -5,6 +5,7 @@ import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { transformJson } from '@server/common/utils/transform';
 
 export class GetPictureListDto extends PaginationDto {
+
 }
 
 export class GetUserPictureListDto extends GetPictureListDto {

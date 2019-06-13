@@ -1,7 +1,9 @@
+import _ from 'lodash';
 import { action, observable } from 'mobx';
 
 import { UserEntity } from '@pages/common/interfaces/user';
 import { request } from '@pages/common/utils/request';
+import { MutableRequired } from '@typings/index';
 import { BaseStore } from '../base/BaseStore';
 import { PictureStore } from '../PictureStore';
 import { UserLikeStore } from './UserLike';
@@ -37,6 +39,32 @@ export class UserScreenStore extends BaseStore {
       await Promise.all(runList);
     } finally {
       this.type = type;
+    }
+  }
+
+  /**
+   * 初始化列表 store
+   *
+   * @memberof UserScreenStore
+   */
+  @action public initData = () => {
+    if (!(this.likeInfo instanceof UserLikeStore)) {
+      if (this.type === 'like') {
+        const info = new UserLikeStore(this.username);
+        // tslint:disable-next-line: prefer-array-literal
+        (Object.keys(info) as Array<keyof Omit<UserLikeStore, 'isNoMore' | 'maxPage'>>).forEach((value) => {
+          (info as any)[value] = this.likeInfo![value];
+        });
+        this.likeInfo = info;
+      } else {
+        const info = new PictureStore();
+        info.setUrl(`/api/user/${this.username}/picture`);
+        // tslint:disable-next-line: prefer-array-literal
+        (Object.keys(info) as Array<keyof Omit<PictureStore, 'isNoMore' | 'maxPage'>>).forEach((value) => {
+          (info as any)[value] = this.pictureInfo![value];
+        });
+        this.pictureInfo = info;
+      }
     }
   }
 

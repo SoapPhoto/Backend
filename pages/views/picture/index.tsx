@@ -120,7 +120,7 @@ class Picture extends React.Component<IProps> {
                 content={<span>图片信息</span>}
               >
                 <div
-                  style={{ fontSize: 0, marginRight: rem('6px') }}
+                  style={{ fontSize: 0 }}
                   onClick={this.openPicture}
                 >
                   <InfoButton style={{ cursor: 'pointer' }}/>

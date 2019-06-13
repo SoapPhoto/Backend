@@ -75,20 +75,29 @@ class User extends React.Component<IProps> {
     const { user } = this.props.userStore;
     return user.name || user.username;
   }
+
+  @computed get type () {
+    return this.props.userStore.type;
+  }
+
   public static getInitialProps: (_: CustomNextContext) => any;
+
+  constructor(props: IProps) {
+    super(props);
+    props.userStore.initData();
+  }
   public componentDidMount() {
     this.props.userStore.active();
   }
   public componentWillUnmount() {
     this.props.userStore.deactive();
   }
-  @computed get type () {
-    return this.props.userStore.type;
-  }
+
   public parseWebsite = (url: string) => {
     const data = parse(url);
     return data.hostname;
   }
+
   public render() {
     const { user, likeInfo, type, pictureInfo } = this.props.userStore;
     if (this.props.error) {
@@ -100,6 +109,7 @@ class User extends React.Component<IProps> {
     } else {
       info = pictureInfo!;
     }
+    console.log(likeInfo, pictureInfo);
     return (
       <Wrapper>
         <Head>
