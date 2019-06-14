@@ -40,34 +40,10 @@ async function bootstrap() {
   const renderer = server.get(RenderModule);
   renderer.register(server, app, {
     viewsDir: '/views',
+    dev: true,
   });
 
-  const service = server.get(RenderService);
-  service.setErrorHandler(async (err, req, res) => {
-    // const isJSON = /application\/json/g.test(req.headers.accept);
-    // Logger.error(err.response);
-    // if (isJSON) {
-    //   if (err.response) {
-    //     return res.json(err.response);
-    //   }
-    //   const error = {
-    //     statusCode: 500,
-    //     timestamp: new Date().toISOString(),
-    //     message: err.message,
-    //   };
-    //   return res
-    //     .status(500)
-    //     .json(error);
-    // }
-    // if (err.response) {
-    //   if (err.response.statusCode === 404) {
-    //     return res.render('error', { status: 404, error: err.response });
-    //   }
-    //   return res.render('error', { status: 500, error: err.response });
-    // }
-    // return res.render('error', {  status: 500, error: err });
-
-  });
+  server.get(RenderService);
 
   await server.listen(process.env.PORT!);
 

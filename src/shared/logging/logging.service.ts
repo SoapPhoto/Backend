@@ -18,8 +18,10 @@ export class LoggingService implements LoggerService {
         maxsize: 1024 * 1024 * 10 * 5,
         maxFiles: 5,
         format: winston.format.combine(
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss',
+          }),
           winston.format.splat(),
-          winston.format.timestamp(),
           winston.format.json(),
         ),
       }),
@@ -28,8 +30,10 @@ export class LoggingService implements LoggerService {
         maxsize: 1024 * 1024 * 10,
         maxFiles: 5,
         format: winston.format.combine(
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss',
+          }),
           winston.format.splat(),
-          winston.format.timestamp(),
           winston.format.json(),
         ),
       }),
@@ -46,10 +50,24 @@ export class LoggingService implements LoggerService {
             if (typeof message === 'object') {
               newMessage = JSON.stringify(message);
             }
-            return `${chalk.green(time)} ${chalk.green(`[${level}]`)} ${newMessage}`;
+            let color = chalk.green;
+            switch (level) {
+              case 'error':
+                color = chalk.red;
+                break;
+              case 'info':
+                color = chalk.blue;
+                break;
+              default:
+                break;
+            }
+            return `${chalk.green(time)} ${color(`[${level}]`)} ${newMessage}`;
           }),
         ),
       }),
+    ],
+    exceptionHandlers: [
+      new winston.transports.File({ filename: `${this.logDir}/exceptions.log` }),
     ],
     exitOnError: false,
   });

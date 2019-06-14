@@ -78,6 +78,7 @@ export class UserController {
       const data = await this.qiniuService.uploadFile(avatarFile);
       avatar = `qiniu:${data.hash}|${data.key}`;
     }
+    throw new Error('123123');
     try {
       if (user.username !== username) {
         throw new UnauthorizedException();
