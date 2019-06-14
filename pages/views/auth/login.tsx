@@ -10,6 +10,7 @@ import { Button } from '@pages/components/Button';
 import { Input } from '@pages/components/Input';
 import { withAuth } from '@pages/components/router/withAuth';
 import Toast from '@pages/components/Toast';
+import { Key } from '@pages/icon';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { Title, Wrapper } from './styles';
@@ -44,18 +45,18 @@ const Login = withRouter<IProps>(
         <Head>
           <title>{getTitle('登录')}</title>
         </Head>
-        <Title>登录</Title>
+        <Title>登录 <Key /></Title>
         <Input
+          label="用户名"
           type="text"
-          placeholder="用户名"
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
         <Input
+          label="密码"
           type="password"
           value={password}
-          placeholder="密码"
-          style={{ marginTop: '18px' }}
+          style={{ marginTop: '20px' }}
           onPressEnter={handleOk}
           onChange={e => setPassword(e.target.value)}
         />

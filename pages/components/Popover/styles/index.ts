@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { box } from '@pages/common/utils/themes/common';
 import { rem } from 'polished';
-import { PopoverTheme } from '..';
 
 export const Arrow = styled.span<{placement: Placement}>`
   position: absolute;

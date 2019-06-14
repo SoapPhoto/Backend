@@ -28,10 +28,15 @@ declare module 'styled-components' {
       }
       input: {
         borderColor: string;
+        background: string;
         shadow: string;
         disabled: {
           color: string;
           background: string;
+        }
+        hover: {
+          shadow: string;
+          borderColor: string;
         }
       }
     };

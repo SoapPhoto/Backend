@@ -1,4 +1,4 @@
-import { rem } from 'polished';
+import { lighten, opacify, rem, rgba } from 'polished';
 import styled from 'styled-components';
 
 export const LabelBox = styled.label`
@@ -7,7 +7,10 @@ export const LabelBox = styled.label`
 `;
 export const Label = styled.span`
   display: inline-block;
-  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  font-weight: 500;
+  line-height: ${rem('29px')};
+  letter-spacing: 0.61px;
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   margin-bottom: ${rem('8px')};
   color: ${_ => _.theme.colors.secondary};
 `;
@@ -15,29 +18,26 @@ export const Label = styled.span`
 export const StyleInput = styled.input`
   line-height: 1;
   width: 100%;
-  height: ${rem('38px')};
+  height: ${rem('40px')};
   margin: 0;
-  padding: 0 ${rem('10px')};
+  padding: ${rem('5px')} ${rem('10px')};
   transition: border .25s ease;
   text-align: left;
-  color: ${props => props.theme.colors.text};
+  color: ${props => rgba(props.theme.colors.text, .7)};
   border: none;
   border-radius: ${rem('5px')};
   outline: 0;
-  border: 1px solid ${props => props.theme.colors.gray};
-  background: ${props => props.theme.colors.background};
-  box-shadow: none;
+  border: 1px solid ${props => props.theme.styles.input.borderColor};
+  background: ${props => props.theme.styles.input.background};
+  box-shadow: ${props => props.theme.styles.input.shadow};
   transition: border .2s,color .2s ease-out,box-shadow .2s ease;
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
   & + & {
     margin-top: ${rem('12px')};
   }
-  &:hover {
-    border-color: ${_ => _.theme.styles.input.borderColor};
-    box-shadow: ${_ => _.theme.styles.input.shadow};
-  }
-  &:focus {
-    border-color: ${_ => _.theme.styles.input.borderColor};
-    box-shadow: ${_ => _.theme.styles.input.shadow};
+  &:focus, &:hover {
+    border-color: ${props => props.theme.styles.input.hover.borderColor};
+    box-shadow: ${props => props.theme.styles.input.hover.shadow};
   }
   &::placeholder {
   }

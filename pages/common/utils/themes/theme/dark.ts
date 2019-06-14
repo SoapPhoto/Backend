@@ -35,10 +35,15 @@ const theme: DefaultTheme =  {
     },
     input: {
       borderColor: colors.lightgray,
-      shadow: `0 2px 6px ${colors.shadowColor}`,
+      background: colors.background,
+      shadow: 'none',
       disabled: {
         color: colors.gray,
         background: colors.lightgray,
+      },
+      hover: {
+        shadow: 'none',
+        borderColor: colors.lightgray,
       },
     },
   },

@@ -34,11 +34,16 @@ const theme: DefaultTheme =  {
       color: colors.primary,
     },
     input: {
-      borderColor: colors.gray,
-      shadow: `0 2px 6px ${colors.shadowColor}`,
+      borderColor: 'transparent',
+      background: lighten(.48, colors.primary),
+      shadow: `0px 1px 1px 0px ${lighten(.4, colors.primary)}`,
       disabled: {
         color: colors.gray,
         background: colors.gray,
+      },
+      hover: {
+        shadow: `0px 1px 2px 0px ${lighten(.3, colors.primary)}`,
+        borderColor: 'transparent',
       },
     },
   },
