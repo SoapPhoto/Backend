@@ -11,10 +11,12 @@ import { Maybe, MutablePartial, MutableRequired } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
+import { LoggingService } from '@server/shared/logging/logging.service';
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly logger: LoggingService,
     @Inject(forwardRef(() => PictureService))
     private readonly pictureService: PictureService,
     private readonly emailService: EmailService,
@@ -56,7 +58,7 @@ export class UserService {
       try {
         await this.emailService.sendSignupEmail(info.identifier!, info.verificationToken!, userInfo);
       } catch (err) {
-        Logger.error(err);
+        this.logger.error(err);
         throw new BadRequestException('email failed to send');
       }
     }

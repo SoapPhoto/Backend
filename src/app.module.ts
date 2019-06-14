@@ -1,5 +1,5 @@
 
-import { Logger, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -25,6 +25,7 @@ import { AccessTokenEntity } from './oauth/access-token/access-token.entity';
 import { ClientEntity } from './oauth/client/client.entity';
 import { PictureEntity } from './picture/picture.entity';
 import { PictureUserActivityEntity } from './picture/user-activity/user-activity.entity';
+import { Logger } from './shared/logging/logging.service';
 import { TagEntity } from './tag/tag.entity';
 import { UserEntity } from './user/user.entity';
 

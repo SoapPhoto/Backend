@@ -14,11 +14,12 @@ export class LoggingService implements LoggerService {
       new winston.transports.File({
         level: 'error',
         filename: `${this.logDir}/error.log`,
-        handleExceptions: true,
+        handleExceptions: false,
         maxsize: 1024 * 1024 * 10 * 5,
         maxFiles: 5,
         format: winston.format.combine(
           winston.format.splat(),
+          winston.format.timestamp(),
           winston.format.json(),
         ),
       }),
@@ -28,6 +29,7 @@ export class LoggingService implements LoggerService {
         maxFiles: 5,
         format: winston.format.combine(
           winston.format.splat(),
+          winston.format.timestamp(),
           winston.format.json(),
         ),
       }),
@@ -40,7 +42,11 @@ export class LoggingService implements LoggerService {
           winston.format.printf((info) => {
             const { timestamp, level, message } = info;
             const time = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
-            return `${chalk.green(time)} ${chalk.green(`[${level}]`)} ${message}`;
+            let newMessage = message;
+            if (typeof message === 'object') {
+              newMessage = JSON.stringify(message);
+            }
+            return `${chalk.green(time)} ${chalk.green(`[${level}]`)} ${newMessage}`;
           }),
         ),
       }),
@@ -81,3 +87,5 @@ export class LoggingService implements LoggerService {
   }
 
 }
+
+export const Logger = new LoggingService();
