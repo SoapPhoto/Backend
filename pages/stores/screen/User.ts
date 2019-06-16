@@ -28,10 +28,14 @@ export class UserScreenStore extends BaseStore {
     this.username = username;
 
     if (type === 'like') {
-      this.likeInfo = new UserLikeStore(username);
+      if (!this.likeInfo) {
+        this.likeInfo = new UserLikeStore(username);
+      }
       runList.push(this.likeInfo.getList(undefined, headers));
     } else {
-      this.pictureInfo = new PictureStore();
+      if (!this.pictureInfo) {
+        this.pictureInfo = new PictureStore();
+      }
       this.pictureInfo.setUrl(`/api/user/${username}/picture`);
       runList.push(this.pictureInfo.getList(undefined, headers));
     }

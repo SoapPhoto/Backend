@@ -22,21 +22,32 @@ interface IProps extends WithRouterProps {
   accountStore: AccountStore;
 }
 
+const initForm = {
+  username: '',
+  password: '',
+};
+
 const Login = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
     const { login, isLogin } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const handleOk = async () => {
+    const handleOk = async (value: typeof initForm, setSubmitting: (data: any) => void) => {
       setConfirmLoading(true);
       try {
-        // await login(username, password);
-        if (query.redirectUrl) {
-          Router.replaceRoute(query.redirectUrl);
-        } else {
-          Router.replaceRoute('/');
-        }
+        await login(value.username, value.password);
+        setSubmitting(true);
+        setTimeout(() => {
+          if (query.redirectUrl) {
+            Router.replaceRoute(query.redirectUrl);
+          } else {
+            Router.replaceRoute('/');
+          }
+        }, 400);
         Toast.success('登录成功！');
+      } catch (error) {
+        setSubmitting(false);
+        Toast.error('登录失败');
       } finally {
         setConfirmLoading(false);
       }
@@ -50,8 +61,7 @@ const Login = withRouter<IProps>(
         <Formik
           initialValues={{ username: '', password: '' }}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            setSubmitting(true);
+            handleOk(values, setSubmitting);
           }}
           validationSchema={LoginSchema}
         >
@@ -85,7 +95,7 @@ const Login = withRouter<IProps>(
               />
               <Button
                 loading={confirmLoading}
-                style={{ marginTop: '24px', width: '100%' }}
+                style={{ marginTop: '46px', width: '100%' }}
                 type="submit"
                 disabled={isSubmitting}
               >
