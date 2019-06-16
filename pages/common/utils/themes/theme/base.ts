@@ -1,12 +1,13 @@
 import { DefaultTheme } from 'styled-components';
 
-import { darken, lighten } from 'polished';
+import { darken, lighten, rgba } from 'polished';
 
 const colors = {
   shadowColor: 'rgba(0, 0, 0, 0.06)',
   secondary: '#888',
   primary: '#05f',
   text: lighten(.1, '#000'),
+  danger: '#ff4d4f',
   background: '#f8fafc',
   gray: '#eaeaea',
   pure: '#fff',
@@ -34,16 +35,16 @@ const theme: DefaultTheme =  {
       color: colors.primary,
     },
     input: {
-      borderColor: 'transparent',
-      background: lighten(.48, colors.primary),
-      shadow: `0px 1px 1px 0px ${lighten(.4, colors.primary)}`,
+      borderColor: colors.gray,
+      background: colors.lightgray,
+      shadow: 'transparent',
       disabled: {
         color: colors.gray,
-        background: colors.gray,
+        background: colors.lightgray,
       },
       hover: {
-        shadow: `0px 1px 2px 0px ${lighten(.3, colors.primary)}`,
-        borderColor: 'transparent',
+        shadow: `0 1px 4px -1px ${rgba(colors.primary, .4)}`,
+        borderColor: colors.primary,
       },
     },
   },

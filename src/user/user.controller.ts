@@ -18,10 +18,10 @@ import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
-import { QiniuService } from '@server/common/modules/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
 import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
+import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { UpdateProfileSettingDto } from './dto/user.dto';
@@ -78,7 +78,6 @@ export class UserController {
       const data = await this.qiniuService.uploadFile(avatarFile);
       avatar = `qiniu:${data.hash}|${data.key}`;
     }
-    throw new Error('123123');
     try {
       if (user.username !== username) {
         throw new UnauthorizedException();

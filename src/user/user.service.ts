@@ -1,17 +1,24 @@
-import { BadGatewayException, BadRequestException, forwardRef, Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
-import { EmailService } from '@server/common/modules/email/email.service';
+import { BadRequestError } from '@server/common/enum/message';
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
+import { EmailService } from '@server/shared/email/email.service';
+import { LoggingService } from '@server/shared/logging/logging.service';
 import { Maybe, MutablePartial, MutableRequired } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
-import { LoggingService } from '@server/shared/logging/logging.service';
 
 @Injectable()
 export class UserService {
@@ -42,7 +49,7 @@ export class UserService {
   public async signup(data: CreateUserDto, isEmail: boolean = true) {
     const user = await this.userEntity.findOne({ email: data.email });
     if (user) {
-      throw new BadRequestException('email is registered');
+      throw new BadRequestException(BadRequestError.EmailExist);
     }
     const info: MutablePartial<UserEntity> = {};
     if (isEmail) {

@@ -1,7 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseFilters } from '@nestjs/common';
+import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { InstagramService } from './instagram.service';
 
 @Controller('api/instagram')
+@UseFilters(new AllExceptionFilter())
 export class InstagramController {
   constructor(
     private readonly instagramService: InstagramService,

@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,10 +17,11 @@ import fs from 'fs';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
+import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
-import { QiniuService } from '@server/common/modules/qiniu/qiniu.service';
 import { photoUpload } from '@server/common/utils/upload';
+import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { UserEntity } from '@server/user/user.entity';
 import { Maybe } from '@typings/index';
 import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
@@ -27,6 +29,7 @@ import { PictureService } from './picture.service';
 
 @Controller('api/picture')
 @UseGuards(AuthGuard)
+@UseFilters(new AllExceptionFilter())
 export class PictureController {
   constructor(
     private readonly qiniuService: QiniuService,

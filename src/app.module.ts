@@ -9,8 +9,8 @@ import { AuthModule } from '@server/auth/auth.module';
 import { OauthModule } from '@server/oauth/oauth.module';
 import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
-import { CacheModule } from './common/cache/cache.module';
-import { EmailModule } from './common/modules/email/email.module';
+import { CacheModule } from './shared/cache/cache.module';
+import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
 import { ViewsModule } from './views/views.module';
 

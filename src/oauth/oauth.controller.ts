@@ -1,13 +1,15 @@
-import { BadRequestException, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters } from '@nestjs/common';
 import { Request, Response } from 'express';
 import parserAgent from 'ua-parser-js';
 
+import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 
 // tslint:disable-next-line: no-var-requires
 const OAuth2Server = require('oauth2-server');
 
 @Controller('oauth')
+@UseFilters(new AllExceptionFilter())
 export class OauthController {
   constructor(
     private readonly oauthServerService: OauthServerService,

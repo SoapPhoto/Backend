@@ -1,3 +1,4 @@
+import { Formik } from 'formik';
 import { inject, observer } from 'mobx-react';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import Head from 'next/Head';
@@ -13,6 +14,8 @@ import Toast from '@pages/components/Toast';
 import { Key } from '@pages/icon';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
+import { validator } from '@server/common/utils/validator';
+import { LoginSchema } from './dto';
 import { Title, Wrapper } from './styles';
 
 interface IProps extends WithRouterProps {
@@ -23,13 +26,11 @@ const Login = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
     const { login, isLogin } = accountStore;
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const handleOk = async () => {
       setConfirmLoading(true);
       try {
-        await login(username, password);
+        // await login(username, password);
         if (query.redirectUrl) {
           Router.replaceRoute(query.redirectUrl);
         } else {
@@ -46,28 +47,53 @@ const Login = withRouter<IProps>(
           <title>{getTitle('登录')}</title>
         </Head>
         <Title>登录 <Key /></Title>
-        <Input
-          label="用户名"
-          type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-        />
-        <Input
-          label="密码"
-          type="password"
-          value={password}
-          style={{ marginTop: '20px' }}
-          onPressEnter={handleOk}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <Button
-          loading={confirmLoading}
-          style={{ marginTop: '24px', width: '100%' }}
-          onClick={handleOk}
-          disabled={isLogin}
+        <Formik
+          initialValues={{ username: '', password: '' }}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
+            setSubmitting(true);
+          }}
+          validationSchema={LoginSchema}
         >
-          登录
-        </Button>
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Input
+                label="用户名"
+                type="text"
+                value={values.username}
+                onChange={handleChange}
+                name="username"
+                error={errors.username}
+              />
+              <Input
+                label="密码"
+                type="password"
+                value={values.password}
+                onChange={handleChange}
+                name="password"
+                error={errors.password}
+                style={{ marginTop: '24px' }}
+              />
+              <Button
+                loading={confirmLoading}
+                style={{ marginTop: '24px', width: '100%' }}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                登录
+              </Button>
+            </form>
+          )}
+        </Formik>
       </Wrapper>
     );
   },

@@ -2,8 +2,8 @@ import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/comm
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
-import { QiniuModule } from '@server/common/modules/qiniu/qiniu.module';
 import { NotificationModule } from '@server/notification/notification.module';
+import { QiniuModule } from '@server/shared/qiniu/qiniu.module';
 import { TagModule } from '@server/tag/tag.module';
 import { UserModule } from '@server/user/user.module';
 import { PictureController } from './picture.controller';

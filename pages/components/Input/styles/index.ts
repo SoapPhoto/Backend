@@ -2,6 +2,7 @@ import { lighten, opacify, rem, rgba } from 'polished';
 import styled from 'styled-components';
 
 export const LabelBox = styled.label`
+  position: relative;
   text-align: left;
   display: block;
 `;
@@ -15,7 +16,7 @@ export const Label = styled.span`
   color: ${_ => _.theme.colors.secondary};
 `;
 
-export const StyleInput = styled.input`
+export const StyleInput = styled.input<{ error: boolean }>`
   line-height: 1;
   width: 100%;
   height: ${rem('40px')};
@@ -27,11 +28,16 @@ export const StyleInput = styled.input`
   border: none;
   border-radius: ${rem('5px')};
   outline: 0;
-  border: 1px solid ${props => props.theme.styles.input.borderColor};
+  border: 1px solid ;
   background: ${props => props.theme.styles.input.background};
   box-shadow: ${props => props.theme.styles.input.shadow};
   transition: border .2s,color .2s ease-out,box-shadow .2s ease;
   font-size: ${_ => rem(_.theme.fontSizes[1])};
+  border-color: ${
+  props => props.error ?
+    `${props.theme.colors.danger} !important` :
+    props.theme.styles.input.borderColor
+  };
   & + & {
     margin-top: ${rem('12px')};
   }
@@ -54,4 +60,12 @@ export const StyleInput = styled.input`
       box-shadow: none;
     }
   }
+`;
+
+export const ErrorBox = styled.div`
+  position: absolute;
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  color: ${_ => _.theme.colors.danger};
+  margin-top: ${rem('4px')};
+  margin-bottom: ${rem('4px')};
 `;

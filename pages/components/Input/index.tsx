@@ -1,5 +1,5 @@
 import React from 'react';
-import { Label, LabelBox, StyleInput } from './styles';
+import { ErrorBox, Label, LabelBox, StyleInput } from './styles';
 
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
@@ -9,6 +9,13 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
    * @memberof IInputProps
    */
   label?: string;
+  /**
+   * 错误
+   *
+   * @type {string}
+   * @memberof IInputProps
+   */
+  error?: string;
   /**
    * 输入框的Ref
    *
@@ -33,6 +40,7 @@ export const Input: Component = ({
   label,
   inputRef,
   style,
+  error,
   ...restProps
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,8 +60,13 @@ export const Input: Component = ({
       <StyleInput
         ref={inputRef}
         onKeyDown={handleKeyDown}
+        error={!!error}
         {...restProps}
       />
+      {
+        error &&
+        <ErrorBox>{error}</ErrorBox>
+      }
     </LabelBox>
   );
 };

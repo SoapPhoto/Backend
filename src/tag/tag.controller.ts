@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseFilters, UseGuards } from '@nestjs/common';
 
 import { User } from '@server/common/decorator/user.decorator';
+import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/user/user.entity';
 import { GetTagPictureListDto } from './dto/tag.dto';
@@ -8,6 +9,7 @@ import { TagService } from './tag.service';
 
 @Controller('api/tag')
 @UseGuards(AuthGuard)
+@UseFilters(new AllExceptionFilter())
 export class TagController {
   constructor(
     private readonly tagService: TagService,

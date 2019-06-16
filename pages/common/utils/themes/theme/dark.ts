@@ -7,6 +7,7 @@ const colors = {
   text: lighten(.1, '#fff'),
   primary: '#05f',
   secondary: '#666',
+  danger: '#ff4d4f',
   lightgray: 'rgb(51, 51, 51)',
   gray: '#1e1e1e',
   pure: '#000',

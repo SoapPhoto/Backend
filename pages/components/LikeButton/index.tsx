@@ -20,7 +20,7 @@ const Button = styled.div<{like: boolean; color?: string}>`
   align-items: center;
   pointer-events: auto;
   user-select: none;
-  margin-right: ${rem('6px')};
+  margin-left: ${rem('12px')};
   & svg {
     fill: ${_ => _.like ? '#f44336' : 'none'};
     stroke: ${_ => _.like ? '#f44336' : _.color || '#fff'};

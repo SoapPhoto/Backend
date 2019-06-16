@@ -28,6 +28,7 @@
     "@nestjs/typeorm": "^6.1.1",
     "@nestjs/websockets": "^6.2.3",
     "@types/nodemailer": "^6.1.0",
+    "@types/yup": "^0.26.16",
     "@zeit/next-typescript": "^1.1.1",
     "apollo-server-express": "^2.5.0",
     "axios": "^0.18.0",
@@ -41,6 +42,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "dotenv": "^6.1.0",
+    "formik": "^1.5.7",
     "fs-extra": "^7.0.1",
     "graphql": "^14.3.0",
     "graphql-tools": "^4.0.4",
@@ -95,7 +97,8 @@
     "url": "^0.11.0",
     "url-parse": "^1.4.7",
     "webpack": "^4.32.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
