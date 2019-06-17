@@ -43,7 +43,7 @@ const theme: DefaultTheme =  {
         background: colors.lightgray,
       },
       hover: {
-        shadow: 'none',
+        shadow: 'transparent',
         borderColor: colors.lightgray,
       },
     },

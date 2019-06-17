@@ -1,5 +1,4 @@
 import { Formik } from 'formik';
-import { inject, observer } from 'mobx-react';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import Head from 'next/Head';
 import { withRouter } from 'next/router';
@@ -8,13 +7,12 @@ import React from 'react';
 import { getTitle, parsePath } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
 import { Button } from '@pages/components/Button';
-import { Input } from '@pages/components/Input';
+import { FieldInput } from '@pages/components/Formik/FieldInput';
 import { withAuth } from '@pages/components/router/withAuth';
 import Toast from '@pages/components/Toast';
 import { Key } from '@pages/icon';
 import { Router } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
-import { validator } from '@server/common/utils/validator';
 import { LoginSchema } from './dto';
 import { Title, Wrapper } from './styles';
 
@@ -34,6 +32,7 @@ const Login = withRouter<IProps>(
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const handleOk = async (value: typeof initForm, setSubmitting: (data: any) => void) => {
       setConfirmLoading(true);
+      setSubmitting(false);
       try {
         await login(value.username, value.password);
         setSubmitting(true);
@@ -59,38 +58,25 @@ const Login = withRouter<IProps>(
         </Head>
         <Title>登录 <Key /></Title>
         <Formik
-          initialValues={{ username: '', password: '' }}
+          initialValues={initForm}
           onSubmit={(values, { setSubmitting }) => {
             handleOk(values, setSubmitting);
           }}
           validationSchema={LoginSchema}
         >
           {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
             handleSubmit,
             isSubmitting,
-            /* and other goodies */
           }) => (
             <form onSubmit={handleSubmit}>
-              <Input
-                label="用户名"
-                type="text"
-                value={values.username}
-                onChange={handleChange}
+              <FieldInput
                 name="username"
-                error={errors.username}
+                label="用户名"
               />
-              <Input
-                label="密码"
+              <FieldInput
                 type="password"
-                value={values.password}
-                onChange={handleChange}
                 name="password"
-                error={errors.password}
+                label="密码"
                 style={{ marginTop: '24px' }}
               />
               <Button

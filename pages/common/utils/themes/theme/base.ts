@@ -43,7 +43,7 @@ const theme: DefaultTheme =  {
         background: colors.lightgray,
       },
       hover: {
-        shadow: `0 1px 4px -1px ${rgba(colors.primary, .4)}`,
+        shadow: rgba(colors.primary, .6),
         borderColor: colors.primary,
       },
     },

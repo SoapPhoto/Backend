@@ -31,7 +31,7 @@ export const StyleInput = styled.input<{ error: boolean }>`
   border: 1px solid ;
   background: ${props => props.theme.styles.input.background};
   box-shadow: ${props => props.theme.styles.input.shadow};
-  transition: border .2s,color .2s ease-out,box-shadow .2s ease;
+  transition: border .2s, color .2s ease-out,box-shadow .2s ease;
   font-size: ${_ => rem(_.theme.fontSizes[1])};
   border-color: ${
   props => props.error ?
@@ -43,7 +43,15 @@ export const StyleInput = styled.input<{ error: boolean }>`
   }
   &:focus, &:hover {
     border-color: ${props => props.theme.styles.input.hover.borderColor};
-    box-shadow: ${props => props.theme.styles.input.hover.shadow};
+    box-shadow: 0 1px 4px -1px ${
+      props => props.error ?
+        (
+          props.theme.styles.input.hover.shadow === 'transparent' ?
+          'transparent' :
+          rgba(props.theme.colors.danger, .6)
+        ) :
+        props.theme.styles.input.hover.shadow
+    };
   }
   &::placeholder {
   }
