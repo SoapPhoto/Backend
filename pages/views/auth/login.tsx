@@ -28,7 +28,7 @@ const initForm = {
 const Login = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
-    const { login, isLogin } = accountStore;
+    const { login } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const handleOk = async (value: typeof initForm, setSubmitting: (data: any) => void) => {
       setConfirmLoading(true);
