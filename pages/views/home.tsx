@@ -2,8 +2,9 @@ import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
 import React from 'react';
 
-import { CustomNextContext } from '@pages/common/interfaces/global';
+import { CustomNextContext, CustomNextPage } from '@pages/common/interfaces/global';
 import { getTitle } from '@pages/common/utils';
+import { connect } from '@pages/common/utils/store';
 import { PictureList } from '@pages/containers/Picture/List';
 import { IMyMobxStore } from '@pages/stores/init';
 import { HomeScreenStore } from '@pages/stores/screen/Home';
@@ -12,24 +13,19 @@ interface IProps {
   homeStore: HomeScreenStore;
 }
 
-@inject((stores: IMyMobxStore) => ({
-  homeStore: stores.screen.homeStore,
-}))
-@observer
-class Index extends React.Component<IProps> {
-  public static getInitialProps: (_: CustomNextContext) => any;
-  public render() {
-    const { list, like, getPageList, isNoMore } = this.props.homeStore;
-    return (
-      <div>
-        <Head>
-          <title>{getTitle('首页')}</title>
-        </Head>
-        <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
-      </div>
-    );
-  }
-}
+const Index: CustomNextPage<IProps, any> = ({
+  homeStore,
+}) => {
+  const { list, like, getPageList, isNoMore } = homeStore;
+  return (
+    <div>
+      <Head>
+        <title>{getTitle('首页')}</title>
+      </Head>
+      <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
+    </div>
+  );
+};
 
 Index.getInitialProps = async (_: CustomNextContext) => {
   if (
@@ -43,4 +39,6 @@ Index.getInitialProps = async (_: CustomNextContext) => {
   return {};
 };
 
-export default Index;
+export default connect((stores: IMyMobxStore) => ({
+  homeStore: stores.screen.homeStore,
+}))(Index);

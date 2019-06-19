@@ -24,6 +24,12 @@ export interface CustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
   ctx: CustomNextContext<Q>;
 }
 
+export type CustomNextPage<P = {}, IP = P> = {
+  (props: P): JSX.Element
+  getInitialProps?(ctx: CustomNextContext): Promise<IP>
+}
+
+
 export interface PaginationList {
   timestamp: number;
   pageSize: number;
