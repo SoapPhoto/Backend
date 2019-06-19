@@ -86,7 +86,7 @@ export const PictureList: React.FC<IProps> = ({
   }, []);
   // 滚动事件绑定
   useEffect(() => {
-    if (noMore) {
+    if (!noMore) {
       window.addEventListener('scroll', scrollEvent);
       return () => window.removeEventListener('scroll', scrollEvent);
     }
@@ -95,10 +95,11 @@ export const PictureList: React.FC<IProps> = ({
   // 处理客户端列表数据
   useEffect(() => {
     pictureList();
-  }, [col]);
+  }, [col, data]);
   // 服务端渲染列表
   if (server) {
     serverList = colArr.map(_col => listParse(data, col));
+    console.log(serverList);
   }
 
   const pictureList = () => {
@@ -126,28 +127,31 @@ export const PictureList: React.FC<IProps> = ({
       }
     }
   }, 50);
-
   return (
     <Wapper>
-      <NoSSR server={false}>
-        {
-          serverList.map((mainCol, i) => (
-            <Col ssr={true} col={colArr[i]} key={colArr[i]} list={mainCol} />
-          ))
-        }
+      <NoSSR key="server" server={false}>
+        <span>
+          {/* {
+            serverList.map((mainCol, i) => (
+              <Col ssr={true} col={colArr[i]} key={colArr[i]} list={mainCol} />
+            ))
+          } */}
+        </span>
       </NoSSR>
-      <NoSSR>
+      {/* <NoSSR key="client">
         <Col like={like} col={col} list={clientList} />
-      </NoSSR>
-      <Footer>
-        {
-          noMore ? (
-            <span>没有更多内容啦</span>
-          ) : (
-            <Loading size={8} />
-          )
-        }
-      </Footer>
+      </NoSSR> */}
+      {/* <span>
+        <Footer key="footer">
+          {
+            noMore ? (
+              <span>没有更多内容啦</span>
+            ) : (
+              <Loading size={8} />
+            )
+          }
+        </Footer>
+      </span> */}
     </Wapper>
   );
 };

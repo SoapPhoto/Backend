@@ -4,12 +4,11 @@ import media from 'styled-media-query';
 
 const padding = 24;
 
-export const Wapper = styled.section`
+export const Wapper = styled.div`
   width: 100%;
   max-width: ${rem('1300px')};
   margin: ${rem(padding)} auto;
   padding: 0 ${rem('24px')};
-
   ${media.lessThan('small')`
     &>div:nth-child(4) {
       display: grid;
