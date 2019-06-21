@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserService } from '@server/user/user.service';
+import { plainToClass } from 'class-transformer';
 import { AccessTokenEntity } from './access-token.entity';
 
 @Injectable()
@@ -14,9 +15,13 @@ export class AccessTokenService {
   ) {}
 
   public create = async (data: Partial<AccessTokenEntity>) => {
-    return this.accessTokenRepository.save(
+    const token = await this.accessTokenRepository.save(
       this.accessTokenRepository.create(data),
     );
+    return plainToClass(AccessTokenEntity, {
+      ...token,
+      user: data.user,
+    });
   }
   public getRefreshToken = async (refreshToken: string) => {
     const token = await this.accessTokenRepository.findOne({
@@ -28,11 +33,11 @@ export class AccessTokenService {
     return token;
   }
   public getAccessToken = async (accessToken: string) => {
-    const token = await this.accessTokenRepository.createQueryBuilder('token')
+    const q = this.accessTokenRepository.createQueryBuilder('token')
       .where('token.accessToken=:accessToken', { accessToken })
       .leftJoinAndSelect('token.user', 'user')
-      .leftJoinAndSelect('token.client', 'client')
-      .getOne();
-    return token;
+      .leftJoinAndSelect('token.client', 'client');
+    this.userService.selectInfo(q);
+    return q.getOne();
   }
 }

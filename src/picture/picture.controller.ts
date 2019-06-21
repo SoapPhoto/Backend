@@ -15,6 +15,8 @@ import {
 } from '@nestjs/common';
 import fs from 'fs';
 
+import { CommentService } from '@server/comment/comment.service';
+import { CreatePictureCommentDot, GetPictureCommentListDto } from '@server/comment/dto/comment.dto';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
@@ -33,6 +35,7 @@ import { PictureService } from './picture.service';
 export class PictureController {
   constructor(
     private readonly qiniuService: QiniuService,
+    private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
   ) {}
 
@@ -98,5 +101,24 @@ export class PictureController {
     @User() user: UserEntity,
   ) {
     return this.pictureService.likePicture(id, user);
+  }
+
+  @Get(':id([0-9]+)/comments')
+  public async getPictureCommentList(
+    @Param('id') id: string,
+    @User() user: Maybe<UserEntity>,
+    @Query() query: GetPictureCommentListDto,
+  ) {
+    return this.commentService.getPictureList(id, query, user);
+  }
+
+  @Post(':id([0-9]+)/comment')
+  @Roles('user')
+  public async createPictureComment(
+    @Body() data: CreatePictureCommentDot,
+    @Param('id') id: string,
+    @User() user: UserEntity,
+  ) {
+    return this.commentService.create(data, id, user);
   }
 }

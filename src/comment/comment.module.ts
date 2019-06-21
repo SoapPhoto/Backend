@@ -1,9 +1,20 @@
-import { Module } from '@nestjs/common';
-import { CommentService } from './comment.service';
+import { forwardRef, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { PictureModule } from '@server/picture/picture.module';
+import { UserModule } from '@server/user/user.module';
 import { CommentController } from './comment.controller';
+import { CommentEntity } from './comment.entity';
+import { CommentService } from './comment.service';
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([CommentEntity]),
+    forwardRef(() => UserModule),
+    forwardRef(() => PictureModule),
+  ],
   providers: [CommentService],
-  controllers: [CommentController]
+  controllers: [CommentController],
+  exports: [CommentService],
 })
 export class CommentModule {}

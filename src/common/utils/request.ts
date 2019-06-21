@@ -1,4 +1,6 @@
+import { plainToClass } from 'class-transformer';
 import { Request } from 'express';
+import { PaginationDto } from '../dto/pagination.dto';
 
 export const clientInfo = (req: Request) => {
   return {
@@ -11,3 +13,11 @@ export const clientInfo = (req: Request) => {
     },
   };
 };
+
+export const listRequest = <Q extends Omit<PaginationDto, 'time'>, T>(query: Q, data: T, count: number) => ({
+  count,
+  data,
+  page: query.page,
+  pageSize: query.pageSize,
+  timestamp: new Date().getTime(),
+});

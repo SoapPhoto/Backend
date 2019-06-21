@@ -2,6 +2,7 @@ import { BadRequestException, forwardRef, Inject, Injectable, UnauthorizedExcept
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 
+import { listRequest } from '@server/common/utils/request';
 import { validator } from '@server/common/utils/validator';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { GetTagPictureListDto } from '@server/tag/dto/tag.dto';
@@ -37,16 +38,10 @@ export class PictureService {
     return plainToClass(PictureEntity, createData);
   }
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const data = await this.selectList(user, query)
+    const [data, count] = await this.selectList(user, query)
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
-    return {
-      data: plainToClass(PictureEntity, data[0]),
-      count: data[1],
-      page: query.page,
-      pageSize: query.pageSize,
-      timestamp: moment().valueOf(),
-    };
+    return listRequest(query, plainToClass(PictureEntity, data), count);
   }
 
   public addViewCount(id: number) {
@@ -92,14 +87,8 @@ export class PictureService {
     if (!isMe) {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
-    const data = await q.cache(100).getManyAndCount();
-    return {
-      count: data[1],
-      data: plainToClass(PictureEntity, data[0]),
-      page: query.page,
-      pageSize: query.pageSize,
-      timestamp: new Date().getTime(),
-    };
+    const [data, count] = await q.cache(100).getManyAndCount();
+    return listRequest(query, plainToClass(PictureEntity, data), count);
   }
 
   public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
@@ -116,13 +105,7 @@ export class PictureService {
     const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
-    return {
-      count,
-      data: plainToClass(PictureEntity, data),
-      page: query.page,
-      pageSize: query.pageSize,
-      timestamp: new Date().getTime(),
-    };
+    return listRequest(query, plainToClass(PictureEntity, data), count as number);
   }
 
   public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) => {
@@ -130,13 +113,7 @@ export class PictureService {
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .getManyAndCount();
-    return {
-      count,
-      data: plainToClass(PictureEntity, data),
-      page: query.page,
-      pageSize: query.pageSize,
-      timestamp: new Date().getTime(),
-    };
+    return listRequest(query, plainToClass(PictureEntity, data), count);
   }
 
   public delete = async (id: number, user: UserEntity) => {
@@ -164,7 +141,7 @@ export class PictureService {
         'picture.likes', 'picture.activitys', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
-    this.userService.selectInfo<PictureEntity>(q);
+    this.userService.selectInfo(q);
     if (user) {
       q
         .loadRelationCountAndMap(

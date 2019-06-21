@@ -1,6 +1,7 @@
 import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { CommentModule } from '@server/comment/comment.module';
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { NotificationModule } from '@server/notification/notification.module';
 import { QiniuModule } from '@server/shared/qiniu/qiniu.module';
@@ -18,6 +19,7 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
     QiniuModule,
     NotificationModule,
     PictureUserActivityModule,
+    forwardRef(() => CommentModule),
     forwardRef(() => TagModule),
     forwardRef(() => UserModule),
   ],

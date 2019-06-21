@@ -9,6 +9,9 @@ export class CommentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: string;
 
+  @Column()
+  public content!: string;
+
   @ManyToOne(() => UserEntity, user => user.comments)
   public readonly user!: UserEntity;
 
