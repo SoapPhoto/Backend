@@ -4,6 +4,7 @@ import { getManager, Repository } from 'typeorm';
 
 import { validator } from '@server/common/utils/validator';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
+import { GetTagPictureListDto } from '@server/tag/dto/tag.dto';
 import { TagService } from '@server/tag/tag.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
@@ -123,6 +124,21 @@ export class PictureService {
       timestamp: new Date().getTime(),
     };
   }
+
+  public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) => {
+    const q = this.selectList(user);
+    const [data, count] = await q
+      .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
+      .getManyAndCount();
+    return {
+      count,
+      data: plainToClass(PictureEntity, data),
+      page: query.page,
+      pageSize: query.pageSize,
+      timestamp: new Date().getTime(),
+    };
+  }
+
   public delete = async (id: number, user: UserEntity) => {
     const data = await this.getOne(id);
     if (!data) {

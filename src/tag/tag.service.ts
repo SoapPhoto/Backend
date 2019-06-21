@@ -42,20 +42,6 @@ export class TagService {
       .getOne();
   }
   public async getTagPicture(name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) {
-    // tslint:disable-next-line: max-line-length
-    const pictureId = await this.tagRepository.manager.query(`SELECT tags.pictureId AS id FROM picture_tags tags WHERE tags.tagName='${name}'`);
-    const q = this.pictureService.select(user);
-    const data = await q
-      .andWhere('picture.id IN (:...ids)', { ids: pictureId.map((id: any) => id.id) })
-      .skip((query.page - 1) * query.pageSize)
-      .take(query.pageSize)
-      .getManyAndCount();
-    return {
-      data: plainToClass(PictureEntity, data[0]),
-      count: data[1],
-      page: query.page,
-      pageSize: query.pageSize,
-      timestamp: moment().valueOf(),
-    };
+    return this.pictureService.getTagPictureList(name, user, query);
   }
 }

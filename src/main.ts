@@ -16,7 +16,7 @@ import { Logger, LoggingService } from './shared/logging/logging.service';
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
   const app = Next({
-    dev,
+    dev: false,
   });
 
   await app.prepare();

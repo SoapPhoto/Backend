@@ -18,6 +18,7 @@ import { Request } from 'express';
 import { GraphQLError } from 'graphql';
 import { CollectionEntity } from './collection/collection.entity';
 import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
+import { CommentEntity } from './comment/comment.entity';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { NotificationEntity } from './notification/notification.entity';
 import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
@@ -52,6 +53,7 @@ import { UserEntity } from './user/user.entity';
         AccessTokenEntity,
         CollectionEntity,
         CollectionPictureEntity,
+        CommentEntity,
       ],
     }),
     GraphQLModule.forRoot({

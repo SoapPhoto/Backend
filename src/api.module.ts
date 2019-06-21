@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { ClientModule } from '@server/oauth/client/client.module';
 import { CollectionModule } from './collection/collection.module';
 import { InstagramModule } from './instagram/instagram.module';
@@ -8,6 +7,8 @@ import { PictureModule } from './picture/picture.module';
 import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
+import { CommentModule } from './comment/comment.module';
+
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserModule } from './user/user.module';
     InstagramModule,
     TagModule,
     CollectionModule,
+    CommentModule,
   ],
   exports: [
     ClientModule,

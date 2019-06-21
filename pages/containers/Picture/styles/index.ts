@@ -4,11 +4,7 @@ import media from 'styled-media-query';
 
 const padding = 24;
 
-export const Wapper = styled.div`
-  width: 100%;
-  max-width: ${rem('1300px')};
-  margin: ${rem(padding)} auto;
-  padding: 0 ${rem('24px')};
+export const PictureContent = styled.div`
   ${media.lessThan('small')`
     &>div:nth-child(4) {
       display: grid;
@@ -32,6 +28,13 @@ export const Wapper = styled.div`
       display: grid;
     }
   `}
+`;
+
+export const Wapper = styled.div`
+  width: 100%;
+  max-width: ${rem('1300px')};
+  margin: ${rem(padding)} auto;
+  padding: 0 ${rem('24px')};
 `;
 
 export const Col = styled.div<{col: number; ssr: boolean}>`

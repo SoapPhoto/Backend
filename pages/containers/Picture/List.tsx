@@ -9,8 +9,9 @@ import { debounce } from 'lodash';
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import Col from './Col';
-import { Footer, Wapper } from './styles';
+import { Footer, PictureContent, Wapper } from './styles';
 
+import useMedia from '@pages/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
 
 interface IProps {
@@ -48,7 +49,7 @@ const mediaArr = [
   },
 ];
 
-const colArr = [4, 3, 2, 1];
+const colArr = mediaArr.map(media => media.col);
 
 export const PictureList: React.FC<IProps> = ({
   data,
@@ -58,32 +59,12 @@ export const PictureList: React.FC<IProps> = ({
 }) => {
   let serverList: PictureEntity[][][] = [];
   const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
-  const [col, setCol] = React.useState<number>(4);
-  const mediaList = React.useRef<MediaQueryList[]>([]);
+  const col = useMedia(
+    mediaArr.map(media => media.media),
+    mediaArr.map(media => media.col),
+    4,
+  );
   const pageLock = React.useRef<boolean>(false);
-  // 媒体查询事件绑定
-  useEffect(() => {
-    if (!server) {
-      if (isSafari) {
-        // window.addEventListener('resize', this.onresize);
-        return () => undefined;
-      }
-      for (const info of mediaArr) {
-        const mediaData = window.matchMedia(info.media);
-        mediaList.current.push(mediaData);
-        mediaData.addEventListener('change', mediaSetCol);
-        if (mediaData.matches) {
-          setCol(info.col);
-        }
-      }
-      return () => {
-        for (const mediaData of mediaList.current) {
-          mediaData.removeEventListener('change', mediaSetCol);
-        }
-      };
-    }
-    return;
-  }, []);
   // 滚动事件绑定
   useEffect(() => {
     if (!noMore) {
@@ -98,21 +79,11 @@ export const PictureList: React.FC<IProps> = ({
   }, [col, data]);
   // 服务端渲染列表
   if (server) {
-    serverList = colArr.map(_col => listParse(data, col));
-    console.log(serverList);
+    serverList = colArr.map(_col => listParse(data, _col));
   }
 
   const pictureList = () => {
     setClientList(_ => listParse(data, col));
-  };
-
-  const mediaSetCol = (mediaInfo: MediaQueryListEvent) => {
-    if (mediaInfo.matches) {
-      const media = mediaArr.find(info => info.media === mediaInfo.media);
-      if (media) {
-        setCol(media.col);
-      }
-    }
   };
 
   const scrollEvent = debounce(async () => {
@@ -130,18 +101,18 @@ export const PictureList: React.FC<IProps> = ({
   return (
     <Wapper>
       <NoSSR key="server" server={false}>
-        <span>
-          {/* {
+        <PictureContent>
+          {
             serverList.map((mainCol, i) => (
               <Col ssr={true} col={colArr[i]} key={colArr[i]} list={mainCol} />
             ))
-          } */}
-        </span>
+          }
+        </PictureContent>
       </NoSSR>
-      {/* <NoSSR key="client">
-        <Col like={like} col={col} list={clientList} />
-      </NoSSR> */}
-      {/* <span>
+      <NoSSR key="client">
+        <Col style={{ display: 'grid' }} like={like} col={col} list={clientList} />
+      </NoSSR>
+      <span>
         <Footer key="footer">
           {
             noMore ? (
@@ -151,7 +122,7 @@ export const PictureList: React.FC<IProps> = ({
             )
           }
         </Footer>
-      </span> */}
+      </span>
     </Wapper>
   );
 };

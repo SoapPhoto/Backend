@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { CollectionEntity } from '@server/collection/collection.entity';
+import { CommentEntity } from '@server/comment/comment.entity';
 import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
@@ -108,6 +109,10 @@ export class PictureEntity extends BaseEntity {
   @Type(() => UserEntity)
   @ManyToOne(() => UserEntity, user => user.pictures, { eager: true })
   public readonly user!: UserEntity;
+
+  /** 图片的评论 */
+  @OneToMany(type => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  public readonly comments!: CommentEntity[];
 
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
   public readonly activitys!: PictureUserActivityEntity[];

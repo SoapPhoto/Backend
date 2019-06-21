@@ -10,6 +10,7 @@ interface IProps {
   col: number;
   ssr?: boolean;
   like?: (data: PictureEntity) => void;
+  style?: React.CSSProperties;
 }
 
 interface IListProps {
@@ -37,10 +38,11 @@ export default connect<React.FC<IProps>>()(({
   col,
   like,
   ssr = false,
+  style,
 }) => {
   if (list.length === 1) {
     return (
-      <Col col={col} ssr={ssr}>
+      <Col style={style} col={col} ssr={ssr}>
         <ColItem>
           <List like={like} list={list[0]} />
         </ColItem>
@@ -48,7 +50,7 @@ export default connect<React.FC<IProps>>()(({
     );
   }
   return (
-    <Col col={col} ssr={ssr}>
+    <Col style={style} col={col} ssr={ssr}>
       {
         list.map((pictureList, index) => (
           <ColItem key={index} >

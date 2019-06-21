@@ -6,6 +6,7 @@ import { PictureEntity } from '@server/picture/picture.entity';
 import { IsEmail, ValidateIf } from 'class-validator';
 
 import { CollectionEntity } from '@server/collection/collection.entity';
+import { CommentEntity } from '@server/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
 
@@ -112,6 +113,11 @@ export class UserEntity extends BaseEntity {
   @OneToMany(type => PictureEntity, photo => photo.user)
   @Expose()
   public readonly pictures!: PictureEntity[];
+
+  /** 用户的评论 */
+  @OneToMany(type => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @Expose()
+  public readonly comments!: CommentEntity[];
 
   /** 用户的收藏夹 */
   @OneToMany(type => CollectionEntity, collection => collection.user)
