@@ -37,6 +37,14 @@ export interface PaginationList {
   count: number;
 }
 
+export interface ListRequest<T> {
+  timestamp: number;
+  pageSize: number;
+  page: number;
+  count: number;
+  data: T
+}
+
 export interface IBaseQuery {
   page: number;
   pageSize: number;

@@ -3,7 +3,7 @@ import Head from 'next/Head';
 import React from 'react';
 import parse from 'url-parse';
 
-import { CustomNextContext, IBaseScreenProps } from '@pages/common/interfaces/global';
+import { CustomNextContext, CustomNextPage, IBaseScreenProps } from '@pages/common/interfaces/global';
 import { getTitle } from '@pages/common/utils';
 import { Avatar, Nav, NavItem } from '@pages/components';
 import { withError } from '@pages/components/withError';
