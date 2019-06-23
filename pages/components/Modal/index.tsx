@@ -1,6 +1,6 @@
 import { observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
@@ -26,7 +26,7 @@ const transitionStyles: {
 };
 
 const maskTransitionStyles: {
-  [key in TransitionStatus]?: any
+  [key in TransitionStatus]?: CSSProperties
 } = {
   entering: { opacity: 0 },
   entered: { opacity: 1 },

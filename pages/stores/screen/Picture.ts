@@ -2,7 +2,7 @@ import { action, observable } from 'mobx';
 
 import { CommentEntity } from '@pages/common/interfaces/comment';
 import { PictureEntity } from '@pages/common/interfaces/picture';
-import { getPictureComment } from '@pages/services/comment';
+import { addComment, getPictureComment } from '@pages/services/comment';
 import { getPicture, likePicture } from '@pages/services/picture';
 import { BaseStore } from '../base/BaseStore';
 
@@ -30,6 +30,13 @@ export class PictureScreenStore extends BaseStore {
   @action public getComment = async () => {
     const { data } = await getPictureComment(this.id);
     this.comment = data.data;
+  }
+  public addComment = async (content: string) => {
+    const { data } = await addComment(content, this.id);
+    this.pushComment(data);
+  }
+  @action public pushComment = (comment: CommentEntity) => {
+    this.comment.unshift(comment);
   }
   @action
   public like = async () => {

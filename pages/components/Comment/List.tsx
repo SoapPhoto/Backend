@@ -1,5 +1,6 @@
 import moment from 'moment';
-import React from 'react';
+import React, { memo } from 'react';
+import { Emojione } from 'react-emoji-render';
 
 import { CommentEntity } from '@pages/common/interfaces/comment';
 import { connect } from '@pages/common/utils/store';
@@ -26,7 +27,10 @@ export const CommentList = connect<React.FC<IProps>>('accountStore')(({
             <MainBox>
               <ContentBox>
                 <UserName>{user.username}</UserName>
-                <div>{content}</div>
+                <Emojione
+                  svg
+                  text={content}
+                />
               </ContentBox>
               <InfoBox>
                 <Popover

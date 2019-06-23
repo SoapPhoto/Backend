@@ -1,10 +1,12 @@
 import { lighten, opacify, rem, rgba } from 'polished';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Textarea } from '../Textarea';
 
 export const LabelBox = styled.label`
   position: relative;
   text-align: left;
   display: block;
+  font-size: 0;
 `;
 export const Label = styled.span`
   display: inline-block;
@@ -16,10 +18,9 @@ export const Label = styled.span`
   color: ${_ => _.theme.colors.secondary};
 `;
 
-export const StyleInput = styled.input<{ error: boolean }>`
-  line-height: 1;
+export const inputCss = css<{ error?: boolean, focus?: boolean }>`
   width: 100%;
-  height: ${rem('40px')};
+  line-height: ${rem('28px')};
   margin: 0;
   padding: ${rem('5px')} ${rem('10px')};
   transition: border .25s ease;
@@ -41,6 +42,23 @@ export const StyleInput = styled.input<{ error: boolean }>`
   & + & {
     margin-top: ${rem('12px')};
   }
+  & textarea {
+    line-height: ${rem('28px')};
+  }
+  ${
+    props => props.focus ? `
+      border-color: ${props.theme.styles.input.hover.borderColor};
+      box-shadow: 0 1px 4px -1px ${
+        props.error ?
+          (
+            props.theme.styles.input.hover.shadow === 'transparent' ?
+            'transparent' :
+            rgba(props.theme.colors.danger, .6)
+          ) :
+          props.theme.styles.input.hover.shadow
+      };
+    ` : ''
+}
   &:focus, &:hover {
     border-color: ${props => props.theme.styles.input.hover.borderColor};
     box-shadow: 0 1px 4px -1px ${
@@ -70,6 +88,9 @@ export const StyleInput = styled.input<{ error: boolean }>`
   }
 `;
 
+export const StyleInput = styled.input<{ error: boolean }>`
+  ${inputCss}
+`;
 export const ErrorBox = styled.div`
   position: absolute;
   font-size: ${_ => rem(_.theme.fontSizes[0])};

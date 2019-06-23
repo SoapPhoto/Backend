@@ -17,9 +17,9 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
         setTreeVisible(true);
       }
     };
-    document.addEventListener('keydown', func);
+    // document.addEventListener('keydown', func);
     return () => {
-      document.removeEventListener('keydown', func);
+      // document.removeEventListener('keydown', func);
     };
   }, []);
   keydown(Keys.ENTER)((props: any) => {

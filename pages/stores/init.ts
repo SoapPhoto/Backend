@@ -15,7 +15,7 @@ export interface IInitialStore {
   screen: Partial<typeof ScreenStore>;
 }
 
-export let store: IMyMobxStore = {
+export const store: IMyMobxStore = {
   accountStore: new AccountStore(),
   appStore: new AppStore(),
   themeStore: new ThemeStore(),

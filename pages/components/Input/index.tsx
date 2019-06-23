@@ -1,6 +1,8 @@
 import React from 'react';
 import { ErrorBox, Label, LabelBox, StyleInput } from './styles';
 
+export * from './Textarea';
+
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * 显示的标题
@@ -23,6 +25,8 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
    * @memberof IInputProps
    */
   inputRef?: React.Ref<HTMLInputElement>;
+
+  type?: 'password';
   /**
    * 回车执行的事件
    *
@@ -41,6 +45,7 @@ export const Input: Component = ({
   inputRef,
   style,
   error,
+  type = 'input',
   ...restProps
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -61,6 +66,7 @@ export const Input: Component = ({
         ref={inputRef}
         onKeyDown={handleKeyDown}
         error={!!error}
+        type={type === 'password' ? 'password' : undefined}
         {...restProps}
       />
       {

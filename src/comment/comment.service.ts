@@ -23,6 +23,7 @@ export class CommentService {
     const q = this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.pictureId=:id', { id })
+      .orderBy('comment.createTime', 'DESC')
       .leftJoinAndSelect('comment.user', 'user');
     this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();

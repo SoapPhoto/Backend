@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { PictureEntity } from '@pages/common/interfaces/picture';
+import { server } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
 import { PictureItem } from './Item';
 import { Col, ColItem } from './styles';
@@ -25,8 +26,8 @@ export const List = connect<React.FC<IListProps>>()(({
   return (
     <>
       {
-        list.map(picture => (
-          <PictureItem like={like} key={picture.id} detail={picture} />
+        list.map((picture, index) => (
+          <PictureItem lazyload={index < 10} like={like} key={picture.id} detail={picture} />
         ))
       }
     </>

@@ -10,6 +10,8 @@ export const Wrapper = styled.div`
 
 export const HandleBox = styled.div`
   display: flex;
+  height: ${rem('36px')};
+  margin-top: -${rem('48px')};
+  padding: 0 ${rem('12px')};
   justify-content: space-between;
-  margin-top: ${rem('14px')};
 `;

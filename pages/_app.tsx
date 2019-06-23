@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import * as types from 'styled-components/cssprop';
+
 import _ from 'lodash';
 import { Provider } from 'mobx-react';
 import moment from 'moment';

@@ -34,8 +34,19 @@ class User extends React.Component<IProps> {
     return user.name || user.username;
   }
 
-  @computed get type () {
+  @computed get type() {
     return this.props.userStore.type;
+  }
+
+  @computed get data() {
+    const { likeInfo, type, pictureInfo } = this.props.userStore;
+    let info: typeof likeInfo | typeof pictureInfo;
+    if (type === 'like') {
+      info = likeInfo!;
+    } else {
+      info = pictureInfo!;
+    }
+    return info;
   }
 
   public static getInitialProps: (_: CustomNextContext) => any;
@@ -58,13 +69,7 @@ class User extends React.Component<IProps> {
 
   public render() {
     const { isLogin, userInfo } = this.props.accountStore;
-    const { user, likeInfo, type, pictureInfo } = this.props.userStore;
-    let info: typeof likeInfo | typeof pictureInfo;
-    if (type === 'like') {
-      info = likeInfo!;
-    } else {
-      info = pictureInfo!;
-    }
+    const { user } = this.props.userStore;
     return (
       <Wrapper>
         <Head>
@@ -112,10 +117,10 @@ class User extends React.Component<IProps> {
           </NavItem>
         </Nav>
         <PictureList
-          noMore={info.isNoMore}
-          data={info.list}
-          like={info.like}
-          onPage={info.getPageList}
+          noMore={this.data.isNoMore}
+          data={this.data.list}
+          like={this.data.like}
+          onPage={this.data.getPageList}
         />
       </Wrapper>
     );

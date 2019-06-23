@@ -1,6 +1,6 @@
 import moment from 'moment';
 import Head from 'next/Head';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { CustomNextContext, CustomNextPage, IBaseScreenProps } from '@pages/common/interfaces/global';
 import { PictureEntity } from '@pages/common/interfaces/picture';
@@ -54,13 +54,14 @@ const Picture: CustomNextPage<IProps, any> = ({
   themeStore,
   pictureStore,
 }) => {
-  const [EXIFVisible, setEXIFVisible] = React.useState(false);
+  const [EXIFVisible, setEXIFVisible] = useState(false);
+  const [commentValue, setCommentValue] = useState('');
   const { isLogin } = accountStore;
   const { themeData } = themeStore;
-  const { info, like, getComment, comment } = pictureStore;
-  const { user, tags } = info;
+  const { info, like, getComment, comment, addComment } = pictureStore;
+  const { user, tags, id } = info;
 
-  React.useEffect(() => {
+  useEffect(() => {
     getComment();
   }, []);
 
@@ -72,6 +73,9 @@ const Picture: CustomNextPage<IProps, any> = ({
   };
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
+  const onConfirm = async () => {
+    await addComment(commentValue);
+  };
   return (
     <Wrapper>
       <Head>
@@ -170,7 +174,7 @@ const Picture: CustomNextPage<IProps, any> = ({
           )
         }
       </Content>
-      <Comment comment={comment} />
+      <Comment onConfirm={onConfirm} onChange={setCommentValue} value={commentValue} comment={comment} />
       <EXIFModal
         visible={EXIFVisible}
         onClose={closeEXIF}
