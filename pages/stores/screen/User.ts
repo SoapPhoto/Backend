@@ -22,6 +22,10 @@ export class UserScreenStore extends BaseStore {
 
   @action
   public update = (store?: Partial<this>) => {
+    if (this.isInit) {
+      return;
+    }
+    this.isInit = true;
     if (store) {
       mergeStore(this, store);
       if (store!.pictureInfo) {

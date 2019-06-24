@@ -75,7 +75,7 @@ export default class MyApp extends App {
         ...pageProps,
         initialStore: _.merge(basePageProps.initialStore, pageProps.initialStore || {}),
       };
-      ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
+      pageProps.initialStore = ctx.mobxStore;
     }
     return {
       pageProps: {
