@@ -11,16 +11,12 @@ import { Wrapper } from './styles';
 interface IProps {
   accountStore?: AccountStore;
   comment: CommentEntity[];
-  value: string;
-  onChange: (value: string) => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: (value: string) => Promise<void>;
 }
 
 export const Comment = connect<React.FC<IProps>>('accountStore')(({
   accountStore,
   comment,
-  value,
-  onChange,
   onConfirm,
 }) => {
   const { isLogin } = accountStore!;
@@ -28,7 +24,7 @@ export const Comment = connect<React.FC<IProps>>('accountStore')(({
     <Wrapper>
       {
         isLogin &&
-        <CommentEditor onConfirm={onConfirm} onChange={onChange} value={value} />
+        <CommentEditor onConfirm={onConfirm} />
       }
       <CommentList comment={comment} />
     </Wrapper>

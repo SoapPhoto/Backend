@@ -10,34 +10,31 @@ import { HandleBox, Wrapper } from './styles/editor';
 
 interface IProps {
   accountStore?: AccountStore;
-  value: string;
-  onConfirm: () => Promise<void>;
-  onChange: (value: string) => void;
+  onConfirm: (value: string) => Promise<void>;
 }
 
 export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
   accountStore,
-  value,
-  onChange,
   onConfirm,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { userInfo } = accountStore!;
   const setInputFocus = useCallback(() => {
     inputRef.current!.focus();
   }, []);
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e.target.value);
-  }, [onChange]);
+    setValue(e.target.value);
+  }, []);
   const onConfirmClick = useCallback(async () => {
     setLoading(true);
     try {
-      await onConfirm();
+      await onConfirm(value);
     } finally {
       setLoading(false);
     }
-  }, [onConfirm]);
+  }, [value]);
   return (
     <Wrapper>
       <Avatar src={userInfo!.avatar} />

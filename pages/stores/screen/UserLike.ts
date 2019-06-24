@@ -26,7 +26,7 @@ export class UserLikeStore extends ListStore<PictureEntity> {
     }
     this.init = true;
     const { data } = await request.get<IPictureListRequest>(`/api/user/${this.username}/picture/like`, {
-      headers: headers || {},
+      headers,
       params: {
         ...this.listQuery,
         ...query,
@@ -72,6 +72,6 @@ export class UserLikeStore extends ListStore<PictureEntity> {
     if (page > this.maxPage) {
       return;
     }
-    return this.getList(undefined, true);
+    return this.getList({ page }, undefined, true);
   }
 }
