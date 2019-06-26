@@ -2,13 +2,16 @@ import 'reflect-metadata';
 
 import * as types from 'styled-components/cssprop';
 
+import { ApolloClient } from 'apollo-boost';
 import _ from 'lodash';
 import { Provider } from 'mobx-react';
 import moment from 'moment';
 import App, { Container } from 'next/app';
 import React from 'react';
+import { ApolloProvider } from 'react-apollo';
 
 import { parsePath, server } from '@pages/common/utils';
+import withData from './common/apollow/withData';
 import { getCurrentTheme, ThemeType } from './common/utils/themes';
 import { PictureModal } from './components';
 import { BodyLayout } from './containers/BodyLayout';
@@ -36,7 +39,7 @@ Router.events.on('routeChangeStart', (url: string) => {
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 
-export default class MyApp extends App {
+class MyApp extends App<{apollo: ApolloClient<unknown>}> {
 
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
@@ -112,11 +115,12 @@ export default class MyApp extends App {
     });
   }
   public render() {
-    const { Component, pageProps, router } = this.props;
+    const { Component, pageProps, router, apollo } = this.props;
     const { picture } = router.query!;
     const isError = pageProps.error || pageProps.statusCode && pageProps.statusCode !== 200;
     return (
       <Container>
+      <ApolloProvider client={apollo}>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
             <BodyLayout header={!isError}>
@@ -130,7 +134,10 @@ export default class MyApp extends App {
             </BodyLayout>
           </ThemeWrapper>
         </Provider>
+        </ApolloProvider>
       </Container>
     );
   }
 }
+
+export default withData(MyApp);

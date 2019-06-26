@@ -74,9 +74,13 @@ export class ViewsController {
 
   @Get('tag/:name')
   @Render('tag')
-  public async tagsIndex(
-    @Res() res: Response,
-  ) {
+  public async tagsIndex() {
+    return {};
+  }
+
+  @Get('test')
+  @Render('test')
+  public async test() {
     return {};
   }
 

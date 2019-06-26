@@ -27,7 +27,7 @@ export const List = connect<React.FC<IListProps>>()(({
     <>
       {
         list.map((picture, index) => (
-          <PictureItem lazyload={index < 10} like={like} key={picture.id} detail={picture} />
+          <PictureItem lazyload={index > 10} like={like} key={picture.id} detail={picture} />
         ))
       }
     </>
