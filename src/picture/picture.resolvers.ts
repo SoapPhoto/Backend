@@ -16,7 +16,7 @@ export class PictureResolver {
   ) {}
 
   @Query()
-  public async getPictures(
+  public async pictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args() query: GetPictureListDto,
   ) {
@@ -24,7 +24,7 @@ export class PictureResolver {
   }
 
   @Query()
-  public async getUserPictures(
+  public async userPictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args() query: GetUserPictureListDto,
   ) {
@@ -32,7 +32,7 @@ export class PictureResolver {
   }
 
   @Query()
-  public async getPicture(
+  public async picture(
     @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
   ) {

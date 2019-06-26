@@ -5,6 +5,7 @@ import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { PictureModule } from '@server/picture/picture.module';
 import { TagController } from './tag.controller';
 import { TagEntity } from './tag.entity';
+import { TagResolver } from './tag.resolvers';
 import { TagService } from './tag.service';
 
 @Module({
@@ -12,7 +13,7 @@ import { TagService } from './tag.service';
     TypeOrmModule.forFeature([TagEntity]),
     forwardRef(() => PictureModule),
   ],
-  providers: [TagService],
+  providers: [TagService, TagResolver],
   controllers: [TagController],
   exports: [TagService],
 })

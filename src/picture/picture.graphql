@@ -1,11 +1,11 @@
 type Query {
   "获取单个picture"
-  getPicture(
+  picture(
     id: ID!
   ): Picture
 
   "获取picture列表"
-  getPictures(
+  pictures(
     "分页"
     page: Float
     "分页"
@@ -15,7 +15,7 @@ type Query {
   ): Pictures
 
   "获取用户的picture"
-  getUserPictures(
+  userPictures(
     "用户id"
     id: ID!
     "用户名"
@@ -39,7 +39,7 @@ type LikePictureReq {
   count: Float
 }
 
-type Pictures {
+type Pictures implements BaseList {
   count: Float
   page: Float
   pageSize: Float
@@ -54,7 +54,7 @@ type EXIF {
   iso: Float
 }
 
-type Picture {
+type Picture implements BaseNode {
   "id"
   id: ID!
 
@@ -110,4 +110,6 @@ type Picture {
 
   "图片作者"
   user: User
+  createTime: DateTime
+  updateTime: DateTime
 }

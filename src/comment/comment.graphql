@@ -1,0 +1,47 @@
+type Query {
+  pictureComments(
+    "图片id"
+    id: ID!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Comments
+}
+
+type Mutation {
+  addComment(
+    "图片id"
+    id: ID!
+    data: AddCommentInput!
+  ): Comment
+}
+
+input AddCommentInput {
+  "评论内容"
+  content: String
+}
+
+
+type Comments implements BaseList {
+  count: Float
+  page: Float
+  pageSize: Float
+  timestamp: Float
+  data: [Comment!]!
+}
+
+type Comment implements BaseNode {
+  id: ID!
+  content: String
+
+  "评论作者"
+  user: User
+
+  "评论的图片"
+  picture: Picture
+  createTime: DateTime
+  updateTime: DateTime
+}

@@ -57,7 +57,10 @@ import { UserEntity } from './user/user.entity';
       ],
     }),
     GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
+      resolverValidationOptions: {
+        requireResolversForResolveType: false,
+      },
+      typePaths: ['./comment/graphql/*.graphql', './**/*.graphql'],
       context: ({ req }: { req: Request }) => ({
         headers: req.headers,
         cookies: req.cookies,

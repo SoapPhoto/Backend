@@ -7,12 +7,33 @@ type Query {
     id: ID
     username: String
   ): User
+
+  userPicturesByName(
+    "用户名"
+    username: String!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
+  userPicturesById(
+    "id"
+    id: ID!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
 }
 
 """
 用户
 """
-type User {
+type User implements BaseNode {
   "id"
   id: ID!
 
@@ -34,15 +55,12 @@ type User {
   "个人网站"
   website: String
 
-  # 用户的picture
-  # pictures: PictureEntity[];
-  # 用户的picture操作
-  # pictureActivitys: PictureUserActivityEntity[];
-
   "喜欢的picture数量"
   likes: Float
 
   "用户的picture数量"
   pictureCount: Float
+  createTime: DateTime
+  updateTime: DateTime
 }
 

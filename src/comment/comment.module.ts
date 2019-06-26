@@ -5,6 +5,7 @@ import { PictureModule } from '@server/picture/picture.module';
 import { UserModule } from '@server/user/user.module';
 import { CommentController } from './comment.controller';
 import { CommentEntity } from './comment.entity';
+import { CommentResolver } from './comment.resolvers';
 import { CommentService } from './comment.service';
 
 @Module({
@@ -13,7 +14,7 @@ import { CommentService } from './comment.service';
     forwardRef(() => UserModule),
     forwardRef(() => PictureModule),
   ],
-  providers: [CommentService],
+  providers: [CommentService, CommentResolver],
   controllers: [CommentController],
   exports: [CommentService],
 })

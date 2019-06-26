@@ -1,0 +1,15 @@
+scalar DateTime
+
+interface BaseNode {
+  id: ID!
+  createTime: DateTime
+  updateTime: DateTime
+}
+
+
+interface BaseList {
+  count: Float
+  page: Float
+  pageSize: Float
+  timestamp: Float
+}

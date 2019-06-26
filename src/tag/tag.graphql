@@ -1,0 +1,30 @@
+type Query {
+  "获取单个用户信息"
+  tag(
+    name: String
+  ): Tag
+  tagPictures(
+    "标签名称"
+    name: String!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
+}
+
+"""
+标签
+"""
+type Tag implements BaseNode {
+  "id"
+  id: ID!
+
+  "标签名称"
+  name: String
+
+  createTime: DateTime
+  updateTime: DateTime
+}
