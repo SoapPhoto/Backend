@@ -1,8 +1,13 @@
+import { CustomNextContext, CustomNextPage } from '@pages/common/interfaces/global';
 import { IPictureListRequest } from '@pages/common/interfaces/picture';
 import { PictureList } from '@pages/containers/Picture/List';
 import gql from 'graphql-tag';
 import React from 'react';
 import { Query } from 'react-apollo';
+
+interface IProps {
+  isPop: boolean;
+}
 
 const GET_PICTURE = gql`
   {
@@ -25,7 +30,8 @@ const GET_PICTURE = gql`
   }
 `;
 
-const Test: React.FC = () => {
+const Test: CustomNextPage<IProps, any> = ({ isPop }) => {
+  console.log(isPop);
   return (
     <Query<{pictures: IPictureListRequest}> query={GET_PICTURE} fetchPolicy="cache-and-network">
       {({ loading, error, data }) => {
@@ -45,6 +51,20 @@ const Test: React.FC = () => {
       }}
     </Query>
   );
+};
+
+Test.getInitialProps = async (_: CustomNextContext) => {
+  if (
+    _.mobxStore.appStore.location &&
+    _.mobxStore.appStore.location.action === 'POP'
+  ) {
+    return {
+      isPop: true,
+    };
+  }
+  return {
+    isPop: false,
+  };
 };
 
 export default Test;

@@ -39,8 +39,8 @@ async function bootstrap() {
 
   const renderer = server.get(RenderModule);
   renderer.register(server, app, {
+    dev,
     viewsDir: '/views',
-    dev: true,
   });
 
   server.get(RenderService);
