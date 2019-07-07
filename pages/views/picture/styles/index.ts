@@ -18,10 +18,10 @@ export const UserHeader = styled(Grid)`
 `;
 
 export const UserLink = styled.a`
-display: flex;
-text-decoration: none;
-align-items: center;
-color: ${_ => _.theme.colors.text};
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  color: ${_ => _.theme.colors.text};
 `;
 
 export const UserName = styled.h3`
@@ -31,6 +31,12 @@ export const UserName = styled.h3`
 export const UserInfo = styled(Cell)`
   display: flex;
   align-items: center;
+`;
+
+export const UserHeaderInfo = styled(Cell)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 export const PictureBox = styled.div`
@@ -64,9 +70,10 @@ export const BaseInfoItem = styled.div`
   display: flex;
   align-items: center;
   font-size: ${_ => rem(_.theme.fontSizes[1])};
+  color: ${_ => _.theme.colors.secondary};
   & svg {
     margin-right: ${rem('6px')};
-    margin-top: -${rem('4px')};
+    margin-top: -${rem('2px')};
   }
 `;
 

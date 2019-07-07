@@ -4,7 +4,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import { connect } from '@pages/common/utils/store';
 import { Avatar } from '@pages/components';
 import { Popover } from '@pages/components/Popover';
-import { Upload } from '@pages/icon';
+import { Upload, User } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { ThemeStore } from '@pages/stores/ThemeStore';
@@ -42,7 +42,9 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
     };
     let content = (
       <Link route="/login">
-        <Href href="/login">登录</Href>
+        <Href href="/login">
+          <User />
+        </Href>
       </Link>
     );
     if (isLogin && userInfo) {

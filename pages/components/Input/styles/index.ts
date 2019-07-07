@@ -1,6 +1,5 @@
 import { lighten, opacify, rem, rgba } from 'polished';
 import styled, { css } from 'styled-components';
-import { Textarea } from '../Textarea';
 
 export const LabelBox = styled.label`
   position: relative;
