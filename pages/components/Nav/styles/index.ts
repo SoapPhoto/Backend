@@ -7,10 +7,26 @@ export const Item = styled.span`
 `;
 
 export const ItemLink = styled.a<{ active: boolean }>`
+  position: relative;
   color: ${_ => _.active ? _.theme.colors.text : _.theme.colors.secondary};
   font-size: ${_ => rem(_.theme.fontSizes[3])};
   text-decoration: none;
   transition: .2s color ease;
+  letter-spacing: 2px;
+  &:before {
+    background: ${_ => _.theme.colors.primary};
+    bottom: -6px;
+    content: "";
+    width: 4px;
+    height: 4px;
+    left: 0;
+    margin: auto;
+    opacity: ${_ => _.active ? 1 : 0};
+    position: absolute;
+    right: 0;
+    transition: all 0.3s ease 0s;
+    border-radius: 10px;
+  }
 `;
 
 export const Wrapper = styled.section`
@@ -18,6 +34,7 @@ export const Wrapper = styled.section`
   max-width: ${rem('1300px')};
   margin: 0 auto;
   padding: 0 ${rem('24px')};
+  padding-bottom: 12px;
   & :last-child {
     font-size: 42px;
   }

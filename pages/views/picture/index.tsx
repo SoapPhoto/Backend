@@ -10,6 +10,7 @@ import { Comment } from '@pages/components/Comment';
 import { Tag } from '@pages/components/Tag';
 import { withError } from '@pages/components/withError';
 import { PictureImage } from '@pages/containers/Picture/Image';
+import { Eye, Heart } from '@pages/icon';
 import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { IMyMobxStore } from '@pages/stores/init';
@@ -18,6 +19,7 @@ import { ThemeStore } from '@pages/stores/ThemeStore';
 import { Cell } from 'styled-css-grid';
 import { PictureInfo } from './components/PictureInfo';
 import {
+  BaseInfoItem,
   Bio,
   Content,
   GpsCotent,
@@ -25,6 +27,7 @@ import {
   TagBox,
   Title,
   UserHeader,
+  UserHeaderInfo,
   UserInfo,
   UserLink,
   UserName,
@@ -73,7 +76,16 @@ const Picture: CustomNextPage<IProps, any> = ({
             </UserLink>
           </Link>
         </UserInfo>
-        <Cell width={1}/>
+        <UserHeaderInfo width={1}>
+          <BaseInfoItem style={{ marginRight: '14px' }}>
+            <Eye size={20} />
+            <p>{info.views}</p>
+          </BaseInfoItem>
+          <BaseInfoItem>
+            <Heart size={20} />
+            <p>{info.likes}</p>
+          </BaseInfoItem>
+        </UserHeaderInfo>
       </UserHeader>
       <PictureBox>
         <PictureImage size="full" detail={info} lazyload={false} />

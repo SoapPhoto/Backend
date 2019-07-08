@@ -1,4 +1,5 @@
 import { isFunction } from 'lodash';
+import { rgba } from 'polished';
 import React, { memo, useCallback, useState } from 'react';
 import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
 import styled from 'styled-components';
@@ -38,6 +39,7 @@ const TextareaBox = styled.div<{ error?: boolean, focus?: boolean }>`
     overflow: hidden;
     transition: .1s height ease;
     display: block;
+    color: ${props => rgba(props.theme.colors.text, .7)};
   }
 `;
 
