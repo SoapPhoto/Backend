@@ -3,6 +3,7 @@ import { WithRouterProps } from 'next/dist/client/with-router';
 import Head from 'next/Head';
 import { withRouter } from 'next/router';
 import React from 'react';
+import { Emojione } from 'react-emoji-render';
 
 import { getTitle, parsePath } from '@pages/common/utils';
 import { connect } from '@pages/common/utils/store';
@@ -54,9 +55,14 @@ const Login = withRouter<IProps>(
     return (
       <Wrapper>
         <Head>
-          <title>{getTitle('登录')}</title>
+          <title>{getTitle('登录🔑')}</title>
         </Head>
-        <Title>登录 <Key /></Title>
+          <Title>
+          <Emojione
+            svg
+            text="登录🔑"
+          />
+        </Title>
         <Formik
           initialValues={initForm}
           onSubmit={(values, { setSubmitting }) => {

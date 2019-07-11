@@ -8,10 +8,10 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';
 
-import Next from 'next/dist/server/next';
+import Next from 'next';
 
 import { AppModule } from './app.module';
-import { Logger, LoggingService } from './shared/logging/logging.service';
+import { LoggingService } from './shared/logging/logging.service';
 
 async function bootstrap() {
   const dev = process.env.NODE_ENV !== 'production';
