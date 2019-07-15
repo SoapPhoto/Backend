@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const composePlugins = require('next-compose-plugins')
-const withTypescript = require('@zeit/next-typescript');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer')
 const withOffline = require('next-offline')
 
@@ -63,11 +62,9 @@ const nextConfig = {
         }
       },
     };
-
     return config
   }
 }
-
 
 module.exports = composePlugins(
   [withOffline, withBundleAnalyzer],

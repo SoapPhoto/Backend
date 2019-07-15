@@ -51,6 +51,11 @@ class User extends React.Component<IProps> {
 
   public static getInitialProps: (_: CustomNextContext) => any;
 
+  constructor(props: IProps) {
+    super(props);
+    console.log(1111, props);
+  }
+
   public componentDidMount() {
     this.props.userStore.active();
   }

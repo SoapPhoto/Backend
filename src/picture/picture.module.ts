@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentModule } from '@server/comment/comment.module';
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { NotificationModule } from '@server/notification/notification.module';
-import { QiniuModule } from '@server/shared/qiniu/qiniu.module';
 import { TagModule } from '@server/tag/tag.module';
 import { UserModule } from '@server/user/user.module';
 import { PictureController } from './picture.controller';
@@ -16,9 +15,8 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
 @Module({
   imports: [
     TypeOrmModule.forFeature([PictureEntity]),
-    QiniuModule,
     NotificationModule,
-    PictureUserActivityModule,
+    forwardRef(() => PictureUserActivityModule),
     forwardRef(() => CommentModule),
     forwardRef(() => TagModule),
     forwardRef(() => UserModule),

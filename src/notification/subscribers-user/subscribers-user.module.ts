@@ -9,5 +9,6 @@ import { SubscribersUserService } from './subscribers-user.service';
     TypeOrmModule.forFeature([NotificationSubscribersUserEntity]),
   ],
   providers: [SubscribersUserService],
+  exports: [SubscribersUserService],
 })
 export class SubscribersUserModule {}

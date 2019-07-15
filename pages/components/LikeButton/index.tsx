@@ -1,6 +1,6 @@
 import { Heart } from '@pages/icon';
 import { rem } from 'polished';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Popover } from '../Popover';
 

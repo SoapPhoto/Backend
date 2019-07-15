@@ -1,6 +1,5 @@
 import { darken, rem } from 'polished';
 import React from 'react';
-import { LoadableComponent } from 'react-loadable';
 import styled from 'styled-components';
 
 import { href } from '@pages/common/utils/themes/common';

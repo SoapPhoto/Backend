@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, CacheModule } from '@nestjs/common';
 
 import { AuthModule } from '@server/auth/auth.module';
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
@@ -7,7 +7,11 @@ import { ViewsController } from './views.controller';
 import { ViewsService } from './views.service';
 
 @Module({
-  imports: [PictureModule, AuthModule],
+  imports: [
+    PictureModule,
+    AuthModule,
+    CacheModule.register(),
+  ],
   controllers: [ViewsController],
   providers: [
     ViewsService,

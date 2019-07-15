@@ -27,6 +27,7 @@ import { ClientEntity } from './oauth/client/client.entity';
 import { PictureEntity } from './picture/picture.entity';
 import { PictureUserActivityEntity } from './picture/user-activity/user-activity.entity';
 import { Logger } from './shared/logging/logging.service';
+import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { TagEntity } from './tag/tag.entity';
 import { UserEntity } from './user/user.entity';
 
@@ -86,6 +87,7 @@ import { UserEntity } from './user/user.entity';
     CacheModule,
     ApiModule,
     EmailModule,
+    QiniuModule,
     // EventsModule,
   ],
   providers: [
