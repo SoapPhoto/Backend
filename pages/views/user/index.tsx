@@ -13,18 +13,23 @@ import { Link } from '@pages/routes';
 import { AccountStore } from '@pages/stores/AccountStore';
 import { IMyMobxStore } from '@pages/stores/init';
 import { UserScreenStore } from '@pages/stores/screen/User';
+import { UserScreenPictureList } from '@pages/stores/screen/UserList';
 import { computed } from 'mobx';
+import { WithRouterProps } from 'next/dist/client/with-router';
+import { withRouter } from 'next/router';
 import { Cell, Grid } from 'styled-css-grid';
 import { Bio, EditIcon, Profile, ProfileItem, ProfileItemLink, UserHeader, UserName, Wrapper } from './styles';
 
-interface IProps extends IBaseScreenProps {
+interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
   userStore: UserScreenStore;
+  listStore: UserScreenPictureList;
   accountStore: AccountStore;
 }
 
 @inject((stores: IMyMobxStore) => ({
   userStore: stores.screen.userStore,
+  listStore: stores.screen.userPictureStore,
   accountStore: stores.accountStore,
 }))
 @observer
@@ -38,22 +43,10 @@ class User extends React.Component<IProps> {
     return this.props.userStore.type;
   }
 
-  @computed get data() {
-    const { likeInfo, type, pictureInfo } = this.props.userStore;
-    let info: typeof likeInfo | typeof pictureInfo;
-    if (type === 'like') {
-      info = likeInfo!;
-    } else {
-      info = pictureInfo!;
-    }
-    return info;
-  }
-
   public static getInitialProps: (_: CustomNextContext) => any;
 
   constructor(props: IProps) {
     super(props);
-    console.log(1111, props);
   }
 
   public componentDidMount() {
@@ -72,6 +65,7 @@ class User extends React.Component<IProps> {
   public render() {
     const { isLogin, userInfo } = this.props.accountStore;
     const { user } = this.props.userStore;
+    const { list, isNoMore, getPageList } = this.props.listStore;
     return (
       <Wrapper>
         <Head>
@@ -119,10 +113,10 @@ class User extends React.Component<IProps> {
           </NavItem>
         </Nav>
         <PictureList
-          noMore={this.data.isNoMore}
-          data={this.data.list}
-          like={this.data.like}
-          onPage={this.data.getPageList}
+          noMore={isNoMore}
+          data={list}
+          like={() => {}}
+          onPage={getPageList}
         />
       </Wrapper>
     );
@@ -131,22 +125,28 @@ class User extends React.Component<IProps> {
 
 User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
   const { params } = route;
-  if (
-    mobxStore.appStore.location &&
-    mobxStore.appStore.location.action === 'POP' &&
-    mobxStore.screen.userStore.init &&
-    mobxStore.screen.userStore.user &&
-    mobxStore.screen.userStore.user.username === params.username &&
-    mobxStore.screen.userStore.type === params.type
-  ) {
-    return {};
-  }
   let error: {
     message: string,
     statusCode: number,
   } | undefined;
   try {
-    await mobxStore.screen.userStore.getInit(params.username!, params.type!, req ? req.headers : undefined);
+    const all = [];
+    const arg: [string, string, any] = [params.username!, params.type!, req ? req.headers : undefined];
+    const isUsername = (
+      mobxStore.screen.userStore.init &&
+      mobxStore.screen.userStore.user &&
+      mobxStore.screen.userStore.user.username === params.username
+    );
+    const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
+    if (!(isPop && isUsername)) {
+      all.push(mobxStore.screen.userStore.getInit(...arg));
+    }
+    if (isPop && isUsername && mobxStore.screen.userPictureStore.isCache(params.type)) {
+      mobxStore.screen.userPictureStore.getCache(params.type);
+    } else {
+      all.push(mobxStore.screen.userPictureStore.getList(...arg));
+    }
+    await Promise.all(all);
   } catch (err) {
     error = err;
   }
@@ -156,4 +156,4 @@ User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
   };
 };
 
-export default withError<IProps>(User);
+export default withRouter(withError<IProps>(User));

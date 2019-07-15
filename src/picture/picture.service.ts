@@ -103,6 +103,7 @@ export class PictureService {
       };
     }
     const q = this.selectList(user);
+    console.log(22222, ids);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
     return listRequest(query, plainToClass(PictureEntity, data), count as number);

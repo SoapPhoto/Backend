@@ -84,6 +84,7 @@ export class PictureUserActivityService {
 
   public getLikeList = async (userIdOrName: string, query: GetPictureListDto) => {
     const q = this.activityRepository.createQueryBuilder('activity')
+      .select('DISTINCT activity.pictureId', 'id')
       .where('activity.like=:like', { like: true });
     if (validator.isNumberString(userIdOrName)) {
       q.andWhere('activity.userId=:id', { id: userIdOrName });

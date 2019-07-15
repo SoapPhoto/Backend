@@ -1,7 +1,7 @@
 import { Router } from '@pages/routes';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Item, ItemLink, Wrapper } from './styles';
 
@@ -25,12 +25,12 @@ export const NavItem = withRouter<INavItemProps>(({
   router,
 }) => {
   const active = router!.asPath === route;
-  const push = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const push = useCallback((e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     Router.pushRoute(route, undefined, {
       shallow: true,
     });
     e.preventDefault();
-  };
+  }, [route]);
   return (
     <Item>
       <ItemLink onClick={push} active={active} href={route}>

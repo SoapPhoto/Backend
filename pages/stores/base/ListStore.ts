@@ -1,7 +1,6 @@
 import { computed, observable } from 'mobx';
 
 import { IBaseQuery } from '@pages/common/interfaces/global';
-import { PictureEntity } from '@pages/common/interfaces/picture';
 import { BaseStore } from './BaseStore';
 
 export class ListStore<L, Q = {}> extends BaseStore {

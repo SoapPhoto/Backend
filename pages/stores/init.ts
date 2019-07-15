@@ -26,6 +26,7 @@ export const initStore = (initialState: IInitialStore): IMyMobxStore => {
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
   store.screen.userStore.update(initialState.screen.userStore);
+  store.screen.userPictureStore.update(initialState.screen.userPictureStore);
   store.screen.homeStore.update(initialState.screen.homeStore);
   store.screen.tagStore.update(initialState.screen.tagStore);
   store.screen.pictureStore.update(initialState.screen.pictureStore);
