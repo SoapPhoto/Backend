@@ -66,13 +66,13 @@ export class PictureStore extends ListStore<PictureEntity> {
   }
 
   @action
-  public like = async (data: PictureEntity) => {
-    const oldData = data.isLike;
-    data.isLike = !data.isLike;
+  public like = async (picture: PictureEntity) => {
+    const oldData = picture.isLike;
     try {
-      await likePicture(data.id);
+      const { data } = await likePicture(picture.id);
+      picture.isLike = data.isLike;
+    // tslint:disable-next-line: no-empty
     } catch (err) {
-      data.isLike = oldData;
       console.error(err);
     }
   }

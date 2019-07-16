@@ -65,7 +65,7 @@ class User extends React.Component<IProps> {
   public render() {
     const { isLogin, userInfo } = this.props.accountStore;
     const { user } = this.props.userStore;
-    const { list, isNoMore, getPageList } = this.props.listStore;
+    const { list, isNoMore, getPageList, like } = this.props.listStore;
     return (
       <Wrapper>
         <Head>
@@ -115,7 +115,7 @@ class User extends React.Component<IProps> {
         <PictureList
           noMore={isNoMore}
           data={list}
-          like={() => {}}
+          like={like}
           onPage={getPageList}
         />
       </Wrapper>

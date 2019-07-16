@@ -1,6 +1,6 @@
 import { Heart } from '@pages/icon';
 import { rem } from 'polished';
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Popover } from '../Popover';
 
@@ -41,8 +41,17 @@ export const LikeButton: React.FC<IProps> = ({
   size = 18,
   onLike = () => null,
 }) => {
+  const disabled = useRef<boolean>(false);
+  const onClick = useCallback(async () => {
+    if (disabled.current) {
+      return;
+    }
+    disabled.current = true;
+    await onLike();
+    disabled.current = false;
+  }, [onLike]);
   const content = (
-    <Button onClick={onLike} color={color} like={isLike} >
+    <Button onClick={onClick} color={color} like={isLike} >
       <Heart size={size} />
     </Button>
   );

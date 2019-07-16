@@ -1,6 +1,7 @@
 import { IBaseQuery } from '@pages/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@pages/common/interfaces/picture';
 import { request } from '@pages/common/utils/request';
+import { likePicture } from '@pages/services/picture';
 import { action, computed, observable } from 'mobx';
 import { BaseStore } from '../base/BaseStore';
 import { ListStore } from '../base/ListStore';
@@ -57,7 +58,6 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
   }
 
   @action public setData = (data: IPictureListRequest, plus: boolean = false) => {
-    console.log(data.data);
     if (plus) {
       this.list = this.list.concat(data.data);
     } else {
@@ -80,4 +80,15 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
   }
 
   public isCache = (type: string = '') => this.cacheList[type] !== undefined;
+
+  @action
+  public like = async (picture: PictureEntity) => {
+    try {
+      const { data } = await likePicture(picture.id);
+      picture.isLike = data.isLike;
+    // tslint:disable-next-line: no-empty
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

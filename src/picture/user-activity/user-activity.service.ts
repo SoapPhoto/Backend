@@ -55,7 +55,10 @@ export class PictureUserActivityService {
     if (!activity || activity.like) {
       this.notificationService.publishNotification(user, picture.user);
     }
-    return this.activityRepository.count({ picture, like: true });
+    return {
+      isLike: activity ? activity.like : false,
+      count: await this.activityRepository.count({ picture, like: true }),
+    };
   }
 
   public setInfo = async (
@@ -98,7 +101,9 @@ export class PictureUserActivityService {
       } else {
         q.andWhere('activity.userUsername=:id', { id: userIdOrName });
       }
-      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+      if (!isCount) {
+        q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+      }
       return q;
     };
     // 分页
@@ -106,6 +111,7 @@ export class PictureUserActivityService {
       getQ(true).getRawOne(),
       getQ().getRawMany(),
     ]);
+    console.log(data);
     return [data[0].count, data[1].map(activity => activity.id as string)];
   }
 }

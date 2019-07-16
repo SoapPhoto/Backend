@@ -28,9 +28,9 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
   ...restProps
 }) => {
   const { isLogin } = accountStore!;
-  const onLike = () => {
+  const onLike = async () => {
     if (like) {
-      like(detail);
+      await like(detail);
     }
   };
   return (

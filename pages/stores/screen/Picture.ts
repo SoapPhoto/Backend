@@ -40,12 +40,12 @@ export class PictureScreenStore extends BaseStore {
   }
   @action
   public like = async () => {
-    const oldData = this.info.isLike;
-    this.info.isLike = !this.info.isLike;
     try {
-      await likePicture(this.info.id);
+      const { data } = await likePicture(this.info.id);
+      this.info.isLike = data.isLike;
+      this.info.likes = data.count;
+    // tslint:disable-next-line: no-empty
     } catch (err) {
-      this.info.isLike = oldData;
       console.error(err);
     }
   }

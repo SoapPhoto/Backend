@@ -65,9 +65,7 @@ export class PictureService {
     if (!picture) {
       throw new BadRequestException('no_picture');
     }
-    return {
-      count: await this.activityService.like(picture, user),
-    };
+    return await this.activityService.like(picture, user);
   }
 
   public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
