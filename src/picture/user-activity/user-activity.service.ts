@@ -83,20 +83,29 @@ export class PictureUserActivityService {
   }
 
   public getLikeList = async (userIdOrName: string, query: GetPictureListDto) => {
-    const q = this.activityRepository.createQueryBuilder('activity')
-      .select('DISTINCT activity.pictureId', 'id')
-      .where('activity.like=:like', { like: true });
-    if (validator.isNumberString(userIdOrName)) {
-      q.andWhere('activity.userId=:id', { id: userIdOrName });
-    } else {
-      q.andWhere('activity.userUsername=:id', { id: userIdOrName });
-    }
+    const getQ = (isCount = false) => {
+      const q = this.activityRepository.createQueryBuilder('activity')
+        .select(
+          ...(
+            isCount ?
+            ['COUNT(DISTINCT(`pictureId`))', 'count'] :
+            ['DISTINCT(`pictureId`)', 'id']
+          ) as [string, string],
+        )
+        .where('activity.like=:like', { like: true });
+      if (validator.isNumberString(userIdOrName)) {
+        q.andWhere('activity.userId=:id', { id: userIdOrName });
+      } else {
+        q.andWhere('activity.userUsername=:id', { id: userIdOrName });
+      }
+      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+      return q;
+    };
     // 分页
-    q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
     const data = await Promise.all([
-      q.getCount(),
-      q.getRawMany(),
+      getQ(true).getRawOne(),
+      getQ().getRawMany(),
     ]);
-    return [data[0], data[1].map(activity => activity.activity_pictureId as string)];
+    return [data[0].count, data[1].map(activity => activity.id as string)];
   }
 }
