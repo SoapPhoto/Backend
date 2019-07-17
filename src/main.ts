@@ -29,12 +29,8 @@ async function bootstrap() {
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
-  server.useWebSocketAdapter(new WsAdapter(server));
   server.enableCors({
-    origin: [
-      'http://localhost:3001',
-      'http://localhost.com:3001',
-    ],
+    origin: false,
   });
 
   const renderer = server.get(RenderModule);

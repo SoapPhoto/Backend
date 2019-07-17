@@ -1,13 +1,9 @@
 import io from 'socket.io-client';
 
 const setupSocket = () => {
-  const socket = io('//localhost:1080');
+  const socket = io();
   socket.on('connect', () => {
-    console.log('Connected');
-    socket.emit('events', { test: 'test' });
-    socket.emit('identity', 0, (response: any) =>
-      console.log('Identity:', response),
-    );
+    socket.emit('CONNECT_USER', { test: 'yu' });
   });
   socket.on('events', (data: any) => {
     console.log('event', data);

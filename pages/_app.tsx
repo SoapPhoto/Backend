@@ -96,7 +96,6 @@ class MyApp extends App<{apollo: ApolloClient<unknown>}> {
   }
   public componentDidMount() {
     const socket = setupSocket();
-    console.log(socket);
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/service-worker.js')

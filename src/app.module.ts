@@ -30,7 +30,6 @@ import { Logger } from './shared/logging/logging.service';
 import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { TagEntity } from './tag/tag.entity';
 import { UserEntity } from './user/user.entity';
-import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -89,7 +88,7 @@ import { EventsModule } from './events/events.module';
     ApiModule,
     EmailModule,
     QiniuModule,
-    EventsModule,
+    // EventsModule,
   ],
   providers: [
     {

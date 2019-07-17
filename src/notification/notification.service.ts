@@ -4,11 +4,13 @@ import { EntityManager, Repository } from 'typeorm';
 
 import { UserEntity } from '@server/user/user.entity';
 import { NotificationEntity } from './notification.entity';
+import { NotificationGateway } from './notification.gateway';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 
 @Injectable()
 export class NotificationService {
   constructor(
+    private wss: NotificationGateway,
     @InjectRepository(NotificationEntity)
     private notificationRepository: Repository<NotificationEntity>,
     @InjectRepository(NotificationSubscribersUserEntity)
@@ -31,6 +33,7 @@ export class NotificationService {
           this.subscribersUserRepository.create({ notification, user: subscribers }),
         );
       }
+      this.wss.emitMessage('notify', {});
     } catch (err) {
       throw err;
     }

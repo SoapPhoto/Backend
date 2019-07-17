@@ -22,6 +22,6 @@ export class NotificationModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(OauthMiddleware)
-      .forRoutes(NotificationController);
+      .forRoutes(NotificationController, NotificationGateway);
   }
 }
