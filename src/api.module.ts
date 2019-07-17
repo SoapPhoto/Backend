@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { ClientModule } from '@server/oauth/client/client.module';
 import { CollectionModule } from './collection/collection.module';
 import { CommentModule } from './comment/comment.module';

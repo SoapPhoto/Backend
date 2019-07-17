@@ -12,6 +12,7 @@ import { ApolloProvider } from 'react-apollo';
 
 import { parsePath, server } from '@pages/common/utils';
 import withData from './common/apollow/withData';
+import setupSocket from './common/sockets';
 import { getCurrentTheme, ThemeType } from './common/utils/themes';
 import { PictureModal } from './components';
 import { BodyLayout } from './containers/BodyLayout';
@@ -94,6 +95,8 @@ class MyApp extends App<{apollo: ApolloClient<unknown>}> {
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
   public componentDidMount() {
+    const socket = setupSocket();
+    console.log(socket);
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/service-worker.js')
