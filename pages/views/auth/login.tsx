@@ -5,17 +5,16 @@ import { withRouter } from 'next/router';
 import React from 'react';
 import { Emojione } from 'react-emoji-render';
 
-import { getTitle, parsePath } from '@pages/common/utils';
-import { connect } from '@pages/common/utils/store';
-import { Button } from '@pages/components/Button';
-import { FieldInput } from '@pages/components/Formik/FieldInput';
-import { withAuth } from '@pages/components/router/withAuth';
-import Toast from '@pages/components/Toast';
-import { Key } from '@pages/icon';
-import { Router } from '@pages/routes';
-import { AccountStore } from '@pages/stores/AccountStore';
-import { LoginSchema } from './dto';
-import { Title, Wrapper } from './styles';
+import { LoginSchema } from '@lib/common/dto/auth';
+import { getTitle, parsePath } from '@lib/common/utils';
+import { connect } from '@lib/common/utils/store';
+import { Button } from '@lib/components/Button';
+import { FieldInput } from '@lib/components/Formik/FieldInput';
+import { withAuth } from '@lib/components/router/withAuth';
+import Toast from '@lib/components/Toast';
+import { Router } from '@lib/routes';
+import { AccountStore } from '@lib/stores/AccountStore';
+import { Title, Wrapper } from '@lib/styles/views/auth';
 
 interface IProps extends WithRouterProps {
   accountStore: AccountStore;

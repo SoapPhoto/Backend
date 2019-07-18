@@ -20,6 +20,9 @@
       "@server/*": [
         "src/*"
       ],
+      "@lib/*": [
+        "lib/*"
+      ],
       "@pages/*": [
         "pages/*"
       ],

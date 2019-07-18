@@ -22,6 +22,7 @@
           "./pages"
         ],
         "alias": {
+          "@lib": "./lib",
           "@pages": "./pages",
           "@server": "./src"
         },

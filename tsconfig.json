@@ -36,6 +36,9 @@
       "@pages/*": [
         "pages/*"
       ],
+      "@lib/*": [
+        "lib/*"
+      ],
       "@typings/*": [
         "typings/*"
       ]
@@ -48,6 +51,7 @@
   },
   "include": [
     "src/**/*",
+    "lib/**/*",
     "pages/**/*",
     "typings/**/*"
   ],

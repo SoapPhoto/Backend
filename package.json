@@ -58,7 +58,7 @@
     "multer": "^1.4.1",
     "mysql": "^2.17.0",
     "nest-next": "^0.7.0",
-    "next": "^9.0.1",
+    "next": "^9.0.2",
     "next-compose-plugins": "^2.2.0",
     "next-offline": "^3.4.0",
     "next-routes": "^1.4.2",
@@ -104,6 +104,7 @@
     "url-parse": "^1.4.7",
     "webpack": "^4.35.3",
     "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.10.0",
     "yup": "^0.27.0"
   },
   "devDependencies": {

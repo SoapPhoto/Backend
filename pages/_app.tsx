@@ -10,15 +10,15 @@ import App, { Container } from 'next/app';
 import React from 'react';
 import { ApolloProvider } from 'react-apollo';
 
-import { parsePath, server } from '@pages/common/utils';
-import withData from './common/apollow/withData';
-import setupSocket from './common/sockets';
-import { getCurrentTheme, ThemeType } from './common/utils/themes';
-import { PictureModal } from './components';
-import { BodyLayout } from './containers/BodyLayout';
-import { ThemeWrapper } from './containers/Theme';
-import { Router } from './routes';
-import { IInitialStore, IMyMobxStore, initStore, store } from './stores/init';
+import { parsePath, server } from '@lib/common/utils';
+import { PictureModal } from '@lib/components';
+import withData from '../lib/common/apollow/withData';
+import setupSocket from '../lib/common/sockets';
+import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
+import { BodyLayout } from '../lib/containers/BodyLayout';
+import { ThemeWrapper } from '../lib/containers/Theme';
+import { Router } from '../lib/routes';
+import { IInitialStore, IMyMobxStore, initStore, store } from '../lib/stores/init';
 
 moment.locale('zh-cn');
 

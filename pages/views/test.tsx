@@ -1,6 +1,6 @@
-import { CustomNextContext, CustomNextPage } from '@pages/common/interfaces/global';
-import { IPictureListRequest } from '@pages/common/interfaces/picture';
-import { PictureList } from '@pages/containers/Picture/List';
+import { CustomNextContext, CustomNextPage } from '@lib/common/interfaces/global';
+import { IPictureListRequest } from '@lib/common/interfaces/picture';
+import { PictureList } from '@lib/containers/Picture/List';
 import gql from 'graphql-tag';
 import React from 'react';
 import { Query } from 'react-apollo';

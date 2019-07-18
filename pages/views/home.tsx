@@ -2,12 +2,12 @@ import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
 import React from 'react';
 
-import { CustomNextContext, CustomNextPage } from '@pages/common/interfaces/global';
-import { getTitle } from '@pages/common/utils';
-import { connect } from '@pages/common/utils/store';
-import { PictureList } from '@pages/containers/Picture/List';
-import { IMyMobxStore } from '@pages/stores/init';
-import { HomeScreenStore } from '@pages/stores/screen/Home';
+import { CustomNextContext, CustomNextPage } from '@lib/common/interfaces/global';
+import { getTitle } from '@lib/common/utils';
+import { connect } from '@lib/common/utils/store';
+import { PictureList } from '@lib/containers/Picture/List';
+import { IMyMobxStore } from '@lib/stores/init';
+import { HomeScreenStore } from '@lib/stores/screen/Home';
 
 interface IProps {
   homeStore: HomeScreenStore;

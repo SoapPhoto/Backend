@@ -4,11 +4,11 @@ import Head from 'next/Head';
 import { withRouter } from 'next/router';
 import React from 'react';
 
-import { CustomNextContext } from '@pages/common/interfaces/global';
-import { getTitle, parsePath } from '@pages/common/utils';
-import { withAuth } from '@pages/components/router/withAuth';
-import { Menu } from './components/Menu';
-import { Warpper } from './style';
+import { CustomNextContext } from '@lib/common/interfaces/global';
+import { getTitle, parsePath } from '@lib/common/utils';
+import { withAuth } from '@lib/components/router/withAuth';
+import { Menu } from '@lib/components/WrapperMenu';
+import { Warpper } from '@lib/styles/views/setting';
 
 interface IProps extends WithRouterProps {
   type: 'user' | 'basic';

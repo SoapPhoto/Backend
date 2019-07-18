@@ -4,12 +4,12 @@ import { computed } from 'mobx';
 import { observer, Provider } from 'mobx-react';
 import Head from 'next/Head';
 import styled from 'styled-components';
-import { getTitle } from './common/utils';
-import { href } from './common/utils/themes/common';
-import { ThemeWrapper } from './containers/Theme';
-import { ArrowRight, CloudSnow } from './icon';
-import { Link } from './routes';
-import { IMyMobxStore, initStore } from './stores/init';
+import { getTitle } from '../lib/common/utils';
+import { href } from '../lib/common/utils/themes/common';
+import { ThemeWrapper } from '../lib/containers/Theme';
+import { ArrowRight, CloudSnow } from '../lib/icon';
+import { Link } from '../lib/routes';
+import { IMyMobxStore, initStore } from '../lib/stores/init';
 
 interface IErrorProps {
   statusCode: number;

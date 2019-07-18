@@ -1,15 +1,15 @@
 import React from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
-import { getTitle } from '@pages/common/utils';
-import { getImageUrl } from '@pages/common/utils/image';
-import { connect } from '@pages/common/utils/store';
-import { Avatar } from '@pages/components';
-import { Button } from '@pages/components/Button';
-import { Input } from '@pages/components/Input';
-import Toast from '@pages/components/Toast';
-import { Upload } from '@pages/components/Upload';
-import { AccountStore } from '@pages/stores/AccountStore';
+import { getTitle } from '@lib/common/utils';
+import { getImageUrl } from '@lib/common/utils/image';
+import { connect } from '@lib/common/utils/store';
+import { Avatar } from '@lib/components';
+import { Button } from '@lib/components/Button';
+import { Input } from '@lib/components/Input';
+import Toast from '@lib/components/Toast';
+import { Upload } from '@lib/components/Upload';
+import { AccountStore } from '@lib/stores/AccountStore';
 import Head from 'next/Head';
 
 interface IUserProps {
