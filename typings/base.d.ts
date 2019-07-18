@@ -74,5 +74,11 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     LOGGER_FILE: string;
+  
+    REDIS_HOST: string;
+    REDIS_PORT: string;
+    REDIS_DB: string;
+    REDIS_PASSWORD: string;
+    REDIS_PRIFIX: string;
   }
 }

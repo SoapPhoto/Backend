@@ -78,12 +78,6 @@ export class ViewsController {
     return {};
   }
 
-  @Get('test')
-  @Render('test')
-  public async test() {
-    return {};
-  }
-
   @Get('service-worker.js')
   public async serviceWorker(
     @Res() res: Response,

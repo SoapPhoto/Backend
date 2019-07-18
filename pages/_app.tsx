@@ -2,17 +2,14 @@ import 'reflect-metadata';
 
 import * as types from 'styled-components/cssprop';
 
-import { ApolloClient } from 'apollo-boost';
 import _ from 'lodash';
 import { Provider } from 'mobx-react';
 import moment from 'moment';
 import App, { Container } from 'next/app';
 import React from 'react';
-import { ApolloProvider } from 'react-apollo';
 
 import { parsePath, server } from '@lib/common/utils';
 import { PictureModal } from '@lib/components';
-import withData from '../lib/common/apollow/withData';
 import setupSocket from '../lib/common/sockets';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
@@ -40,7 +37,7 @@ Router.events.on('routeChangeStart', (url: string) => {
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
 
-class MyApp extends App<{apollo: ApolloClient<unknown>}> {
+class MyApp extends App {
 
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
@@ -95,7 +92,7 @@ class MyApp extends App<{apollo: ApolloClient<unknown>}> {
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
   public componentDidMount() {
-    const socket = setupSocket();
+    // const socket = setupSocket();
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/service-worker.js')
@@ -117,12 +114,11 @@ class MyApp extends App<{apollo: ApolloClient<unknown>}> {
     });
   }
   public render() {
-    const { Component, pageProps, router, apollo } = this.props;
+    const { Component, pageProps, router } = this.props;
     const { picture } = router.query!;
     const isError = pageProps.error || pageProps.statusCode && pageProps.statusCode !== 200;
     return (
       <Container>
-      <ApolloProvider client={apollo}>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
             <BodyLayout header={!isError}>
@@ -136,10 +132,9 @@ class MyApp extends App<{apollo: ApolloClient<unknown>}> {
             </BodyLayout>
           </ThemeWrapper>
         </Provider>
-        </ApolloProvider>
       </Container>
     );
   }
 }
 
-export default withData(MyApp);
+export default MyApp;

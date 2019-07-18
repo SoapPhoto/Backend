@@ -4,6 +4,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RenderModule } from 'nest-next';
+import { RedisModule } from 'nestjs-redis';
 
 import { AuthModule } from '@server/auth/auth.module';
 import { OauthModule } from '@server/oauth/oauth.module';
@@ -33,6 +34,13 @@ import { UserEntity } from './user/user.entity';
 
 @Module({
   imports: [
+    RedisModule.register({
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      db: Number(process.env.REDIS_DB),
+      password: process.env.REDIS_PASSWORD,
+      keyPrefix: process.env.REDIS_PRIFIX,
+    }),
     TypeOrmModule.forRoot({
       logging: true,
       keepConnectionAlive: true,
