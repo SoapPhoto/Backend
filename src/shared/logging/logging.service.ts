@@ -4,6 +4,25 @@ import chalk from 'chalk';
 import fs from 'fs';
 import moment from 'moment';
 import winston from 'winston';
+import winstonDailyRotate from 'winston-daily-rotate-file';
+
+const LOGGER_COMMON_CONFIG = {
+  timestamp: moment().format('YYYY-MM-DD HH:mm:ss:SSS'),
+  prepend: true,
+  datePattern:'yyyy-MM-dd.',
+  maxsize: 1024 * 1024 * 10,
+  colorize: false,
+  json: false,
+  handleExceptions: true,
+};
+
+const LOGGER_COMMON_FORMAT = winston.format.combine(
+  winston.format.timestamp({
+    format: 'YYYY-MM-DD HH:mm:ss',
+  }),
+  winston.format.splat(),
+  winston.format.json(),
+);
 
 @Injectable()
 export class LoggingService implements LoggerService {
@@ -11,31 +30,23 @@ export class LoggingService implements LoggerService {
 
   private readonly logger = winston.createLogger({
     transports: [
-      new winston.transports.File({
+      new winstonDailyRotate({
         level: 'error',
-        filename: `${this.logDir}/error.log`,
-        handleExceptions: false,
-        maxsize: 1024 * 1024 * 10 * 5,
-        maxFiles: 5,
-        format: winston.format.combine(
-          winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss',
-          }),
-          winston.format.splat(),
-          winston.format.json(),
-        ),
+        filename: `${this.logDir}/error.log.txt`,
+        options: LOGGER_COMMON_CONFIG,
+        format: LOGGER_COMMON_FORMAT,
       }),
-      new winston.transports.File({
-        filename: `${this.logDir}/all.log`,
-        maxsize: 1024 * 1024 * 10,
-        maxFiles: 5,
-        format: winston.format.combine(
-          winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss',
-          }),
-          winston.format.splat(),
-          winston.format.json(),
-        ),
+      new winstonDailyRotate({
+        level: 'warn',
+        filename: `${this.logDir}/warn.log.txt`,
+        options: LOGGER_COMMON_CONFIG,
+        format: LOGGER_COMMON_FORMAT,
+      }),
+      new winstonDailyRotate({
+        level: 'info',
+        filename: `${this.logDir}/normal.log.txt`,
+        options: LOGGER_COMMON_CONFIG,
+        format: LOGGER_COMMON_FORMAT,
       }),
       new winston.transports.Console({
         level: 'debug',
@@ -65,9 +76,6 @@ export class LoggingService implements LoggerService {
           }),
         ),
       }),
-    ],
-    exceptionHandlers: [
-      new winston.transports.File({ filename: `${this.logDir}/exceptions.log` }),
     ],
     exitOnError: false,
   });
