@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserModule } from '@server/user/user.module';
@@ -8,7 +8,7 @@ import { AccessTokenService } from './access-token.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([AccessTokenEntity]),
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   providers: [AccessTokenService],
   exports: [AccessTokenService],

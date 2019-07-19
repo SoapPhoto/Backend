@@ -15,7 +15,7 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
 @Module({
   imports: [
     TypeOrmModule.forFeature([PictureEntity]),
-    NotificationModule,
+    forwardRef(() => NotificationModule),
     forwardRef(() => PictureUserActivityModule),
     forwardRef(() => CommentModule),
     forwardRef(() => TagModule),

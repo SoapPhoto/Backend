@@ -20,7 +20,9 @@ import { GraphQLError } from 'graphql';
 import { CollectionEntity } from './collection/collection.entity';
 import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
 import { CommentEntity } from './comment/comment.entity';
+import { AuthGuard } from './common/guard/auth.guard';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
+import { EventsModule } from './events/events.module';
 import { NotificationEntity } from './notification/notification.entity';
 import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
 import { AccessTokenEntity } from './oauth/access-token/access-token.entity';
@@ -96,7 +98,7 @@ import { UserEntity } from './user/user.entity';
     ApiModule,
     EmailModule,
     QiniuModule,
-    // EventsModule,
+    EventsModule,
   ],
   providers: [
     {

@@ -19,7 +19,6 @@ import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
-import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Maybe } from '@typings/index';

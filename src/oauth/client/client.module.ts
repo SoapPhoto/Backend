@@ -1,10 +1,10 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { ClientController } from './client.controller';
 import { ClientEntity } from './client.entity';
 import { ClientService } from './client.service';
-import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 
 @Module({
   imports: [

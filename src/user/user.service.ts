@@ -11,6 +11,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { BadRequestError } from '@server/common/enum/message';
 import { validator } from '@server/common/utils/validator';
+import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';

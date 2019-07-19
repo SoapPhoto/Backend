@@ -1,25 +1,71 @@
+import { Server, Socket } from 'socket.io';
+
+import { UseGuards } from '@nestjs/common';
 import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Client, Server } from 'socket.io';
+import { Roles } from '@server/common/decorator/roles.decorator';
+import { AuthGuard } from '@server/common/guard/auth.guard';
+import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
+import { LoggingService } from '@server/shared/logging/logging.service';
+import { RedisService } from 'nestjs-redis';
 
-@WebSocketGateway(1080)
-export class EventsGateway {
+interface IUserClientData {
+  clientId: string;
+}
+
+@UseGuards(AuthGuard)
+@WebSocketGateway()
+export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   public server!: Server;
 
-  @SubscribeMessage('events')
-  public findAll(client: Client, data: any): Observable<WsResponse<number>> {
-    return from([1, 2, 3]).pipe(map(item => ({ event: 'events', data: item })));
+  public data: Record<string, IUserClientData> = {};
+
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly logger: LoggingService,
+  ) {}
+
+  public handleConnection(client: Socket) {
+    this.logger.log(`Client connected: ${client.id}`, 'NotificationGateway');
   }
 
-  @SubscribeMessage('identity')
-  public async identity(client: Client, data: number): Promise<number> {
-    return data;
+  public afterInit(server: Server) {
+    this.logger.log('Init', 'NotificationGateway');
+  }
+
+  public handleDisconnect(client: Socket) {
+    this.logger.log(`Client disconnected: ${client.id}`, 'NotificationGateway');
+  }
+
+  @Roles('user')
+  @SubscribeMessage('CONNECT_USER')
+  public async connectUser(client: Socket, data: any) {
+    return {
+      event: 'CONNECT_USER',
+      message: 'ok',
+    };
+  }
+
+  @SubscribeMessage('notify')
+  public notify(client: Socket, data: any) {
+    return {
+      event: 'notify',
+      data: {
+        client,
+        hello: 'world',
+      },
+    };
+  }
+
+  public emitMessage<T>(event: string, data: T) {
+    console.log(this.data);
+    this.server.emit(event, data);
   }
 }
