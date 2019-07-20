@@ -59,10 +59,18 @@ export class ViewsController {
     return {};
   }
 
-  @Get('setting/:type(profile|basic)')
+  @Get('setting/:type(profile)')
   @Render('setting')
   public async setting() {
     return {};
+  }
+
+  @Get('setting/*')
+  @Render('setting')
+  public async settingRedirect(
+    @Res() res: Response,
+  ) {
+    res.redirect('/setting/profile');
   }
 
   @Get('setting')

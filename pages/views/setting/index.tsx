@@ -21,12 +21,12 @@ const menu = [
     path: '/setting/profile',
     component: dynamic(() => import('./User')),
   },
-  {
-    value: 'basic',
-    name: '基本设置',
-    path: '/setting/basic',
-    component: dynamic(() => import('./Basic')),
-  },
+  // {
+  //   value: 'basic',
+  //   name: '基本设置',
+  //   path: '/setting/basic',
+  //   component: dynamic(() => import('./Basic')),
+  // },
 ];
 class Setting extends React.Component<IProps> {
   public static async getInitialProps(ctx: CustomNextContext) {
