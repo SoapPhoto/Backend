@@ -9,7 +9,6 @@ const loadingCss = ({ loading }: {loading: boolean}) => loading ?
 export const StyleButton = styled.button<{loading: boolean}>`
   position: relative;
   display: inline-block;
-  height: ${rem('34px')};
   line-height: ${rem('34px')};
   font-weight: 400;
   border: 1px solid transparent;

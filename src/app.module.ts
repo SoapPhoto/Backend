@@ -3,6 +3,8 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Request } from 'express';
+import { GraphQLError } from 'graphql';
 import { RenderModule } from 'nest-next';
 import { RedisModule } from 'nestjs-redis';
 
@@ -15,12 +17,9 @@ import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
 import { ViewsModule } from './views/views.module';
 
-import { Request } from 'express';
-import { GraphQLError } from 'graphql';
 import { CollectionEntity } from './collection/collection.entity';
 import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
 import { CommentEntity } from './comment/comment.entity';
-import { AuthGuard } from './common/guard/auth.guard';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { EventsModule } from './events/events.module';
 import { NotificationEntity } from './notification/notification.entity';

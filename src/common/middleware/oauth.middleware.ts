@@ -16,7 +16,6 @@ export class OauthMiddleware implements NestMiddleware {
     private readonly oauthServerService: OauthServerService,
   ) {}
   public async use(req: Request, res: Response, next: () => void) {
-    console.log(req);
     const isReq = /text\/html|application\/json/g.test(req.headers.accept || '');
     if (!isReq) {
       next();

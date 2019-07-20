@@ -10,6 +10,7 @@ export class PictureScreenStore extends BaseStore {
   @observable public info!: PictureEntity;
   @observable public comment: CommentEntity[] = [];
   @observable public id!: number;
+  public cacheData: Record<string, PictureEntity> = {};
 
   @action public setInfo = (data: PictureEntity) => {
     this.id = data.id;
@@ -25,6 +26,7 @@ export class PictureScreenStore extends BaseStore {
       };
     }
     this.setInfo(data);
+    this.setCache(this.id, this.info);
     return undefined;
   }
   @action public getComment = async () => {
@@ -49,4 +51,17 @@ export class PictureScreenStore extends BaseStore {
       console.error(err);
     }
   }
+
+  public setCache = (id: string | number, data: PictureEntity) => {
+    this.cacheData[id] = data;
+  }
+
+  public getCache = (type: string = '') => {
+    if (this.cacheData[type]) {
+      this.setInfo(this.cacheData[type]);
+    }
+  }
+
+  public isCache = (type: number | string = '') => this.cacheData[type] !== undefined;
+
 }

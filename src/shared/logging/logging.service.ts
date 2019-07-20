@@ -11,6 +11,7 @@ const LOGGER_COMMON_CONFIG = {
   prepend: true,
   datePattern:'yyyy-MM-dd.',
   maxsize: 1024 * 1024 * 10,
+  maxFiles: '31d',
   colorize: false,
   json: false,
   handleExceptions: true,
@@ -32,19 +33,22 @@ export class LoggingService implements LoggerService {
     transports: [
       new winstonDailyRotate({
         level: 'error',
-        filename: `${this.logDir}/error.log.txt`,
+        filename: '%DATE%.log',
+        dirname: `${this.logDir}/error/`,
         options: LOGGER_COMMON_CONFIG,
         format: LOGGER_COMMON_FORMAT,
       }),
       new winstonDailyRotate({
         level: 'warn',
-        filename: `${this.logDir}/warn.log.txt`,
+        filename: '%DATE%.log',
+        dirname: `${this.logDir}/warn/`,
         options: LOGGER_COMMON_CONFIG,
         format: LOGGER_COMMON_FORMAT,
       }),
       new winstonDailyRotate({
         level: 'info',
-        filename: `${this.logDir}/normal.log.txt`,
+        filename: '%DATE%.log',
+        dirname: `${this.logDir}/normal/`,
         options: LOGGER_COMMON_CONFIG,
         format: LOGGER_COMMON_FORMAT,
       }),

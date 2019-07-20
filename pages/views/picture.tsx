@@ -135,10 +135,20 @@ const Picture: CustomNextPage<IProps, any> = ({
 /// TODO: mobx-react@6 @inject 不执行 getInitialProps 的暂时解决方案
 Picture.getInitialProps = async ({ mobxStore, route, req }: CustomNextContext) => {
   const { params } = route;
+  const isPicture = (
+    mobxStore.screen.pictureStore.id &&
+    mobxStore.screen.pictureStore.id === Number(params.id || 0)
+  );
+  const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
+  if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
+    mobxStore.screen.pictureStore.getCache();
+    return {};
+  }
   return mobxStore.screen.pictureStore.getPictureInfo(
     params.id!,
     req ? req.headers : undefined,
   );
+
 };
 
 export default withError<IProps>(

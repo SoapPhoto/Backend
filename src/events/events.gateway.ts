@@ -11,7 +11,6 @@ import {
 } from '@nestjs/websockets';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
-import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { RedisService } from 'nestjs-redis';
 
@@ -65,7 +64,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   public emitMessage<T>(event: string, data: T) {
-    console.log(this.data);
     this.server.emit(event, data);
   }
 }
