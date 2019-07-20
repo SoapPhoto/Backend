@@ -12,7 +12,7 @@ export class CollectionPictureEntity extends BaseEntity {
   /* 收藏 */
   @ManyToOne(() => CollectionEntity, { onDelete: 'CASCADE', cascade: true })
   @JoinTable()
-  public collection!: PictureEntity[];
+  public collection!: CollectionEntity;
 
   /* 图片 */
   @ManyToOne(() => PictureEntity, { onDelete: 'CASCADE', cascade: true })

@@ -17,3 +17,10 @@ export class CreateCollectionDot implements Partial<CollectionEntity> {
   @Expose()
   public isPrivate!: boolean;
 }
+
+@Exclude()
+export class AddPictureCollectionDot {
+  @IsString()
+  @Expose()
+  public pictureId!: string;
+}

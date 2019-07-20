@@ -1,6 +1,6 @@
 import { BadRequestException, forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository } from 'typeorm';
+import { getManager, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { validator } from '@server/common/utils/validator';
@@ -162,6 +162,32 @@ export class PictureService {
       q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
     }
     return q;
+  }
+
+  // 查询
+  public getRawOne = async (id: string | number) => {
+    return this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.id=:id', { id })
+      .getOne();
+  }
+
+  public getQueryInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>) => {
+    q.leftJoinAndSelect('picture.user', 'user')
+    .loadRelationCountAndMap(
+      'picture.likes', 'picture.activitys', 'activity',
+      qb => qb.andWhere('activity.like=:like', { like: true }),
+    );
+    this.userService.selectInfo(q);
+    if (user) {
+      q
+        .loadRelationCountAndMap(
+          'picture.isLike', 'picture.activitys', 'activity',
+          qb => qb.andWhere(
+            'activity.userId=:userId AND activity.like=:like',
+            { userId: user.id, like: true },
+          ),
+        );
+    }
   }
 
   private getOne = async (id: string | number) => {

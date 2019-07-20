@@ -2,13 +2,16 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
+import { PictureModule } from '@server/picture/picture.module';
 import { CollectionController } from './collection.controller';
 import { CollectionEntity } from './collection.entity';
 import { CollectionService } from './collection.service';
+import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CollectionEntity]),
+    PictureModule,
+    TypeOrmModule.forFeature([CollectionEntity, CollectionPictureEntity]),
   ],
   providers: [CollectionService],
   controllers: [CollectionController],
