@@ -46,7 +46,7 @@ import { UserEntity } from './user/user.entity';
       logging: true,
       keepConnectionAlive: true,
       type: 'mysql',
-      port: 3306,
+      port: Number(process.env.DATABASE_PORT),
       host: process.env.DATABASE_HOST,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,

@@ -57,13 +57,30 @@ export class CollectionService {
   }
   // no
   public async getCollectionPictureList(id: string | number, user: Maybe<UserEntity>) {
-    const q = await this.collectionPictureEntity.createQueryBuilder('cp')
-      .select('COUNT(DISTINCT `pictureId`)', '___pictureId')
-      .groupBy()
-      .leftJoinAndSelect('cp.picture', 'picture');
-    this.pictureService.getQueryInfo<CollectionPictureEntity>(q, user);
-    const data = await q.getMany();
-    return data;
+    const countQuery = this.collectionPictureEntity.createQueryBuilder('cp')
+    // .groupBy()
+      .where('cp.collectionId=:id', { id })
+      .select('COUNT(DISTINCT pictureId)', 'count');
+      // .leftJoinAndSelect('cp.picture', 'picture');
+      // .orderBy({ createTime: 'ASC' });
+    // this.pictureService.getQueryInfo<CollectionPictureEntity>(q, user);
+    const dataQuery = this.collectionPictureEntity.createQueryBuilder('cp')
+      .where('cp.collectionId=:id', { id })
+      .select('DISTINCT pictureId')
+      .addSelect('pictureId');
+    //   .leftJoinAndSelect('cp.picture', 'picture');
+    // this.pictureService.getQueryInfo<CollectionPictureEntity>(dataQuery, user);
+    const [count, list] = await Promise.all([
+      countQuery.getRawOne(),
+      dataQuery.getRawMany(),
+    ]);
+    console.log(count, list);
+    if (list.length === 0) {
+      return;
+    }
+    const q = this.pictureService.selectList(user);
+    q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
+    return q.getMany();
   }
   /**
    * 是否已收藏
