@@ -1,13 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { listRequest } from '@server/common/utils/request';
+import { PictureEntity } from '@server/picture/picture.entity';
 import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
+import { UserService } from '@server/user/user.service';
 import { Maybe } from '@typings/index';
 import { plainToClass } from 'class-transformer';
 import { CollectionEntity } from './collection.entity';
-import { AddPictureCollectionDot, CreateCollectionDot } from './dto/collection.dto';
+import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Injectable()
@@ -18,6 +21,7 @@ export class CollectionService {
     @InjectRepository(CollectionPictureEntity)
     private collectionPictureEntity: Repository<CollectionPictureEntity>,
     private pictureService: PictureService,
+    private userService: UserService,
   ) {}
   public async create(body: CreateCollectionDot, user: UserEntity) {
     const data = await this.collectionEntity.save(
@@ -55,32 +59,67 @@ export class CollectionService {
       message: 'ok',
     };
   }
-  // no
-  public async getCollectionPictureList(id: string | number, user: Maybe<UserEntity>) {
+
+  public async getCollectionDetail(id: string | number, user: Maybe<UserEntity>) {
+    const q = this.collectionEntity.createQueryBuilder('collection')
+      .where('collection.id=:id', { id })
+      .leftJoinAndSelect('collection.user', 'user');
+    this.userService.selectInfo(q);
+    const collection = await q.getOne();
+    const isMe = user && user.id === user.id;
+    if (!collection) {
+      throw new NotFoundException();
+    }
+    // 检测是否有权限
+    if (collection.isPrivate && !isMe) {
+      throw new ForbiddenException();
+    }
+    return plainToClass(CollectionEntity, collection, {
+      groups: isMe ? ['me'] : undefined,
+    });
+  }
+
+  public async getCollectionPictureList(
+    id: string | number,
+    query: GetCollectionPictureListDto,
+    user: Maybe<UserEntity>,
+  ) {
+    const collection = await this.collectionEntity.findOne(id);
+    const isMe = user && user.id === user.id;
+    if (!collection) {
+      throw new NotFoundException();
+    }
+    // 检测是否有权限
+    if (collection.isPrivate && !isMe) {
+      throw new ForbiddenException();
+    }
     const countQuery = this.collectionPictureEntity.createQueryBuilder('cp')
-    // .groupBy()
       .where('cp.collectionId=:id', { id })
-      .select('COUNT(DISTINCT pictureId)', 'count');
-      // .leftJoinAndSelect('cp.picture', 'picture');
-      // .orderBy({ createTime: 'ASC' });
-    // this.pictureService.getQueryInfo<CollectionPictureEntity>(q, user);
+      .select('COUNT(DISTINCT pictureId)', 'count')
+      .leftJoin('cp.picture', 'picture');
+    if (!isMe) {
+      countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
+    }
     const dataQuery = this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .select('DISTINCT pictureId')
-      .addSelect('pictureId');
-    //   .leftJoinAndSelect('cp.picture', 'picture');
-    // this.pictureService.getQueryInfo<CollectionPictureEntity>(dataQuery, user);
+      .addSelect('pictureId')
+      .leftJoin('cp.picture', 'picture')
+      .skip((query.page - 1) * query.pageSize).take(query.pageSize);
+    if (!isMe) {
+      dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
+    }
     const [count, list] = await Promise.all([
       countQuery.getRawOne(),
       dataQuery.getRawMany(),
     ]);
-    console.log(count, list);
     if (list.length === 0) {
-      return;
+      return listRequest(query, [], count.count as number);
     }
     const q = this.pictureService.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
-    return q.getMany();
+    const pictureList = await q.getMany();
+    return listRequest(query, plainToClass(PictureEntity, pictureList), count.count as number);
   }
   /**
    * 是否已收藏

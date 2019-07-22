@@ -92,13 +92,7 @@ export class PictureService {
   public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const [count, ids] = await this.activityService.getLikeList(idOrName, query);
     if (ids.length === 0) {
-      return {
-        count,
-        data: [],
-        page: query.page,
-        pageSize: query.pageSize,
-        timestamp: new Date().getTime(),
-      };
+      return listRequest(query, [], count as number);
     }
     const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });

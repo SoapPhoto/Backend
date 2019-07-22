@@ -1,6 +1,11 @@
+import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsString } from 'class-validator';
 import { CollectionEntity } from '../collection.entity';
+
+export class GetCollectionPictureListDto extends PaginationDto {
+
+}
 
 @Exclude()
 export class CreateCollectionDot implements Partial<CollectionEntity> {

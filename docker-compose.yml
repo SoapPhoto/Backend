@@ -10,11 +10,11 @@ services:
     volumes:
       - ./docker-data/mysql:/var/lib/mysql:rw
     ports:
-        - "33063:3306"
+      - "33061:3306"
   redis:
     image: redis
     restart: always
     volumes:
       - ./docker-data/redis:/data:rw
     ports:
-      - "6379:6379"
+      - "63791:6379"

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
@@ -7,7 +7,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/user/user.entity';
 import { Maybe } from '@typings/index';
 import { CollectionService } from './collection.service';
-import { AddPictureCollectionDot, CreateCollectionDot } from './dto/collection.dto';
+import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
 
 @Controller('api/collection')
 @UseGuards(AuthGuard)
@@ -36,11 +36,21 @@ export class CollectionController {
     return this.collectionService.addPicture(collectionId, body, user);
   }
 
+  @Get('/:collectionId')
+  public async collectionDetail(
+    @Param('collectionId') collectionId: string,
+    @Query() query: GetCollectionPictureListDto,
+    @User() user: Maybe<UserEntity>,
+  ) {
+    return this.collectionService.getCollectionDetail(collectionId, user);
+  }
+
   @Get('/:collectionId/picture')
   public async collectionPictureList(
     @Param('collectionId') collectionId: string,
+    @Query() query: GetCollectionPictureListDto,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.collectionService.getCollectionPictureList(collectionId, user);
+    return this.collectionService.getCollectionPictureList(collectionId, query, user);
   }
 }
