@@ -5,7 +5,7 @@ import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/user/user.entity';
-import { Maybe } from '@typings/index';
+import { Maybe } from '@typings/types';
 import { CollectionService } from './collection.service';
 import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
 

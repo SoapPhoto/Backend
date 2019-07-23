@@ -24,7 +24,7 @@ import {
   UploadBox,
   Wapper,
 } from '@lib/styles/views/upload';
-import { Maybe } from '@typings/index';
+import { Maybe } from '@typings/types';
 import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
 

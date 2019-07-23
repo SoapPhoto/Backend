@@ -4,6 +4,7 @@ import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
 import { getPicture, likePicture } from '@lib/services/picture';
+import { ID } from '@typings/types';
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
@@ -52,7 +53,7 @@ export class PictureScreenStore extends BaseStore {
     }
   }
 
-  public setCache = (id: string | number, data: PictureEntity) => {
+  public setCache = (id: ID, data: PictureEntity) => {
     this.cacheData[id] = data;
   }
 
@@ -62,6 +63,6 @@ export class PictureScreenStore extends BaseStore {
     }
   }
 
-  public isCache = (type: number | string = '') => this.cacheData[type] !== undefined;
+  public isCache = (type: string = '') => this.cacheData[type] !== undefined;
 
 }

@@ -4,7 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/user/user.entity';
-import { Maybe } from '@typings/index';
+import { Maybe } from '@typings/types';
 import { GetTagPictureListDto } from './dto/tag.dto';
 import { TagService } from './tag.service';
 

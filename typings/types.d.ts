@@ -4,6 +4,8 @@ export type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };
 
 export type MutablePartial<T> = { -readonly [P in keyof T]?: T[P] };
 
+export type ID = string | number;
+
 export interface IEXIF {
   meteringMode?: string;
   exposureMode?: string;

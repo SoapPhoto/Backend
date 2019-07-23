@@ -1,6 +1,6 @@
 import { PaginationList } from './global';
 
-import { MutableRequired } from '@typings/index';
+import { MutableRequired } from '@typings/types';
 
 export type TagEntity = import('@server/tag/tag.entity').TagEntity;
 

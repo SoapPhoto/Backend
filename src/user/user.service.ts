@@ -16,7 +16,7 @@ import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
-import { Maybe, MutablePartial, MutableRequired } from '@typings/index';
+import { Maybe, MutablePartial, MutableRequired } from '@typings/types';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';

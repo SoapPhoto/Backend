@@ -5,6 +5,8 @@ import { EntityManager, getManager, Repository } from 'typeorm';
 import { validator } from '@server/common/utils/validator';
 import { NotificationService } from '@server/notification/notification.service';
 import { UserEntity } from '@server/user/user.entity';
+import { ID } from '@typings/types';
+import Maybe from 'graphql/tsutils/Maybe';
 import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
@@ -17,7 +19,7 @@ export class PictureUserActivityService {
     private activityRepository: Repository<PictureUserActivityEntity>,
   ) {}
 
-  public getOne = async (pictureId: string | number, userId: string | number) => {
+  public getOne = async (pictureId: ID, userId: ID) => {
     return this.activityRepository.createQueryBuilder('activity')
       .where('activity.pictureId=:pictureId', { pictureId })
       .leftJoinAndSelect('activity.user', 'user')
@@ -85,8 +87,10 @@ export class PictureUserActivityService {
       .execute();
   }
 
-  public getLikeList = async (userIdOrName: string, query: GetPictureListDto) => {
+  public getLikeList = async (userIdOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const getQ = (isCount = false) => {
+      let isMe = false;
+      let type = '';
       const q = this.activityRepository.createQueryBuilder('activity')
         .select(
           ...(
@@ -97,9 +101,22 @@ export class PictureUserActivityService {
         )
         .where('activity.like=:like', { like: true });
       if (validator.isNumberString(userIdOrName)) {
-        q.andWhere('activity.userId=:id', { id: userIdOrName });
+        type = 'userId';
+        if (user && user.id === userIdOrName) isMe = true;
       } else {
-        q.andWhere('activity.userUsername=:id', { id: userIdOrName });
+        type = 'userUsername';
+        if (user && user.username === userIdOrName) isMe = true;
+      }
+      q.andWhere(`activity.${type}=:id`, { id: userIdOrName });
+      if (isMe) {
+        const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
+        q.leftJoin('activity.picture', 'picture')
+          .andWhere(`((picture.${type}=:id AND ${qO}) OR picture.isPrivate = 0)`, {
+            id: userIdOrName,
+          });
+      } else {
+        q.leftJoin('activity.picture', 'picture')
+          .andWhere('picture.isPrivate = 0');
       }
       if (!isCount) {
         q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
@@ -107,10 +124,10 @@ export class PictureUserActivityService {
       return q;
     };
     // 分页
-    const data = await Promise.all([
+    const [count, data] = await Promise.all([
       getQ(true).getRawOne(),
       getQ().getRawMany(),
     ]);
-    return [data[0].count, data[1].map(activity => activity.id as string)];
+    return [count.count, data.map(activity => activity.id as string)];
   }
 }

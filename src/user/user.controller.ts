@@ -21,7 +21,7 @@ import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { Maybe } from '@typings/index';
+import { Maybe } from '@typings/types';
 import { plainToClass } from 'class-transformer';
 import { UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';

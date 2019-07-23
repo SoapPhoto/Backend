@@ -7,7 +7,7 @@ import { PictureEntity } from '@server/picture/picture.entity';
 import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
-import { Maybe } from '@typings/index';
+import { ID, Maybe } from '@typings/types';
 import { plainToClass } from 'class-transformer';
 import { CollectionEntity } from './collection.entity';
 import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
@@ -60,19 +60,15 @@ export class CollectionService {
     };
   }
 
-  public async getCollectionDetail(id: string | number, user: Maybe<UserEntity>) {
+  public async getCollectionDetail(id: ID, user: Maybe<UserEntity>) {
     const q = this.collectionEntity.createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user');
     this.userService.selectInfo(q);
     const collection = await q.getOne();
     const isMe = user && user.id === user.id;
-    if (!collection) {
+    if (!collection || collection.isPrivate && !isMe) {
       throw new NotFoundException();
-    }
-    // 检测是否有权限
-    if (collection.isPrivate && !isMe) {
-      throw new ForbiddenException();
     }
     return plainToClass(CollectionEntity, collection, {
       groups: isMe ? ['me'] : undefined,
@@ -80,7 +76,7 @@ export class CollectionService {
   }
 
   public async getCollectionPictureList(
-    id: string | number,
+    id: ID,
     query: GetCollectionPictureListDto,
     user: Maybe<UserEntity>,
   ) {
@@ -126,7 +122,7 @@ export class CollectionService {
    *
    * @memberof CollectionService
    */
-  public async isCollected(id: string | number, pictureId: string | number) {
+  public async isCollected(id: ID, pictureId: ID) {
     const data = await this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.pictureId=:pictureId', { pictureId })
       .andWhere('cp.collectionId=:id', { id })
