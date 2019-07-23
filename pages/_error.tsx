@@ -74,7 +74,7 @@ class Error extends React.Component<IErrorProps> {
         <ThemeWrapper>
           <Wrapper>
             <Head>
-              <title>{getTitle(statusCode)}</title>
+              <title>{getTitle(String(statusCode))}</title>
             </Head>
             <Box>
               <CloudSnowIcon />
