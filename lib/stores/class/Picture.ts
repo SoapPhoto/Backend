@@ -1,7 +1,6 @@
 import { observable } from 'mobx';
 
 import { UserEntity } from '@lib/common/interfaces/user';
-import { IEXIF } from '@typings/types';
 
 export class PictureClass {
   public id!: number;

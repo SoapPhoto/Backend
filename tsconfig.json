@@ -30,6 +30,9 @@
       "dom"
     ],
     "paths": {
+      "*": [
+        "typings/*"
+      ],
       "@server/*": [
         "src/*"
       ],

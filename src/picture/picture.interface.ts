@@ -1,5 +1,3 @@
-import { IEXIF } from '@typings/types';
-
 export interface IImgInfo {
   exif: IEXIF;
   color: string;

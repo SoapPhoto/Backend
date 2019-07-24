@@ -1,12 +1,12 @@
-export type Maybe<T> = T | null;
+type Maybe<T> = T | null;
 
-export type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };
+type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };
 
-export type MutablePartial<T> = { -readonly [P in keyof T]?: T[P] };
+type MutablePartial<T> = { -readonly [P in keyof T]?: T[P] };
 
-export type ID = string | number;
+type ID = string | number;
 
-export interface IEXIF {
+interface IEXIF {
   meteringMode?: string;
   exposureMode?: string;
   exposureBias?: string;

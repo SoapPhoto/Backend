@@ -5,7 +5,7 @@ import { EntityManager, getManager, Repository } from 'typeorm';
 import { validator } from '@server/common/utils/validator';
 import { NotificationService } from '@server/notification/notification.service';
 import { UserEntity } from '@server/user/user.entity';
-import { ID } from '@typings/types';
+
 import Maybe from 'graphql/tsutils/Maybe';
 import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';

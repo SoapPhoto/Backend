@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
 
-import { IEXIF } from '@typings/types';
 import { changeToDu } from './gps';
 import { round } from './math';
 

@@ -4,7 +4,7 @@ import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
 import { getPicture, likePicture } from '@lib/services/picture';
-import { ID } from '@typings/types';
+
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {

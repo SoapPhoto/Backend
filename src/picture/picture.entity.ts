@@ -14,7 +14,6 @@ import { CommentEntity } from '@server/comment/comment.entity';
 import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/tag/tag.entity';
 import { UserEntity } from '@server/user/user.entity';
-import { IEXIF } from '@typings/types';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 
 @Entity('picture')

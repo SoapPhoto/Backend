@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { server } from '@lib/common/utils';
-import { Maybe } from '@typings/types';
 import { ToastComponent } from './Toast';
 
 class Toast {
