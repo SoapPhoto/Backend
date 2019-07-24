@@ -6,6 +6,8 @@ services:
     restart: always
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=soap
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./docker-data/mysql:/var/lib/mysql:rw

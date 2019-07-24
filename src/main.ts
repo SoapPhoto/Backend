@@ -14,8 +14,8 @@ import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
 
 async function bootstrap() {
-  const dev = process.env.NODE_ENV !== 'production';
-  // const dev = false;
+  // const dev = process.env.NODE_ENV !== 'production';
+  const dev = false;
   const app = Next({
     dev,
   });
