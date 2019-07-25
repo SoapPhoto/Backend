@@ -1,9 +1,10 @@
+/// <reference types="../typings/index" />
+
 // tslint:disable-next-line: no-var-requires
 require('dotenv').config();
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { WsAdapter } from '@nestjs/platform-ws';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { RenderModule, RenderService } from 'nest-next';

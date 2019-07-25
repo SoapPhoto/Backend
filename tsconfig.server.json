@@ -1,6 +1,7 @@
 {
   // "extends": "./tsconfig.json",
   "compilerOptions": {
+    "typeRoots" : ["./node_modules/@types", "./typings"],
     "target": "es6",
     "module": "commonjs",
     "emitDecoratorMetadata": true,
@@ -12,8 +13,8 @@
     ],
     "lib": [
       "es6",
-      // "es2015",
-      // "es2017"
+      "es2015",
+      "es2017"
     ],
     "paths": {
       "@server/*": [
@@ -24,12 +25,8 @@
       ],
       "@pages/*": [
         "pages/*"
-      ],
-      "@typings/*": [
-        "typings/*"
       ]
     },
-    "typeRoots" : ["./node_modules/@types", "./typings"],
     "moduleResolution": "node"
   },
   "include": ["src/**/*", "typings/**/*"],
