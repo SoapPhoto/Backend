@@ -7,7 +7,6 @@ import { PictureEntity } from '@server/picture/picture.entity';
 import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
-import { ID, Maybe } from '@typings/types';
 import { plainToClass } from 'class-transformer';
 import { CollectionEntity } from './collection.entity';
 import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';

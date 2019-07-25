@@ -1,7 +1,6 @@
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { ListRequest } from '@lib/common/interfaces/global';
 import { request } from '@lib/common/utils/request';
-import { ID } from '@typings/types';
 
 export const getPictureComment = async (id: ID) =>
   request.get<ListRequest<CommentEntity[]>>(`/api/picture/${id}/comments`);

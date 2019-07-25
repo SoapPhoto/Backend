@@ -25,7 +25,6 @@ import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { UserEntity } from '@server/user/user.entity';
-import { Maybe } from '@typings/types';
 import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 

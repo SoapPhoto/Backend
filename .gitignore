@@ -53,3 +53,5 @@ logs/
 build/
 
 uploads/
+
+docker-data/

@@ -1,10 +1,34 @@
 {
-  "extends": "./tsconfig.json",
+  // "extends": "./tsconfig.json",
   "compilerOptions": {
+    "typeRoots" : ["./node_modules/@types", "./typings"],
     "target": "es6",
     "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "es6",
+      "es2015",
+      "es2017"
+    ],
+    "paths": {
+      "@server/*": [
+        "src/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ]
+    },
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "typings/**/*"],
   "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*"]
 }

@@ -1,5 +1,5 @@
 {
-  // "extends": "./tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": ".next/production-server",
     "target": "es6",
@@ -17,6 +17,9 @@
       "es2017"
     ],
     "paths": {
+      "*": [
+        "typings/*"
+      ],
       "@server/*": [
         "src/*"
       ],
@@ -32,6 +35,6 @@
     },
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "typings/**/*"],
   "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*"]
 }
