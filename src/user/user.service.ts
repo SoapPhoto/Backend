@@ -9,9 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
-import { BadRequestError } from '@server/common/enum/message';
 import { validator } from '@server/common/utils/validator';
-import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { PictureService } from '@server/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
@@ -47,9 +45,11 @@ export class UserService {
   }
 
   public async signup(data: CreateUserDto, isEmail: boolean = true) {
-    const user = await this.userEntity.findOne({ email: data.email });
-    if (user) {
-      throw new BadRequestException(BadRequestError.EmailExist);
+    if (await this.userEntity.findOne({ username: data.username })) {
+      throw new BadRequestException('Username already exists');
+    }
+    if (await this.userEntity.findOne({ email: data.email })) {
+      throw new BadRequestException('Email already exists');
     }
     const info: MutablePartial<UserEntity> = {};
     if (isEmail) {
@@ -66,11 +66,11 @@ export class UserService {
         await this.emailService.sendSignupEmail(info.identifier!, info.verificationToken!, userInfo);
       } catch (err) {
         this.logger.error(err);
-        throw new BadRequestException('email failed to send');
+        throw new BadRequestException('Email failed to send');
       }
     }
     return {
-      message: 'email is send',
+      message: 'Email is send',
     };
   }
 
@@ -101,7 +101,7 @@ export class UserService {
         return undefined;
       }
       if (!user.verified) {
-        throw new UnauthorizedException('email is not activated');
+        throw new UnauthorizedException('Email is not activated');
       }
       return plainToClass(UserEntity, user);
     }
