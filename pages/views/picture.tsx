@@ -88,7 +88,7 @@ const Picture: CustomNextPage<IProps, any> = ({
         </UserHeaderInfo>
       </UserHeader>
       <PictureBox>
-        <PictureImage size="full" detail={info} lazyload={false} />
+        <PictureImage size="full" detail={info} lazyload={true} zooming />
       </PictureBox>
       <Content>
         <Title>{info.title}</Title>

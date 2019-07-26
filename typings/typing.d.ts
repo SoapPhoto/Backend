@@ -7,6 +7,8 @@ declare module 'react-simple-img';
 
 declare module 'react-keydown';
 
+declare module 'zooming';
+
 declare module "*.json" {
   const value: any;
   export default value;

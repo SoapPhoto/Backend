@@ -66,18 +66,20 @@ export const ItemWapper = styled.div`
 export const ImageBox = styled.div<{height: number; background: string}>`
   position: relative;
   display: block;
+  pointer-events: none;
   padding-bottom: ${props => props.height}%;
   background-color: ${props => props.background};
   width: 100%;
 `;
 
 export const ItemImage = styled.img`
+  pointer-events: auto;
   position: absolute;
   top: 0;
   user-select: none;
-  pointer-events: none;
   display: block;
   width: 100%;
+  opacity: 0;
   transition: .2s opacity ease-in;
 `;
 

@@ -108,7 +108,8 @@
     "webpack": "^4.37.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.10.0",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "zooming": "^2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
