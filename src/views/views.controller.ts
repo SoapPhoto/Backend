@@ -53,6 +53,12 @@ export class ViewsController {
     return {};
   }
 
+  @Get('signup')
+  @Render('auth/signup')
+  public async signup() {
+    return {};
+  }
+
   @Get('upload')
   @Render('upload')
   public async upload() {

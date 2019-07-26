@@ -42,7 +42,6 @@ export function setBodyCss(css: Partial<CSSStyleDeclaration>) {
 }
 
 export const server = typeof window === 'undefined';
-
 export function getScrollTop() {
   let scrollTop = 0;
   let bodyScrollTop = 0;

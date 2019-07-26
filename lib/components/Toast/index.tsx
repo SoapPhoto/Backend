@@ -8,7 +8,7 @@ import { ToastComponent } from './Toast';
 class Toast {
   public ref!: ToastComponent;
   constructor() {
-    if (!server) {
+    if (!typeof window === undefined) {
       const div = document.createElement('div');
       document.body.appendChild(div);
       const refFunc = (ref: Maybe<ToastComponent>) => {
