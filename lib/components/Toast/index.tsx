@@ -2,13 +2,12 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 
-import { server } from '@lib/common/utils';
 import { ToastComponent } from './Toast';
 
 class Toast {
   public ref!: ToastComponent;
   constructor() {
-    if (!typeof window === undefined) {
+    if (!(typeof window === 'undefined')) {
       const div = document.createElement('div');
       document.body.appendChild(div);
       const refFunc = (ref: Maybe<ToastComponent>) => {

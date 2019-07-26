@@ -1,12 +1,12 @@
 import { rem } from 'polished';
 import styled, { css } from 'styled-components';
 
-const loadingCss = ({ loading }: {loading: boolean}) => loading ?
+const loadingCss = ({ loading }: {loading: number}) => loading ?
   css`
     pointer-events: none;
   ` : '';
 
-export const StyleButton = styled.button<{loading: boolean}>`
+export const StyleButton = styled.button<{loading: number}>`
   position: relative;
   display: inline-block;
   line-height: ${rem('34px')};

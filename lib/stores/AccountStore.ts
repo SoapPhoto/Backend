@@ -1,6 +1,6 @@
 import { action, computed, observable } from 'mobx';
 
-import { UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
+import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
 
 export class AccountStore {
@@ -66,5 +66,8 @@ export class AccountStore {
   public logout = async () => {
     await request.post('auth/logout');
     window.location.href = '/';
+  }
+  public signup = async (value: CreateUserDto) => {
+    await request.post('auth/signup', value);
   }
 }

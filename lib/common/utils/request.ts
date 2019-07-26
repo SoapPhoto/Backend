@@ -1,7 +1,6 @@
 import Toast from '@lib/components/Toast';
 import { store } from '@lib/stores/init';
 import axios, { AxiosResponse } from 'axios';
-import { server } from '.';
 // import { setupCache } from 'axios-cache-adapter';
 
 // const cache = setupCache({
@@ -22,7 +21,7 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (response: AxiosResponse<any>) => {
     if (response.status >= 400) {
-      if (!server) {
+      if (!!window) {
         let message;
         if (response.data && response.data.message) {
           message = store.i18nStore.__(response.data.message);

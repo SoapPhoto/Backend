@@ -5,8 +5,8 @@ import { withRouter } from 'next/router';
 import React from 'react';
 import { Emojione } from 'react-emoji-render';
 
-import { LoginSchema } from '@lib/common/dto/auth';
-import { getTitle, parsePath } from '@lib/common/utils';
+import { SignUpSchema } from '@lib/common/dto/auth';
+import { getTitle, parsePath, server } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { Button } from '@lib/components/Button';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
@@ -29,13 +29,13 @@ const initForm = {
 const SignUp = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
-    const { login } = accountStore;
+    const { signup } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const handleOk = async (value: typeof initForm, setSubmitting: (data: any) => void) => {
       setConfirmLoading(true);
       setSubmitting(false);
       try {
-        // await login(value.username, value.password);
+        await signup(value);
         setSubmitting(true);
         setTimeout(() => {
           if (query.redirectUrl) {
@@ -44,10 +44,10 @@ const SignUp = withRouter<IProps>(
             Router.replaceRoute('/');
           }
         }, 400);
-        Toast.success('登录成功！');
+        Toast.success('注册成功！');
       } catch (error) {
+        console.error(error);
         setSubmitting(false);
-        // Toast.error('登录失败');
       } finally {
         setConfirmLoading(false);
       }
@@ -68,7 +68,7 @@ const SignUp = withRouter<IProps>(
           onSubmit={(values, { setSubmitting }) => {
             handleOk(values, setSubmitting);
           }}
-          validationSchema={LoginSchema}
+          validationSchema={SignUpSchema}
         >
           {({
             handleSubmit,

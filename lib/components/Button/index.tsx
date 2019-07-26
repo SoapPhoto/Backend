@@ -22,7 +22,7 @@ export const Button: Component = ({
   return (
     <StyleButton
       {...restProps}
-      loading={loading}
+      loading={loading ? 1 : 0}
     >
       <>
         {
