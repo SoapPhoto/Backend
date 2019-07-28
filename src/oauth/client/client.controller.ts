@@ -4,6 +4,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
+import { Role } from '@server/user/role.enum';
 import { UserEntity } from '@server/user/user.entity';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/client.dto';
@@ -18,7 +19,7 @@ export class ClientController {
   ) {}
 
   @Post('add')
-  @Roles('user')
+  @Roles(Role.USER)
   public async addClient(
     @User() user: UserEntity,
     @Query() param: CreateClientDto,

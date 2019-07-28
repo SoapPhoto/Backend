@@ -9,6 +9,7 @@ import { CollectionEntity } from '@server/collection/collection.entity';
 import { CommentEntity } from '@server/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/picture/user-activity/user-activity.entity';
+import { Role, RoleValues } from './role.enum';
 
 type SignupType = 'email' | 'oauth';
 
@@ -27,6 +28,11 @@ export class UserEntity extends BaseEntity {
     length: 15,
   })
   public readonly username!: string;
+
+  /** 用户类型 */
+  @Exclude()
+  @Column({ type: 'enum', enum: RoleValues, default: `${Role.USER}` })
+  public role!: Role;
 
   /** 显示的名称 */
   @Column({
@@ -79,13 +85,6 @@ export class UserEntity extends BaseEntity {
   @Column()
   @Expose({ groups: ['admin'] })
   public readonly salt!: string;
-
-  /** 用户类型 */
-  @Exclude()
-  @Column({
-    default: 'user',
-  })
-  public readonly role!: string;
 
   /** 用户头像 */
   @Transform(transformAvatar)

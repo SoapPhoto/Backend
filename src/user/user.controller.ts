@@ -23,6 +23,7 @@ import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { plainToClass } from 'class-transformer';
 import { UpdateProfileSettingDto } from './dto/user.dto';
+import { Role } from './role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -36,7 +37,7 @@ export class UserController {
   ) {}
 
   @Get('whoami')
-  @Roles('user')
+  @Roles(Role.USER)
   public async getMyInfo(
     @User() user: UserEntity,
   ) {
@@ -62,7 +63,7 @@ export class UserController {
   }
 
   @Post(':name/setting/profile')
-  @Roles('user')
+  @Roles(Role.USER)
   @UseInterceptors(photoUpload('avatar'))
   public async updateUserSetting(
     @Param('name') username: string,

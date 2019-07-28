@@ -4,6 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
+import { Role } from './role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -15,7 +16,7 @@ export class UserResolver {
   ) {}
 
   @Query()
-  @Roles('user')
+  @Roles(Role.USER)
   public whoami(
     @Context('user') user: UserEntity,
   ) {

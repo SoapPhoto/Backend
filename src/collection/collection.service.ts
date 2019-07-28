@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -63,6 +63,9 @@ export class CollectionService {
     const q = this.collectionEntity.createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user');
+      // .innerJoin('collection.info', 'info')
+      // .innerJoin('info.picture', 'picture');
+
     this.userService.selectInfo(q);
     const collection = await q.getOne();
     const isMe = user && user.id === user.id;

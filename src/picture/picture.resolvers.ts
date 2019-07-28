@@ -3,6 +3,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
+import { Role } from '@server/user/role.enum';
 import { UserEntity } from '@server/user/user.entity';
 import { GetPictureListDto, GetUserPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
@@ -39,7 +40,7 @@ export class PictureResolver {
   }
 
   @Mutation()
-  @Roles('user')
+  @Roles(Role.USER)
   public async likePicture(
     @Context('user') user: UserEntity,
     @Args('id') id: string,

@@ -13,6 +13,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { RedisService } from 'nestjs-redis';
+import { Role } from '@server/user/role.enum';
 
 interface IUserClientData {
   clientId: string;
@@ -43,7 +44,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     this.logger.log(`Client disconnected: ${client.id}`, 'NotificationGateway');
   }
 
-  @Roles('user')
+  @Roles(Role.USER)
   @SubscribeMessage('CONNECT_USER')
   public async connectUser(client: Socket, data: any) {
     return {

@@ -4,6 +4,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
+import { Role } from '@server/user/role.enum';
 import { UserEntity } from '@server/user/user.entity';
 import { CollectionService } from './collection.service';
 import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
@@ -17,7 +18,7 @@ export class CollectionController {
   ) {}
 
   @Post('')
-  @Roles('user')
+  @Roles(Role.USER)
   public async createCollection(
     @Body() body: CreateCollectionDot,
     @User() user: UserEntity,
@@ -26,7 +27,7 @@ export class CollectionController {
   }
 
   @Post('/:collectionId')
-  @Roles('user')
+  @Roles(Role.USER)
   public async addPictureCollection(
     @Body() body: AddPictureCollectionDot,
     @Param('collectionId') collectionId: string,

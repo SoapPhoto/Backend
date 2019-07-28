@@ -24,6 +24,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
+import { Role } from '@server/user/role.enum';
 import { UserEntity } from '@server/user/user.entity';
 import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';
@@ -39,7 +40,7 @@ export class PictureController {
   ) {}
 
   @Post('upload')
-  @Roles('user')
+  @Roles(Role.USER)
   @UseInterceptors(photoUpload('photo'))
   public async upload(
     @UploadedFile() file: File,
@@ -69,7 +70,7 @@ export class PictureController {
   }
 
   @Delete(':id')
-  @Roles('user')
+  @Roles(Role.USER)
   public async deletePicture (
     @Param('id') id: number,
     @User() user: UserEntity,
@@ -94,7 +95,7 @@ export class PictureController {
   }
 
   @Put('like/:id([0-9]+)')
-  @Roles('user')
+  @Roles(Role.USER)
   public async updatePictureActivity(
     @Param('id') id: string,
     @User() user: UserEntity,
@@ -112,7 +113,7 @@ export class PictureController {
   }
 
   @Post(':id([0-9]+)/comment')
-  @Roles('user')
+  @Roles(Role.USER)
   public async createPictureComment(
     @Body() data: CreatePictureCommentDot,
     @Param('id') id: string,
