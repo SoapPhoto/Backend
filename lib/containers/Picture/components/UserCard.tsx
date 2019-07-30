@@ -39,18 +39,16 @@ const Bio = styled.p`
 export default ({
   user,
   ...restProps
-}: IProps) => {
-  return (
-    <div {...restProps}>
-      <Wrapper columns={1}>
-        <Header>
-          <Avatar src={user.avatar} size={48} />
-          <UserBox>
-            <UserName>{user.username}</UserName>
-            <Bio>{user.bio}</Bio>
-          </UserBox>
-        </Header>
-      </Wrapper>
-    </div>
-  );
-};
+}: IProps) => (
+  <div {...restProps}>
+    <Wrapper columns={1}>
+      <Header>
+        <Avatar src={user.avatar} size={48} />
+        <UserBox>
+          <UserName>{user.username}</UserName>
+          <Bio>{user.bio}</Bio>
+        </UserBox>
+      </Header>
+    </Wrapper>
+  </div>
+);

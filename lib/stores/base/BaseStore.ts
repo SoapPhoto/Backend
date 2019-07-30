@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 
 export class BaseStore {
   @observable public isInit = false;
+
   /**
    * 初始化替换状态
    *
@@ -18,5 +19,4 @@ export class BaseStore {
       mergeStore(this, store);
     }
   }
-
 }

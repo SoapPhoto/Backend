@@ -4,7 +4,7 @@ import { darken, lighten } from 'polished';
 
 const colors = {
   shadowColor: 'transparent',
-  text: lighten(.1, '#fff'),
+  text: lighten(0.1, '#fff'),
   primary: '#05f',
   secondary: '#666',
   danger: '#ff4d4f',
@@ -14,7 +14,7 @@ const colors = {
   background: '#121212',
 };
 
-const theme: DefaultTheme =  {
+const theme: DefaultTheme = {
   colors,
   fontSizes: [
     12, 14, 16, 18, 24, 32, 48, 64, 72,
@@ -26,8 +26,8 @@ const theme: DefaultTheme =  {
   styles: {
     nprogress: colors.primary,
     link: {
-      hover: lighten(.2, colors.text),
-      active: darken(.2, colors.text),
+      hover: lighten(0.2, colors.text),
+      active: darken(0.2, colors.text),
       color: colors.text,
     },
     box: {
@@ -56,7 +56,7 @@ const theme: DefaultTheme =  {
       menu: {
         color: colors.secondary,
         hover: {
-          color: lighten(.5, colors.secondary),
+          color: lighten(0.5, colors.secondary),
           background: '#111',
         },
       },

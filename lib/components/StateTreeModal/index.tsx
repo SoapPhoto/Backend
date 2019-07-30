@@ -8,17 +8,15 @@ interface IProps {
   onClose: () => void;
 }
 
-export const StateTreeModal: React.FC<IProps> = ({ visible, onClose }) => {
-  return (
-    <Modal
-      visible={visible}
-      onClose={onClose}
-      boxStyle={{
-        height: '600px',
-        overflow: 'auto',
-      }}
-    >
-      <StateJson />
-    </Modal>
-  );
-};
+export const StateTreeModal: React.FC<IProps> = ({ visible, onClose }) => (
+  <Modal
+    visible={visible}
+    onClose={onClose}
+    boxStyle={{
+      height: '600px',
+      overflow: 'auto',
+    }}
+  >
+    <StateJson />
+  </Modal>
+);

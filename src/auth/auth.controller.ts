@@ -1,4 +1,6 @@
-import { Body, Controller, Post, Req, Res, UseFilters } from '@nestjs/common';
+import {
+  Body, Controller, Post, Res, UseFilters,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
@@ -11,6 +13,7 @@ export class AuthController {
   constructor(
     private readonly userService: UserService,
   ) {}
+
   @Post('signup')
   public async signup(
     @Body() body: CreateUserDto,
@@ -18,6 +21,7 @@ export class AuthController {
     const data = await this.userService.signup(body);
     return data;
   }
+
   @Post('logout')
   public async logout(
     @Res() res: Response,

@@ -22,6 +22,7 @@ const router = (routes as any)({
   Link: BaseLink,
 }) as Routes;
 
+// eslint-disable-next-line no-restricted-syntax
 for (const route in routeObject) {
   if (route) {
     router.add(routeObject[route], route);

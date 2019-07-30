@@ -1,4 +1,6 @@
-import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  forwardRef, MiddlewareConsumer, Module, NestModule,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';

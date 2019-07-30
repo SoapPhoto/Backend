@@ -1,4 +1,6 @@
-import { lighten, opacify, rem, rgba } from 'polished';
+import {
+  rem, rgba,
+} from 'polished';
 import styled, { css } from 'styled-components';
 
 export const LabelBox = styled.label`
@@ -17,14 +19,14 @@ export const Label = styled.span`
   color: ${_ => _.theme.colors.secondary};
 `;
 
-export const inputCss = css<{ error?: boolean, focus?: boolean }>`
+export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   width: 100%;
   line-height: ${rem('28px')};
   margin: 0;
   padding: ${rem('5px')} ${rem('10px')};
   transition: border .25s ease;
   text-align: left;
-  color: ${props => rgba(props.theme.colors.text, .7)};
+  color: ${props => rgba(props.theme.colors.text, 0.7)};
   border: none;
   border-radius: ${rem('5px')};
   outline: 0;
@@ -34,10 +36,10 @@ export const inputCss = css<{ error?: boolean, focus?: boolean }>`
   transition: border .2s, color .2s ease-out,box-shadow .2s ease;
   font-size: ${_ => rem(_.theme.fontSizes[1])};
   border-color: ${
-  props => props.error ?
-    `${props.theme.colors.danger} !important` :
-    props.theme.styles.input.borderColor
-  };
+  props => (props.error
+    ? `${props.theme.colors.danger} !important`
+    : props.theme.styles.input.borderColor)
+};
   & + & {
     margin-top: ${rem('12px')};
   }
@@ -45,30 +47,30 @@ export const inputCss = css<{ error?: boolean, focus?: boolean }>`
     line-height: ${rem('28px')};
   }
   ${
-    props => props.focus ? `
+  props => (props.focus ? `
       border-color: ${props.theme.styles.input.hover.borderColor};
       box-shadow: 0 1px 4px -1px ${
-        props.error ?
-          (
-            props.theme.styles.input.hover.shadow === 'transparent' ?
-            'transparent' :
-            rgba(props.theme.colors.danger, .6)
-          ) :
-          props.theme.styles.input.hover.shadow
-      };
-    ` : ''
+    props.error
+      ? (
+        props.theme.styles.input.hover.shadow === 'transparent'
+          ? 'transparent'
+          : rgba(props.theme.colors.danger, 0.6)
+      )
+      : props.theme.styles.input.hover.shadow
+    };
+    ` : '')
 }
   &:focus, &:hover {
     border-color: ${props => props.theme.styles.input.hover.borderColor};
     box-shadow: 0 1px 4px -1px ${
-      props => props.error ?
-        (
-          props.theme.styles.input.hover.shadow === 'transparent' ?
-          'transparent' :
-          rgba(props.theme.colors.danger, .6)
-        ) :
-        props.theme.styles.input.hover.shadow
-    };
+  props => (props.error
+    ? (
+      props.theme.styles.input.hover.shadow === 'transparent'
+        ? 'transparent'
+        : rgba(props.theme.colors.danger, 0.6)
+    )
+    : props.theme.styles.input.hover.shadow)
+};
   }
   &::placeholder {
   }

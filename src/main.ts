@@ -1,8 +1,5 @@
 /// <reference types="../typings/index" />
 
-// tslint:disable-next-line: no-var-requires
-require('dotenv').config();
-
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
@@ -14,7 +11,9 @@ import Next from 'next';
 import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
 
-async function bootstrap() {
+require('dotenv').config();
+
+const bootstrap = async () => {
   const dev = process.env.NODE_ENV !== 'production';
   // const dev = false;
   const app = Next({
@@ -46,6 +45,6 @@ async function bootstrap() {
   await server.listen(process.env.PORT!);
 
   // Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
-}
+};
 
 bootstrap();

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import LazyLoad from 'react-lazyload';
 import { CSSTransition } from 'react-transition-group';
 
 import { pictureStyle } from '@lib/common/utils/image';
-import { Zooming } from '@lib/components/zooming';
 import { IPictureItemProps } from './Item';
 import { ImageBox, ItemImage } from './styles';
 
@@ -15,10 +14,10 @@ interface IPictureImage extends IPictureItemProps {
 export const PictureImage: React.FC<IPictureImage> = ({
   detail,
   lazyload,
-  zooming = false,
   size = 'regular',
 }) => {
   const [isFade, setFade] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isComplete, setComplete] = useState(false);
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   const imgRef = (ref: HTMLImageElement) => {
@@ -66,7 +65,7 @@ export const PictureImage: React.FC<IPictureImage> = ({
     <ImageBox height={height} background={detail.color}>
       {
         lazyload ? (
-          <LazyLoad resize={true} height="100%" offset={0}>
+          <LazyLoad resize height="100%" offset={0}>
             {imgRender}
           </LazyLoad>
         ) : (

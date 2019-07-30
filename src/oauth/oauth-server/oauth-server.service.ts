@@ -14,6 +14,7 @@ const OAuth2Server = require('oauth2-server');
 @Injectable()
 export class OauthServerService {
   public server: any;
+
   constructor(
     private readonly clientService: ClientService,
     private readonly userService: UserService,
@@ -31,10 +32,12 @@ export class OauthServerService {
       },
     });
   }
+
   private getClient = async (clientId: string, clientSecret: string) => {
     const client = await this.clientService.getOne(clientId, clientSecret);
     return client;
   }
+
   private saveToken = async ({ accessToken, refreshToken }: any, client: ClientEntity, user: UserEntity) => {
     const token = {
       client,
@@ -47,12 +50,11 @@ export class OauthServerService {
     const newToken = await this.accessTokenService.create(token);
     return newToken;
   }
-  private getAccessToken = async (token: string) => {
-    return this.accessTokenService.getAccessToken(token);
-  }
-  private getRefreshToken = async (refreshToken: string) => {
-    return this.accessTokenService.getRefreshToken(refreshToken);
-  }
+
+  private getAccessToken = async (token: string) => this.accessTokenService.getAccessToken(token)
+
+  private getRefreshToken = async (refreshToken: string) => this.accessTokenService.getRefreshToken(refreshToken)
+
   private revokeToken = async (token: AccessTokenEntity) => {
     if (token) {
       if (token.refreshTokenExpiresAt >= new Date()) {
@@ -61,9 +63,9 @@ export class OauthServerService {
     }
     return false;
   }
-  private verifyScope = async () => {
-    return true;
-  }
+
+  private verifyScope = async () => true
+
   private getUser = async (email: string, password: string) => {
     const user = await this.userService.verifyUser(email, password);
     return user;

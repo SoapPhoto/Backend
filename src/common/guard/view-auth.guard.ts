@@ -4,6 +4,7 @@ import { Reflector } from '@nestjs/core';
 @Injectable()
 export class ViewAuthGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
+
   public async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
@@ -20,7 +21,6 @@ export class ViewAuthGuard implements CanActivate {
         return false;
       }
       return true;
-
     }
     if (request.user) return true;
     response.redirect(301, `/login?redirectUrl=${request.url}`);

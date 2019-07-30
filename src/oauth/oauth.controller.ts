@@ -1,11 +1,12 @@
-import { BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters } from '@nestjs/common';
+import {
+  BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
-import parserAgent from 'ua-parser-js';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
 
 @Controller('oauth')
@@ -31,9 +32,9 @@ export class OauthController {
       res.json(token);
     } catch (err) {
       if (
-        err instanceof OAuth2Server.OAuthError ||
-        err instanceof OAuth2Server.InvalidArgumentError ||
-        err instanceof OAuth2Server.ServerError
+        err instanceof OAuth2Server.OAuthError
+        || err instanceof OAuth2Server.InvalidArgumentError
+        || err instanceof OAuth2Server.ServerError
       ) {
         throw new UnauthorizedException(err.message);
       }

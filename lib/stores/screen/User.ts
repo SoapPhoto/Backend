@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { action, observable } from 'mobx';
 
 import { UserEntity } from '@lib/common/interfaces/user';
@@ -7,9 +6,13 @@ import { BaseStore } from '../base/BaseStore';
 
 export class UserScreenStore extends BaseStore {
   @observable public type = '';
+
   @observable public init = false;
+
   @observable public user!: UserEntity;
+
   @observable public username = '';
+
   @observable public actived = false;
 
   @action
@@ -25,6 +28,7 @@ export class UserScreenStore extends BaseStore {
   @action public getUserInfo = async (username: string, headers?: any) => {
     const { data } = await request.get<UserEntity>(`/api/user/${username}`, { headers: headers || {} });
     if (!data) {
+      // eslint-disable-next-line no-throw-literal
       throw {
         statusCode: 404,
         message: 'no user',
@@ -39,6 +43,6 @@ export class UserScreenStore extends BaseStore {
    * @memberof UserScreenStore
    */
   @action public active = () => this.actived = true;
-  @action public deactive = () => this.actived = false;
 
+  @action public deactive = () => this.actived = false;
 }

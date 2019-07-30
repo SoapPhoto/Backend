@@ -1,5 +1,7 @@
 import React from 'react';
-import { ErrorBox, Label, LabelBox, StyleInput } from './styles';
+import {
+  ErrorBox, Label, LabelBox, StyleInput,
+} from './styles';
 
 export * from './Textarea';
 
@@ -59,8 +61,8 @@ export const Input: Component = ({
   return (
     <LabelBox style={style}>
       {
-        label &&
-        <Label>{label}</Label>
+        label
+        && <Label>{label}</Label>
       }
       <StyleInput
         ref={inputRef}
@@ -70,8 +72,8 @@ export const Input: Component = ({
         {...restProps}
       />
       {
-        error &&
-        <ErrorBox>{error}</ErrorBox>
+        error
+        && <ErrorBox>{error}</ErrorBox>
       }
     </LabelBox>
   );

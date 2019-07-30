@@ -36,7 +36,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     this.logger.log(`Client connected: ${client.id}`, 'NotificationGateway');
   }
 
-  public afterInit(server: Server) {
+  public afterInit(_server: Server) {
     this.logger.log('Init', 'NotificationGateway');
   }
 
@@ -46,7 +46,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
 
   @Roles(Role.USER)
   @SubscribeMessage('CONNECT_USER')
-  public async connectUser(client: Socket, data: any) {
+  public async connectUser(_client: Socket, _data: any) {
     return {
       event: 'CONNECT_USER',
       message: 'ok',
@@ -54,7 +54,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   @SubscribeMessage('notify')
-  public notify(client: Socket, data: any) {
+  public notify(client: Socket, _data: any) {
     return {
       event: 'notify',
       data: {

@@ -1,12 +1,12 @@
-require('dotenv').config()
+require('dotenv').config();
 
-const composePlugins = require('next-compose-plugins')
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer')
-const withOffline = require('next-offline')
+const composePlugins = require('next-compose-plugins');
+const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withOffline = require('next-offline');
 
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const Dotenv = require('dotenv-webpack')
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 
@@ -16,19 +16,19 @@ const nextConfig = {
   bundleAnalyzerConfig: {
     server: {
       analyzerMode: 'static',
-      reportFilename: './bundles/server.html'
+      reportFilename: './bundles/server.html',
     },
     browser: {
       analyzerMode: 'static',
-      reportFilename: './bundles/client.html'
-    }
+      reportFilename: './bundles/client.html',
+    },
   },
   useFileSystemPublicRoutes: false,
   webpack(config, options) {
-    if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin())
+    if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin());
     config.plugins.push(
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(zh-cn)/)
-    )
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(zh-cn)/),
+    );
     // config.plugins.push(
     //   new SWPrecacheWebpackPlugin({
     //     navigateFallback: '/index',
@@ -49,24 +49,24 @@ const nextConfig = {
     config.plugins.push(
       new Dotenv({
         path: path.join(__dirname, '.env'),
-        systemvars: true
-      })
-    )
-  
+        systemvars: true,
+      }),
+    );
+
     config.resolve = {
       ...config.resolve,
       ...{
         alias: {
           ...config.resolve.alias,
           '@pages': path.resolve(__dirname, 'pages'),
-        }
+        },
       },
     };
-    return config
-  }
-}
+    return config;
+  },
+};
 
 module.exports = composePlugins(
   [withOffline, withBundleAnalyzer],
-  nextConfig
-)
+  nextConfig,
+);

@@ -1,5 +1,9 @@
-import { Exclude, Expose, Transform, Type } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Exclude, Expose, Transform, Type,
+} from 'class-transformer';
+import {
+  Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -109,17 +113,17 @@ export class UserEntity extends BaseEntity {
   public readonly website!: string;
 
   /** 用户的picture */
-  @OneToMany(type => PictureEntity, photo => photo.user)
+  @OneToMany(() => PictureEntity, photo => photo.user)
   @Expose()
   public readonly pictures!: PictureEntity[];
 
   /** 用户的评论 */
-  @OneToMany(type => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
   @Expose()
   public readonly comments!: CommentEntity[];
 
   /** 用户的收藏夹 */
-  @OneToMany(type => CollectionEntity, collection => collection.user)
+  @OneToMany(() => CollectionEntity, collection => collection.user)
   @Expose()
   public readonly collections!: CollectionEntity[];
 

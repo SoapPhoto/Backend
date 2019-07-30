@@ -6,7 +6,7 @@ import { changeToDu } from './gps';
 import { round } from './math';
 
 declare global {
-// tslint:disable-next-line: interface-name
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface Window {
     EXIF: any;
     FastAverageColor: any;
@@ -47,11 +47,6 @@ export const pictureStyle = {
 };
 
 export type PictureStyle = keyof typeof pictureStyle;
-
-function parse(num: number) {
-  // tslint:disable-next-line:radix
-  return parseInt((num * 10).toString()) / 10;
-}
 
 type GetData = (image: File, cb: (this: any) => void) => void;
 
@@ -98,12 +93,15 @@ export function formatEXIFValue(label: ExifProperties, value: any, originalValue
 
     switch (label) {
       case ExifProperties.ExposureTime:
-        return resolve(`${originalValue >= 1 ? value : `1/${value}`}`);
+        resolve(`${originalValue >= 1 ? value : `1/${value}`}`);
+        break;
       case ExifProperties.ExposureBias:
-        return resolve(`${value >= 0 ? '+' : ''}${value}`);
+        resolve(`${value >= 0 ? '+' : ''}${value}`);
+        break;
       case ExifProperties.DateTimeOriginal:
-        return resolve(
+        resolve(
           (([date, hour]) => [
+            // eslint-disable-next-line no-useless-escape
             date.replace(/\:/g, '/'),
             hour
               .split(':')
@@ -111,14 +109,15 @@ export function formatEXIFValue(label: ExifProperties, value: any, originalValue
               .join(':'),
           ])(value.split(' ')).join(' '),
         );
+        break;
       default:
-        return resolve(value);
+        resolve(value);
     }
   });
 }
 
 export function getImageEXIF(image: File) {
-  return new Promise<IEXIF>((resolve, reject) => {
+  return new Promise<IEXIF>((resolve) => {
     window.EXIF.getData(image, async () => {
       const data = (image as any).exifdata;
       const exifData = await Promise.all(
@@ -137,10 +136,11 @@ export function getImageEXIF(image: File) {
       );
       const newData: Partial<Record<ExifProperties, any>> = {};
       exifData
-        .filter(_data =>
-          (typeof _data.value === 'number' && !isNaN(_data.value)) || (_data.value !== null && _data.value !== 'NaN'),
-        )
-        .forEach(exif => newData[exif.title] = exif.value);
+        .filter(_data => (
+          typeof _data.value === 'number'
+            && !Number.isNaN(_data.value))
+            || (_data.value !== null && _data.value !== 'NaN'))
+        .forEach((exif) => { newData[exif.title] = exif.value; });
       resolve(newData);
     });
   });
@@ -169,18 +169,16 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
       const imgHtml = document.createElement('img');
       imgHtml.src = imgSrc;
       const fac = new window.FastAverageColor();
-      await (async() => {
-        return new Promise((res) => {
-          imgHtml.onload = () => {
-            const color  = fac.getColor(imgHtml);
-            info.color = color.hex;
-            info.isDark = color.isDark;
-            info.height = imgHtml.naturalHeight;
-            info.width = imgHtml.naturalWidth;
-            res();
-          };
-        });
-      })();
+      await (async () => new Promise((res) => {
+        imgHtml.onload = () => {
+          const color = fac.getColor(imgHtml);
+          info.color = color.hex;
+          info.isDark = color.isDark;
+          info.height = imgHtml.naturalHeight;
+          info.width = imgHtml.naturalWidth;
+          res();
+        };
+      }))();
       const exif = await getImageEXIF(image);
       info.make = exif.make;
       info.model = exif.model;

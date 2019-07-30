@@ -8,6 +8,7 @@ import {
 export class CacheConfigService implements CacheOptionsFactory {
   public retryStrategy() {
     return {
+      // eslint-disable-next-line @typescript-eslint/camelcase
       retry_strategy: (options: any) => {
         if (options.error && options.error.code === 'ECONNREFUSED') {
           return new Error('The server refused the connection');

@@ -1,5 +1,4 @@
 import React from 'react';
-import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
@@ -9,21 +8,14 @@ import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
-import { Href, MenuProfile, RightWarpper, UserName } from './styles';
+import {
+  Href, MenuProfile, RightWarpper, UserName,
+} from './styles';
 
 export interface IProps {
   accountStore?: AccountStore;
   themeStore?: ThemeStore;
 }
-
-const transitionStyles: {
-  [key in TransitionStatus]?: any
-} = {
-  entering: { opacity: 1, transform: 'scale(1)' },
-  entered: { opacity: 1, transform: 'scale(1)' },
-  exiting: { opacity: 0, transform: 'scale(.98)' },
-  exited: { opacity: 0, transform: 'scale(.98)' },
-};
 
 export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
   ({ accountStore, themeStore }) => {
@@ -53,7 +45,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
           ref={PopoverRef}
           trigger="click"
           contentStyle={{ padding: 0 }}
-          content={
+          content={(
             <Menu>
               <MenuItem>
                 <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
@@ -90,7 +82,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
                 </MenuItemLink>
               </MenuItem>
             </Menu>
-          }
+          )}
         >
           <Avatar
             src={userInfo!.avatar}

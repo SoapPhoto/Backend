@@ -1,4 +1,6 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -16,6 +18,6 @@ export class TagEntity extends BaseEntity {
   })
   public readonly name!: string;
 
-  @ManyToMany(type => PictureEntity, item => item.tags)
+  @ManyToMany(() => PictureEntity, item => item.tags)
   public readonly pictures!: PictureEntity[];
 }

@@ -1,4 +1,6 @@
-import { Controller, Get, Param, Query, UseFilters, UseGuards } from '@nestjs/common';
+import {
+  Controller, Get, Param, Query, UseFilters, UseGuards,
+} from '@nestjs/common';
 
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
@@ -20,7 +22,7 @@ export class TagController {
     @Param('name') name: string,
     @User() user: UserEntity,
   ) {
-    return this.tagService.getTagInfo(name, user);
+    return this.tagService.getTagInfo(nameuser);
   }
 
   @Get(':name/picture')

@@ -22,6 +22,7 @@ export class NoSSR extends React.PureComponent<INoSSRProps, INoSSRState> {
     onSSR: <DefaultOnSSR />,
     server: true,
   };
+
   public state = {
     canRender: !this.props.server,
   };

@@ -1,4 +1,6 @@
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args, Context, Mutation, Query, Resolver,
+} from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -23,6 +25,7 @@ export class CommentResolver {
   ) {
     return this.commentService.getPictureList(id, query, user);
   }
+
   @Mutation()
   @Roles(Role.USER)
   public async addComment(

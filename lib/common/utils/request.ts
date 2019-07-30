@@ -10,7 +10,7 @@ const instance = axios.create({
   // adapter: cache.adapter,
   withCredentials: true,
   baseURL: `http://localhost.com:${process.env.PORT}`,
-  validateStatus (status: number) {
+  validateStatus(status: number) {
     return status < 500 && status !== 404;
   },
   headers: {
@@ -21,7 +21,7 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (response: AxiosResponse<any>) => {
     if (response.status >= 400) {
-      if (!!window) {
+      if (window) {
         let message;
         if (response.data && response.data.message) {
           message = store.i18nStore.__(response.data.message);
@@ -40,10 +40,8 @@ instance.interceptors.response.use(
       return Promise.reject(response);
     }
     return Promise.resolve(response);
-
   },
-  (error: any) =>
-    Promise.reject(error),
+  (error: any) => Promise.reject(error),
 );
 
 export const request = instance;

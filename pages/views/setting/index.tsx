@@ -4,7 +4,7 @@ import Head from 'next/Head';
 import { withRouter } from 'next/router';
 import React from 'react';
 
-import { CustomNextContext } from '@lib/common/interfaces/global';
+import { ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle, parsePath } from '@lib/common/utils';
 import { withAuth } from '@lib/components/router/withAuth';
 import { Menu } from '@lib/components/WrapperMenu';
@@ -29,11 +29,12 @@ const menu = [
   // },
 ];
 class Setting extends React.Component<IProps> {
-  public static async getInitialProps(ctx: CustomNextContext) {
+  public static async getInitialProps(ctx: ICustomNextContext) {
     return {
       type: ctx.route.params.type,
     };
   }
+
   public static getDerivedStateFromProps(nextProps: IProps) {
     const route = parsePath(nextProps.router!.asPath!);
     return {
@@ -46,13 +47,14 @@ class Setting extends React.Component<IProps> {
   };
 
   public render() {
+    const { type } = this.state;
     return (
       <Warpper>
         <Head>
           <title>{getTitle('设置')}</title>
         </Head>
         <Menu
-          value={this.state.type}
+          value={type}
           data={menu}
         />
       </Warpper>

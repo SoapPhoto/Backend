@@ -1,0 +1,65 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "es6": true,
+    "browser": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript"
+  ],
+  "plugins": ["react-hooks"],
+  "parserOptions":  {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": ".",
+    "ecmaVersion":  2018,
+    "sourceType":  "module",
+    "ecmaFeatures":  {
+      "jsx":  true
+    },
+  },
+  "rules": {
+    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+    "@typescript-eslint/indent": ["error", 2],
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "import/no-unresolved": "off",
+    "class-methods-use-this": "off",
+    "import/prefer-default-export": "off",
+    "no-useless-constructor": "off",
+    "@typescript-eslint/explicit-member-accessibility": ["off", { "accessibility": "no-public" }],
+    "@typescript-eslint/no-parameter-properties": ["off", { "allows": ["private", "readonly"] }],
+    "no-empty-function": ["error", { "allow": ["constructors"] }],
+    "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
+    "@typescript-eslint/interface-name-prefix": ["error", "always"],
+    "react/prop-types": "off",
+    "no-param-reassign": "off",
+    "arrow-parens": ["error", "as-needed", {
+      "requireForBlockBody": true,
+    }],
+    "no-nested-ternary": "off",
+    "max-len": ["error", { "code": 120 }],
+    "import/no-cycle": "off",
+    "no-underscore-dangle": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "implicit-arrow-linebreak": ["error", "beside"],
+    "jsx-a11y/anchor-is-valid": "off",
+    "react/destructuring-assignment": ["error", "always", { "ignoreClassFields": true }],
+    "no-return-assign": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "jsx-a11y/click-events-have-key-events": "off",
+    "indent": "off"
+  },
+  "settings":  {
+    "react":  {
+      "version":  "detect",
+    },
+  },
+}

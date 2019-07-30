@@ -9,7 +9,6 @@ export class GetCollectionPictureListDto extends PaginationDto {
 
 @Exclude()
 export class CreateCollectionDot implements Partial<CollectionEntity> {
-
   @IsString()
   @Expose()
   public name!: string;

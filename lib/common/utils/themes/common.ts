@@ -6,10 +6,10 @@ export const href = (color: string, hover?: string, active?: string) => `
   color: ${color};
   transition: .2s color ease-in;
   &:hover {
-    color: ${hover ? hover : lighten(.1, color)};
+    color: ${hover || lighten(0.1, color)};
   }
   &:active {
-    color: ${active ? active : darken(.1, color)};
+    color: ${active || darken(0.1, color)};
   }
 `;
 

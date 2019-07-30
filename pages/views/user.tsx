@@ -3,7 +3,7 @@ import Head from 'next/Head';
 import React from 'react';
 import parse from 'url-parse';
 
-import { CustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
+import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import { Avatar, Nav, NavItem } from '@lib/components';
 import { withError } from '@lib/components/withError';
@@ -43,27 +43,31 @@ interface IProps extends IBaseScreenProps, WithRouterProps {
 }))
 @observer
 class User extends React.Component<IProps> {
-  get name () {
-    const { user } = this.props.userStore;
-    return user.name || user.username;
-  }
-
-  @computed get type() {
-    return this.props.userStore.type;
-  }
-
-  public static getInitialProps: (_: CustomNextContext) => any;
+  public static getInitialProps: (_: ICustomNextContext) => any;
 
   constructor(props: IProps) {
     super(props);
   }
 
   public componentDidMount() {
-    this.props.userStore.active();
+    const { userStore } = this.props;
+    userStore.active();
   }
 
   public componentWillUnmount() {
-    this.props.userStore.deactive();
+    const { userStore } = this.props;
+    userStore.deactive();
+  }
+
+  @computed get type() {
+    const { userStore } = this.props;
+    return userStore.type;
+  }
+
+  get name() {
+    const { userStore } = this.props;
+    const { user } = userStore;
+    return user.name || user.username;
   }
 
   public parseWebsite = (url: string) => {
@@ -72,9 +76,12 @@ class User extends React.Component<IProps> {
   }
 
   public render() {
-    const { isLogin, userInfo } = this.props.accountStore;
-    const { user } = this.props.userStore;
-    const { list, isNoMore, getPageList, like } = this.props.listStore;
+    const { accountStore, userStore, listStore } = this.props;
+    const { isLogin, userInfo } = accountStore;
+    const { user } = userStore;
+    const {
+      list, isNoMore, getPageList, like,
+    } = listStore;
     return (
       <Wrapper>
         <Head>
@@ -89,22 +96,27 @@ class User extends React.Component<IProps> {
               <UserName>
                 {this.name}
                 {
-                  isLogin && userInfo && userInfo.username === user.username &&
-                  <Link route="/setting/profile">
-                    <a href="'/setting/profile">
-                      <EditIcon size={18} />
-                    </a>
-                  </Link>
+                  isLogin && userInfo && userInfo.username === user.username
+                  && (
+                    <Link route="/setting/profile">
+                      <a href="'/setting/profile">
+                        <EditIcon size={18} />
+                      </a>
+                    </Link>
+                  )
                 }
               </UserName>
               <Profile>
                 {
-                  user.website &&
-                  <ProfileItem>
-                    <ProfileItemLink href={user.website} target="__blank">
-                      <LinkIcon size={14}/>{this.parseWebsite(user.website)}
-                    </ProfileItemLink>
-                  </ProfileItem>
+                  user.website
+                  && (
+                    <ProfileItem>
+                      <ProfileItemLink href={user.website} target="__blank">
+                        <LinkIcon size={14} />
+                        {this.parseWebsite(user.website)}
+                      </ProfileItemLink>
+                    </ProfileItem>
+                  )
                 }
               </Profile>
               <Bio>
@@ -132,19 +144,19 @@ class User extends React.Component<IProps> {
   }
 }
 
-User.getInitialProps = async ({ mobxStore, req, route }: CustomNextContext) => {
+User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => {
   const { params } = route;
   let error: {
-    message: string,
-    statusCode: number,
+    message: string;
+    statusCode: number;
   } | undefined;
   try {
     const all = [];
     const arg: [string, string, any] = [params.username!, params.type!, req ? req.headers : undefined];
     const isUsername = (
-      mobxStore.screen.userStore.init &&
-      mobxStore.screen.userStore.user &&
-      mobxStore.screen.userStore.user.username === params.username
+      mobxStore.screen.userStore.init
+      && mobxStore.screen.userStore.user
+      && mobxStore.screen.userStore.user.username === params.username
     );
     const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
     if (!(isPop && isUsername)) {

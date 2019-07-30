@@ -6,7 +6,7 @@ const colors = {
   shadowColor: 'rgba(0, 0, 0, 0.06)',
   secondary: '#8a92a9',
   primary: '#05f',
-  text: lighten(.1, '#000'),
+  text: lighten(0.1, '#000'),
   danger: '#ff4d4f',
   background: '#f8fafc',
   gray: '#eaeaea',
@@ -14,7 +14,7 @@ const colors = {
   lightgray: '#fafafa',
 };
 
-const theme: DefaultTheme =  {
+const theme: DefaultTheme = {
   colors,
   fontSizes: [
     12, 14, 16, 18, 24, 32, 48, 64, 72,
@@ -30,8 +30,8 @@ const theme: DefaultTheme =  {
       background: '#fff',
     },
     link: {
-      hover: lighten(.2, colors.primary),
-      active: darken(.2, colors.primary),
+      hover: lighten(0.2, colors.primary),
+      active: darken(0.2, colors.primary),
       color: colors.primary,
     },
     input: {
@@ -43,7 +43,7 @@ const theme: DefaultTheme =  {
         background: colors.lightgray,
       },
       hover: {
-        shadow: rgba(colors.primary, .6),
+        shadow: rgba(colors.primary, 0.6),
         borderColor: colors.primary,
       },
     },
@@ -56,7 +56,7 @@ const theme: DefaultTheme =  {
       menu: {
         color: colors.secondary,
         hover: {
-          color: darken(.3, colors.secondary),
+          color: darken(0.3, colors.secondary),
           background: colors.lightgray,
         },
       },

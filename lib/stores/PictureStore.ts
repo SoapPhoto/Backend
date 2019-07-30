@@ -42,12 +42,12 @@ export class PictureStore extends ListStore<PictureEntity> {
     this.setData(data, plus);
   }
 
-  public getPageList = async() => {
+  public getPageList = async () => {
     const page = this.listQuery.page + 1;
     if (page > this.maxPage) {
       return;
     }
-    return this.getList({
+    await this.getList({
       page: this.listQuery.page + 1,
     }, undefined, true);
   }
@@ -67,7 +67,6 @@ export class PictureStore extends ListStore<PictureEntity> {
 
   @action
   public like = async (picture: PictureEntity) => {
-    const oldData = picture.isLike;
     try {
       const { data } = await likePicture(picture.id);
       picture.isLike = data.isLike;

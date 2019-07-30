@@ -16,6 +16,7 @@ export class NotificationService {
     @InjectRepository(NotificationSubscribersUserEntity)
     private subscribersUserRepository: Repository<NotificationSubscribersUserEntity>,
   ) {}
+
   public publishNotification = async (
     publisher: UserEntity,
     subscribers: UserEntity,

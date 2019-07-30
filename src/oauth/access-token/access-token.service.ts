@@ -23,6 +23,7 @@ export class AccessTokenService {
       user: data.user,
     });
   }
+
   public getRefreshToken = async (refreshToken: string) => {
     const token = await this.accessTokenRepository.findOne({
       relations: ['client', 'user'],
@@ -32,6 +33,7 @@ export class AccessTokenService {
     });
     return token;
   }
+
   public getAccessToken = async (accessToken: string) => {
     const q = this.accessTokenRepository.createQueryBuilder('token')
       .where('token.accessToken=:accessToken', { accessToken })

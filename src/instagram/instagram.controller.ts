@@ -1,4 +1,6 @@
-import { Controller, Get, Param, UseFilters } from '@nestjs/common';
+import {
+  Controller, Get, Param, UseFilters,
+} from '@nestjs/common';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { InstagramService } from './instagram.service';
 

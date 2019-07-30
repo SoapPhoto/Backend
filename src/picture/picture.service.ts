@@ -33,15 +33,18 @@ export class PictureService {
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
   ) {}
+
   public create = async (data: Partial<PictureEntity>) => {
+    const newData = { ...data };
     if (Array.isArray(data.tags)) {
-      data.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
+      newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
     }
     const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );
     return plainToClass(PictureEntity, createData);
   }
+
   /**
    * 图片列表查询
    *
@@ -96,7 +99,7 @@ export class PictureService {
     if (!picture) {
       throw new BadRequestException('no_picture');
     }
-    return await this.activityService.like(picture, user);
+    return this.activityService.like(picture, user);
   }
 
   /**
@@ -173,6 +176,7 @@ export class PictureService {
     }
     throw new UnauthorizedException();
   }
+
   /**
    * 图片的初始查询条件
    *
@@ -199,6 +203,7 @@ export class PictureService {
     q.orderBy('picture.createTime', 'DESC');
     return q;
   }
+
   /**
    * 图片列表的初始查询条件
    *
@@ -220,23 +225,22 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getRawOne = async (id: ID) => {
-    return this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.id=:id', { id })
-      .getOne();
-  }
+  public getRawOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
+    .where('picture.id=:id', { id })
+    .getOne()
 
   /**
    * 获取图片的一些基础信息的查询，如：`likes`,`isLike`
    *
    * @memberof PictureService
    */
+  // eslint-disable-next-line arrow-parens
   public getQueryInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>) => {
     q.leftJoinAndSelect('picture.user', 'user')
-    .loadRelationCountAndMap(
-      'picture.likes', 'picture.activitys', 'activity',
-      qb => qb.andWhere('activity.like=:like', { like: true }),
-    );
+      .loadRelationCountAndMap(
+        'picture.likes', 'picture.activitys', 'activity',
+        qb => qb.andWhere('activity.like=:like', { like: true }),
+      );
     this.userService.selectInfo(q);
     if (user) {
       q
@@ -256,10 +260,8 @@ export class PictureService {
    * @private
    * @memberof PictureService
    */
-  private getOne = async (id: ID) => {
-    return this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.id=:id', { id })
-      .leftJoinAndSelect('picture.user', 'user')
-      .getOne();
-  }
+  private getOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
+    .where('picture.id=:id', { id })
+    .leftJoinAndSelect('picture.user', 'user')
+    .getOne()
 }

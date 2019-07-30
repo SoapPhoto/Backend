@@ -8,7 +8,9 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { NoSSR } from '../SSR';
-import { Box, Content, Mask, Warpper } from './styles';
+import {
+  Box, Content, Mask, Warpper,
+} from './styles';
 
 interface IModalProps {
   visible: boolean;
@@ -37,14 +39,14 @@ const maskTransitionStyles: {
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
   public contentRef = React.createRef<HTMLDivElement>();
+
   @observable public isDestroy = !this.props.visible;
-  get scrollWidth() {
-    return getScrollWidth();
-  }
+
   public initStyle?: () => void;
+
   constructor(props: IModalProps) {
     super(props);
-    reaction(() => this.props.visible, (visible) => {
+    reaction(() => props.visible, (visible) => {
       if (visible) {
         this.initStyle = setBodyCss({
           overflowY: 'hidden',
@@ -54,33 +56,44 @@ export class Modal extends React.PureComponent<IModalProps> {
       }
     });
   }
+
   public componentDidMount() {
-    if (this.props.visible) {
+    const { visible } = this.props;
+    if (visible) {
       this.initStyle = setBodyCss({
         overflowY: 'hidden',
         paddingRight: `${this.scrollWidth}px`,
       });
     }
   }
+
   public componentWillUnmount() {
     this.onDestroy();
   }
+
+  get scrollWidth() {
+    return getScrollWidth();
+  }
+
+
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  　e.stopPropagation();
+    e.stopPropagation();
     if (e.target === this.contentRef.current) {
       if (isFunction(this.props.onClose)) {
         this.props.onClose();
       }
     }
   }
+
   public onDestroy = () => {
     if (isFunction(this.initStyle)) {
       this.initStyle();
     }
     this.isDestroy = true;
   }
+
   public render() {
-    const { visible, boxStyle } = this.props;
+    const { visible, boxStyle, children } = this.props;
     if (this.isDestroy) {
       return null;
     }
@@ -113,7 +126,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                               ...boxStyle || {},
                             }}
                           >
-                            {this.props.children}
+                            {children}
                           </Box>
                         </Content>
                       </Warpper>
@@ -127,6 +140,5 @@ export class Modal extends React.PureComponent<IModalProps> {
         }
       </NoSSR>
     );
-
   }
 }

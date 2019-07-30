@@ -4,12 +4,12 @@ import chalk from 'chalk';
 import fs from 'fs';
 import moment from 'moment';
 import winston from 'winston';
-import winstonDailyRotate from 'winston-daily-rotate-file';
+import WinstonDailyRotate from 'winston-daily-rotate-file';
 
 const LOGGER_COMMON_CONFIG = {
   timestamp: moment().format('YYYY-MM-DD HH:mm:ss:SSS'),
   prepend: true,
-  datePattern:'yyyy-MM-dd.',
+  datePattern: 'yyyy-MM-dd.',
   maxsize: 1024 * 1024 * 10,
   maxFiles: '31d',
   colorize: false,
@@ -31,21 +31,21 @@ export class LoggingService implements LoggerService {
 
   private readonly logger = winston.createLogger({
     transports: [
-      new winstonDailyRotate({
+      new WinstonDailyRotate({
         level: 'error',
         filename: '%DATE%.log',
         dirname: `${this.logDir}/error/`,
         options: LOGGER_COMMON_CONFIG,
         format: LOGGER_COMMON_FORMAT,
       }),
-      new winstonDailyRotate({
+      new WinstonDailyRotate({
         level: 'warn',
         filename: '%DATE%.log',
         dirname: `${this.logDir}/warn/`,
         options: LOGGER_COMMON_CONFIG,
         format: LOGGER_COMMON_FORMAT,
       }),
-      new winstonDailyRotate({
+      new WinstonDailyRotate({
         level: 'info',
         filename: '%DATE%.log',
         dirname: `${this.logDir}/normal/`,
@@ -115,7 +115,6 @@ export class LoggingService implements LoggerService {
   private getLogMessage(message: any, context?: string): string {
     return context ? `[${context}]: ${message}` : message;
   }
-
 }
 
 export const Logger = new LoggingService();

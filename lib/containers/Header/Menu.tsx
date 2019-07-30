@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { box } from '@lib/common/utils/themes/common';
 import { Link } from '@lib/routes';
 import { rem } from 'polished';
 
-interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
-}
+type IProps = React.HTMLAttributes<HTMLDivElement>
+// interface IProps extends React.HTMLAttributes<HTMLDivElement> {
+
+// }
 
 interface ILinkProps {
   route?: string;
@@ -78,38 +79,32 @@ export const MenuArrow = styled.span`
 export const Menu: React.FC<IProps> = ({
   children,
   ...restProps
-}) => {
-  return (
-    <Wrapper {...restProps}>
-      {children}
-    </Wrapper>
-  );
-};
+}) => (
+  <Wrapper {...restProps}>
+    {children}
+  </Wrapper>
+);
 
 export const MenuItem: React.FC = ({
   children,
-}) => {
-  return (
-    <ItemWrapper>
-      {children}
-    </ItemWrapper>
-  );
-};
+}) => (
+  <ItemWrapper>
+    {children}
+  </ItemWrapper>
+);
 
 export const MenuItemLink: React.FC<ILinkProps> = ({
   route,
   onClick,
   children,
-}) => {
-  return route ? (
-    <Link route={route}>
-      <MenuLink onClick={onClick} href={route}>
-        {children}
-      </MenuLink>
-    </Link>
-  ) : (
+}) => (route ? (
+  <Link route={route}>
     <MenuLink onClick={onClick} href={route}>
       {children}
     </MenuLink>
-  );
-};
+  </Link>
+) : (
+  <MenuLink onClick={onClick} href={route}>
+    {children}
+  </MenuLink>
+));

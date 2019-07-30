@@ -1,4 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column, Entity, ManyToOne, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/user/user.entity';
@@ -9,10 +11,10 @@ export class PictureUserActivityEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
 
-  @ManyToOne(type => UserEntity)
+  @ManyToOne(() => UserEntity)
   public readonly user!: UserEntity;
 
-  @ManyToOne(type => PictureEntity, { onDelete: 'CASCADE', cascade: true })
+  @ManyToOne(() => PictureEntity, { onDelete: 'CASCADE', cascade: true })
   public readonly picture!: PictureEntity;
 
   @Column({ default: false })

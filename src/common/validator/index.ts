@@ -32,7 +32,7 @@ export function IsWebsite() {
       options: {},
       validator: {
         validate(value: any, _: ValidationArguments) {
-          if (!!value) {
+          if (value) {
             return validator.isURL(value);
           }
           return true;
@@ -44,4 +44,3 @@ export function IsWebsite() {
     });
   };
 }
-

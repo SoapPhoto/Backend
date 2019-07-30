@@ -1,9 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import {
+  ArgumentsHost, Catch, ExceptionFilter, HttpException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
 import { Logger } from '@server/shared/logging/logging.service';
-import { ValidationError } from 'class-validator';
 import { validator } from '../utils/validator';
 
 @Catch()
@@ -44,12 +45,10 @@ export class AllExceptionFilter implements ExceptionFilter {
       const exRes = exception.getResponse() as any;
       if (validator.isString(exRes)) {
         done(status, exRes);
+      } else if (exRes.message) {
+        doneRes(exRes);
       } else {
-        if (exRes.message) {
-          doneRes(exRes);
-        } else {
-          done(status, exRes.error);
-        }
+        done(status, exRes.error);
       }
     } else if (exception instanceof QueryFailedError) {
       done(500, exception.message);

@@ -1,4 +1,4 @@
-// tslint:disable-next-line: no-reference
+// eslint-disable-next-line @typescript-eslint/no-triple-slash-reference
 /// <reference path="../../../typings/typing.d.ts" />
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
@@ -15,6 +15,7 @@ export class OauthMiddleware implements NestMiddleware {
   constructor(
     private readonly oauthServerService: OauthServerService,
   ) {}
+
   public async use(req: Request, res: Response, next: () => void) {
     const isReq = /text\/html|application\/json/g.test(req.headers.accept || '');
     if (!isReq) {

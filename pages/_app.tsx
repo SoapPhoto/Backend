@@ -1,6 +1,6 @@
-import 'reflect-metadata';
+/// <reference types="styled-components/cssprop" />
 
-import * as types from 'styled-components/cssprop';
+import 'reflect-metadata';
 
 import _ from 'lodash';
 import { Provider } from 'mobx-react';
@@ -10,12 +10,13 @@ import React from 'react';
 
 import { parsePath, server } from '@lib/common/utils';
 import { PictureModal } from '@lib/components';
-import setupSocket from '../lib/common/sockets';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
 import { Router } from '../lib/routes';
-import { IInitialStore, IMyMobxStore, initStore, store } from '../lib/stores/init';
+import {
+  IInitialStore, IMyMobxStore, initStore, store,
+} from '../lib/stores/init';
 
 moment.locale('zh-cn');
 
@@ -31,14 +32,13 @@ interface IPageProps {
   statusCode?: number;
 }
 
-Router.events.on('routeChangeStart', (url: string) => {
+Router.events.on('routeChangeStart', () => {
   store.appStore.setLoading(true);
 });
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
-Router.events.on('routeChangeError', () =>  store.appStore.setLoading(false));
+Router.events.on('routeChangeError', () => store.appStore.setLoading(false));
 
 class MyApp extends App {
-
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
     const { ctx, Component } = data;
@@ -57,7 +57,7 @@ class MyApp extends App {
         screen: {},
       },
     };
-    if (!!ctx.query.error) {
+    if (ctx.query.error) {
       statusCode = ctx.query.error.statusCode || 500;
     } else if (ctx.pathname === '/_error') {
       statusCode = 404;
@@ -66,7 +66,8 @@ class MyApp extends App {
       ...basePageProps,
     };
     ctx.route = route;
-    ctx.mobxStore = pageProps.initialStore = initStore(pageProps.initialStore);
+    ctx.mobxStore = initStore(pageProps.initialStore);
+    pageProps.initialStore = ctx.mobxStore;
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({
         ...basePageProps,
@@ -85,21 +86,25 @@ class MyApp extends App {
       },
     };
   }
+
   public mobxStore: IMyMobxStore;
 
   constructor(props: any) {
     super(props);
     this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
   }
+
   public componentDidMount() {
     // const socket = setupSocket();
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/service-worker.js')
-        .then((_reg) => {
+        .then(() => {
+          // eslint-disable-next-line no-console
           console.log('service worker registration successful');
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.warn('service worker registration failed', err.message);
         });
     }
@@ -113,18 +118,19 @@ class MyApp extends App {
       return true;
     });
   }
+
   public render() {
     const { Component, pageProps, router } = this.props;
     const { picture } = router.query!;
-    const isError = pageProps.error || pageProps.statusCode && pageProps.statusCode !== 200;
+    const isError = pageProps.error ? pageProps.statusCode : pageProps.statusCode !== 200;
     return (
       <Container>
         <Provider {...this.mobxStore}>
           <ThemeWrapper>
             <BodyLayout header={!isError}>
               {
-                picture &&
-                <PictureModal pictureId={picture.toString()} />
+                picture
+                && <PictureModal pictureId={picture.toString()} />
               }
               <Component
                 {...pageProps}

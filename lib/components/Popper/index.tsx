@@ -36,13 +36,13 @@ export function isIn(target: Node, parent: Element) {
   let parentNode: Node | null = target;
   while (parentNode && parentNode !== document.body) {
     path.push(parentNode);
+    // eslint-disable-next-line prefer-destructuring
     parentNode = parentNode.parentNode;
   }
   return path.indexOf(parent) !== -1;
 }
 
 export class Popper extends React.Component<IPopperProps> {
-
   public static getDerivedStateFromProps(nextProps: IPopperProps) {
     if (nextProps.visible) {
       return {
@@ -58,33 +58,43 @@ export class Popper extends React.Component<IPopperProps> {
 
     return null;
   }
+
   public popperRef = React.createRef<HTMLDivElement>();
+
   public popper?: PopperJS;
+
   public state = {
     exited: !this.props.visible,
   };
-  public componentWillUnmount() {
-    this.handleClose();
-  }
+
   public componentDidUpdate() {
-    if (this.props.visible) {
+    const { visible } = this.props;
+    if (visible) {
       this.handleOpen();
     }
   }
+
+  public componentWillUnmount() {
+    this.handleClose();
+  }
+
   public ifEl = (e: MouseEvent) => {
     if (!this.props.visible) {
       return;
     }
+    // eslint-disable-next-line react/no-find-dom-node
     const referenceNode = ReactDOM.findDOMNode(this);
     if (!isIn(e.target as Node, this.popperRef.current!) && !isIn(e.target as Node, referenceNode as Element)) {
       if (this.props.onClose) this.props.onClose();
     }
   }
+
   public handleOpen = () => {
     if (this.popper) {
       this.handleClose();
     }
     document.addEventListener('mousedown', this.ifEl);
+    // eslint-disable-next-line react/no-find-dom-node
     const referenceNode = ReactDOM.findDOMNode(this) as Element;
     this.popper = new PopperJS(referenceNode, this.popperRef.current!, {
       placement: this.props.placement,
@@ -98,6 +108,7 @@ export class Popper extends React.Component<IPopperProps> {
       onUpdate: this.props.onUpdate,
     });
   }
+
   public handleClose = () => {
     document.removeEventListener('mousedown', this.ifEl);
     if (!this.popper) {
@@ -107,6 +118,7 @@ export class Popper extends React.Component<IPopperProps> {
     this.popper.destroy();
     this.popper = undefined;
   }
+
   public renderContent = () => {
     const { visible, content, transition } = this.props;
     const { exited } = this.state;
@@ -128,15 +140,16 @@ export class Popper extends React.Component<IPopperProps> {
       </PopperWrapper>
     );
   }
+
   public render() {
-    const { children } = this.props;
+    const { children, getContainer } = this.props;
     return (
       <>
         {children}
         <NoSSR>
           {!server && ReactDOM.createPortal(
             this.renderContent(),
-            this.props.getContainer || document.querySelector('#__next')!,
+            getContainer || document.querySelector('#__next')!,
           )}
         </NoSSR>
       </>

@@ -1,13 +1,12 @@
 import { NextComponentType, NextContext } from 'next';
 import { DefaultQuery, RouterProps } from 'next/router';
-import { IncomingMessage, ServerResponse } from 'http';
 
 import { IMyMobxStore } from '@lib/stores/init';
 import { Request, Response } from 'express';
 import { UserEntity } from './user';
 import { IPathInfo } from '../utils';
 
-export interface CustomNextContext<Q extends DefaultQuery = DefaultQuery> {
+export interface ICustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   mobxStore: IMyMobxStore;
   pathname: string;
   query: Q;
@@ -18,31 +17,31 @@ export interface CustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   err?: any;
 }
 
-export interface CustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
+export interface ICustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
   Component: NextComponentType<any, any, NextContext<Q>>;
   router: RouterProps<Q>;
-  ctx: CustomNextContext<Q>;
+  ctx: ICustomNextContext<Q>;
 }
 
-export type CustomNextPage<P = {}, IP = P> = {
-  (props: P): JSX.Element
-  getInitialProps?(ctx: CustomNextContext): Promise<IP>
+export interface ICustomNextPage<P = {}, IP = P> {
+  (props: P): JSX.Element;
+  getInitialProps?(ctx: ICustomNextContext): Promise<IP>;
 }
 
 
-export interface PaginationList {
+export interface IPaginationList {
   timestamp: number;
   pageSize: number;
   page: number;
   count: number;
 }
 
-export interface ListRequest<T> {
+export interface IListRequest<T> {
   timestamp: number;
   pageSize: number;
   page: number;
   count: number;
-  data: T
+  data: T;
 }
 
 export interface IBaseQuery {
@@ -57,5 +56,5 @@ export interface IBaseScreenProps {
   error: {
     message?: string;
     statusCode: number;
-  }
+  };
 }

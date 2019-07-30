@@ -6,7 +6,7 @@ import React from 'react';
 import { Emojione } from 'react-emoji-render';
 
 import { SignUpSchema } from '@lib/common/dto/auth';
-import { getTitle, parsePath, server } from '@lib/common/utils';
+import { getTitle, parsePath } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { Button } from '@lib/components/Button';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
@@ -57,7 +57,7 @@ const SignUp = withRouter<IProps>(
         <Head>
           <title>{getTitle('注册🔑')}</title>
         </Head>
-          <Title>
+        <Title>
           <Emojione
             svg
             text="注册🔑"

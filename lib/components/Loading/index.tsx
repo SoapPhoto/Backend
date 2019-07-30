@@ -44,12 +44,10 @@ export const Box = styled.div<{size: number}>`
 
 export const Loading: React.FC<ILoadingProps> = ({
   size = 4,
-}) => {
-  return (
-    <Box size={size}>
-      <span />
-      <span />
-      <span />
-    </Box>
-  );
-};
+}) => (
+  <Box size={size}>
+    <span />
+    <span />
+    <span />
+  </Box>
+);

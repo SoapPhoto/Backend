@@ -1,5 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/user/user.entity';

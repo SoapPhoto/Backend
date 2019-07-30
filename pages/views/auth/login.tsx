@@ -30,7 +30,7 @@ const Login = withRouter<IProps>(
     const { query } = parsePath(router!.asPath!);
     const { login } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const handleOk = async (value: typeof initForm, setSubmitting: (data: any) => void) => {
+    const handleOk = async (value: typeof initForm, setSubmitting: (isSubmitting: boolean) => void) => {
       setConfirmLoading(true);
       setSubmitting(false);
       try {
@@ -56,7 +56,7 @@ const Login = withRouter<IProps>(
         <Head>
           <title>{getTitle('登录🔑')}</title>
         </Head>
-          <Title>
+        <Title>
           <Emojione
             svg
             text="登录🔑"

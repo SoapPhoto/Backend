@@ -61,24 +61,29 @@ export class Popover extends React.PureComponent<IPopoverProps> {
   };
 
   @observable public visible = false;
+
   @observable public placement: Placement = this.props.placement;
 
   public delay?: NodeJS.Timeout;
+
   public _timer?: NodeJS.Timeout;
 
   public arrow?: HTMLDivElement;
+
   public arrowRef = (ref: HTMLDivElement) => {
     if (ref) {
       this.arrow = ref;
       this.forceUpdate();
     }
   }
+
   public onClose = () => {
     if (isFunction(this.props.onClose)) {
       this.props.onClose();
     }
     this.visible = false;
   }
+
   public close = (isDelay = false) => {
     clearTimeout(this._timer!);
     if (isDelay) {
@@ -89,6 +94,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       this.visible = false;
     }
   }
+
   public open = () => {
     if (this.props.openDelay) {
       clearTimeout(this._timer!);
@@ -99,11 +105,13 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       this.visible = true;
     }
   }
+
   public selfEvents = (child: any, type: string, e: any) => {
     if (child && child.props && isFunction(child.props[type])) {
       child.props[type](e);
     }
   }
+
   public render() {
     const {
       children,
@@ -198,8 +206,14 @@ export class Popover extends React.PureComponent<IPopoverProps> {
               {state => (
                 <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
                   {
-                    arrow &&
-                    <Arrow x-theme={theme} x-placement={this.placement} placement={this.placement} ref={this.arrowRef}/>
+                    arrow && (
+                      <Arrow
+                        x-theme={theme}
+                        x-placement={this.placement}
+                        placement={this.placement}
+                        ref={this.arrowRef}
+                      />
+                    )
                   }
                   <Content x-theme={theme} style={contentStyle}>
                     {cntentRender}

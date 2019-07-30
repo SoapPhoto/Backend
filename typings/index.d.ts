@@ -20,4 +20,3 @@ interface IEXIF {
   exposureTime?: string;
   ISO?: string;
 }
-

@@ -1,8 +1,8 @@
-import { PaginationList } from './global';
+import { IPaginationList } from './global';
 
 export type PictureEntity = import('@server/picture/picture.entity').PictureEntity;
 
-export interface IPictureListRequest extends PaginationList {
+export interface IPictureListRequest extends IPaginationList {
   data: PictureEntity[];
 }
 

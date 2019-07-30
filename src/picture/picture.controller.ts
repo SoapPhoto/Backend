@@ -71,7 +71,7 @@ export class PictureController {
 
   @Delete(':id')
   @Roles(Role.USER)
-  public async deletePicture (
+  public async deletePicture(
     @Param('id') id: number,
     @User() user: UserEntity,
   ) {
@@ -79,7 +79,7 @@ export class PictureController {
   }
 
   @Get()
-  public async getList (
+  public async getList(
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {

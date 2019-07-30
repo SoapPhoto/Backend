@@ -1,4 +1,4 @@
-import React, { Children, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Zoom from 'zooming';
 
 export const Zooming: React.FC<any> = ({ children }) => {

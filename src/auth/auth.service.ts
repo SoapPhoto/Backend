@@ -20,8 +20,8 @@ export class AuthService {
       if (userInfo.verified || userInfo.signupType !== 'email') {
         message = 'activated';
       } else if (
-        userInfo.identifier === identifier &&
-        userInfo.verificationToken === verificationToken
+        userInfo.identifier === identifier
+        && userInfo.verificationToken === verificationToken
       ) {
         await this.userService.updateUser(userInfo, {
           verified: true,
