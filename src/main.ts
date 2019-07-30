@@ -1,4 +1,6 @@
+/* eslint-disable import/first */
 /// <reference types="../typings/index" />
+require('dotenv').config();
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -11,11 +13,9 @@ import Next from 'next';
 import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
 
-require('dotenv').config();
-
 const bootstrap = async () => {
-  const dev = process.env.NODE_ENV !== 'production';
-  // const dev = false;
+  // const dev = process.env.NODE_ENV !== 'production';
+  const dev = false;
   const app = Next({
     dev,
   });

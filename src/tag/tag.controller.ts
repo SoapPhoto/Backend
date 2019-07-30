@@ -22,7 +22,7 @@ export class TagController {
     @Param('name') name: string,
     @User() user: UserEntity,
   ) {
-    return this.tagService.getTagInfo(nameuser);
+    return this.tagService.getTagInfo(name, user);
   }
 
   @Get(':name/picture')

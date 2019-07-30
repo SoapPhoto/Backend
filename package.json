@@ -5,18 +5,18 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "npx npm-run-all --parallel build:*",
-    "build:server": "npx tsc -p tsconfig.build.json && npx babel --no-babelrc --config-file ./.babelrc-server -d .next/production-server .next/production-server",
-    "build:view": "npx next build",
+    "build": "npm-run-all --parallel build:*",
+    "build:server": "tsc -p tsconfig.build.json && babel --no-babelrc --config-file ./.babelrc-server -d .next/production-server .next/production-server",
+    "build:view": "next build",
     "format": "prettier --write \"src/**/*.ts\"",
-    "start": "npx cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/main.js",
-    "start:dev": "npx nodemon",
-    "start:debug": "npx nodemon --config nodemon-debug.json",
+    "start": "cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/main.js",
+    "start:dev": "nodemon",
+    "start:debug": "nodemon --config nodemon-debug.json",
     "start:prod": "node dist/main.js",
-    "env": "npx sync-dotenv",
+    "env": "sync-dotenv",
     "lint": "eslint src/** --ext .ts,.tsx",
     "lint:fix": "eslint src/** --ext .ts,.tsx --fix",
-    "commitlint": "npx commitlint -E HUSKY_GIT_PARAMS"
+    "commitlint": "commitlint -E HUSKY_GIT_PARAMS"
   },
   "dependencies": {
     "@nestjs/common": "^6.5.3",
