@@ -6,7 +6,7 @@ const colors = {
   shadowColor: 'rgba(0, 0, 0, 0.06)',
   secondary: '#8a92a9',
   primary: '#05f',
-  text: lighten(0.1, '#000'),
+  text: '#161b3d',
   danger: '#ff4d4f',
   background: '#f8fafc',
   gray: '#eaeaea',

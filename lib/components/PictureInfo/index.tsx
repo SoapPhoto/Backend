@@ -6,7 +6,7 @@ import { connect } from '@lib/common/utils/store';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton } from '@lib/components/LikeButton';
 import { Popover } from '@lib/components/Popover';
-import { Calendar } from '@lib/icon';
+import { Clock, Bookmark } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -51,7 +51,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           content={<span>{moment(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
         >
           <BaseInfoItem>
-            <Calendar size={20} />
+            <Clock size={20} />
             <p>{moment(info.createTime).from()}</p>
           </BaseInfoItem>
         </Popover>
@@ -82,6 +82,10 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             />
           )
         }
+        <Bookmark
+          color={themeData.colors.secondary}
+          size={22}
+        />
       </BaseInfoHandleBox>
       <EXIFModal
         visible={EXIFVisible}

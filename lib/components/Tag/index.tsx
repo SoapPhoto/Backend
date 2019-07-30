@@ -16,24 +16,37 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export const Tag = styled.span<{close?: boolean}>`
+export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   position: relative;
   box-sizing: border-box;
-  color: ${_ => _.theme.colors.secondary};
+  color: ${_ => _.theme.colors.text};
+  font-weight: 700;
   border: 1px solid ${_ => _.theme.colors.gray};
-  border-radius: ${rem('4px')};
+  border-radius: ${rem('20px')};
   font-size: ${_ => rem(_.theme.fontSizes[0])};
   font-variant: tabular-nums;
   display: flex;
   align-items: center;
   justify-content: center;
   height: auto;
-  padding: ${rem('4px')} ${rem('16px')};
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  padding: ${rem('4px')} ${rem('20px')};
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
   background: ${_ => _.theme.colors.lightgray};
-  border-radius: ${rem('2px')};
+  ${_ => (
+    _.edit ? `
+      font-size: ${rem(_.theme.fontSizes[1])};
+      height: ${rem('32px')};
+    ` : `
+      &:hover {
+        background: ${_.theme.colors.primary};
+        border-color: ${_.theme.colors.primary};
+        color: ${_.theme.colors.pure};
+      }
+  `
+  )}
+  transition: .2s background ease, .2s border-color ease, .2s color ease;
   & svg {
-    stroke: ${_ => _.theme.colors.secondary};
+    stroke: ${_ => _.theme.colors.text};
   }
 `;
 
@@ -91,6 +104,7 @@ export default function ({
       {
         value.map(e => (
           <Tag
+            edit
             style={{ marginRight: '12px', marginBottom: '12px' }}
             key={e}
             close
@@ -105,6 +119,7 @@ export default function ({
           width: '120px', textAlign: 'center', marginRight: '12px', marginBottom: '12px',
         }}
         onClick={click}
+        edit
       >
         {
           !isClick ? (
