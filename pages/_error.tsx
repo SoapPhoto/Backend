@@ -64,8 +64,9 @@ class Error extends React.Component<IErrorProps> {
   }
 
   @computed get error() {
+    const { statusCode } = this.props;
     return {
-      statusCode: this.props.statusCode || 500,
+      statusCode: statusCode || 500,
     };
   }
 

@@ -15,7 +15,7 @@
     "start:prod": "node dist/main.js",
     "env": "sync-dotenv",
     "lint": "eslint src/** --ext .ts,.tsx",
-    "lint:fix": "eslint src/** --ext .ts,.tsx --fix",
+    "lint:fix": "eslint src/** lib/** pages/** --ext .ts,.tsx --fix",
     "commitlint": "commitlint -E HUSKY_GIT_PARAMS"
   },
   "dependencies": {

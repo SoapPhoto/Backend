@@ -4,3 +4,4 @@ config/*
 docker-data/*
 logs/*
 src/*.graphql
+src/*.json
