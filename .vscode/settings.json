@@ -1,16 +1,9 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
-  },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "javascript.validate.enable": false,
-  "tslint.exclude": [
-    "**/dist/**",
-    "**/node_modules/**",
-    "**/.next/**",
-  ],
   "editor.fontFamily": " 'Dank Mono', 'FiraCode-Retina',  'Fira Code Retina', 'Iosevka Term', Consolas, 'M+ 1m', 'Courier New', monospace, 微软雅黑",
   "editor.tabSize": 2,
   "vsicons.presets.nestjs": true,
-  "debug.node.autoAttach": "on"
+  "debug.node.autoAttach": "on",
+  "eslint.enable": true,
+  "eslint.autoFixOnSave": true
 }

@@ -1,4 +1,6 @@
-import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity, JoinTable, ManyToOne, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';

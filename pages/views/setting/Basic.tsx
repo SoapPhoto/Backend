@@ -1,9 +1,7 @@
 import React from 'react';
 
-const Basic = () => {
-  return (
-    <div>basic</div>
-  );
-};
+const Basic = () => (
+  <div>basic</div>
+);
 
 export default Basic;

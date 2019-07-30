@@ -85,12 +85,12 @@ export class UserService {
     return q.loadRelationCountAndMap(
       'user.pictureCount', 'user.pictures',
     )
-    .loadRelationCountAndMap(
-      'user.likes', 'user.pictureActivitys', 'activity',
-      qb => qb.andWhere(
-        'activity.like=TRUE',
-      ),
-    );
+      .loadRelationCountAndMap(
+        'user.likes', 'user.pictureActivitys', 'activity',
+        qb => qb.andWhere(
+          'activity.like=TRUE',
+        ),
+      );
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
@@ -123,11 +123,11 @@ export class UserService {
     });
   }
 
-  public async getUserPicture(idOrName: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
+  public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserPicture(idOrName, query, user);
   }
 
-  public async getUserLikePicture(idOrName: string , query: GetPictureListDto, user: Maybe<UserEntity>) {
+  public async getUserLikePicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserLikePicture(idOrName, query, user);
   }
 

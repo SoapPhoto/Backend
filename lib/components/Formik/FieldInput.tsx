@@ -8,7 +8,6 @@ interface IProps extends IInputProps {
 }
 
 const Component = React.memo(({
-  name,
   field,
   form: { touched, errors },
   ...restFieldProps

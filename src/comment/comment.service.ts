@@ -19,7 +19,8 @@ export class CommentService {
     private pictureService: PictureService,
     private userService: UserService,
   ) {}
-  public async getPictureList(id: string, query: GetPictureCommentListDto, user: Maybe<UserEntity>) {
+
+  public async getPictureList(id: string, query: GetPictureCommentListDto, _user: Maybe<UserEntity>) {
     const q = this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.pictureId=:id', { id })
@@ -29,6 +30,7 @@ export class CommentService {
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, plainToClass(CommentEntity, data), count);
   }
+
   public async create(data: CreatePictureCommentDot, id: string, user: UserEntity) {
     // console.log(user, data);
     const picture = await this.pictureService.getOnePicture(id, user);

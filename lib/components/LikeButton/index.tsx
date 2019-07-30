@@ -1,6 +1,6 @@
 import { Heart } from '@lib/icon';
 import { rem } from 'polished';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { Popover } from '../Popover';
 
@@ -22,8 +22,8 @@ const Button = styled.div<{like: boolean; color?: string}>`
   user-select: none;
   margin-left: ${rem('12px')};
   & svg {
-    fill: ${_ => _.like ? '#f44336' : 'none'};
-    stroke: ${_ => _.like ? '#f44336' : _.color || '#fff'};
+    fill: ${_ => (_.like ? '#f44336' : 'none')};
+    stroke: ${_ => (_.like ? '#f44336' : _.color || '#fff')};
     transition: .2s fill ease, .2s stroke ease, .2s transform ease;
   }
   transition: transform 0.1s;
@@ -51,7 +51,7 @@ export const LikeButton: React.FC<IProps> = ({
     disabled.current = false;
   }, [onLike]);
   const content = (
-    <Button onClick={onClick} color={color} like={isLike} >
+    <Button onClick={onClick} color={color} like={isLike}>
       <Heart size={size} />
     </Button>
   );

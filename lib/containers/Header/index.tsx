@@ -32,8 +32,8 @@ export const Header = withRouter<IProps>(
             {/* <MenuItem>首页</MenuItem> */}
           </MenuWapper>
           {
-            !isLog &&
-            <Btns />
+            !isLog
+            && <Btns />
           }
         </Wrapper>
       );

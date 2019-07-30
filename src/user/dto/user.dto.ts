@@ -1,7 +1,8 @@
-import { IsEmail, IsOptional, IsString, IsUrl, Length, ValidateIf } from 'class-validator';
+import {
+  IsEmail, IsOptional, IsString, IsUrl, Length,
+} from 'class-validator';
 
-import { validator } from '@server/common/utils/validator';
-import { IsUserName, IsWebsite } from '@server/common/validator';
+import { IsUserName } from '@server/common/validator';
 import { Exclude, Expose } from 'class-transformer';
 import { UserEntity } from '../user.entity';
 
@@ -13,7 +14,6 @@ import { UserEntity } from '../user.entity';
  */
 @Exclude()
 export class CreateUserDto {
-
   /**
    * 邮箱
    *
@@ -23,6 +23,7 @@ export class CreateUserDto {
   @IsEmail()
   @Expose()
   public readonly email!: string;
+
   /**
    * 用户名
    *

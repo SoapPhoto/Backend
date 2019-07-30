@@ -9,13 +9,17 @@ declare module 'react-keydown';
 
 declare module 'zooming';
 
-declare module "*.json" {
+declare module 'socks-proxy-agent';
+
+
+declare module '*.json' {
   const value: any;
   export default value;
 }
 
 declare namespace Express {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface Request {
-    user: import('@server/user/user.entity').UserEntity | null
+    user: import('@server/user/user.entity').UserEntity | null;
   }
 }

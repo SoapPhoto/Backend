@@ -2,6 +2,7 @@ export * from './route';
 export * from './math';
 
 export function indexOfSmallest(a: number[]): number {
+  // eslint-disable-next-line prefer-spread
   return a.indexOf(Math.min.apply(Math, a));
 }
 /**
@@ -11,12 +12,10 @@ export function indexOfSmallest(a: number[]): number {
  */
 export function getScrollWidth() {
   const div = document.createElement('DIV');
-  let noScroll;
-  let scroll;
   div.style.cssText = 'position:absolute; top:-1000px; width:100px; height:100px; overflow:hidden;';
-  noScroll = document.body.appendChild(div).clientWidth;
+  const noScroll = document.body.appendChild(div).clientWidth;
   div.style.overflowY = 'scroll';
-  scroll = div.clientWidth;
+  const scroll = div.clientWidth;
   document.body.removeChild(div);
   return noScroll - scroll;
 }
@@ -31,6 +30,7 @@ export function getScrollWidth() {
 export function setBodyCss(css: Partial<CSSStyleDeclaration>) {
   const body = document.querySelector('body')!;
   const init = body.getAttribute('style')!;
+  // eslint-disable-next-line no-restricted-syntax
   for (const key in css) {
     if (key) {
       body.style[key] = css[key] as string;

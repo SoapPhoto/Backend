@@ -8,6 +8,7 @@ import { ListStore } from '../base/ListStore';
 
 export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDto> {
   @observable public name!: string;
+
   @observable public info!: TagEntity;
 
   constructor() {
@@ -30,15 +31,16 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
     this.init = true;
     this.setData(data, plus);
   }
+
   @action
-  public getPageList = async() => {
+  public getPageList = async () => {
     const page = this.listQuery.page + 1;
     if (page > this.maxPage) {
       return;
     }
     // tslint:disable-next-line: no-increment-decrement
-    this.listQuery.page++;
-    return this.getList(undefined, true);
+    this.listQuery.page += 1;
+    await this.getList(undefined, true);
   }
 
   @action public setData = (data: ITagPictureListRequest, plus: boolean) => {
@@ -60,6 +62,7 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
   }
+
   @action
   public like = async (data: PictureEntity) => {
     const oldData = data.isLike;

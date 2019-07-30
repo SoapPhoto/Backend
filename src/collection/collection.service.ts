@@ -1,6 +1,8 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException, ForbiddenException, Injectable, NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -22,6 +24,7 @@ export class CollectionService {
     private pictureService: PictureService,
     private userService: UserService,
   ) {}
+
   public async create(body: CreateCollectionDot, user: UserEntity) {
     const data = await this.collectionEntity.save(
       this.collectionEntity.create({
@@ -33,7 +36,9 @@ export class CollectionService {
       groups: ['me'],
     });
   }
-  public async addPicture(id: string, { pictureId }: AddPictureCollectionDot, user: UserEntity) {
+
+  // TODO: BUG
+  public async addPicture(id: string, { pictureId }: AddPictureCollectionDot, _user: UserEntity) {
     const [picture, collection] = await Promise.all([
       this.pictureService.getRawOne(pictureId),
       this.collectionEntity.findOne(id),
@@ -68,8 +73,8 @@ export class CollectionService {
 
     this.userService.selectInfo(q);
     const collection = await q.getOne();
-    const isMe = user && user.id === user.id;
-    if (!collection || collection.isPrivate && !isMe) {
+    const isMe = user && collection && (user.id === collection.user.id);
+    if (!collection || (collection.isPrivate && !isMe)) {
       throw new NotFoundException();
     }
     return plainToClass(CollectionEntity, collection, {
@@ -83,7 +88,7 @@ export class CollectionService {
     user: Maybe<UserEntity>,
   ) {
     const collection = await this.collectionEntity.findOne(id);
-    const isMe = user && user.id === user.id;
+    const isMe = user && collection && user.id === collection.user.id;
     if (!collection) {
       throw new NotFoundException();
     }
@@ -103,7 +108,8 @@ export class CollectionService {
       .select('DISTINCT pictureId')
       .addSelect('pictureId')
       .leftJoin('cp.picture', 'picture')
-      .skip((query.page - 1) * query.pageSize).take(query.pageSize);
+      .skip((query.page - 1) * query.pageSize)
+      .take(query.pageSize);
     if (!isMe) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
@@ -119,6 +125,7 @@ export class CollectionService {
     const pictureList = await q.getMany();
     return listRequest(query, plainToClass(PictureEntity, pictureList), count.count as number);
   }
+
   /**
    * 是否已收藏
    *
@@ -131,5 +138,4 @@ export class CollectionService {
       .getOne();
     return !!data;
   }
-
 }

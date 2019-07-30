@@ -10,7 +10,9 @@ import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import UserCard from './components/UserCard';
 import { PictureImage } from './Image';
-import { HandleBox, InfoBox, ItemWapper, UserBox, UserName } from './styles';
+import {
+  HandleBox, InfoBox, ItemWapper, UserBox, UserName,
+} from './styles';
 
 export interface IPictureItemProps {
   detail: PictureEntity;
@@ -36,9 +38,12 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
   return (
     <ItemWapper>
       <Link route={`/picture/${detail.id}`}>
+        {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
         <a
           href={`/picture/${detail.id}`}
-          style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, zIndex: 2 }}
+          style={{
+            position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, zIndex: 2,
+          }}
         />
       </Link>
       <InfoBox>
@@ -65,8 +70,8 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
         </UserBox>
         <HandleBox>
           {
-            isLogin &&
-            <LikeButton isLike={detail.isLike} onLike={onLike} />
+            isLogin
+            && <LikeButton isLike={detail.isLike} onLike={onLike} />
           }
         </HandleBox>
       </InfoBox>

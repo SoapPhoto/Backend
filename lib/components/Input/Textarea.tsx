@@ -3,7 +3,9 @@ import { rgba } from 'polished';
 import React, { memo, useCallback, useState } from 'react';
 import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
 import styled from 'styled-components';
-import { ErrorBox, inputCss, Label, LabelBox } from './styles';
+import {
+  ErrorBox, inputCss, Label, LabelBox,
+} from './styles';
 
 export interface ITextareaProps extends TextareaAutosizeProps {
   /**
@@ -27,7 +29,7 @@ export interface ITextareaProps extends TextareaAutosizeProps {
 
 type Component = React.FC<ITextareaProps>;
 
-const TextareaBox = styled.div<{ error?: boolean, focus?: boolean }>`
+const TextareaBox = styled.div<{ error?: boolean; focus?: boolean }>`
   ${inputCss}
   line-height: 24px;
   & textarea {
@@ -39,7 +41,7 @@ const TextareaBox = styled.div<{ error?: boolean, focus?: boolean }>`
     overflow: hidden;
     transition: .1s height ease;
     display: block;
-    color: ${props => rgba(props.theme.colors.text, .7)};
+    color: ${props => rgba(props.theme.colors.text, 0.7)};
   }
 `;
 
@@ -50,6 +52,7 @@ export const Textarea: React.FC<ITextareaProps> = memo(({
   textareaStyle,
   boxStyle,
   error,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ref,
   focus: inputFocus,
   onFocus,
@@ -73,8 +76,8 @@ export const Textarea: React.FC<ITextareaProps> = memo(({
   return (
     <LabelBox style={style}>
       {
-        label &&
-        <Label>{label}</Label>
+        label
+        && <Label>{label}</Label>
       }
       <TextareaBox
         className={className}
@@ -91,8 +94,8 @@ export const Textarea: React.FC<ITextareaProps> = memo(({
         />
       </TextareaBox>
       {
-        error &&
-        <ErrorBox>{error}</ErrorBox>
+        error
+        && <ErrorBox>{error}</ErrorBox>
       }
     </LabelBox>
   );

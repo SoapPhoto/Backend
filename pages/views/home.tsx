@@ -1,8 +1,7 @@
-import { inject, observer } from 'mobx-react';
 import Head from 'next/Head';
 import React from 'react';
 
-import { CustomNextContext, CustomNextPage } from '@lib/common/interfaces/global';
+import { ICustomNextContext, ICustomNextPage } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -13,10 +12,12 @@ interface IProps {
   homeStore: HomeScreenStore;
 }
 
-const Index: CustomNextPage<IProps, any> = ({
+const Index: ICustomNextPage<IProps, any> = ({
   homeStore,
 }) => {
-  const { list, like, getPageList, isNoMore } = homeStore;
+  const {
+    list, like, getPageList, isNoMore,
+  } = homeStore;
   return (
     <div>
       <Head>
@@ -27,11 +28,11 @@ const Index: CustomNextPage<IProps, any> = ({
   );
 };
 
-Index.getInitialProps = async (_: CustomNextContext) => {
+Index.getInitialProps = async (_: ICustomNextContext) => {
   if (
-    _.mobxStore.appStore.location &&
-    _.mobxStore.appStore.location.action === 'POP' &&
-    _.mobxStore.screen.homeStore.init
+    _.mobxStore.appStore.location
+    && _.mobxStore.appStore.location.action === 'POP'
+    && _.mobxStore.screen.homeStore.init
   ) {
     return {};
   }

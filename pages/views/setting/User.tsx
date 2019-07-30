@@ -40,7 +40,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
   };
   const handleAvatarChange = (files: FileList | null) => {
     if (files) {
-      avatarFile.current = files[0];
+      [avatarFile.current] = (files as any) as File[];
       const url = getImageUrl(files[0]);
       setAvatarUrl(url);
     }

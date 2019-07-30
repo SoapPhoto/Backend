@@ -38,7 +38,7 @@ export const Wapper = styled.div`
 `;
 
 export const Col = styled.div<{col: number; ssr: boolean}>`
-  display: ${_ => _.ssr ? 'none' : 'grid'};
+  display: ${_ => (_.ssr ? 'none' : 'grid')};
   grid-gap: ${rem(padding)};
   grid-template-columns: repeat(${props => props.col}, 1fr);
 `;

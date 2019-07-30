@@ -187,7 +187,7 @@ const Upload: React.FC = () => {
                 type => (
                   <>
                     <UploadCloud size={34} style={{ pointerEvents: 'none' }} />
-                    <span style={{ pointerEvents: 'none' }} >{type === 'drop' ? '松开上传' : '拖拽照片到这里'}</span>
+                    <span style={{ pointerEvents: 'none' }}>{type === 'drop' ? '松开上传' : '拖拽照片到这里'}</span>
                   </>
                 )
               }

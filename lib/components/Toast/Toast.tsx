@@ -1,4 +1,3 @@
-import { ThemeWrapper } from '@lib/containers/Theme';
 import { IObservableArray, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { rem } from 'polished';
@@ -10,7 +9,7 @@ import uniqid from 'uniqid';
 
 type ToastType = 'success' | 'warning' | 'error' | 'base';
 
-interface IToastConfig  {
+interface IToastConfig {
   key?: string | number;
   duration?: number;
   title: string;
@@ -156,13 +155,14 @@ const ToastBox = styled.div<{type?: ToastType}>`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 ${rem('4px')} ${rem('9px')} rgba(0, 0, 0, 0.12);
-  font-size: ${_ => rem(14)};
+  font-size: ${() => rem(14)};
   transition: transform 0.4s, opacity 0.4s ease;
 `;
 
 @observer
 export class ToastComponent extends React.Component {
   @observable public configList: IObservableArray<IToastConfig> = observable.array([]);
+
   public add = (config: IToastConfig) => {
     const newConfig = {
       ...config,
@@ -176,12 +176,14 @@ export class ToastComponent extends React.Component {
       }, config.duration || 6000);
     }
   }
+
   public animate = (state: TransitionStatus, key: number) => {
     if (state === 'exiting') {
       return animate[state][key];
     }
     return animate[state][this.configList.length - key - 1];
   }
+
   public render() {
     return (
       <TransitionGroup component={Area}>

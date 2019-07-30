@@ -1,19 +1,25 @@
-import { IsNumber } from 'class-validator';
+import {
+  IsOptional, IsPositive, Max, Min,
+} from 'class-validator';
 
 import { Type } from 'class-transformer';
 import moment from 'moment';
 
 export class PaginationDto {
-
-  @IsNumber()
+  @IsOptional()
+  @IsPositive()
+  @Min(1)
   @Type(() => Number)
   public readonly page: number = 1;
 
-  @IsNumber()
+  @IsOptional()
+  @IsPositive()
   @Type(() => Number)
+  @Min(1)
+  @Max(50)
   public readonly pageSize: number = Number(process.env.LIST_PAGE_SIZE);
 
-  @Type(type => Number)
+  @Type(() => Number)
   public readonly timestamp?: number;
 
   get time() {

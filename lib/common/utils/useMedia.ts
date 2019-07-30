@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { server } from '../utils';
+import { server } from '.';
 
 export default function useMedia(queries: string[], values: any[], defaultValue: any) {
   let mediaQueryLists: MediaQueryList[] = [];

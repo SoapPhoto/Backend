@@ -3,7 +3,6 @@ import React from 'react';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
-import { Avatar } from '../Avatar';
 import { CommentEditor } from './Editor';
 import { CommentList } from './List';
 import { Wrapper } from './styles';
@@ -23,8 +22,8 @@ export const Comment = connect<React.FC<IProps>>('accountStore')(({
   return (
     <Wrapper>
       {
-        isLogin &&
-        <CommentEditor onConfirm={onConfirm} />
+        isLogin
+        && <CommentEditor onConfirm={onConfirm} />
       }
       <CommentList comment={comment} />
     </Wrapper>

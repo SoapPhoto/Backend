@@ -1,5 +1,7 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray, IsBoolean, IsNotEmpty, IsString,
+} from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { transformJson } from '@server/common/utils/transform';
@@ -54,7 +56,7 @@ export class CreatePictureAddDot {
   public readonly tags!: string;
 
   @IsBoolean()
-  @Transform(value => value === '0' ? false : true)
+  @Transform(value => (value !== '0'))
   @Expose()
   public readonly isPrivate!: boolean;
 }

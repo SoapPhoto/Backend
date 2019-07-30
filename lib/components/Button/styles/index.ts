@@ -1,10 +1,10 @@
 import { rem } from 'polished';
 import styled, { css } from 'styled-components';
 
-const loadingCss = ({ loading }: {loading: number}) => loading ?
-  css`
+const loadingCss = ({ loading }: {loading: number}) => (loading
+  ? css`
     pointer-events: none;
-  ` : '';
+  ` : '');
 
 export const StyleButton = styled.button<{loading: number}>`
   position: relative;
@@ -23,8 +23,8 @@ export const StyleButton = styled.button<{loading: number}>`
   padding: 0 ${rem('17px')};
   font-size: ${_ => rem(_.theme.fontSizes[1])};
   border-radius: ${rem('4px')};
-  border-color: ${_ => _.loading ? _.theme.colors.gray : _.theme.colors. primary};
-  background-color: ${_ => _.loading ? 'rgb(250, 250, 250)' : _.theme.colors.primary};
+  border-color: ${_ => (_.loading ? _.theme.colors.gray : _.theme.colors.primary)};
+  background-color: ${_ => (_.loading ? 'rgb(250, 250, 250)' : _.theme.colors.primary)};
   color: #fff;
   transition: .2s color ease, .2s background ease;
   ${loadingCss}

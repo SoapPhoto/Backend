@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { getScrollHeight, getScrollTop, getWindowHeight, isSafari, server } from '@lib/common/utils';
+import {
+  getScrollHeight, getScrollTop, getWindowHeight, server,
+} from '@lib/common/utils';
 import { listParse } from '@lib/common/utils/waterfall';
 import { Loading } from '@lib/components/Loading';
 import { NoSSR } from '@lib/components/SSR';
 import { debounce } from 'lodash';
-import { observable, reaction } from 'mobx';
-import { observer } from 'mobx-react';
-import Col from './Col';
-import { Footer, PictureContent, Wapper } from './styles';
 
 import useMedia from '@lib/common/utils/useMedia';
-import { connect } from 'formik';
 import { defaultBreakpoints } from 'styled-media-query';
+import { Footer, PictureContent, Wapper } from './styles';
+import Col from './Col';
 
 interface IProps {
   /**
@@ -62,35 +61,12 @@ export const PictureList: React.FC<IProps> = ({
 }) => {
   let serverList: PictureEntity[][][] = [];
   const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
+  const pageLock = React.useRef<boolean>(false);
   const col = useMedia(
     mediaArr.map(media => media.media),
     mediaArr.map(media => media.col),
     4,
   );
-  useEffect(() => {
-    scrollEvent();
-  }, []);
-  const pageLock = React.useRef<boolean>(false);
-  // 滚动事件绑定
-  useEffect(() => {
-    if (!noMore) {
-      window.addEventListener('scroll', scrollEvent);
-      return () => window.removeEventListener('scroll', scrollEvent);
-    }
-    return;
-  }, []);
-  // 处理客户端列表数据
-  useEffect(() => {
-    pictureList();
-  }, [col, data]);
-  // 服务端渲染列表
-  if (server) {
-    serverList = colArr.map(_col => listParse(data, _col));
-  }
-
-  const pictureList = () => {
-    setClientList(_ => listParse(data, col));
-  };
 
   const scrollEvent = debounce(async () => {
     const offset = getScrollHeight() - (getScrollTop() + getWindowHeight());
@@ -104,13 +80,36 @@ export const PictureList: React.FC<IProps> = ({
       }
     }
   }, 50);
+
+  const pictureList = () => {
+    setClientList(() => listParse(data, col));
+  };
+  useEffect(() => {
+    scrollEvent();
+  }, []);
+  // 滚动事件绑定
+  useEffect(() => {
+    if (!noMore) {
+      window.addEventListener('scroll', scrollEvent);
+      return () => window.removeEventListener('scroll', scrollEvent);
+    }
+    return () => null;
+  }, []);
+  // 处理客户端列表数据
+  useEffect(() => {
+    pictureList();
+  }, [col, data]);
+  // 服务端渲染列表
+  if (server) {
+    serverList = colArr.map(_col => listParse(data, _col));
+  }
   return (
     <Wapper>
       <NoSSR key="server" server={false}>
         <PictureContent>
           {
             serverList.map((mainCol, i) => (
-              <Col ssr={true} col={colArr[i]} key={colArr[i]} list={mainCol} />
+              <Col ssr col={colArr[i]} key={colArr[i]} list={mainCol} />
             ))
           }
         </PictureContent>

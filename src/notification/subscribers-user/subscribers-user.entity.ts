@@ -1,5 +1,7 @@
 
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/user/user.entity';
@@ -10,15 +12,16 @@ import { NotificationEntity } from '../notification.entity';
 @Index(['notification'])
 export class NotificationSubscribersUserEntity extends BaseEntity {
   @PrimaryGeneratedColumn() public id!: number;
+
   /** 是否已读 */
   @Column({ default: false })
   public read: boolean = false;
 
-  @ManyToOne(type => NotificationEntity)
+  @ManyToOne(() => NotificationEntity)
   @JoinColumn()
   public notification!: NotificationEntity;
 
-  @ManyToOne(type => UserEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
   public user!: UserEntity;
 }

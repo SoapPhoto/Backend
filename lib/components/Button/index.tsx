@@ -18,18 +18,16 @@ export const Button: Component = ({
   children,
   loading = false,
   ...restProps
-}) => {
-  return (
-    <StyleButton
-      {...restProps}
-      loading={loading ? 1 : 0}
-    >
-      <>
-        {
-          loading && <LoadingBox><Loading /></LoadingBox>
-        }
-        {children}
-      </>
-    </StyleButton>
-  );
-};
+}) => (
+  <StyleButton
+    {...restProps}
+    loading={loading ? 1 : 0}
+  >
+    <>
+      {
+        loading && <LoadingBox><Loading /></LoadingBox>
+      }
+      {children}
+    </>
+  </StyleButton>
+);

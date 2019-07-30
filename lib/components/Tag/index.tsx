@@ -79,7 +79,7 @@ export default function ({
 
   const deleteTag = (tag: string) => isFunction(onChange) && onChange(value.filter(item => item !== tag));
 
-  const keyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const keyDown = () => {
     if (isFunction(onChange)) {
       onChange([...new Set([...value, inputRef.current!.value])]);
     }
@@ -101,7 +101,9 @@ export default function ({
         ))
       }
       <Tag
-        style={{ width: '120px', textAlign: 'center', marginRight: '12px', marginBottom: '12px' }}
+        style={{
+          width: '120px', textAlign: 'center', marginRight: '12px', marginBottom: '12px',
+        }}
         onClick={click}
       >
         {

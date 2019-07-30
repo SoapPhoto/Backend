@@ -9,7 +9,9 @@ import { ThemeStore } from '@lib/stores/ThemeStore';
 import { computed } from 'mobx';
 import { Cell } from 'styled-css-grid';
 import { Modal } from '../Modal';
-import { EXIFBox, EXIFInfo, EXIFTitle, Info, Title } from './styles';
+import {
+  EXIFBox, EXIFInfo, EXIFTitle, Info, Title,
+} from './styles';
 
 interface IProps {
   visible: boolean;
@@ -22,16 +24,21 @@ interface IProps {
 @observer
 export class EXIFModal extends React.Component<IProps> {
   @computed get background() {
-    const { key } = this.props.picture;
-    const { themeData } = this.props.themeStore!;
-  // tslint:disable-next-line: max-line-length
-    return `linear-gradient(${rgba(themeData.colors.pure, .8)}, ${themeData.colors.pure} 150px), url("${getPictureUrl(key)}")`;
+    const { picture, themeStore } = this.props;
+    const { key } = picture;
+    const { themeData } = themeStore!;
+    // eslint-disable-next-line max-len
+    return `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 150px), url("${getPictureUrl(key)}")`;
   }
 
   public render() {
-    const { visible, onClose } = this.props;
-    const { make, model, exif, width, height, size } = this.props.picture;
-    const { focalLength, aperture, exposureTime, ISO } = exif!;
+    const { visible, onClose, picture } = this.props;
+    const {
+      make, model, exif, width, height, size,
+    } = picture;
+    const {
+      focalLength, aperture, exposureTime, ISO,
+    } = exif!;
     return (
       <Modal
         visible={visible}

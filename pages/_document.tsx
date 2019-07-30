@@ -1,4 +1,6 @@
-import Document, { DocumentContext, Head, Main, NextScript } from 'next/document';
+import Document, {
+  DocumentContext, Head, Main, NextScript,
+} from 'next/document';
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 
@@ -7,10 +9,9 @@ export default class MyDocument extends Document {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
     try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
-        });
+      ctx.renderPage = () => originalRenderPage({
+        enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+      });
 
       const initialProps = await Document.getInitialProps(ctx);
       return {
@@ -26,13 +27,14 @@ export default class MyDocument extends Document {
       sheet.seal();
     }
   }
+
   public render() {
     return (
-      <html>
+      <html lang="zh-CN">
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
-          <link href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" rel="stylesheet"/>
+          <link href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" rel="stylesheet" />
         </Head>
         <body id="body">
           <Main />

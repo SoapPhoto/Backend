@@ -4,12 +4,11 @@ import { computed } from 'mobx';
 import { observer, Provider } from 'mobx-react';
 import Head from 'next/Head';
 import styled from 'styled-components';
-import { getTitle } from '../lib/common/utils';
-import { href } from '../lib/common/utils/themes/common';
-import { ThemeWrapper } from '../lib/containers/Theme';
-import { ArrowRight, CloudSnow } from '../lib/icon';
-import { Link } from '../lib/routes';
-import { IMyMobxStore, initStore } from '../lib/stores/init';
+import { getTitle } from '@lib/common/utils';
+import { href } from '@lib/common/utils/themes/common';
+import { ThemeWrapper } from '@lib/containers/Theme';
+import { ArrowRight, CloudSnow } from '@lib/icon';
+import { IMyMobxStore, initStore } from '@lib/stores/init';
 
 interface IErrorProps {
   statusCode: number;
@@ -55,16 +54,19 @@ const A = styled.a`
 
 @observer
 class Error extends React.Component<IErrorProps> {
+  public static getInitialProps: (data: any) => any;
+
+  public mobxStore: IMyMobxStore;
+
+  constructor(props: IErrorProps) {
+    super(props);
+    this.mobxStore = initStore({ screen: {} });
+  }
+
   @computed get error() {
     return {
       statusCode: this.props.statusCode || 500,
     };
-  }
-  public static getInitialProps: (data: any) => any;
-  public mobxStore: IMyMobxStore;
-  constructor(props: IErrorProps) {
-    super(props);
-    this.mobxStore = initStore({ screen: {} });
   }
 
   public render() {
@@ -80,10 +82,10 @@ class Error extends React.Component<IErrorProps> {
               <CloudSnowIcon />
               <Status>{statusCode}</Status>
               {/* <Link route="/"> */}
-                <A href="/">
+              <A href="/">
                   前往首页
-                  <ArrowRight style={{ marginLeft: 4 }} size={14} />
-                </A>
+                <ArrowRight style={{ marginLeft: 4 }} size={14} />
+              </A>
               {/* </Link> */}
             </Box>
           </Wrapper>

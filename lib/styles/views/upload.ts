@@ -77,7 +77,7 @@ export const FormInfo = styled(Cell)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${_ => rem('12px')};
+  margin-bottom: ${() => rem('12px')};
 `;
 
 export const FormLabel = styled.div`
@@ -96,5 +96,5 @@ export const FormMessage = styled.p`
 `;
 
 export const FormTag = styled(Cell)`
-  margin-top: ${_ => rem('24px')};
+  margin-top: ${() => rem('24px')};
 `;

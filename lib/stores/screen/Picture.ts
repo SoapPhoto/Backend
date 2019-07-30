@@ -9,14 +9,18 @@ import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
   @observable public info!: PictureEntity;
+
   @observable public comment: CommentEntity[] = [];
+
   @observable public id!: number;
+
   public cacheData: Record<string, PictureEntity> = {};
 
   @action public setInfo = (data: PictureEntity) => {
     this.id = data.id;
     this.info = data;
   }
+
   public getPictureInfo = async (id: string, header?: any) => {
     const { data } = await getPicture(id, header);
     if (!data) {
@@ -30,17 +34,21 @@ export class PictureScreenStore extends BaseStore {
     this.setCache(this.id, this.info);
     return undefined;
   }
+
   @action public getComment = async () => {
     const { data } = await getPictureComment(this.id);
     this.comment = data.data;
   }
+
   public addComment = async (content: string) => {
     const { data } = await addComment(content, this.id);
     this.pushComment(data);
   }
+
   @action public pushComment = (comment: CommentEntity) => {
     this.comment.unshift(comment);
   }
+
   @action
   public like = async () => {
     try {
@@ -64,5 +72,4 @@ export class PictureScreenStore extends BaseStore {
   }
 
   public isCache = (type: string = '') => this.cacheData[type] !== undefined;
-
 }

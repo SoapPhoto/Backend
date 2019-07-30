@@ -1,15 +1,14 @@
-import { IBaseQuery } from '@lib/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { request } from '@lib/common/utils/request';
 import { likePicture } from '@lib/services/picture';
-import { action, computed, observable } from 'mobx';
-import { BaseStore } from '../base/BaseStore';
+import { action, observable } from 'mobx';
 import { ListStore } from '../base/ListStore';
 
 export class UserScreenPictureList extends ListStore<PictureEntity> {
   public cacheList: Record<string, IPictureListRequest> = {};
 
   @observable public username: string = '';
+
   @observable public type: string = '';
 
   @action

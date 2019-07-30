@@ -7,6 +7,7 @@ export class AccountStore {
   @computed get isLogin() {
     return !!this.userInfo;
   }
+
   /**
    * 登录的用户信息
    *
@@ -33,6 +34,7 @@ export class AccountStore {
   @action
   public updateProfile = async (userInfo: UpdateProfileSettingDto, avatar?: File) => {
     const params = new FormData();
+    // eslint-disable-next-line no-restricted-syntax
     for (const key in userInfo) {
       if (key) {
         params.append(key, (userInfo as any)[key]);
@@ -44,6 +46,7 @@ export class AccountStore {
     const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, params);
     this.setUserInfo(data);
   }
+
   /**
    * 登录
    *
@@ -67,6 +70,7 @@ export class AccountStore {
     await request.post('auth/logout');
     window.location.href = '/';
   }
+
   public signup = async (value: CreateUserDto) => {
     await request.post('auth/signup', value);
   }

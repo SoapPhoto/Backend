@@ -30,7 +30,7 @@ const Content = styled.div`
 `;
 
 export const Href = styled.a<{active?: boolean}>`
-  ${_ => href(_.active ? _.theme.styles.link.color : darken(.6, _.theme.colors.text))}
+  ${_ => href(_.active ? _.theme.styles.link.color : darken(0.6, _.theme.colors.text))}
   display: block;
 `;
 
@@ -56,8 +56,8 @@ export const Menu: React.FC<IUserProps> = ({
       </Wrapper>
       <Content>
         {
-          currentData &&
-          <currentData.component />
+          currentData
+          && <currentData.component />
         }
       </Content>
     </>

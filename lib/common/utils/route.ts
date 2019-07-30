@@ -1,4 +1,4 @@
-import { routeObject  } from '@lib/routes';
+import { routeObject } from '@lib/routes';
 import { pick } from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import parse from 'url-parse';
@@ -13,8 +13,7 @@ export interface IPathInfo extends Pick<parse, 'pathname' | 'href' | 'query'> {
 }
 
 export const parsePath = (asPath: string) => {
-  let info: IPathInfo;
-  info = {
+  const info: IPathInfo = {
     params: {},
     ...pick(parse(asPath, true), ['pathname', 'href', 'query']),
   };
@@ -25,7 +24,7 @@ export const parsePath = (asPath: string) => {
     const regexp = pathToRegexp(route, keys);
     const result = regexp.exec(info.pathname);
     // tslint:disable-next-line:no-increment-decrement
-    for (let i = 0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i += 1) {
       params[keys[i].name] = result[i + 1];
     }
     info.params = params;
@@ -34,6 +33,7 @@ export const parsePath = (asPath: string) => {
 };
 
 function setUrlPath(url: string) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const key in routeObject) {
     if (key) {
       const regexp = pathToRegexp(key);

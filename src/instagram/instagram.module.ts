@@ -4,6 +4,6 @@ import { InstagramService } from './instagram.service';
 
 @Module({
   controllers: [InstagramController],
-  providers: [InstagramService]
+  providers: [InstagramService],
 })
 export class InstagramModule {}

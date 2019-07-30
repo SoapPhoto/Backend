@@ -19,14 +19,12 @@ export class PictureUserActivityService {
     private activityRepository: Repository<PictureUserActivityEntity>,
   ) {}
 
-  public getOne = async (pictureId: ID, userId: ID) => {
-    return this.activityRepository.createQueryBuilder('activity')
-      .where('activity.pictureId=:pictureId', { pictureId })
-      .leftJoinAndSelect('activity.user', 'user')
-      .leftJoinAndSelect('activity.picture', 'picture')
-      .andWhere('activity.userId=:userId', { userId })
-      .getOne();
-  }
+  public getOne = async (pictureId: ID, userId: ID) => this.activityRepository.createQueryBuilder('activity')
+    .where('activity.pictureId=:pictureId', { pictureId })
+    .leftJoinAndSelect('activity.user', 'user')
+    .leftJoinAndSelect('activity.picture', 'picture')
+    .andWhere('activity.userId=:userId', { userId })
+    .getOne()
 
   public like = async (
     picture: PictureEntity,
@@ -78,14 +76,13 @@ export class PictureUserActivityService {
       this.activityRepository.create(data),
     );
   }
-  public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => {
-    return entityManager
-      .createQueryBuilder()
-      .delete()
-      .from(PictureUserActivityEntity)
-      .where('pictureId=:id', { id: picture.id })
-      .execute();
-  }
+
+  public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => entityManager
+    .createQueryBuilder()
+    .delete()
+    .from(PictureUserActivityEntity)
+    .where('pictureId=:id', { id: picture.id })
+    .execute()
 
   public getLikeList = async (userIdOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const getQ = (isCount = false) => {
@@ -94,9 +91,9 @@ export class PictureUserActivityService {
       const q = this.activityRepository.createQueryBuilder('activity')
         .select(
           ...(
-            isCount ?
-            ['COUNT(DISTINCT(`pictureId`))', 'count'] :
-            ['DISTINCT(`pictureId`)', 'id']
+            isCount
+              ? ['COUNT(DISTINCT(`pictureId`))', 'count']
+              : ['DISTINCT(`pictureId`)', 'id']
           ) as [string, string],
         )
         .where('activity.like=:like', { like: true });

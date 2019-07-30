@@ -1,7 +1,7 @@
 import 'styled-components';
 
 declare module 'styled-components' {
-  // tslint:disable-next-line:interface-name
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface DefaultTheme {
     fontSizes: number[];
     lineHeights: {[key: string]: number};
@@ -22,11 +22,11 @@ declare module 'styled-components' {
         color: string;
         hover: string;
         active: string;
-      }
+      };
       box: {
         background: string;
         borderColor: string;
-      }
+      };
       input: {
         borderColor: string;
         background: string;
@@ -34,12 +34,12 @@ declare module 'styled-components' {
         disabled: {
           color: string;
           background: string;
-        }
+        };
         hover: {
           shadow: string;
           borderColor: string;
-        }
-      }
+        };
+      };
     };
     layout: {
       header: {
@@ -52,8 +52,8 @@ declare module 'styled-components' {
           hover: {
             color: string;
             background: string;
-          }
-        }
+          };
+        };
       };
     };
   }

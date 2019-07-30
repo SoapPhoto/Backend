@@ -10,9 +10,11 @@ import nodemailer from 'nodemailer';
 @Injectable()
 export class EmailService {
   public transporter!: import('nodemailer/lib/mailer');
+
   constructor() {
     this.init();
   }
+
   public async init() {
     this.transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -24,6 +26,7 @@ export class EmailService {
       },
     });
   }
+
   public setMailContent(type: string, options: Record<string, string>) {
     const string = fs.readFileSync(path.join(__dirname, `./template/${type}.mjml`)).toString();
     return lodash.template(string)({
@@ -31,6 +34,7 @@ export class EmailService {
       host: `${process.env.URL}`,
     });
   }
+
   public async sendSignupEmail(identifier: string, verificationToken: string, userInfo: UserEntity) {
     return this.transporter.sendMail({
       from: `"Soap 👻" <${process.env.EMAIL_USER}>`,

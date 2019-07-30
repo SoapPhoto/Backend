@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { memo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { connect } from '@lib/common/utils/store';
@@ -10,7 +10,9 @@ import { Calendar } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { ThemeStore } from '@lib/stores/ThemeStore';
-import { BaseInfoHandleBox, BaseInfoItem, InfoButton, PictureBaseInfo } from '@lib/styles/views/picture';
+import {
+  BaseInfoHandleBox, BaseInfoItem, InfoButton, PictureBaseInfo,
+} from '@lib/styles/views/picture';
 
 interface IProps {
   info: PictureEntity;
@@ -66,17 +68,19 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             style={{ fontSize: 0 }}
             onClick={openEXIF}
           >
-            <InfoButton style={{ cursor: 'pointer' }}/>
+            <InfoButton style={{ cursor: 'pointer' }} />
           </div>
         </Popover>
         {
-          isLogin &&
-          <LikeButton
-            color={themeData.colors.secondary}
-            isLike={info.isLike}
-            size={22}
-            onLike={onLike}
-          />
+          isLogin
+          && (
+            <LikeButton
+              color={themeData.colors.secondary}
+              isLike={info.isLike}
+              size={22}
+              onLike={onLike}
+            />
+          )
         }
       </BaseInfoHandleBox>
       <EXIFModal

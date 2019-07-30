@@ -1,4 +1,3 @@
-import { Link } from '@lib/routes';
 import { rem } from 'polished';
 import styled from 'styled-components';
 
@@ -8,7 +7,7 @@ export const Item = styled.span`
 
 export const ItemLink = styled.a<{ active: boolean }>`
   position: relative;
-  color: ${_ => _.active ? _.theme.colors.text : _.theme.colors.secondary};
+  color: ${_ => (_.active ? _.theme.colors.text : _.theme.colors.secondary)};
   font-size: ${_ => rem(_.theme.fontSizes[3])};
   text-decoration: none;
   transition: .2s color ease;
@@ -21,7 +20,7 @@ export const ItemLink = styled.a<{ active: boolean }>`
     height: 4px;
     left: 0;
     margin: auto;
-    opacity: ${_ => _.active ? 1 : 0};
+    opacity: ${_ => (_.active ? 1 : 0)};
     position: absolute;
     right: 0;
     transition: all 0.3s ease 0s;

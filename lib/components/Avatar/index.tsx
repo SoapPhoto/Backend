@@ -42,10 +42,8 @@ export const Avatar: React.FC<IAvatarProps> = ({
   size = 40,
   onClick,
   ...restProps
-}) => {
-  return (
-    <Box size={size} onClick={onClick} isClick={!!onClick} {...restProps}>
-      <Img src={src} />
-    </Box>
-  );
-};
+}) => (
+  <Box size={size} onClick={onClick} isClick={!!onClick} {...restProps}>
+    <Img src={src} />
+  </Box>
+);

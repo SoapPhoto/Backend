@@ -5,9 +5,7 @@ import * as themeData from './theme';
 
 export type ThemeType = keyof typeof themeData;
 
-export const getTheme = (theme: ThemeType): DefaultTheme => {
-  return themeData[theme];
-};
+export const getTheme = (theme: ThemeType): DefaultTheme => themeData[theme];
 
 export const getCurrentTheme = (data?: any) => {
   let cookies: {[key: string]: string} = data;

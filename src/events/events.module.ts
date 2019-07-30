@@ -1,4 +1,6 @@
-import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer, Module, NestModule,
+} from '@nestjs/common';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { OauthModule } from '@server/oauth/oauth.module';

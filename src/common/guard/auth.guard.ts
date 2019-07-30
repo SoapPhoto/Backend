@@ -1,9 +1,9 @@
-import { CanActivate, ExecutionContext, forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate, ExecutionContext, forwardRef, Inject, Injectable, UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { WsException } from '@nestjs/websockets';
 import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
-import { Socket } from 'socket.io';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
     private readonly oauthServerService: OauthServerService,
     private readonly reflector: Reflector,
   ) {}
+
   public async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
@@ -33,11 +34,11 @@ export class AuthGuard implements CanActivate {
     // }
     let user;
     if (request) {
-      user = request.user;
+      ({ user } = request);
     } else {
-        // graphql
+      // graphql
       const ctx = GqlExecutionContext.create(context).getContext();
-      user = ctx.user;
+      ({ user } = ctx);
     }
     if (user) return true;
     throw new UnauthorizedException();

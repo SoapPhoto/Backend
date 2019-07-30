@@ -1,4 +1,6 @@
-import { Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/user/user.entity';
@@ -9,10 +11,10 @@ export class NotificationEntity extends BaseEntity {
   @PrimaryGeneratedColumn() public id!: number;
 
   /** 消息发布者 */
-  @ManyToOne(type => UserEntity)
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
   public publisher!: UserEntity;
 
-  @OneToMany(type => NotificationSubscribersUserEntity, item => item.notification)
+  @OneToMany(() => NotificationSubscribersUserEntity, item => item.notification)
   public subscribers!: NotificationSubscribersUserEntity[];
 }

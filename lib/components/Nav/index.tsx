@@ -11,13 +11,11 @@ export interface INavItemProps extends WithRouterProps {
 
 export const Nav: React.FC = ({
   children,
-}) => {
-  return (
-    <Wrapper>
-      {children}
-    </Wrapper>
-  );
-};
+}) => (
+  <Wrapper>
+    {children}
+  </Wrapper>
+);
 
 export const NavItem = withRouter<INavItemProps>(({
   children,

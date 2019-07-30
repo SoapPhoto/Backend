@@ -1,12 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import moment from 'moment';
 import { Repository } from 'typeorm';
 
-import { PictureEntity } from '@server/picture/picture.entity';
 import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
-import { plainToClass } from 'class-transformer';
 import { GetTagPictureListDto } from './dto/tag.dto';
 import { TagEntity } from './tag.entity';
 
@@ -35,11 +32,13 @@ export class TagService {
     }
     return tagData!;
   }
-  public async getTagInfo(name: string, user: Maybe<UserEntity>) {
+
+  public async getTagInfo(name: string, _user: Maybe<UserEntity>) {
     return this.tagRepository.createQueryBuilder('tag')
       .where('tag.name=:name', { name })
       .getOne();
   }
+
   public async getTagPicture(name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) {
     return this.pictureService.getTagPictureList(name, user, query);
   }

@@ -12,11 +12,9 @@ const Title = styled.div`
   font-size: ${_ => rem(_.theme.fontSizes[4])};
 `;
 
-export default () => {
-  return (
-    <Wrapper>
-      <Title>验证成功</Title>
-      <div>validatoremail</div>
-    </Wrapper>
-  );
-};
+export default () => (
+  <Wrapper>
+    <Title>验证成功</Title>
+    <div>validatoremail</div>
+  </Wrapper>
+);

@@ -32,15 +32,18 @@ export class QiniuService {
           } else {
             reject(respInfo);
           }
-        });
+        },
+      );
     });
   }
-  public createBucketManager () {
+
+  public createBucketManager() {
     const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
     const config = new qiniu.conf.Config() as any;
     config.zone = qiniu.zone.Zone_z0;
     return new qiniu.rs.BucketManager(mac, config);
   }
+
   public deleteFile(key: string) {
     const bucketManager = this.createBucketManager();
     return new Promise((resolve, reject) => {

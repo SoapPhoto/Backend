@@ -1,4 +1,6 @@
-import { Controller, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
+import {
+  Controller, Post, Query, UseFilters, UseGuards,
+} from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
@@ -13,7 +15,6 @@ import { CreateClientDto } from './dto/client.dto';
 @UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class ClientController {
-
   constructor(
     private readonly clientService: ClientService,
   ) {}

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { server } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureItem } from './Item';
 import { Col, ColItem } from './styles';
@@ -22,17 +21,15 @@ interface IListProps {
 export const List = connect<React.FC<IListProps>>()(({
   list,
   like,
-}: IListProps) => {
-  return (
-    <>
-      {
-        list.map((picture, index) => (
-          <PictureItem lazyload={index > 4} like={like} key={picture.id} detail={picture} />
-        ))
-      }
-    </>
-  );
-});
+}: IListProps) => (
+  <>
+    {
+      list.map((picture, index) => (
+        <PictureItem lazyload={index > 4} like={like} key={picture.id} detail={picture} />
+      ))
+    }
+  </>
+));
 
 export default connect<React.FC<IProps>>()(({
   list,
@@ -54,7 +51,8 @@ export default connect<React.FC<IProps>>()(({
     <Col style={style} col={col} ssr={ssr}>
       {
         list.map((pictureList, index) => (
-          <ColItem key={index} >
+          // eslint-disable-next-line react/no-array-index-key
+          <ColItem key={index}>
             <List like={like} list={pictureList} />
           </ColItem>
         ))

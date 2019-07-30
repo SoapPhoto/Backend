@@ -9,12 +9,12 @@ export const Wrapper = styled.header<{login: boolean}>`
   width: 100%;
   height: ${rem('80px')};
   align-items: center;
-  background: ${_ => _.login ? 'transparent' :_.theme.layout.header.background};
+  background: ${_ => (_.login ? 'transparent' : _.theme.layout.header.background)};
   border-bottom-color: ${_ => _.theme.layout.header.borderColor};
   border-bottom-style: solid;
-  border-bottom-width: ${_ => _.login ? 0 : 1}px;
+  border-bottom-width: ${_ => (_.login ? 0 : 1)}px;
   box-shadow:
-    ${_ => _.login ? 'transparent' : _.theme.layout.header.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+    ${_ => (_.login ? 'transparent' : _.theme.layout.header.shadowColor)} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   transition: .2s all ease;
 `;
 

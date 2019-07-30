@@ -1,7 +1,7 @@
 import Head from 'next/Head';
 import React, { useEffect } from 'react';
 
-import { CustomNextContext, CustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
+import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
@@ -32,22 +32,23 @@ import {
   UserName,
   Wrapper,
 } from '@lib/styles/views/picture';
-import { Cell } from 'styled-css-grid';
 
-interface InitialProps extends IBaseScreenProps {
+interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
 }
 
-interface IProps extends InitialProps {
+interface IProps extends IInitialProps {
   accountStore: AccountStore;
   themeStore: ThemeStore;
   pictureStore: PictureScreenStore;
 }
 
-const Picture: CustomNextPage<IProps, any> = ({
+const Picture: ICustomNextPage<IProps, any> = ({
   pictureStore,
 }) => {
-  const { info, like, getComment, comment, addComment } = pictureStore;
+  const {
+    info, like, getComment, comment, addComment,
+  } = pictureStore;
   const { user, tags } = info;
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const Picture: CustomNextPage<IProps, any> = ({
         <UserInfo width={1}>
           <Link route={`/@${user.username}`}>
             <UserLink href={`/@${user.username}`}>
-              <Avatar style={{ marginRight: '15px' }} src={user.avatar}/>
+              <Avatar style={{ marginRight: '15px' }} src={user.avatar} />
               <UserName>{user.name}</UserName>
             </UserLink>
           </Link>
@@ -88,7 +89,7 @@ const Picture: CustomNextPage<IProps, any> = ({
         </UserHeaderInfo>
       </UserHeader>
       <PictureBox>
-        <PictureImage size="full" detail={info} lazyload={true} zooming />
+        <PictureImage size="full" detail={info} lazyload zooming />
       </PictureBox>
       <Content>
         <Title>{info.title}</Title>
@@ -97,20 +98,22 @@ const Picture: CustomNextPage<IProps, any> = ({
           onLike={like}
         />
         {
-          tags.length > 0 &&
-          <TagBox>
-            {
-              tags.map(tag => (
-                <Link route={`/tag/${tag.name}`} key={tag.id}>
-                  <a style={{ textDecoration: 'none' }} href={`/tag/${tag.name}`}>
-                    <Tag>
-                      {tag.name}
-                    </Tag>
-                  </a>
-                </Link>
-              ))
-            }
-          </TagBox>
+          tags.length > 0
+          && (
+            <TagBox>
+              {
+                tags.map(tag => (
+                  <Link route={`/tag/${tag.name}`} key={tag.id}>
+                    <a style={{ textDecoration: 'none' }} href={`/tag/${tag.name}`}>
+                      <Tag>
+                        {tag.name}
+                      </Tag>
+                    </a>
+                  </Link>
+                ))
+              }
+            </TagBox>
+          )
         }
         {
           info.bio && (
@@ -132,12 +135,12 @@ const Picture: CustomNextPage<IProps, any> = ({
   );
 };
 
-/// TODO: mobx-react@6 @inject 不执行 getInitialProps 的暂时解决方案
-Picture.getInitialProps = async ({ mobxStore, route, req }: CustomNextContext) => {
+/// TODO: mobx-react@6 @inject 不执行 getIInitialProps 的暂时解决方案
+Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) => {
   const { params } = route;
   const isPicture = (
-    mobxStore.screen.pictureStore.id &&
-    mobxStore.screen.pictureStore.id === Number(params.id || 0)
+    mobxStore.screen.pictureStore.id
+    && mobxStore.screen.pictureStore.id === Number(params.id || 0)
   );
   const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
   if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
@@ -148,7 +151,6 @@ Picture.getInitialProps = async ({ mobxStore, route, req }: CustomNextContext) =
     params.id!,
     req ? req.headers : undefined,
   );
-
 };
 
 export default withError<IProps>(

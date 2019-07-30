@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { CollectionEntity } from '@server/collection/collection.entity';
 import { CommentEntity } from '@server/comment/comment.entity';
 import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/tag/tag.entity';
@@ -63,6 +62,7 @@ export class PictureEntity extends BaseEntity {
   /** 图片大小 */
   @Column()
   public readonly size!: number;
+
   /** 当前登录用户是否喜欢 */
   @Type(() => Boolean)
   public isLike: boolean = false;
@@ -110,14 +110,14 @@ export class PictureEntity extends BaseEntity {
   public readonly user!: UserEntity;
 
   /** 图片的评论 */
-  @OneToMany(type => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
   public readonly comments!: CommentEntity[];
 
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
   public readonly activitys!: PictureUserActivityEntity[];
 
   /* tagId */
-  @ManyToMany(type => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
+  @ManyToMany(() => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
   @JoinTable({ name: 'picture_tags' })
   public tags!: TagEntity[];
 }

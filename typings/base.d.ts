@@ -1,4 +1,5 @@
 declare namespace NodeJS {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface ProcessEnv {
     /**
      * 端口
@@ -14,17 +15,17 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     URL: string;
-    
+
     DATABASE_PORT: string;
     DATABASE_HOST: string;
     DATABASE_USERNAME: string;
     DATABASE_PASSWORD: string;
     DATABASE_NAME: string;
-    
+
     QN_BUCKET: string;
     QN_ACCESS_KEY: string;
     QN_SECRET_KEY: string;
-    
+
     /**
      * cdn地址
      *
@@ -32,7 +33,7 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     CDN_URL: string;
-    
+
     /**
      * token
      *
@@ -40,11 +41,11 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     BASIC_TOKEN: string;
-    
+
     EMAIL_HOST: string;
     EMAIL_USER: string;
     EMAIL_PASS: string;
-    
+
     /**
      * 默认列表数量
      *
@@ -74,7 +75,7 @@ declare namespace NodeJS {
      * @memberof ProcessEnv
      */
     LOGGER_FILE: string;
-  
+
     REDIS_HOST: string;
     REDIS_PORT: string;
     REDIS_DB: string;

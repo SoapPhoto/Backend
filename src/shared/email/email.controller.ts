@@ -7,6 +7,7 @@ export class EmailController {
   constructor(
     private readonly emailService: EmailService,
   ) {}
+
   @Get()
   public async test() {
     // return this.emailService.sendSignupEmail('a1103307414@live.com');

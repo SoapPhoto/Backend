@@ -16,6 +16,7 @@ interface ILocation {
 
 export class AppStore {
   @observable public loading = false;
+
   @observable public location?: ILocation;
 
   constructor() {

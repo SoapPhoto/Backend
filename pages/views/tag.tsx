@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { CustomNextContext } from '@lib/common/interfaces/global';
+import { ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -33,7 +33,10 @@ const TagDetail: React.FC<IProps> = ({
       <Head>
         <title>{getTitle(`# ${info.name}`)}</title>
       </Head>
-      <Title># {info.name}</Title>
+      <Title>
+#
+        {info.name}
+      </Title>
       <PictureList
         noMore={tagStore.isNoMore}
         onPage={tagStore.getPageList}
@@ -44,13 +47,13 @@ const TagDetail: React.FC<IProps> = ({
   );
 };
 
-(TagDetail as any).getInitialProps = async (ctx: CustomNextContext) => {
+(TagDetail as any).getInitialProps = async (ctx: ICustomNextContext) => {
   const { params } = ctx.route;
   if (
-    ctx.mobxStore.appStore.location &&
-    ctx.mobxStore.appStore.location.action === 'POP' &&
-    ctx.mobxStore.screen.tagStore.init &&
-    ctx.mobxStore.screen.tagStore.name === params.name!
+    ctx.mobxStore.appStore.location
+    && ctx.mobxStore.appStore.location.action === 'POP'
+    && ctx.mobxStore.screen.tagStore.init
+    && ctx.mobxStore.screen.tagStore.name === params.name!
   ) {
     return {};
   }

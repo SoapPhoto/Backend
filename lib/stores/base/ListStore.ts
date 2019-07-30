@@ -5,8 +5,11 @@ import { BaseStore } from './BaseStore';
 
 export class ListStore<L, Q = {}> extends BaseStore {
   @observable public init = false;
+
   @observable public list: L[] = [];
+
   @observable public listQuery!: Q & IBaseQuery;
+
   @observable public count: number = 0;
 
   constructor() {

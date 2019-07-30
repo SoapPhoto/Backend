@@ -36,7 +36,6 @@ export const Upload: React.FC<IUploadProps> = ({
   wrapperRef,
   onClick,
   accept = 'image/*',
-  drag,
   ...restProps
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);

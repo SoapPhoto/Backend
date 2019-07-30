@@ -21,30 +21,30 @@ interface ILinkProps {
   prefetch?: boolean;
 }
 
-export class Link extends React.Component<ILinkProps> {
-  public render() {
-    const { children, href, as, ...restProps } = this.props;
-    const child: any = Children.only(children);
-    return (
-      <BaseLink {...this.props} >
-        {React.cloneElement(child, {
-          ...restProps,
-          onClick: (e: any) => {
-            store.appStore.setRoute({
-              as: this.props.as as string,
-              href: this.props.href as string,
-              options: { shallow: this.props.shallow },
-              action: this.props.replace ? 'REPLACE' : 'PUSH',
-            });
-            if (child.props && isFunction(child.props.onClick)) {
-              child.props.onClick(e);
-            }
-            if (isFunction((restProps as any).onClick)) {
-              (restProps as any).onClick(e);
-            }
-          },
-        })}
-      </BaseLink>
-    );
-  }
-}
+export const Link: React.FC<ILinkProps> = (props) => {
+  const {
+    children, href, as, ...restProps
+  } = props;
+  const child: any = Children.only(children);
+  return (
+    <BaseLink {...props}>
+      {React.cloneElement(child, {
+        ...restProps,
+        onClick: (e: any) => {
+          store.appStore.setRoute({
+            as: as as string,
+            href: href as string,
+            options: { shallow: props.shallow },
+            action: props.shallow ? 'REPLACE' : 'PUSH',
+          });
+          if (child.props && isFunction(child.props.onClick)) {
+            child.props.onClick(e);
+          }
+          if (isFunction((restProps as any).onClick)) {
+            (restProps as any).onClick(e);
+          }
+        },
+      })}
+    </BaseLink>
+  );
+};
