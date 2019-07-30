@@ -46,8 +46,9 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   constructor(props: IModalProps) {
     super(props);
-    reaction(() => props.visible, (visible) => {
-      if (visible) {
+    const { visible } = this.props;
+    reaction(() => visible, (vis) => {
+      if (vis) {
         this.initStyle = setBodyCss({
           overflowY: 'hidden',
           paddingRight: `${this.scrollWidth}px`,
