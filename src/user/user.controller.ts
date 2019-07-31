@@ -22,6 +22,8 @@ import { photoUpload } from '@server/common/utils/upload';
 import { GetPictureListDto } from '@server/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { plainToClass } from 'class-transformer';
+import { CollectionService } from '@server/collection/collection.service';
+import { GetUserCollectionListDto } from '@server/collection/dto/collection.dto';
 import { UpdateProfileSettingDto } from './dto/user.dto';
 import { Role } from './role.enum';
 import { UserEntity } from './user.entity';
@@ -34,6 +36,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly qiniuService: QiniuService,
+    private readonly collectionService: CollectionService,
   ) {}
 
   @Get('whoami')
@@ -102,5 +105,14 @@ export class UserController {
     @User() user: Maybe<UserEntity>,
   ) {
     return this.userService.getUser(username, user);
+  }
+
+  @Get(':idOrName/collection')
+  public async getUserCollections(
+    @Param('idOrName') idOrName: string,
+    @User() user: Maybe<UserEntity>,
+    @Query() query: GetUserCollectionListDto,
+  ) {
+    return this.collectionService.getUserCollectionList(idOrName, query, user);
   }
 }

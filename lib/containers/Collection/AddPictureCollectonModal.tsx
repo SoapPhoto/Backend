@@ -30,6 +30,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore')(
   const { themeData } = themeStore!;
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key)}")`;
+
   return (
     <Modal
       visible={visible}

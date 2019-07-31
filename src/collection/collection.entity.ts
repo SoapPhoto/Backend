@@ -5,6 +5,7 @@ import {
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/user/user.entity';
+import { PictureEntity } from '@server/picture/picture.entity';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Exclude()
@@ -43,4 +44,8 @@ export class CollectionEntity extends BaseEntity {
   @OneToMany(() => CollectionPictureEntity, picture => picture.collection)
   @Expose()
   public info!: CollectionPictureEntity[];
+
+  @Expose()
+  @Type(() => PictureEntity)
+  public preview!: PictureEntity[];
 }

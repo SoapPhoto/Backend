@@ -6,6 +6,9 @@ import { CollectionEntity } from '../collection.entity';
 export class GetCollectionPictureListDto extends PaginationDto {
 
 }
+export class GetUserCollectionListDto extends PaginationDto {
+
+}
 
 @Exclude()
 export class CreateCollectionDot implements Partial<CollectionEntity> {

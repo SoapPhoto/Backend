@@ -10,8 +10,12 @@ import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
 import { plainToClass } from 'class-transformer';
+import _ from 'lodash';
+import { validator } from '@server/common/utils/validator';
 import { CollectionEntity } from './collection.entity';
-import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
+import {
+  AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto,
+} from './dto/collection.dto';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Injectable()
@@ -67,17 +71,25 @@ export class CollectionService {
   public async getCollectionDetail(id: ID, user: Maybe<UserEntity>) {
     const q = this.collectionEntity.createQueryBuilder('collection')
       .where('collection.id=:id', { id })
-      .leftJoinAndSelect('collection.user', 'user');
-      // .innerJoin('collection.info', 'info')
-      // .innerJoin('info.picture', 'picture');
+      .leftJoinAndSelect('collection.user', 'user')
+      .leftJoinAndSelect('collection.info', 'info')
+      .leftJoinAndSelect('info.picture', 'picture')
+      .andWhere('picture.isPrivate=0')
+      .orderBy('info.createTime', 'DESC')
+      .skip(0)
+      .take(3);
 
     this.userService.selectInfo(q);
+    this.pictureService.getQueryInfo(q, user, 'pictureUser');
     const collection = await q.getOne();
     const isMe = user && collection && (user.id === collection.user.id);
     if (!collection || (collection.isPrivate && !isMe)) {
       throw new NotFoundException();
     }
-    return plainToClass(CollectionEntity, collection, {
+    return plainToClass(CollectionEntity, {
+      ..._.omit(collection, ['info']),
+      preview: collection.info.map(info => info.picture),
+    }, {
       groups: isMe ? ['me'] : undefined,
     });
   }
@@ -124,6 +136,47 @@ export class CollectionService {
     q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
     const pictureList = await q.getMany();
     return listRequest(query, plainToClass(PictureEntity, pictureList), count.count as number);
+  }
+
+  public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
+    let isMe = false;
+    const q = this.collectionEntity.createQueryBuilder('collection');
+    let userValue;
+    if (validator.isNumberString(idOrName)) {
+      if (user && user.id === idOrName) isMe = true;
+      userValue = 'userId';
+    } else {
+      if (user && user.username === idOrName) isMe = true;
+      userValue = 'userUsername';
+    }
+    q.andWhere(`collection.${userValue}=:id`, { id: idOrName });
+    if (!isMe) {
+      q.andWhere('collection.isPrivate=:private', { private: false });
+    }
+    q
+      .leftJoinAndSelect('collection.user', 'user');
+    this.userService.selectInfo(q);
+    const data = await q.getMany();
+    const previewQ = this.collectionEntity
+      .createQueryBuilder('collection').andWhere('collection.id IN (:...ids)', { ids: data.map(v => v.id) })
+      .leftJoinAndSelect('collection.info', 'info')
+      .leftJoinAndSelect('info.picture', 'picture')
+      .andWhere('picture.isPrivate=0')
+      .orderBy('info.createTime', 'DESC')
+      .skip(0)
+      .take(3);
+    this.pictureService.getQueryInfo(previewQ, user, 'pictureUser');
+    const preview = await previewQ.getMany();
+    const newData = data.map((collection) => {
+      const preivewInfos = preview.find(v => v.id === collection.id);
+      if (preivewInfos) {
+        collection.preview = preivewInfos.info.map(info => info.picture);
+      } else {
+        collection.preview = [];
+      }
+      return collection;
+    });
+    return listRequest(query, plainToClass(PictureEntity, newData), 0);
   }
 
   /**

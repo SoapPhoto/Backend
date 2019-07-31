@@ -235,13 +235,13 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public getQueryInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>) => {
-    q.leftJoinAndSelect('picture.user', 'user')
+  public getQueryInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value: string = 'user') => {
+    q.leftJoinAndSelect('picture.user', value)
       .loadRelationCountAndMap(
         'picture.likes', 'picture.activitys', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
-    this.userService.selectInfo(q);
+    this.userService.selectInfo(q, value);
     if (user) {
       q
         .loadRelationCountAndMap(

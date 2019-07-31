@@ -1,4 +1,6 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer, Module, NestModule, forwardRef,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
@@ -11,8 +13,8 @@ import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Module({
   imports: [
-    PictureModule,
-    UserModule,
+    forwardRef(() => PictureModule),
+    forwardRef(() => UserModule),
     TypeOrmModule.forFeature([CollectionEntity, CollectionPictureEntity]),
   ],
   providers: [CollectionService],

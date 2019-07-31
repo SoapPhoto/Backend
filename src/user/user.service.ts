@@ -81,12 +81,12 @@ export class UserService {
    * @returns
    * @memberof UserService
    */
-  public selectInfo<E>(q: SelectQueryBuilder<E>) {
+  public selectInfo<E>(q: SelectQueryBuilder<E>, value: string = 'user') {
     return q.loadRelationCountAndMap(
-      'user.pictureCount', 'user.pictures',
+      `${value}.pictureCount`, `${value}.pictures`,
     )
       .loadRelationCountAndMap(
-        'user.likes', 'user.pictureActivitys', 'activity',
+        `${value}.likes`, `${value}.pictureActivitys`, 'activity',
         qb => qb.andWhere(
           'activity.like=TRUE',
         ),
