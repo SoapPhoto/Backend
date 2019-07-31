@@ -1,6 +1,9 @@
 import { action, observable, reaction } from 'mobx';
 
 import NProgress from 'nprogress';
+import { CollectionEntity } from '@lib/common/interfaces/collection';
+import { getUserCollection } from '@lib/services/collection';
+import { store } from './init';
 
 export type RouterAction = 'POP' | 'PUSH' | 'REPLACE';
 
@@ -15,6 +18,7 @@ interface ILocation {
 }
 
 export class AppStore {
+  @observable public userCollection: CollectionEntity[] = []
   @observable public loading = false;
 
   @observable public location?: ILocation;
@@ -38,5 +42,14 @@ export class AppStore {
   @action
   public setRoute = (value: ILocation) => {
     this.location = value;
+  }
+
+  @action
+  public getCollection = async () => {
+    const { accountStore } = store;
+    if (accountStore.userInfo) {
+      const { data } = await getUserCollection(accountStore.userInfo.username)
+      this.userCollection = data.data;
+    }
   }
 }

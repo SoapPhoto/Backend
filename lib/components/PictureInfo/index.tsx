@@ -85,11 +85,16 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             />
           )
         }
-        <IconButton popover="添加收藏" onClick={openCollection}>
-          <Bookmark
-            color={themeData.colors.secondary}
-          />
-        </IconButton>
+        {
+          isLogin
+          && (
+            <IconButton popover="添加收藏" onClick={openCollection}>
+              <Bookmark
+                color={themeData.colors.secondary}
+              />
+            </IconButton>
+          )
+        }
       </BaseInfoHandleBox>
       <EXIFModal
         visible={EXIFVisible}

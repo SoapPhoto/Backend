@@ -156,7 +156,7 @@ export class CollectionService {
     q
       .leftJoinAndSelect('collection.user', 'user');
     this.userService.selectInfo(q);
-    const data = await q.getMany();
+    const data = await q.cache(500).getMany();
     const previewQ = this.collectionEntity
       .createQueryBuilder('collection').andWhere('collection.id IN (:...ids)', { ids: data.map(v => v.id) })
       .leftJoinAndSelect('collection.info', 'info')
@@ -166,7 +166,7 @@ export class CollectionService {
       .skip(0)
       .take(3);
     this.pictureService.getQueryInfo(previewQ, user, 'pictureUser');
-    const preview = await previewQ.getMany();
+    const preview = await previewQ.cache(500).getMany();
     const newData = data.map((collection) => {
       const preivewInfos = preview.find(v => v.id === collection.id);
       if (preivewInfos) {
