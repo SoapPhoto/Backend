@@ -1,8 +1,7 @@
 import { Heart } from '@lib/icon';
-import { rem } from 'polished';
 import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import { Popover } from '../Popover';
+import { Popover } from '@lib/components/Popover';
 
 interface IProps {
   size?: number;
@@ -20,7 +19,6 @@ const Button = styled.div<{like: boolean; color?: string}>`
   align-items: center;
   pointer-events: auto;
   user-select: none;
-  margin-left: ${rem('12px')};
   & svg {
     fill: ${_ => (_.like ? '#f44336' : 'none')};
     stroke: ${_ => (_.like ? '#f44336' : _.color || '#fff')};

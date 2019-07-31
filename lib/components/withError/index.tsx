@@ -6,7 +6,10 @@ import ErrorPage from '@pages/_error';
 // eslint-disable-next-line max-len
 export const withError = <P extends IBaseScreenProps>(Component: React.ComponentType<P>) => class extends React.Component<P> {
   public static async getInitialProps(ctx: ICustomNextContext) {
-    const props = await (Component as any).getInitialProps(ctx);
+    let props;
+    if ((Component as any).getInitialProps) {
+      props = await (Component as any).getInitialProps(ctx);
+    }
     return { statusCode: ctx.res ? ctx.res.statusCode : undefined, ...props };
   }
 

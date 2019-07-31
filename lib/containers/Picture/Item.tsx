@@ -4,7 +4,7 @@ import { PictureEntity } from '@lib/common/interfaces/picture';
 import { PictureStyle } from '@lib/common/utils/image';
 import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
-import { LikeButton } from '@lib/components/LikeButton';
+import { LikeButton } from '@lib/components/Button';
 import { Popover } from '@lib/components/Popover';
 import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';

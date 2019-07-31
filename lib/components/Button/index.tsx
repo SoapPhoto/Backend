@@ -2,6 +2,9 @@ import React from 'react';
 import { Loading } from '../Loading';
 import { LoadingBox, StyleButton } from './styles';
 
+export * from './LikeButton';
+export * from './IconButton';
+
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * 加载中

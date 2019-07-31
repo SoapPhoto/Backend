@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LazyLoad from 'react-lazyload';
 import { CSSTransition } from 'react-transition-group';
 
@@ -17,13 +17,20 @@ export const PictureImage: React.FC<IPictureImage> = ({
   size = 'regular',
 }) => {
   const [isFade, setFade] = useState(false);
+  const image = useRef<Maybe<HTMLImageElement>>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isComplete, setComplete] = useState(false);
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
+  useEffect(() => () => {
+    if (image.current) {
+      image.current.onload = null;
+    }
+  }, []);
   const imgRef = (ref: HTMLImageElement) => {
     if (ref) {
-      setComplete(ref.complete);
-      ref.onload = () => {
+      image.current = ref;
+      setComplete(image.current.complete);
+      image.current.onload = () => {
         setFade(true);
       };
     }

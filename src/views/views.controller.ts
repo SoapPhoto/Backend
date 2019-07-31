@@ -90,7 +90,13 @@ export class ViewsController {
 
   @Get('tag/:name')
   @Render('tag')
-  public async tagsIndex() {
+  public async tagDetail() {
+    return {};
+  }
+
+  @Get('collection/:id')
+  @Render('collection')
+  public async collectionDetail() {
     return {};
   }
 

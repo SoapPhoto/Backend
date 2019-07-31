@@ -4,15 +4,16 @@ import React, { useCallback, useState } from 'react';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { connect } from '@lib/common/utils/store';
 import { EXIFModal } from '@lib/components/EXIFModal';
-import { LikeButton } from '@lib/components/LikeButton';
+import { LikeButton, IconButton } from '@lib/components/Button';
 import { Popover } from '@lib/components/Popover';
-import { Clock, Bookmark } from '@lib/icon';
+import { Clock, Bookmark, Info } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import {
-  BaseInfoHandleBox, BaseInfoItem, InfoButton, PictureBaseInfo,
+  BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
 } from '@lib/styles/views/picture';
+import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
 
 interface IProps {
   info: PictureEntity;
@@ -31,14 +32,21 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   onLike,
 }) => {
   const [EXIFVisible, setEXIFVisible] = useState(false);
+  const [CollectionVisible, setCollectionVisible] = useState(false);
   const { isLogin } = accountStore!;
   const { themeData } = themeStore!;
 
   const closeEXIF = useCallback(() => {
     setEXIFVisible(false);
   }, []);
+  const closeCollection = useCallback(() => {
+    setCollectionVisible(false);
+  }, []);
   const openEXIF = useCallback(() => {
     setEXIFVisible(true);
+  }, []);
+  const openCollection = useCallback(() => {
+    setCollectionVisible(true);
   }, []);
   return (
     <PictureBaseInfo>
@@ -56,21 +64,16 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           </BaseInfoItem>
         </Popover>
       </div>
-      <BaseInfoHandleBox>
-        <Popover
-          trigger="hover"
-          placement="top"
-          theme="dark"
-          openDelay={100}
-          content={<span>图片信息</span>}
-        >
-          <div
-            style={{ fontSize: 0 }}
-            onClick={openEXIF}
-          >
-            <InfoButton style={{ cursor: 'pointer' }} />
-          </div>
-        </Popover>
+      <BaseInfoHandleBox
+        flow="column"
+        columns="auto"
+        justifyContent="right"
+      >
+        <IconButton popover="图片信息" onClick={openEXIF}>
+          <Info
+            color={themeData.colors.secondary}
+          />
+        </IconButton>
         {
           isLogin
           && (
@@ -82,15 +85,21 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             />
           )
         }
-        <Bookmark
-          color={themeData.colors.secondary}
-          size={22}
-        />
+        <IconButton popover="添加收藏" onClick={openCollection}>
+          <Bookmark
+            color={themeData.colors.secondary}
+          />
+        </IconButton>
       </BaseInfoHandleBox>
       <EXIFModal
         visible={EXIFVisible}
         onClose={closeEXIF}
         picture={info}
+      />
+      <AddPictureCollectonModal
+        picture={info}
+        visible={CollectionVisible}
+        onClose={closeCollection}
       />
     </PictureBaseInfo>
   );

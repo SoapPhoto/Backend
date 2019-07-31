@@ -77,10 +77,10 @@ export const BaseInfoItem = styled.div`
   }
 `;
 
-export const BaseInfoHandleBox = styled.div`
-  display: flex;
-  align-items: center;
-  grid-gap: ${rem('6px')};
+export const BaseInfoHandleBox = styled(Grid)`
+  /* display: flex;
+  align-items: center; */
+  grid-gap: ${rem('10px')};
 `;
 
 export const Bio = styled.div`

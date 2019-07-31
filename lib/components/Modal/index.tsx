@@ -46,8 +46,8 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   constructor(props: IModalProps) {
     super(props);
-    const { visible } = this.props;
-    reaction(() => visible, (vis) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    reaction(() => this.props.visible, (vis) => {
       if (vis) {
         this.initStyle = setBodyCss({
           overflowY: 'hidden',
