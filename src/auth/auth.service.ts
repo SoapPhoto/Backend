@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { ValidatorEmailDto } from './dto/auth.dto';
 
 @Injectable()
@@ -32,7 +31,7 @@ export class AuthService {
     message = 'failure';
     return {
       message,
-      user: plainToClass(UserEntity, userInfo),
+      user: classToPlain(userInfo),
     };
   }
 }

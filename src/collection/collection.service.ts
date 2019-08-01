@@ -5,12 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
-import { PictureEntity } from '@server/picture/picture.entity';
 import { PictureService } from '@server/picture/picture.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
-import { plainToClass } from 'class-transformer';
-import _ from 'lodash';
+import { classToPlain } from 'class-transformer';
 import { validator } from '@server/common/utils/validator';
 import { CollectionEntity } from './collection.entity';
 import {
@@ -36,7 +34,7 @@ export class CollectionService {
         user,
       }),
     );
-    return plainToClass(CollectionEntity, data, {
+    return classToPlain(data, {
       groups: ['me'],
     });
   }
@@ -100,16 +98,12 @@ export class CollectionService {
 
     this.selectInfo(q, user);
     this.userService.selectInfo(q);
-    this.pictureService.selectInfo(q, user, 'pictureUser');
     const collection = await q.getOne();
     const isMe = user && collection && (user.id === collection.user.id);
     if (!collection || (collection.isPrivate && !isMe)) {
       throw new NotFoundException();
     }
-    return plainToClass(CollectionEntity, {
-      ..._.omit(collection, ['info']),
-      preview: collection.info.map(info => info.picture),
-    }, {
+    return classToPlain(collection, {
       groups: isMe ? ['me'] : undefined,
     });
   }
@@ -155,7 +149,7 @@ export class CollectionService {
     const q = this.pictureService.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
     const pictureList = await q.getMany();
-    return listRequest(query, plainToClass(PictureEntity, pictureList), count.count as number);
+    return listRequest(query, classToPlain(pictureList), count.count as number);
   }
 
   public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
@@ -192,13 +186,13 @@ export class CollectionService {
     const newData = data.map((collection) => {
       const preivewInfos = preview.find(v => v.id === collection.id);
       if (preivewInfos) {
-        collection.preview = preivewInfos.info.map(info => info.picture);
+        collection.info = preivewInfos.info;
       } else {
-        collection.preview = [];
+        collection.info = [];
       }
       return collection;
     });
-    return listRequest(query, plainToClass(CollectionEntity, newData), count);
+    return listRequest(query, classToPlain(newData), count);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -43,7 +43,7 @@ export class PictureService {
     const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );
-    return plainToClass(PictureEntity, createData);
+    return classToPlain(createData);
   }
 
   /**
@@ -55,7 +55,7 @@ export class PictureService {
     const [data, count] = await this.selectList(user, query)
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
-    return listRequest(query, plainToClass(PictureEntity, data), count);
+    return listRequest(query, classToPlain(data), count);
   }
 
   /**
@@ -79,7 +79,6 @@ export class PictureService {
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
     const data = await q.cache(100).getOne();
-    console.log(data);
     if (view && data) {
       this.addViewCount(data.id);
       data.views += 1;
@@ -88,7 +87,7 @@ export class PictureService {
     if (data && data.isPrivate && !isUser) {
       throw new NotFoundException();
     }
-    return plainToClass(PictureEntity, data);
+    return classToPlain(data);
   }
 
   /**
@@ -123,7 +122,7 @@ export class PictureService {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, plainToClass(PictureEntity, data), count);
+    return listRequest(query, classToPlain(data), count);
   }
 
   /**
@@ -139,7 +138,7 @@ export class PictureService {
     const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
-    return listRequest(query, plainToClass(PictureEntity, data), count as number);
+    return listRequest(query, classToPlain(data), count as number);
   }
 
   /**
@@ -152,7 +151,7 @@ export class PictureService {
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .getManyAndCount();
-    return listRequest(query, plainToClass(PictureEntity, data), count);
+    return listRequest(query, classToPlain(data), count);
   }
 
   /**
@@ -245,9 +244,9 @@ export class PictureService {
         .leftJoinAndMapMany(
           'picture.info',
           CollectionPictureEntity,
-          'info', 'info.pictureId = picture.id',
+          'picture_collection_info', 'picture_collection_info.pictureId = picture.id',
         )
-        .leftJoinAndSelect('info.collection', 'collection');
+        .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
   }
 

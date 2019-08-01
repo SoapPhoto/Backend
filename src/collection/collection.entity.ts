@@ -42,12 +42,13 @@ export class CollectionEntity extends BaseEntity {
 
   /* 收藏信息 */
   @OneToMany(() => CollectionPictureEntity, picture => picture.collection)
-  @Expose()
   public info!: CollectionPictureEntity[];
 
   @Expose()
   @Type(() => PictureEntity)
-  public preview!: PictureEntity[];
+  get preview() {
+    return this.info ? this.info.map(info => info.picture) : [];
+  }
 
   /** 用户的picture数量 */
   @Type(() => Number)
