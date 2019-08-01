@@ -1,3 +1,4 @@
+import { plainToClass } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -16,7 +17,7 @@ import { GetTagPictureListDto } from '@server/tag/dto/tag.dto';
 import { TagService } from '@server/tag/tag.service';
 import { UserEntity } from '@server/user/user.entity';
 import { UserService } from '@server/user/user.service';
-import { plainToClass } from 'class-transformer';
+import { CollectionPictureEntity } from '@server/collection/picture/collection-picture.entity';
 import { GetPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -78,6 +79,7 @@ export class PictureService {
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
     const data = await q.cache(100).getOne();
+    console.log(data);
     if (view && data) {
       this.addViewCount(data.id);
       data.views += 1;
@@ -184,22 +186,11 @@ export class PictureService {
    */
   public select = (user: Maybe<UserEntity>) => {
     const q = this.pictureRepository.createQueryBuilder('picture')
-      .leftJoinAndSelect('picture.user', 'user')
       .loadRelationCountAndMap(
         'picture.likes', 'picture.activitys', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
-    this.userService.selectInfo(q);
-    if (user) {
-      q
-        .loadRelationCountAndMap(
-          'picture.isLike', 'picture.activitys', 'activity',
-          qb => qb.andWhere(
-            'activity.userId=:userId AND activity.like=:like',
-            { userId: user.id, like: true },
-          ),
-        );
-    }
+    this.selectInfo(q, user);
     q.orderBy('picture.createTime', 'DESC');
     return q;
   }
@@ -235,7 +226,7 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public getQueryInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value: string = 'user') => {
+  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value: string = 'user') => {
     q.leftJoinAndSelect('picture.user', value)
       .loadRelationCountAndMap(
         'picture.likes', 'picture.activitys', 'activity',
@@ -250,7 +241,13 @@ export class PictureService {
             'activity.userId=:userId AND activity.like=:like',
             { userId: user.id, like: true },
           ),
-        );
+        )
+        .leftJoinAndMapMany(
+          'picture.info',
+          CollectionPictureEntity,
+          'info', 'info.pictureId = picture.id',
+        )
+        .leftJoinAndSelect('info.collection', 'collection');
     }
   }
 

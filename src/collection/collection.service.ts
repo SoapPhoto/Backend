@@ -2,7 +2,7 @@ import {
   BadRequestException, ForbiddenException, Injectable, NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { PictureEntity } from '@server/picture/picture.entity';
@@ -42,7 +42,7 @@ export class CollectionService {
   }
 
   // TODO: BUG
-  public async addPicture(id: string, { pictureId }: AddPictureCollectionDot, _user: UserEntity) {
+  public async addPicture(id: string, { pictureId }: AddPictureCollectionDot, user: UserEntity) {
     const [picture, collection] = await Promise.all([
       this.pictureService.getRawOne(pictureId),
       this.collectionEntity.findOne(id),
@@ -61,11 +61,30 @@ export class CollectionService {
       this.collectionPictureEntity.create({
         collection,
         picture,
+        user,
       }),
     );
     return {
       message: 'ok',
     };
+  }
+
+  public selectInfo<E = CollectionEntity>(
+    q: SelectQueryBuilder<E>,
+    user: Maybe<UserEntity>,
+  ) {
+    let sql = '';
+    const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
+    if (user) {
+      sql = `(collection.userId=${user.id} AND ${qO}) OR `;
+    }
+    q.loadRelationCountAndMap(
+      'collection.pictureCount', 'collection.info', 'info',
+      qb => qb
+        .leftJoin('info.picture', 'picture')
+        .leftJoin('info.collection', 'collection')
+        .andWhere(`(${sql}picture.isPrivate = 0)`),
+    );
   }
 
   public async getCollectionDetail(id: ID, user: Maybe<UserEntity>) {
@@ -79,8 +98,9 @@ export class CollectionService {
       .skip(0)
       .take(3);
 
+    this.selectInfo(q, user);
     this.userService.selectInfo(q);
-    this.pictureService.getQueryInfo(q, user, 'pictureUser');
+    this.pictureService.selectInfo(q, user, 'pictureUser');
     const collection = await q.getOne();
     const isMe = user && collection && (user.id === collection.user.id);
     if (!collection || (collection.isPrivate && !isMe)) {
@@ -155,8 +175,10 @@ export class CollectionService {
     }
     q
       .leftJoinAndSelect('collection.user', 'user');
+
     this.userService.selectInfo(q);
-    const data = await q.cache(500).getMany();
+    this.selectInfo(q, user);
+    const [data, count] = await q.cache(500).getManyAndCount();
     const previewQ = this.collectionEntity
       .createQueryBuilder('collection').andWhere('collection.id IN (:...ids)', { ids: data.map(v => v.id) })
       .leftJoinAndSelect('collection.info', 'info')
@@ -165,7 +187,7 @@ export class CollectionService {
       .orderBy('info.createTime', 'DESC')
       .skip(0)
       .take(3);
-    this.pictureService.getQueryInfo(previewQ, user, 'pictureUser');
+    this.pictureService.selectInfo(previewQ, user, 'pictureUser');
     const preview = await previewQ.cache(500).getMany();
     const newData = data.map((collection) => {
       const preivewInfos = preview.find(v => v.id === collection.id);
@@ -176,7 +198,7 @@ export class CollectionService {
       }
       return collection;
     });
-    return listRequest(query, plainToClass(PictureEntity, newData), 0);
+    return listRequest(query, plainToClass(CollectionEntity, newData), count);
   }
 
   /**

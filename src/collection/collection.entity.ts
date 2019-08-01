@@ -48,4 +48,9 @@ export class CollectionEntity extends BaseEntity {
   @Expose()
   @Type(() => PictureEntity)
   public preview!: PictureEntity[];
+
+  /** 用户的picture数量 */
+  @Type(() => Number)
+  @Expose()
+  public pictureCount: number = 0;
 }

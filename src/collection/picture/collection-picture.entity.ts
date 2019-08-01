@@ -4,6 +4,7 @@ import {
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/picture/picture.entity';
+import { UserEntity } from '@server/user/user.entity';
 import { CollectionEntity } from '../collection.entity';
 
 @Entity('collection_picture')
@@ -20,4 +21,8 @@ export class CollectionPictureEntity extends BaseEntity {
   @ManyToOne(() => PictureEntity, { onDelete: 'CASCADE', cascade: true })
   @JoinTable()
   public picture!: PictureEntity;
+
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE', cascade: true })
+  @JoinTable()
+  public user!: UserEntity;
 }
