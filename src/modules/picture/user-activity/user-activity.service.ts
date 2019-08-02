@@ -116,7 +116,7 @@ export class PictureUserActivityService {
           .andWhere('picture.isPrivate = 0');
       }
       if (!isCount) {
-        q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+        q.offset((query.page - 1) * query.pageSize).limit(query.pageSize);
       }
       return q;
     };

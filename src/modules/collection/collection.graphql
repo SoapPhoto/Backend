@@ -3,8 +3,31 @@ type Query {
   collection(
     id: ID!
   ): Collection
+  "获取单个"
+  collectionPictures(
+    "收藏夹id"
+    id: ID!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
 }
 
+input AddPictureCollectionInput {
+  "图片id"
+  pictureId: ID!
+}
+
+type Mutation {
+  addPictureCollection(
+    "收藏夹id"
+    id: ID!
+    input: AddPictureCollectionInput!
+  ): Boolean
+}
 
 type Collection implements BaseNode {
   "id"
@@ -20,7 +43,7 @@ type Collection implements BaseNode {
   user: User
 
   "收藏夹预览"
-  preview: [Picture]
+  preview: [Picture!]
 
   "私人"
   isPrivate: Boolean

@@ -174,10 +174,9 @@ export class CollectionService {
     const dataQuery = this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .select('DISTINCT pictureId')
-      .addSelect('pictureId')
       .leftJoin('cp.picture', 'picture')
-      .skip((query.page - 1) * query.pageSize)
-      .take(query.pageSize);
+      .limit(query.pageSize)
+      .offset((query.page - 1) * query.pageSize);
     if (!owner) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }

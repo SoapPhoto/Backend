@@ -116,4 +116,6 @@ type Picture implements BaseNode {
 
   "修改时间"
   updateTime: DateTime
+
+  currentCollections: [Collection]
 }
