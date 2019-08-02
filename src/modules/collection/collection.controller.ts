@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards,
+  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Put,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -9,7 +9,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionService } from './collection.service';
-import { AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
+import { CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
 
 @Controller('api/collection')
 @UseGuards(AuthGuard)
@@ -28,14 +28,24 @@ export class CollectionController {
     return this.collectionService.create(body, user);
   }
 
-  @Post('/:collectionId')
+  @Put('/:collectionId/add/:pictureId')
   @Roles(Role.USER)
   public async addPictureCollection(
-    @Body() body: AddPictureCollectionDot,
+    @Param('pictureId') pictureId: string,
     @Param('collectionId') collectionId: string,
     @User() user: UserEntity,
   ) {
-    return this.collectionService.addPicture(collectionId, body, user);
+    return this.collectionService.addPicture(collectionId, pictureId, user);
+  }
+
+  @Put('/:collectionId/remove/:pictureId')
+  @Roles(Role.USER)
+  public async removePictureCollection(
+    @Param('pictureId') pictureId: string,
+    @Param('collectionId') collectionId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.collectionService.removePicture(collectionId, pictureId, user);
   }
 
   @Get('/:collectionId')

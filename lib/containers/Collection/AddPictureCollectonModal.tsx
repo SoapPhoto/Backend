@@ -23,6 +23,8 @@ const Title = styled.h2`
 `;
 
 const CollectionItemBox = styled.button`
+  cursor: pointer;
+  outline: none;
   display: block;
   width: 100%;
   height: ${rem('80px')};

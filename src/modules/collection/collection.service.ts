@@ -13,7 +13,7 @@ import { validator } from '@server/common/utils/validator';
 import { Role } from '@server/modules/user/role.enum';
 import { CollectionEntity } from './collection.entity';
 import {
-  AddPictureCollectionDot, CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto,
+  CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto,
 } from './dto/collection.dto';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
@@ -56,7 +56,7 @@ export class CollectionService {
    * @param {UserEntity} user
    * @memberof CollectionService
    */
-  public async addPicture(id: string, { pictureId }: AddPictureCollectionDot, user: UserEntity) {
+  public async addPicture(id: string, pictureId: string, user: UserEntity) {
     const [picture, collection] = await Promise.all([
       this.pictureService.getRawOne(pictureId),
       this.collectionEntity.findOne(id),
@@ -78,6 +78,18 @@ export class CollectionService {
         user,
       }),
     );
+  }
+
+  public async removePicture(id: string, pictureId: string, _user: UserEntity) {
+    const data = await this.collectionPictureEntity.createQueryBuilder('cp')
+      .where('cp.collectionId=:id', { id })
+      .andWhere('cp.pictureId=:pictureId', { pictureId })
+      .getOne();
+    if (data) {
+      await this.collectionPictureEntity.delete(data.id);
+    } else {
+      throw new BadRequestException('no collect');
+    }
   }
 
   // public removePicture(id: string, { pictureId }: AddPictureCollectionDot, user: UserEntity) {
@@ -209,25 +221,29 @@ export class CollectionService {
       q.andWhere('collection.isPrivate=:private', { private: false });
     }
     q
-      .leftJoinAndSelect('collection.user', 'user');
+      .leftJoinAndSelect('collection.user', 'user')
+      .skip((query.page - 1) * query.pageSize)
+      .take(query.pageSize);
 
     this.userService.selectInfo(q);
     this.selectInfo(q, user);
     const [data, count] = await q.cache(500).getManyAndCount();
-    const previewQ = this.collectionEntity
-      .createQueryBuilder('collection').andWhere('collection.id IN (:...ids)', { ids: data.map(v => v.id) })
-      .leftJoinAndSelect('collection.info', 'info')
-      .leftJoinAndSelect('info.picture', 'picture')
+    if (data.length === 0) {
+      return listRequest(query, [], count);
+    }
+    const previewQ = this.collectionPictureEntity
+      .createQueryBuilder('cp').andWhere('cp.collectionId IN (:...ids)', { ids: data.map(v => v.id) })
+      .leftJoinAndSelect('cp.picture', 'picture')
+      .leftJoinAndSelect('cp.collection', 'collection')
       .andWhere('picture.isPrivate=0')
-      .orderBy('info.createTime', 'DESC')
+      .orderBy('cp.createTime', 'DESC')
       .skip(0)
       .take(3);
-    this.pictureService.selectInfo(previewQ, user, 'pictureUser');
-    const preview = await previewQ.cache(500).getMany();
+    const preview = await previewQ.getMany();
     const newData = data.map((collection) => {
-      const preivewInfos = preview.find(v => v.id === collection.id);
+      const preivewInfos = preview.filter(info => info.collection.id === collection.id);
       if (preivewInfos) {
-        collection.info = preivewInfos.info;
+        collection.info = preivewInfos;
       } else {
         collection.info = [];
       }

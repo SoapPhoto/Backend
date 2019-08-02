@@ -1,9 +1,9 @@
 type Query {
-  "获取单个"
+  "获取收藏夹详情"
   collection(
     id: ID!
   ): Collection
-  "获取单个"
+  "获取收藏夹图片列表"
   collectionPictures(
     "收藏夹id"
     id: ID!
@@ -22,11 +22,28 @@ input AddPictureCollectionInput {
 }
 
 type Mutation {
+  "添加图片到收藏夹"
   addPictureCollection(
     "收藏夹id"
     id: ID!
-    input: AddPictureCollectionInput!
+    "图片id"
+    pictureId: ID!
   ): Boolean
+  "从收藏夹删除图片"
+  removePictureCollection(
+    "收藏夹id"
+    id: ID!
+    "图片id"
+    pictureId: ID!
+  ): Boolean
+}
+
+type Collections implements BaseList {
+  count: Float
+  page: Float
+  pageSize: Float
+  timestamp: Float
+  data: [Collection!]!
 }
 
 type Collection implements BaseNode {

@@ -3,10 +3,10 @@ import {
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
+import { Roles } from '@server/common/decorator/roles.decorator';
 import { CollectionService } from './collection.service';
 import { UserEntity } from '../user/user.entity';
-import { GetCollectionPictureListDto, AddPictureCollectionDot } from './dto/collection.dto';
-import { Roles } from '@server/common/decorator/roles.decorator';
+import { GetCollectionPictureListDto } from './dto/collection.dto';
 import { Role } from '../user/role.enum';
 
 @Resolver()
@@ -38,8 +38,8 @@ export class CollectionResolver {
   public async addPictureCollection(
     @Context('user') user: UserEntity,
     @Args('id') id: string,
-    @Args('input') input: AddPictureCollectionDot,
+    @Args('pictureId') pictureId: string,
   ) {
-    return this.collectionService.addPicture(id, input, user);
+    return this.collectionService.addPicture(id, pictureId, user);
   }
 }

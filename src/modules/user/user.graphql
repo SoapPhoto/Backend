@@ -8,6 +8,28 @@ type Query {
     username: String
   ): User
 
+  "获取用户的收藏夹列表"
+  userCollectionsByName(
+    username: String!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Collections
+
+  "获取用户的收藏夹列表"
+  userCollectionsById(
+    id: ID!
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Collections
+
   userPicturesByName(
     "用户名"
     username: String!

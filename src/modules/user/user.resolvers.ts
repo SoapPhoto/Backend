@@ -9,12 +9,14 @@ import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { Role } from './role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import { CollectionService } from '../collection/collection.service';
 
 @Resolver()
 @UseGuards(AuthGuard)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
+    private readonly collectionService: CollectionService,
   ) {}
 
   @Query()
@@ -50,5 +52,23 @@ export class UserResolver {
     @Args() query: GetPictureListDto,
   ) {
     return this.userService.getUserPicture(username, query, user);
+  }
+
+  @Query()
+  public async userCollectionsByName(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('username') username: string,
+    @Args() query: GetPictureListDto,
+  ) {
+    return this.collectionService.getUserCollectionList(username, query, user);
+  }
+
+  @Query()
+  public async userCollectionsById(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('id') id: string,
+    @Args() query: GetPictureListDto,
+  ) {
+    return this.collectionService.getUserCollectionList(id, query, user);
   }
 }
