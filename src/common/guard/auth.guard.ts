@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { OauthServerService } from '@server/oauth/oauth-server/oauth-server.service';
+import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

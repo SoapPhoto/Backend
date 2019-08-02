@@ -3,8 +3,8 @@ import {
 } from '@nestjs/common';
 import path from 'path';
 
-import { AuthService } from '@server/auth/auth.service';
-import { ValidatorEmailDto } from '@server/auth/dto/auth.dto';
+import { AuthService } from '@server/modules/auth/auth.service';
+import { ValidatorEmailDto } from '@server/modules/auth/dto/auth.dto';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
 import { Response } from 'express';
 

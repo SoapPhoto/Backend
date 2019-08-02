@@ -2,8 +2,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.fontFamily": " 'Dank Mono', 'FiraCode-Retina',  'Fira Code Retina', 'Iosevka Term', Consolas, 'M+ 1m', 'Courier New', monospace, 微软雅黑",
   "editor.tabSize": 2,
-  "vsicons.presets.nestjs": true,
   "debug.node.autoAttach": "on",
   "eslint.enable": true,
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "vsicons.presets.nestjs": true
 }

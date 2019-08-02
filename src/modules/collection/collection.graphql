@@ -1,0 +1,36 @@
+type Query {
+  "获取单个"
+  collection(
+    id: ID!
+  ): Collection
+}
+
+
+type Collection implements BaseNode {
+  "id"
+  id: ID!
+
+  "名字"
+  name: String
+
+  "介绍"
+  bio: String
+
+  "图片作者"
+  user: User
+
+  "收藏夹预览"
+  preview: [Picture]
+
+  "私人"
+  isPrivate: Boolean
+  
+  "图片数量"
+  pictureCount: Float
+
+  "创建时间"
+  createTime: DateTime
+
+  "修改时间"
+  updateTime: DateTime
+}

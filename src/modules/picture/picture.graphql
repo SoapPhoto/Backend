@@ -1,0 +1,119 @@
+type Query {
+  "获取单个picture"
+  picture(
+    id: ID!
+  ): Picture
+
+  "获取picture列表"
+  pictures(
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
+
+  "获取用户的picture"
+  userPictures(
+    "用户id"
+    id: ID!
+    "用户名"
+    username: String
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+  ): Pictures
+}
+
+type Mutation {
+  likePicture(
+    id: ID!
+  ): LikePictureReq
+}
+
+type LikePictureReq {
+  count: Float
+}
+
+type Pictures implements BaseList {
+  count: Float
+  page: Float
+  pageSize: Float
+  timestamp: Float
+  data: [Picture!]!
+}
+
+type EXIF {
+  aperture: Float
+  exposureTime: String
+  focalLength: Float
+  iso: Float
+}
+
+type Picture implements BaseNode {
+  "id"
+  id: ID!
+
+  "七牛的key"
+  key: String
+
+  "七牛的hash"
+  hash: String
+
+  "图片标题"
+  title: String
+
+  "图片介绍"
+  bio: String
+
+  "浏览次数"
+  views: Float
+
+  "图片原始文件名"
+  originalname: String
+
+  "图片类型"
+  mimetype: String
+
+  "图片大小"
+  size: Float
+
+  "当前登录用户是否喜欢"
+  isLike: Boolean
+
+  "picture喜欢的数量"
+  likes: Float
+  "图片的主色调"
+  color: String
+
+  "图片的颜色是明还是暗"
+  isDark: Boolean
+
+  "图片长度"
+  height: Float
+
+  "图片宽度"
+  width: Float
+
+  "设备品牌"
+  make: String
+
+  "设备型号"
+  model: String
+
+  "EXIF信息"
+  exif: EXIF
+
+  "图片作者"
+  user: User
+
+  "创建时间"
+  createTime: DateTime
+
+  "修改时间"
+  updateTime: DateTime
+}

@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
-import { OauthModule } from '@server/oauth/oauth.module';
+import { OauthModule } from '@server/modules/oauth/oauth.module';
 import { EventsGateway } from './events.gateway';
 
 @Module({

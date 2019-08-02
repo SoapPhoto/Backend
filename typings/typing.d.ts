@@ -20,6 +20,6 @@ declare module '*.json' {
 declare namespace Express {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface Request {
-    user: import('@server/user/user.entity').UserEntity | null;
+    user: import('@server/modules/user/user.entity').UserEntity | null;
   }
 }

@@ -4,7 +4,7 @@ import lodash from 'lodash';
 import mjml2html from 'mjml';
 import path from 'path';
 
-import { UserEntity } from '@server/user/user.entity';
+import { UserEntity } from '@server/modules/user/user.entity';
 import nodemailer from 'nodemailer';
 
 @Injectable()

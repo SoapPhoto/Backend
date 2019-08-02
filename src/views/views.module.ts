@@ -2,9 +2,9 @@ import {
   MiddlewareConsumer, Module, NestModule, CacheModule,
 } from '@nestjs/common';
 
-import { AuthModule } from '@server/auth/auth.module';
+import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
-import { PictureModule } from '@server/picture/picture.module';
+import { PictureModule } from '@server/modules/picture/picture.module';
 import { ViewsController } from './views.controller';
 import { ViewsService } from './views.service';
 

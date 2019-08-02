@@ -10,8 +10,8 @@ import { GraphQLError } from 'graphql';
 import { RenderModule } from 'nest-next';
 import { RedisModule } from 'nestjs-redis';
 
-import { AuthModule } from '@server/auth/auth.module';
-import { OauthModule } from '@server/oauth/oauth.module';
+import { AuthModule } from '@server/modules/auth/auth.module';
+import { OauthModule } from '@server/modules/oauth/oauth.module';
 import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
 import { CacheModule } from './shared/cache/cache.module';
@@ -19,21 +19,21 @@ import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
 import { ViewsModule } from './views/views.module';
 
-import { CollectionEntity } from './collection/collection.entity';
-import { CollectionPictureEntity } from './collection/picture/collection-picture.entity';
-import { CommentEntity } from './comment/comment.entity';
+import { CollectionEntity } from './modules/collection/collection.entity';
+import { CollectionPictureEntity } from './modules/collection/picture/collection-picture.entity';
+import { CommentEntity } from './modules/comment/comment.entity';
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { EventsModule } from './events/events.module';
-import { NotificationEntity } from './notification/notification.entity';
-import { NotificationSubscribersUserEntity } from './notification/subscribers-user/subscribers-user.entity';
-import { AccessTokenEntity } from './oauth/access-token/access-token.entity';
-import { ClientEntity } from './oauth/client/client.entity';
-import { PictureEntity } from './picture/picture.entity';
-import { PictureUserActivityEntity } from './picture/user-activity/user-activity.entity';
+import { NotificationEntity } from './modules/notification/notification.entity';
+import { NotificationSubscribersUserEntity } from './modules/notification/subscribers-user/subscribers-user.entity';
+import { AccessTokenEntity } from './modules/oauth/access-token/access-token.entity';
+import { ClientEntity } from './modules/oauth/client/client.entity';
+import { PictureEntity } from './modules/picture/picture.entity';
+import { PictureUserActivityEntity } from './modules/picture/user-activity/user-activity.entity';
 import { Logger } from './shared/logging/logging.service';
 import { QiniuModule } from './shared/qiniu/qiniu.module';
-import { TagEntity } from './tag/tag.entity';
-import { UserEntity } from './user/user.entity';
+import { TagEntity } from './modules/tag/tag.entity';
+import { UserEntity } from './modules/user/user.entity';
 
 @Module({
   imports: [
