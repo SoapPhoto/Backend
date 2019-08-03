@@ -1,17 +1,11 @@
 <mjml>
   <mj-body>
-    <mj-section
-        full-width="full-width"
-        border-radius="10px"
-        background-color="#fff"
-        border="1px solid #eaeaea"
-        border-radius="10px"
-    >
+    <mj-section full-width="full-width" border-radius="10px" background-color="#fff" border="1px solid #eaeaea" border-radius="10px">
       <mj-column>
         <mj-divider border-width="0px" padding="10px" />
         <mj-text font-size="24px" align="center" color="#000" font-family="helvetica">
           验证您的电子邮件以注册Soap
-       	</mj-text>
+        </mj-text>
         <mj-divider border-width="0px" padding="20px" />
         <mj-text>Hello, <mj-text font-weight="700">${username}</mj-text>:</mj-text>
         <mj-divider border-width="0px" padding="10px" />
@@ -19,22 +13,16 @@
           要完成登录过程，请单击下面的按钮：
         </mj-text>
         <mj-divider border-width="0px" padding="10px" />
-        <mj-button
-          font-family="Helvetica"
-          href="${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}"
-          background-color="#05f"
-          color="white"
-          width="120px"
-        >
+        <mj-button font-family="Helvetica" href="${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}" background-color="#05f" color="white" width="120px">
           验证
-         </mj-button>
+        </mj-button>
         <mj-divider border-width="0px" padding="10px" />
         <mj-divider border-color="#05f" border-style="dashed" border-width="1px"></mj-divider>
         <mj-text>
           或者将此URL复制并粘贴到您的浏览器中：
         </mj-text>
         <mj-button href="${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}" align="left" background-color="#fff" color="#05f" padding="0" text-align="left">
-         ${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}
+          ${host}/validatoremail?identifier=${identifier}&verificationToken=${verificationToken}&id=${id}
         </mj-button>
       </mj-column>
     </mj-section>

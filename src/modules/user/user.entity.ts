@@ -13,9 +13,9 @@ import { CollectionEntity } from '@server/modules/collection/collection.entity';
 import { CommentEntity } from '@server/modules/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/modules/picture/user-activity/user-activity.entity';
-import { Role, RoleValues } from './role.enum';
-
-type SignupType = 'email' | 'oauth';
+import { Role, RoleValues } from './enum/role.enum';
+import { Status, StatusValues } from './enum/status.enum';
+import { SignupTypeValues, SignupType } from './enum/signup.type.enum';
 
 @Exclude()
 @Entity('user')
@@ -43,33 +43,29 @@ export class UserEntity extends BaseEntity {
     nullable: true,
   })
   @Expose()
-  public readonly name!: string;
-
-  /** 是否验证 */
-  @Column({ default: false })
-  @Expose({ groups: [Role.ADMIN] })
-  public readonly verified!: boolean;
+  public name!: string;
 
   /** 识别码:一般是邮箱 */
   @Column({
     nullable: true,
   })
   @Expose({ groups: [Role.ADMIN] })
-  public readonly identifier!: string;
+  public identifier!: string;
 
   /** 邮箱验证的随机验证码 */
   @Column({
     nullable: true,
   })
   @Expose({ groups: [Role.ADMIN] })
-  public readonly verificationToken!: string;
+  public verificationToken!: string;
+
+  @Column({ type: 'enum', enum: StatusValues, default: `${Status.UNVERIFIED}` })
+  public status!: Status;
 
   /** 注册的类型 */
-  @Column({
-    default: 'email',
-  })
+  @Column({ type: 'enum', enum: SignupTypeValues, default: `${SignupType.EMAIL}` })
   @Expose()
-  public readonly signupType!: SignupType;
+  public signupType!: SignupType;
 
   /** 邮箱 */
   @ValidateIf(o => !!o.email)
@@ -96,21 +92,21 @@ export class UserEntity extends BaseEntity {
     default: `${process.env.CDN_URL}/default.svg`,
   })
   @Expose()
-  public readonly avatar!: string;
+  public avatar!: string;
 
   /** 个人介绍 */
   @Column({
     nullable: true,
   })
   @Expose()
-  public readonly bio!: string;
+  public bio!: string;
 
   /** 个人网站 */
   @Column({
     nullable: true,
   })
   @Expose()
-  public readonly website!: string;
+  public website!: string;
 
   /** 用户的picture */
   @OneToMany(() => PictureEntity, photo => photo.user)
@@ -140,4 +136,12 @@ export class UserEntity extends BaseEntity {
   @Type(() => Number)
   @Expose()
   public pictureCount: number = 0;
+
+  public isVerified() {
+    return this.status === Status.VERIFIED;
+  }
+
+  public isActive() {
+    return this.status === Status.UNVERIFIED || this.status === Status.VERIFIED;
+  }
 }

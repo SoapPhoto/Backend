@@ -7,6 +7,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { PictureModule } from './modules/picture/picture.module';
 import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
+import { OptionModule } from './modules/option/option.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './modules/user/user.module';
     TagModule,
     CollectionModule,
     CommentModule,
+    OptionModule,
   ],
   exports: [
     ClientModule,

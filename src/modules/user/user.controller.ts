@@ -25,7 +25,7 @@ import { plainToClass } from 'class-transformer';
 import { CollectionService } from '@server/modules/collection/collection.service';
 import { GetUserCollectionListDto } from '@server/modules/collection/dto/collection.dto';
 import { UpdateProfileSettingDto } from './dto/user.dto';
-import { Role } from './role.enum';
+import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 

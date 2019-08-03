@@ -13,7 +13,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { RedisService } from 'nestjs-redis';
-import { Role } from '@server/modules/user/role.enum';
+import { Role } from '@server/modules/user/enum/role.enum';
 
 interface IUserClientData {
   clientId: string;

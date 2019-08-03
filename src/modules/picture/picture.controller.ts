@@ -24,7 +24,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { Role } from '@server/modules/user/role.enum';
+import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
 import { PictureService } from './picture.service';

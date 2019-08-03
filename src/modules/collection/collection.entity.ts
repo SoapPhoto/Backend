@@ -6,7 +6,7 @@ import {
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PictureEntity } from '@server/modules/picture/picture.entity';
-import { Role } from '@server/modules/user/role.enum';
+import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
 @Exclude()

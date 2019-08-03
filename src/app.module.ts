@@ -9,6 +9,7 @@ import { Request } from 'express';
 import { GraphQLError } from 'graphql';
 import { RenderModule } from 'nest-next';
 import { RedisModule } from 'nestjs-redis';
+import { MailerModule } from '@nest-modules/mailer';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
@@ -34,6 +35,7 @@ import { Logger } from './shared/logging/logging.service';
 import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { TagEntity } from './modules/tag/tag.entity';
 import { UserEntity } from './modules/user/user.entity';
+import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 
 @Module({
   imports: [
@@ -89,6 +91,21 @@ import { UserEntity } from './modules/user/user.entity';
         );
         return error;
       },
+    }),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: `smtps://${process.env.EMAIL_USER}:${process.env.EMAIL_PASS}@${process.env.EMAIL_HOST}`,
+        defaults: {
+          from: '"soap" <4049310@qq.com>',
+        },
+        template: {
+          dir: `${__dirname}/common/email/template`,
+          adapter: new MjmlAdapter(), // or new PugAdapter()
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
     LoggingModule,
     RenderModule,

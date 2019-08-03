@@ -7,7 +7,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { CollectionService } from './collection.service';
 import { UserEntity } from '../user/user.entity';
 import { GetCollectionPictureListDto } from './dto/collection.dto';
-import { Role } from '../user/role.enum';
+import { Role } from '../user/enum/role.enum';
 
 @Resolver()
 @UseGuards(AuthGuard)

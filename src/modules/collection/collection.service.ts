@@ -10,7 +10,7 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { classToPlain } from 'class-transformer';
 import { validator } from '@server/common/utils/validator';
-import { Role } from '@server/modules/user/role.enum';
+import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionEntity } from './collection.entity';
 import {
   CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto,

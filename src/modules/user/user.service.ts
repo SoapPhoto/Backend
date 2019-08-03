@@ -17,7 +17,7 @@ import { LoggingService } from '@server/shared/logging/logging.service';
 import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
-import { Role } from './role.enum';
+import { Role } from './enum/role.enum';
 
 @Injectable()
 export class UserService {
@@ -45,13 +45,27 @@ export class UserService {
     return user;
   }
 
+  public async isSignup(username: string, email: string, err = true) {
+    const [nameData, userData] = await Promise.all([
+      this.userEntity.findOne({ username }),
+      this.userEntity.findOne({ email }),
+    ]);
+    if (nameData) {
+      if (err) {
+        throw new BadRequestException('Username already exists');
+      }
+      return 'username';
+    }
+    if (userData) {
+      if (err) {
+        throw new BadRequestException('Email already exists');
+      }
+      return 'email';
+    }
+    return false;
+  }
+
   public async signup(data: CreateUserDto, isEmail: boolean = true) {
-    if (await this.userEntity.findOne({ username: data.username })) {
-      throw new BadRequestException('Username already exists');
-    }
-    if (await this.userEntity.findOne({ email: data.email })) {
-      throw new BadRequestException('Email already exists');
-    }
     const info: MutablePartial<UserEntity> = {};
     if (isEmail) {
       info.identifier = data.email;
@@ -101,7 +115,7 @@ export class UserService {
       if (hash !== user.hash) {
         return undefined;
       }
-      if (!user.verified) {
+      if (!user.isVerified()) {
         throw new UnauthorizedException('Email is not activated');
       }
       return user;

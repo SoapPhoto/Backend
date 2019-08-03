@@ -6,7 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
-import { Role } from './role.enum';
+import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
