@@ -32,6 +32,8 @@ export class AuthService {
           status: Status.VERIFIED,
         });
       }
+    } else {
+      throw new BadGatewayException('verified error');
     }
   }
 
