@@ -30,11 +30,12 @@ export class AllExceptionFilter implements ExceptionFilter {
           message,
         });
     };
-    const doneRes = (res: any) => {
+    const doneRes = (res: any, stack?: any) => {
       Logger.error({
         url: request.url,
         method: request.method,
         ...res,
+        stack,
       });
       response
         .status(res.statusCode)
@@ -44,9 +45,9 @@ export class AllExceptionFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const exRes = exception.getResponse() as any;
       if (validator.isString(exRes)) {
-        done(status, exRes);
+        done(status, exRes, exception.stack);
       } else if (exRes.message) {
-        doneRes(exRes);
+        doneRes(exRes, exception.stack);
       } else {
         done(status, exRes.error);
       }

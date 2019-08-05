@@ -43,10 +43,10 @@ export class ViewsController {
 
   @Get('validatoremail')
   @Render('auth/validatoremail')
-  public async validatoremail(
+  public async validatorEmail(
     @Query() query: ValidatorEmailDto,
   ) {
-    return this.authService.validatoremail(query);
+    return this.authService.validatorEmail(query);
   }
 
   @Get('login')

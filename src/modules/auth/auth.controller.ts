@@ -1,19 +1,23 @@
 import {
-  Body, Controller, Post, Res, UseFilters, Put, HttpCode, HttpStatus,
+  Body, Controller, Post, Res, UseFilters, HttpCode, HttpStatus, UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { CreateUserDto } from '@server/modules/user/dto/user.dto';
-import { UserService } from '@server/modules/user/user.service';
+import { Roles } from '@server/common/decorator/roles.decorator';
+import { User } from '@server/common/decorator/user.decorator';
+import { AuthGuard } from '@server/common/guard/auth.guard';
 import { AuthService } from './auth.service';
 import { ValidatorEmailDto } from './dto/auth.dto';
+import { Role } from '../user/enum/role.enum';
+import { UserEntity } from '../user/user.entity';
 
 @Controller('auth')
+@UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class AuthController {
   constructor(
-    private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
 
@@ -33,18 +37,19 @@ export class AuthController {
     res.json();
   }
 
-  @Put('validatoremail')
+  @Post('validatorEmail')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async validatoremail(
+  public async validatorEmail(
     @Body() body: ValidatorEmailDto,
   ) {
-    return this.authService.validatoremail(body);
+    return this.authService.validatorEmail(body);
   }
 
-  @Post('test')
-  public async test(
-    // @Res() res: Response,
+  @Post('resetMail')
+  @Roles(Role.USER)
+  public async resetMail(
+    @User() user: UserEntity,
   ) {
-    this.authService.test();
+    return this.authService.resetMail(user);
   }
 }

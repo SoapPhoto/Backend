@@ -126,7 +126,7 @@ export class UserService {
   public async getUser(query: string, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user');
     this.selectInfo<UserEntity>(q);
-    const isId = validator.isNumberString(query);
+    const isId = validator.isNumberString(query) || validator.isNumber(query);
     if (isId) {
       q.where('user.id=:id', { id: query });
     } else {
