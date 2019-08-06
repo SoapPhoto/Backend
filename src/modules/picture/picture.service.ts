@@ -66,7 +66,13 @@ export class PictureService {
    * @memberof PictureService
    */
   public addViewCount(id: number) {
-    return this.pictureRepository.manager.query(`UPDATE picture SET views = views + 1 WHERE id = ${id}`);
+    return this.pictureRepository.createQueryBuilder()
+      .update()
+      .set({
+        views: () => 'views + 1',
+      })
+      .where('id = :id', { id })
+      .execute();
   }
 
   /**
