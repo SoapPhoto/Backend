@@ -18,6 +18,7 @@ import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
+import { PictureEntity } from '../picture/picture.entity';
 
 @Injectable()
 export class UserService {
@@ -140,6 +141,14 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: query });
     }
+    q
+      .leftJoinAndMapMany(
+        'user.pictures',
+        PictureEntity,
+        'picture',
+        'picture.userId = user.id AND picture.isPrivate=0',
+      )
+      .limit(3);
     const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {
       groups,

@@ -5,14 +5,13 @@ import { PictureStyle } from '@lib/common/utils/image';
 import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
 import { LikeButton } from '@lib/components/Button';
-import { Popover } from '@lib/components/Popover';
 import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
-import UserCard from './components/UserCard';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName,
 } from './styles';
+import { UserPopper } from './components/UserPopper';
 
 export interface IPictureItemProps {
   detail: PictureEntity;
@@ -48,12 +47,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
       </Link>
       <InfoBox>
         <UserBox>
-          <Popover
-            openDelay={500}
-            trigger="hover"
-            placement="top"
-            content={<UserCard user={detail.user} />}
-          >
+          <UserPopper username={detail.user.username}>
             <div style={{ fontSize: 0 }}>
               <Link route={`/@${detail.user.username}`}>
                 <a href={`/@${detail.user.username}`}>
@@ -61,7 +55,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
                 </a>
               </Link>
             </div>
-          </Popover>
+          </UserPopper>
           <Link route={`/@${detail.user.username}`}>
             <UserName href={`/@${detail.user.username}`}>
               {detail.user.username}

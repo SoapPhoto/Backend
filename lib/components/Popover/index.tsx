@@ -2,11 +2,11 @@ import { isFunction } from 'lodash';
 import React, { Children } from 'react';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
+import PopperJS, { Data, Placement } from 'popper.js';
+import { observer } from 'mobx-react';
+import { observable } from 'mobx';
 
 import { ThemeWrapper } from '@lib/containers/Theme';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { Data, Placement } from 'popper.js';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
 
@@ -34,6 +34,7 @@ interface IPopoverProps {
    */
   trigger: Trigger;
   onClose?: () => void;
+  onOpen?: () => void;
   /**
    * 是否有箭头，默认`true`
    *
@@ -70,6 +71,8 @@ export class Popover extends React.PureComponent<IPopoverProps> {
 
   public arrow?: HTMLDivElement;
 
+  public popper?: PopperJS;
+
   public arrowRef = (ref: HTMLDivElement) => {
     if (ref) {
       this.arrow = ref;
@@ -99,9 +102,15 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     if (this.props.openDelay) {
       clearTimeout(this._timer!);
       this._timer = setTimeout(() => {
+        if (isFunction(this.props.onOpen)) {
+          this.props.onOpen();
+        }
         this.visible = true;
       }, this.props.openDelay);
     } else {
+      if (isFunction(this.props.onOpen)) {
+        this.props.onOpen();
+      }
       this.visible = true;
     }
   }
@@ -167,6 +176,11 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         <Popper
           transition
           placement={placement}
+          ref={e => {
+            if (e) {
+              this.popper = e.popper;
+            }
+          }}
           modifiers={{
             offset: {
               enabled: true,

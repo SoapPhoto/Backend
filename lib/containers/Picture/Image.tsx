@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import LazyLoad from 'react-lazyload';
 import { CSSTransition } from 'react-transition-group';
 
-import { pictureStyle } from '@lib/common/utils/image';
+import { getPictureUrl } from '@lib/common/utils/image';
 import { IPictureItemProps } from './Item';
 import { ImageBox, ItemImage } from './styles';
 
@@ -41,7 +41,7 @@ export const PictureImage: React.FC<IPictureImage> = ({
       <ItemImage
         ref={imgRef}
         className="fade-done-enter"
-        src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
+        src={getPictureUrl(detail.key, size)}
       />
     );
   } else {
@@ -63,7 +63,7 @@ export const PictureImage: React.FC<IPictureImage> = ({
       >
         <ItemImage
           ref={imgRef}
-          src={`//cdn.soapphoto.com/${detail.key}${pictureStyle[size]}`}
+          src={getPictureUrl(detail.key, size)}
         />
       </CSSTransition>
     );
