@@ -3,6 +3,7 @@ import { action, observable, reaction } from 'mobx';
 import NProgress from 'nprogress';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { getUserCollection } from '@lib/services/collection';
+import { UserEntity } from '@lib/common/interfaces/user';
 import { store } from './init';
 
 export type RouterAction = 'POP' | 'PUSH' | 'REPLACE';
@@ -19,9 +20,12 @@ interface ILocation {
 
 export class AppStore {
   @observable public userCollection: CollectionEntity[] = []
+
   @observable public loading = false;
 
   @observable public location?: ILocation;
+
+  @observable public userList: Map<string, UserEntity> = new Map();
 
   constructor() {
     reaction(
@@ -48,7 +52,7 @@ export class AppStore {
   public getCollection = async () => {
     const { accountStore } = store;
     if (accountStore.userInfo) {
-      const { data } = await getUserCollection(accountStore.userInfo.username)
+      const { data } = await getUserCollection(accountStore.userInfo.username);
       this.userCollection = data.data;
     }
   }

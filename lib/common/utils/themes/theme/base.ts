@@ -12,6 +12,7 @@ const colors = {
   gray: '#eaeaea',
   pure: '#fff',
   lightgray: '#fafafa',
+  baseGreen: '#47B881',
 };
 
 const theme: DefaultTheme = {

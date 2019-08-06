@@ -7,6 +7,7 @@ import { UserEntity } from '@lib/common/interfaces/user';
 import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
+import { Link } from '@lib/routes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -29,7 +30,8 @@ const UserBox = styled.div`
 const UserName = styled.p`
   font-size: ${_ => rem(_.theme.fontSizes[3])};
   font-weight: 700;
-  margin-bottom: ${rem('4px')};
+  margin-bottom: ${rem('2px')};
+  color: ${_ => _.theme.colors.text};
 `;
 
 const Bio = styled.p`
@@ -64,10 +66,10 @@ const LoadingBox = styled.div`
   padding: ${rem('24px')};
 `;
 
-export default ({
+const UserCard: React.FC<IProps> = ({
   user,
   ...restProps
-}: IProps) => {
+}) => {
   if (!user) {
     return (
       <LoadingBox>
@@ -79,17 +81,35 @@ export default ({
     <div {...restProps}>
       <Wrapper columns={1} gap="18px">
         <Header>
-          <Avatar src={user.avatar} size={48} />
+          <Link route={`/@${user.username}`}>
+            <a
+              href={`/@${user.username}`}
+            >
+              <Avatar src={user.avatar} size={48} />
+            </a>
+          </Link>
           <UserBox>
-            <UserName>{user.username}</UserName>
+            <Link route={`/@${user.username}`}>
+              <a
+                href={`/@${user.username}`}
+              >
+                <UserName>{user.username}</UserName>
+              </a>
+            </Link>
             <Bio>{user.bio}</Bio>
           </UserBox>
         </Header>
         <PicturePrview>
           {
             user.pictures.map(picture => (
-              <PrviewBox key={picture.id}>
-                <Img src={getPictureUrl(picture.key, 'full')} alt="" />
+              <PrviewBox key={picture.id} style={{ backgroundColor: picture.color }}>
+                <Link route={`/picture/${picture.id}`}>
+                  <a
+                    href={`/picture/${picture.id}`}
+                  >
+                    <Img src={getPictureUrl(picture.key, 'thumb')} alt="" />
+                  </a>
+                </Link>
               </PrviewBox>
             ))
           }
@@ -98,3 +118,5 @@ export default ({
     </div>
   );
 };
+
+export default UserCard;

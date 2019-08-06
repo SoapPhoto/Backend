@@ -15,6 +15,7 @@ declare module 'styled-components' {
       pure: string;
       danger: string;
       lightgray: string;
+      baseGreen: string;
     };
     styles: {
       nprogress: string;

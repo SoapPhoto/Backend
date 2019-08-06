@@ -4,6 +4,7 @@ import styled, { keyframes } from 'styled-components';
 
 interface ILoadingProps {
   size?: number;
+  color?: string;
 }
 
 const animate = keyframes`
@@ -18,7 +19,7 @@ const animate = keyframes`
   }
 `;
 
-export const Box = styled.div<{size: number}>`
+export const Box = styled.div<{size: number; color: string}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,7 +30,7 @@ export const Box = styled.div<{size: number}>`
     animation-fill-mode: both;
     width: ${_ => rem(_.size)};
     height: ${_ => rem(_.size)};
-    background-color: rgb(68, 68, 68);
+    background-color: ${_ => _.color};
     display: inline-block;
     border-radius: 50%;
     margin: 0px ${_ => rem(_.size / 2)};
@@ -44,8 +45,9 @@ export const Box = styled.div<{size: number}>`
 
 export const Loading: React.FC<ILoadingProps> = ({
   size = 4,
+  color = 'rgb(68, 68, 68)',
 }) => (
-  <Box size={size}>
+  <Box size={size} color={color}>
     <span />
     <span />
     <span />

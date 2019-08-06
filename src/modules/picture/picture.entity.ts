@@ -84,6 +84,7 @@ export class PictureEntity extends BaseEntity {
 
   /** 图片的主色调 */
   @Column()
+  @Expose()
   public readonly color!: string;
 
   /** 图片的颜色是明还是暗 */

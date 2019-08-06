@@ -105,6 +105,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
         picture={info}
         visible={CollectionVisible}
         onClose={closeCollection}
+        currentCollections={info.currentCollections || []}
       />
     </PictureBaseInfo>
   );

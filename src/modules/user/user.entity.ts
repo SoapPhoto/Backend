@@ -60,11 +60,12 @@ export class UserEntity extends BaseEntity {
   public verificationToken!: string;
 
   @Column({ type: 'enum', enum: StatusValues, default: `${Status.UNVERIFIED}` })
+  @Expose({ groups: [Role.ADMIN] })
   public status!: Status;
 
   /** 注册的类型 */
   @Column({ type: 'enum', enum: SignupTypeValues, default: `${SignupType.EMAIL}` })
-  @Expose()
+  @Expose({ groups: [Role.ADMIN] })
   public signupType!: SignupType;
 
   /** 邮箱 */

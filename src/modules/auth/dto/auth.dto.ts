@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 @Exclude()
 export class ValidatorEmailDto {
@@ -18,6 +18,7 @@ export class ValidatorEmailDto {
 
 @Exclude()
 export class ResetPasswordDto {
+  @Length(8, 30)
   @IsString()
   @Expose()
   public newPassword!: string
