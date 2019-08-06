@@ -15,3 +15,10 @@ export class ValidatorEmailDto {
   @Expose()
   public readonly verificationToken!: string;
 }
+
+@Exclude()
+export class ResetPasswordDto {
+  @IsString()
+  @Expose()
+  public newPassword!: string
+}

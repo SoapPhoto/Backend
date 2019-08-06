@@ -5,7 +5,6 @@ const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const withOffline = require('next-offline');
 
 const webpack = require('webpack');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
@@ -24,8 +23,7 @@ const nextConfig = {
     },
   },
   useFileSystemPublicRoutes: false,
-  webpack(config, options) {
-    if (options.isServer) config.plugins.push(new ForkTsCheckerWebpackPlugin());
+  webpack(config) {
     config.plugins.push(
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(zh-cn)/),
     );

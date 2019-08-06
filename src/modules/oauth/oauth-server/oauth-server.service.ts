@@ -8,7 +8,7 @@ import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
 
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
 
 @Injectable()
@@ -51,9 +51,9 @@ export class OauthServerService {
     return newToken;
   }
 
-  private getAccessToken = async (token: string) => this.accessTokenService.getAccessToken(token)
+  private getAccessToken = this.accessTokenService.getAccessToken
 
-  private getRefreshToken = async (refreshToken: string) => this.accessTokenService.getRefreshToken(refreshToken)
+  private getRefreshToken = this.accessTokenService.getRefreshToken
 
   private revokeToken = async (token: AccessTokenEntity) => {
     if (token) {

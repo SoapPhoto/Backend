@@ -42,4 +42,11 @@ export class AccessTokenService {
     this.userService.selectInfo(q);
     return q.getOne();
   }
+
+  public async clearUserTokenAll(userId: ID) {
+    return this.accessTokenRepository.createQueryBuilder('token')
+      .delete()
+      .where('accessToken.userId=:userId', { userId })
+      .execute();
+  }
 }

@@ -4,17 +4,19 @@ import uniqid from 'uniqid';
 import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { MailerService } from '@nest-modules/mailer';
-import { ValidatorEmailDto } from './dto/auth.dto';
+import { ValidatorEmailDto, ResetPasswordDto } from './dto/auth.dto';
 import { SignupType } from '../user/enum/signup.type.enum';
 import { Status } from '../user/enum/status.enum';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { UserEntity } from '../user/user.entity';
+import { AccessTokenService } from '../oauth/access-token/access-token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly mailerService: MailerService,
+    private readonly accessTokenService: AccessTokenService,
   ) {}
 
   public async validatorEmail(query: ValidatorEmailDto) {
@@ -31,10 +33,10 @@ export class AuthService {
         await this.userService.updateUser(userInfo, {
           status: Status.VERIFIED,
         });
+        return;
       }
-    } else {
-      throw new BadGatewayException('verified error');
     }
+    throw new BadGatewayException('verified error');
   }
 
   public async emailSignup(data: CreateUserDto) {
@@ -58,25 +60,35 @@ export class AuthService {
     if (userInfo.isVerified()) {
       throw new BadGatewayException('verified');
     } else {
-      this.sendValidator(userInfo);
+      await this.sendValidator(userInfo);
     }
+  }
+
+  public async resetPassword(user: UserEntity, { newPassword }: ResetPasswordDto) {
+    const newPasswordData = await this.userService.getPassword(newPassword);
+    await this.userService.updateUser(user, newPasswordData);
+    await this.accessTokenService.clearUserTokenAll(user.id);
   }
 
   private async sendValidator(user: UserEntity) {
     const {
       identifier, verificationToken, username, id,
     } = user;
-    await this.mailerService.sendMail({
-      to: identifier,
-      from: `"Soap 👻" <${process.env.EMAIL_USER}>`,
-      subject: '欢迎注册肥皂!',
-      template: 'signup.validator',
-      context: {
-        identifier,
-        verificationToken,
-        username,
-        id: Buffer.from(id.toString() as any).toString('base64').replace('=', ''),
-      },
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: identifier,
+        from: `"Soap 👻" <${process.env.EMAIL_USER}>`,
+        subject: '欢迎注册肥皂!',
+        template: 'signup.validator',
+        context: {
+          identifier,
+          verificationToken,
+          username,
+          id: Buffer.from(id.toString() as any).toString('base64').replace('=', ''),
+        },
+      });
+    } catch (err) {
+      throw new BadGatewayException(err.message);
+    }
   }
 }

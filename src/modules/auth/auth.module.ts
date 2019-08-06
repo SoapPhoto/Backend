@@ -6,11 +6,13 @@ import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { InvitationService } from './invitation/invitation.service';
+import { AccessTokenModule } from '../oauth/access-token/access-token.module';
 
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    forwardRef(() => AccessTokenModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, InvitationService],

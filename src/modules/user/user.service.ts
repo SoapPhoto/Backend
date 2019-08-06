@@ -31,8 +31,7 @@ export class UserService {
   ) {}
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
-    const salt = await crypto.randomBytes(32).toString('hex');
-    const hash = await crypto.pbkdf2Sync(data.password, salt, 20, 32, 'sha512').toString('hex');
+    const { salt, hash } = await this.getPassword(data.password);
     const user = await this.userEntity.save(
       this.userEntity.create({
         salt,
@@ -43,6 +42,15 @@ export class UserService {
       }),
     );
     return user;
+  }
+
+  public async getPassword(password: string) {
+    const salt = await crypto.randomBytes(32).toString('hex');
+    const hash = await crypto.pbkdf2Sync(password, salt, 20, 32, 'sha512').toString('hex');
+    return {
+      salt,
+      hash,
+    };
   }
 
   public async isSignup(username: string, email: string, err = true) {
