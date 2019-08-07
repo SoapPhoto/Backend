@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Modal } from '@lib/components/Modal';
 import { connect } from '@lib/common/utils/store';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -10,7 +10,8 @@ import styled from 'styled-components';
 import { AppStore } from '@lib/stores/AppStore';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { Check, Minus } from '@lib/icon';
-// import { Loading } from '@lib/components/Loading';
+import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
+import { Loading } from '@lib/components/Loading';
 
 interface IProps {
   visible: boolean;
@@ -137,17 +138,42 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   onClose,
   currentCollections,
 }) => {
-  const { key } = picture;
+  const { key, id } = picture;
   const { getCollection, userCollection } = appStore!;
   const { themeData } = themeStore!;
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key)}")`;
   useEffect(() => {
     getCollection();
   }, []);
-  const onCollected = (isCollected: boolean) => {
-    console.log(isCollected);
-  };
+  useEffect(() => {
+    const obj: Record<string, boolean> = {};
+    userCollection.forEach(collection => obj[collection.id] = false);
+    setLoading(obj);
+  }, [userCollection]);
+  useEffect(() => {
+    getCollection();
+  }, [visible]);
+  const onCollected = useCallback(async (collection: CollectionEntity, isCollected: boolean) => {
+    setLoading(ld => ({
+      ...ld,
+      [collection.id]: true,
+    }));
+    try {
+      if (isCollected) {
+        await removePictureCollection(collection.id, id);
+      } else {
+        await addPictureCollection(collection.id, id);
+      }
+    } finally {
+      getCollection();
+      setLoading(ld => ({
+        ...ld,
+        [collection.id]: false,
+      }));
+    }
+  }, [loading]);
   return (
     <Modal
       visible={visible}
@@ -159,8 +185,12 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         {
           userCollection.map((collection) => {
             const isCollected = currentCollections.findIndex(cl => cl.id === collection.id) >= 0;
+            const isLoading = loading[collection.id];
             return (
-              <CollectionItemBox key={collection.id} onClick={() => onCollected(isCollected)}>
+              <CollectionItemBox
+                key={collection.id}
+                onClick={() => onCollected(collection, isCollected)}
+              >
                 {
                   collection.preview[0] && (
                     <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'thumb')} />
@@ -177,9 +207,16 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
                     </ItemInfoCount>
                   </div>
                   <ItemHandleIcon>
-                    {/* <Loading size={6} color="#fff" /> */}
-                    <CheckIcon />
-                    <MinusIcon />
+                    {
+                      isLoading
+                        ? <Loading size={6} color="#fff" />
+                        : (
+                          <>
+                            <CheckIcon />
+                            <MinusIcon />
+                          </>
+                        )
+                    }
                   </ItemHandleIcon>
                 </ItemInfoBox>
               </CollectionItemBox>

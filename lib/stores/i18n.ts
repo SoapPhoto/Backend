@@ -12,5 +12,10 @@ export class I18nStore extends BaseStore {
     super();
   }
 
-  public __ = (info: string, ...rest: string[]) => format((cn as any)[info], rest)
+  public __ = (info: string, ...rest: string[]) => {
+    if ((cn as any)[info]) {
+      return format((cn as any)[info], rest);
+    }
+    return undefined;
+  }
 }

@@ -231,19 +231,34 @@ export class CollectionService {
     if (data.length === 0) {
       return listRequest(query, [], count);
     }
+    let sql = '';
+    const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
+    if (user) {
+      sql = `(collection.userId=${user.id} AND ${qO}) OR `;
+    }
+    const previewList = await Promise.all(
+      data.map(v => this.collectionPictureEntity
+        .createQueryBuilder('cp').andWhere('cp.collectionId=:id', { id: v.id })
+        .leftJoinAndSelect('cp.picture', 'picture')
+        .leftJoinAndSelect('cp.collection', 'collection')
+        .andWhere(`${sql}picture.isPrivate=0`)
+        .orderBy('cp.createTime', 'DESC')
+        .skip(0)
+        .take(3)
+        .getMany()),
+    );
+    console.log(previewList);
     const previewQ = this.collectionPictureEntity
       .createQueryBuilder('cp').andWhere('cp.collectionId IN (:...ids)', { ids: data.map(v => v.id) })
       .leftJoinAndSelect('cp.picture', 'picture')
       .leftJoinAndSelect('cp.collection', 'collection')
-      .andWhere('picture.isPrivate=0')
-      .orderBy('cp.createTime', 'DESC')
-      .skip(0)
-      .take(3);
+      .andWhere(`${sql}picture.isPrivate=0`)
+      .orderBy('cp.createTime', 'DESC');
     const preview = await previewQ.getMany();
     const newData = data.map((collection) => {
       const preivewInfos = preview.filter(info => info.collection.id === collection.id);
       if (preivewInfos) {
-        collection.info = preivewInfos;
+        collection.info = preivewInfos.slice(0, 3);
       } else {
         collection.info = [];
       }

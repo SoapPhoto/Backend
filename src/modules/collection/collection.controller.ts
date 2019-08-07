@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Put,
+  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Delete,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -28,7 +28,7 @@ export class CollectionController {
     return this.collectionService.create(body, user);
   }
 
-  @Put('/:collectionId/add/:pictureId')
+  @Post('/:collectionId/:pictureId')
   @Roles(Role.USER)
   public async addPictureCollection(
     @Param('pictureId') pictureId: string,
@@ -38,7 +38,7 @@ export class CollectionController {
     return this.collectionService.addPicture(collectionId, pictureId, user);
   }
 
-  @Put('/:collectionId/remove/:pictureId')
+  @Delete('/:collectionId/:pictureId')
   @Roles(Role.USER)
   public async removePictureCollection(
     @Param('pictureId') pictureId: string,
