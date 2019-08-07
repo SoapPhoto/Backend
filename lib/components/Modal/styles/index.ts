@@ -6,11 +6,19 @@ import { box } from '@lib/common/utils/themes/common';
 export const Warpper = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
-  bottom: 0;
   right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 1000;
-  overflow-y: auto;
+  overflow: auto;
+  outline: 0;
+  &::before {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    content: '';
+  }
 `;
 
 export const Box = styled.div`
@@ -24,12 +32,11 @@ export const Box = styled.div`
 `;
 
 export const Content = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-  height: 100%;
+  top: 0;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  width: 100%;
 `;
 
 export const Mask = styled.div`

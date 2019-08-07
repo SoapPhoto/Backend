@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { AppStore } from '@lib/stores/AppStore';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { Check, Minus } from '@lib/icon';
-import { Loading } from '@lib/components/Loading';
+// import { Loading } from '@lib/components/Loading';
 
 interface IProps {
   visible: boolean;
@@ -65,6 +65,7 @@ const CollectionItemCover = styled.img`
   object-fit: cover;
   width: 100%;
   height: 100%;
+  filter: blur(4px);
 `;
 
 const ItemInfoBox = styled.div<{isCollected: boolean}>`
@@ -144,6 +145,9 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   useEffect(() => {
     getCollection();
   }, []);
+  const onCollected = (isCollected: boolean) => {
+    console.log(isCollected);
+  };
   return (
     <Modal
       visible={visible}
@@ -156,10 +160,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
           userCollection.map((collection) => {
             const isCollected = currentCollections.findIndex(cl => cl.id === collection.id) >= 0;
             return (
-              <CollectionItemBox key={collection.id}>
+              <CollectionItemBox key={collection.id} onClick={() => onCollected(isCollected)}>
                 {
                   collection.preview[0] && (
-                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key)} />
+                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'thumb')} />
                   )
                 }
                 <ItemInfoBox isCollected={isCollected}>
@@ -173,9 +177,9 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
                     </ItemInfoCount>
                   </div>
                   <ItemHandleIcon>
-                    <Loading size={6} color="#fff" />
-                    {/* <CheckIcon />
-                    <MinusIcon /> */}
+                    {/* <Loading size={6} color="#fff" /> */}
+                    <CheckIcon />
+                    <MinusIcon />
                   </ItemHandleIcon>
                 </ItemInfoBox>
               </CollectionItemBox>
