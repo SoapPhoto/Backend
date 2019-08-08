@@ -47,7 +47,7 @@ import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
     TypeOrmModule.forRoot({
-      logging: true,
+      logging: ['error', 'query', 'warn'],
       keepConnectionAlive: true,
       type: 'mysql',
       port: Number(process.env.DATABASE_PORT),
