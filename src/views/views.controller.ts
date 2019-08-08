@@ -1,5 +1,5 @@
 import {
-  CacheInterceptor, Controller, Get, Query, Render, Res, UseGuards, UseInterceptors,
+  CacheInterceptor, Controller, Get, Query, Res, UseGuards, UseInterceptors,
 } from '@nestjs/common';
 import path from 'path';
 
@@ -7,6 +7,7 @@ import { AuthService } from '@server/modules/auth/auth.service';
 import { ValidatorEmailDto } from '@server/modules/auth/dto/auth.dto';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
 import { Response } from 'express';
+import { NextResponse } from 'nest-next-module';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -17,87 +18,96 @@ export class ViewsController {
   ) {}
 
   @Get()
-  @Render('home')
-  public async index() {
-    return {};
+  public async index(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/home');
   }
 
   @Get('@(:username)')
-  @Render('user')
-  public async user() {
-    return {};
+  public async user(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/user');
   }
 
   @Get('@:username/:type(like)?')
-  @Render('user')
-  public async userType() {
-    return {};
+  public async userType(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/user');
   }
 
   @Get('picture/:id([0-9]+)')
   public async pictureDetail(
-    @Res() res: any,
+    @Res() res: NextResponse,
   ) {
-    res.render('picture', {});
+    return res.nextRender('/views/picture');
   }
 
   @Get('validatoremail')
-  @Render('auth/validatoremail')
   public async validatorEmail(
     @Query() query: ValidatorEmailDto,
+    @Res() res: NextResponse,
   ) {
-    return this.authService.validatorEmail(query);
+    await this.authService.validatorEmail(query);
+    return res.nextRender('/views/picture');
   }
 
   @Get('login')
-  @Render('auth/login')
-  public async login() {
-    return {};
+  public async login(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/auth/login');
   }
 
   @Get('signup')
-  @Render('auth/signup')
-  public async signup() {
-    return {};
+  public async signup(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/auth/signup');
   }
 
   @Get('upload')
-  @Render('upload')
-  public async upload() {
-    return {};
+  public async upload(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/upload');
   }
 
   @Get('setting/:type(profile)')
-  @Render('setting')
-  public async setting() {
-    return {};
+  public async setting(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/setting');
   }
 
   @Get('setting/*')
-  @Render('setting')
   public async settingRedirect(
-    @Res() res: Response,
+    @Res() res: NextResponse,
   ) {
     res.redirect('/setting/profile');
   }
 
   @Get('setting')
   public async settingIndex(
-    @Res() res: Response,
+    @Res() res: NextResponse,
   ) {
     res.redirect('/setting/profile');
   }
 
   @Get('tag/:name')
-  @Render('tag')
-  public async tagDetail() {
-    return {};
+  public async tagDetail(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/tag');
   }
 
   @Get('collection/:id')
-  @Render('collection')
-  public async collectionDetail() {
-    return {};
+  public async collectionDetail(
+    @Res() res: NextResponse,
+  ) {
+    return res.nextRender('/views/collection');
   }
 
   @Get('service-worker.js')

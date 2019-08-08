@@ -20,6 +20,10 @@ export class LoggingInterceptor implements NestInterceptor {
     if (req) {
       const { method } = req;
       const { url } = req;
+      // 过滤掉next的一些无用路由信息
+      if ((method === 'GET' && /^\/_next/.test(url)) || /^\/favicon.ico/.test(url)) {
+        return next.handle();
+      }
       this.logger.log(
         `  <-- ${method} ${url}`,
         context.getClass().name,

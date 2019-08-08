@@ -7,9 +7,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { GraphQLError } from 'graphql';
-import { RenderModule } from 'nest-next';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nest-modules/mailer';
+import { NestNextModule } from 'nest-next-module';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
@@ -37,8 +37,12 @@ import { TagEntity } from './modules/tag/tag.entity';
 import { UserEntity } from './modules/user/user.entity';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 
+const dev = process.env.NODE_ENV !== 'production';
+// const dev = false;
+
 @Module({
   imports: [
+    NestNextModule.forRoot({ dev }),
     RedisModule.register({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
@@ -108,7 +112,6 @@ import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
       }),
     }),
     LoggingModule,
-    RenderModule,
     AuthModule,
     OauthModule,
     ViewsModule,

@@ -1,25 +1,24 @@
 {
-  "extends": "./tsconfig.json",
+  // "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": ".next/production-server",
-    "target": "es6",
+    "target": "es2016",
     "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "baseUrl": "./",
     "types": [
+      "react",
       "node"
     ],
     "lib": [
       "es6",
+      "dom",
       "es2015",
       "es2017"
     ],
     "paths": {
-      "*": [
-        "typings/*"
-      ],
       "@server/*": [
         "src/*"
       ],

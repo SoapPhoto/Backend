@@ -6,22 +6,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { RenderModule, RenderService } from 'nest-next';
-
-import Next from 'next';
 
 import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
 
 const bootstrap = async () => {
-  // const dev = process.env.NODE_ENV !== 'production';
-  const dev = false;
-  const app = Next({
-    dev,
-  });
-
-  await app.prepare();
-
   const server = await NestFactory.create(AppModule, {
     logger: new LoggingService(),
   });
@@ -33,14 +22,6 @@ const bootstrap = async () => {
   server.enableCors({
     origin: false,
   });
-
-  const renderer = server.get(RenderModule);
-  renderer.register(server, app, {
-    dev,
-    viewsDir: '/views',
-  });
-
-  server.get(RenderService);
 
   await server.listen(process.env.PORT!);
 
