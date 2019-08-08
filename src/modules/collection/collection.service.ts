@@ -241,11 +241,11 @@ export class CollectionService {
         .createQueryBuilder('cp')
         .andWhere('cp.collectionId=:id', { id: v.id })
         .leftJoinAndSelect('cp.picture', 'picture')
-        .leftJoinAndSelect('cp.collection', 'collection')
-        .andWhere(`${sql}picture.isPrivate=0`)
+        .leftJoin('cp.collection', 'collection')
+        .andWhere(`(${sql}picture.isPrivate=0)`)
         .orderBy('cp.createTime', 'DESC')
-        .skip(0)
-        .take(3)
+        .limit(3)
+        .offset(0)
         .getMany()),
     );
     const newData = data.map((collection, index) => {

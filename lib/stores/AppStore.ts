@@ -19,7 +19,7 @@ interface ILocation {
 }
 
 export class AppStore {
-  @observable.shallow public userCollection: CollectionEntity[] = []
+  @observable public userCollection: CollectionEntity[] = []
 
   @observable public loading = false;
 

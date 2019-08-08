@@ -142,11 +142,17 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   const { getCollection, userCollection } = appStore!;
   const { themeData } = themeStore!;
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key)}")`;
   useEffect(() => {
     getCollection();
   }, []);
+  useEffect(() => {
+    setCurrent(
+      new Map(currentCollections.map(collection => [collection.id, collection])),
+    );
+  }, [currentCollections]);
   useEffect(() => {
     const obj: Record<string, boolean> = {};
     userCollection.forEach(collection => obj[collection.id] = false);
@@ -163,8 +169,11 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
     try {
       if (isCollected) {
         await removePictureCollection(collection.id, id);
+        current.delete(collection.id);
+        setCurrent(current);
       } else {
         await addPictureCollection(collection.id, id);
+        setCurrent(current.set(collection.id, collection));
       }
     } finally {
       getCollection();
@@ -173,7 +182,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         [collection.id]: false,
       }));
     }
-  }, [loading]);
+  }, [loading, current]);
   return (
     <Modal
       visible={visible}
@@ -184,7 +193,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
       <CollectionBox>
         {
           userCollection.map((collection) => {
-            const isCollected = currentCollections.findIndex(cl => cl.id === collection.id) >= 0;
+            const isCollected = current.has(collection.id);
             const isLoading = loading[collection.id];
             return (
               <CollectionItemBox

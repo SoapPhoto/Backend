@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 import { Emojione } from 'react-emoji-render';
+import { observer } from 'mobx-react';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { AccountStore } from '@lib/stores/AccountStore';
@@ -15,7 +16,7 @@ interface IProps {
   comment: CommentEntity[];
 }
 
-export const CommentList: React.FC<IProps> = ({
+export const CommentList: React.FC<IProps> = observer(({
   comment,
 }) => (
   <Wrapper>
@@ -49,4 +50,4 @@ export const CommentList: React.FC<IProps> = ({
       ))
     }
   </Wrapper>
-);
+));

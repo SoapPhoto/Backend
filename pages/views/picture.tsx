@@ -145,12 +145,17 @@ Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) 
   const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
   if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
     mobxStore.screen.pictureStore.getCache();
+    mobxStore.screen.pictureStore.getPictureInfo(
+      params.id!,
+      req ? req.headers : undefined,
+    );
     return {};
   }
-  return mobxStore.screen.pictureStore.getPictureInfo(
+  await mobxStore.screen.pictureStore.getPictureInfo(
     params.id!,
     req ? req.headers : undefined,
   );
+  return {};
 };
 
 export default withError<IProps>(
