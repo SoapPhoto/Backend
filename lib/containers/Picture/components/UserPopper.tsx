@@ -28,7 +28,9 @@ export const UserPopper = connect<React.FC<IProps>>('appStore')(({
       popperRef.current.popper.update();
     } else {
       setTimeout(() => {
-        popperRef.current!.popper!.update();
+        if (popperRef.current && popperRef.current.popper) {
+          popperRef.current!.popper!.update();
+        }
       }, 10);
     }
   };
