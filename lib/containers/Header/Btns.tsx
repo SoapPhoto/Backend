@@ -33,11 +33,9 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
       setTheme(theme === 'dark' ? 'base' : 'dark');
     };
     let content = (
-      <Link route="/login">
-        <Href href="/login">
-          <User />
-        </Href>
-      </Link>
+      <Href route="/login">
+        <User />
+      </Href>
     );
     if (isLogin && userInfo) {
       content = (

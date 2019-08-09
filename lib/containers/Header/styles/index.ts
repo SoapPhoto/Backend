@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { href } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
+import { A } from '@lib/components/A';
 
 export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
@@ -37,7 +38,7 @@ export const RightWarpper = styled.div`
   margin-right: ${rem('22px')};
 `;
 
-export const Href = styled.a`
+export const Href = styled(A)`
   ${_ => href(_.theme.styles.link.color)}
 `;
 

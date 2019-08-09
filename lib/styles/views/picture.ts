@@ -2,6 +2,7 @@ import { Info } from '@lib/icon';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
+import { A } from '@lib/components/A';
 
 export const Wrapper = styled.div`
   max-width: ${rem('1040px')};
@@ -17,7 +18,7 @@ export const UserHeader = styled(Grid)`
   max-width: ${rem('780px')};
 `;
 
-export const UserLink = styled.a`
+export const UserLink = styled(A)`
   display: flex;
   text-decoration: none;
   align-items: center;

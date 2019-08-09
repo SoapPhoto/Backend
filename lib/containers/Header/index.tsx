@@ -3,8 +3,8 @@ import { withRouter } from 'next/router';
 import React from 'react';
 
 import { connect } from '@lib/common/utils/store';
-import { Link } from '@lib/routes';
 import { ThemeStore } from '@lib/stores/ThemeStore';
+import { A } from '@lib/components/A';
 import { Btns } from './Btns';
 import { Icon } from './Icon';
 import { Logo, MenuWapper, Wrapper } from './styles';
@@ -20,13 +20,11 @@ export const Header = withRouter<IProps>(
       return (
         <Wrapper login={isLog}>
           <Logo>
-            <Link route="/">
-              <a style={{ fontSize: 0 }} href="/">
-                <Icon
-                  color={themeStore!.themeData.layout.header.logo}
-                />
-              </a>
-            </Link>
+            <A style={{ fontSize: 0 }} route="/">
+              <Icon
+                color={themeStore!.themeData.layout.header.logo}
+              />
+            </A>
           </Logo>
           <MenuWapper>
             {/* <MenuItem>首页</MenuItem> */}

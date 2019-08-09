@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import media from 'styled-media-query';
 
 import { Image } from '@lib/components/Image';
+import { A } from '@lib/components/A';
 
 const padding = 24;
 
@@ -113,7 +114,7 @@ export const UserBox = styled.div`
   pointer-events: all;
 `;
 
-export const UserName = styled.a`
+export const UserName = styled(A)`
   margin-left: ${rem('12px')};
   font-weight: 700;
   font-size: ${_ => rem(_.theme.fontSizes[1])};

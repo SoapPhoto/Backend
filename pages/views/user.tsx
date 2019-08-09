@@ -9,7 +9,6 @@ import { Avatar, Nav, NavItem } from '@lib/components';
 import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Link as LinkIcon } from '@lib/icon';
-import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { UserScreenStore } from '@lib/stores/screen/User';
@@ -28,6 +27,7 @@ import { computed } from 'mobx';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { Cell, Grid } from 'styled-css-grid';
+import { A } from '@lib/components/A';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -98,11 +98,9 @@ class User extends React.Component<IProps> {
                 {
                   isLogin && userInfo && userInfo.username === user.username
                   && (
-                    <Link route="/setting/profile">
-                      <a href="'/setting/profile">
-                        <EditIcon size={18} />
-                      </a>
-                    </Link>
+                    <A route="'/setting/profile">
+                      <EditIcon size={18} />
+                    </A>
                   )
                 }
               </UserName>
