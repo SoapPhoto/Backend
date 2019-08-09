@@ -8,6 +8,7 @@ import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
 import { Link } from '@lib/routes';
+import { Image } from '@lib/components/Image';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -53,7 +54,7 @@ const PrviewBox = styled.div`
   overflow: hidden;
 `;
 
-const Img = styled.img`
+const Img = styled(Image)`
   position: absolute;
   width: 100%;
   height: 100%;

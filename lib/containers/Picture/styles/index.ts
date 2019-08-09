@@ -2,6 +2,8 @@ import { rem } from 'polished';
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
+import { Image } from '@lib/components/Image';
+
 const padding = 24;
 
 export const PictureContent = styled.div`
@@ -72,7 +74,7 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   width: 100%;
 `;
 
-export const ItemImage = styled.img`
+export const ItemImage = styled(Image)`
   pointer-events: auto;
   position: absolute;
   top: 0;

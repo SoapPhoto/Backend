@@ -1,6 +1,7 @@
 import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
+import { Image } from '../Image';
 
 export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
@@ -32,7 +33,7 @@ const Box = styled.span<{size: number; isClick: boolean}>`
   height: ${props => rem(props.size)};
 `;
 
-const Img = styled.img`
+const Img = styled(Image)`
   width: 100%;
   height: 100%;
 `;
