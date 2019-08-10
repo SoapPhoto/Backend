@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { href } from '@lib/common/utils/themes/common';
-import { Link } from '@lib/routes';
+import { A } from '../A';
 
 interface IData {
   value: string;
@@ -29,7 +29,7 @@ const Content = styled.div`
   padding: ${rem('32px')};
 `;
 
-export const Href = styled.a<{active?: boolean}>`
+export const Href = styled(A)<{active?: boolean}>`
   ${_ => href(_.active ? _.theme.styles.link.color : darken(0.6, _.theme.colors.text))}
   display: block;
 `;
@@ -44,13 +44,11 @@ export const Menu: React.FC<IUserProps> = ({
       <Wrapper>
         {
           data.map(menu => (
-            <Link key={menu.value} route={menu.path}>
-              <Href href={menu.path} active={menu.value === value}>
-                <Item>
-                  {menu.name}
-                </Item>
-              </Href>
-            </Link>
+            <Href route={menu.path} active={menu.value === value}>
+              <Item>
+                {menu.name}
+              </Item>
+            </Href>
           ))
         }
       </Wrapper>

@@ -12,7 +12,6 @@ import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import { Eye, Heart } from '@lib/icon';
-import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { PictureScreenStore } from '@lib/stores/screen/Picture';
@@ -32,6 +31,7 @@ import {
   UserName,
   Wrapper,
 } from '@lib/styles/views/picture';
+import { A } from '@lib/components/A';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -70,12 +70,10 @@ const Picture: ICustomNextPage<IProps, any> = ({
       </Head>
       <UserHeader columns={2}>
         <UserInfo width={1}>
-          <Link route={`/@${user.username}`}>
-            <UserLink href={`/@${user.username}`}>
-              <Avatar style={{ marginRight: '15px' }} src={user.avatar} />
-              <UserName>{user.name}</UserName>
-            </UserLink>
-          </Link>
+          <UserLink route={`/@${user.username}`}>
+            <Avatar style={{ marginRight: '15px' }} src={user.avatar} />
+            <UserName>{user.name}</UserName>
+          </UserLink>
         </UserInfo>
         <UserHeaderInfo width={1}>
           <BaseInfoItem style={{ marginRight: '14px' }}>
@@ -103,13 +101,11 @@ const Picture: ICustomNextPage<IProps, any> = ({
             <TagBox>
               {
                 tags.map(tag => (
-                  <Link route={`/tag/${tag.name}`} key={tag.id}>
-                    <a style={{ textDecoration: 'none' }} href={`/tag/${tag.name}`}>
-                      <Tag>
-                        {tag.name}
-                      </Tag>
-                    </a>
-                  </Link>
+                  <A style={{ textDecoration: 'none' }} route={`/tag/${tag.name}`} key={tag.id}>
+                    <Tag>
+                      {tag.name}
+                    </Tag>
+                  </A>
                 ))
               }
             </TagBox>

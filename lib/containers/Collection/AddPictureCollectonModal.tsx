@@ -12,6 +12,7 @@ import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { Check, Minus } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
+import { Image } from '@lib/components/Image';
 
 interface IProps {
   visible: boolean;
@@ -60,7 +61,7 @@ const CollectionBox = styled.div`
   grid-gap: 14px;
 `;
 
-const CollectionItemCover = styled.img`
+const CollectionItemCover = styled(Image)`
   font-family: "object-fit:cover";
   -o-object-fit: cover;
   object-fit: cover;

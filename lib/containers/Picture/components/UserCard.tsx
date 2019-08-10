@@ -8,6 +8,8 @@ import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
 import { Link } from '@lib/routes';
+import { Image } from '@lib/components/Image';
+import { A } from '@lib/components/A';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -53,7 +55,7 @@ const PrviewBox = styled.div`
   overflow: hidden;
 `;
 
-const Img = styled.img`
+const Img = styled(Image)`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -81,21 +83,17 @@ const UserCard: React.FC<IProps> = ({
     <div {...restProps}>
       <Wrapper columns={1} gap="18px">
         <Header>
-          <Link route={`/@${user.username}`}>
-            <a
-              href={`/@${user.username}`}
-            >
-              <Avatar src={user.avatar} size={48} />
-            </a>
-          </Link>
+          <A
+            route={`/@${user.username}`}
+          >
+            <Avatar src={user.avatar} size={48} />
+          </A>
           <UserBox>
-            <Link route={`/@${user.username}`}>
-              <a
-                href={`/@${user.username}`}
-              >
-                <UserName>{user.username}</UserName>
-              </a>
-            </Link>
+            <A
+              route={`/@${user.username}`}
+            >
+              <UserName>{user.username}</UserName>
+            </A>
             <Bio>{user.bio}</Bio>
           </UserBox>
         </Header>
@@ -103,13 +101,11 @@ const UserCard: React.FC<IProps> = ({
           {
             user.pictures.map(picture => (
               <PrviewBox key={picture.id} style={{ backgroundColor: picture.color }}>
-                <Link route={`/picture/${picture.id}`}>
-                  <a
-                    href={`/picture/${picture.id}`}
-                  >
-                    <Img src={getPictureUrl(picture.key, 'thumb')} alt="" />
-                  </a>
-                </Link>
+                <A
+                  route={`/picture/${picture.id}`}
+                >
+                  <Img src={getPictureUrl(picture.key, 'thumb')} alt="" />
+                </A>
               </PrviewBox>
             ))
           }

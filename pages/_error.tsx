@@ -82,7 +82,6 @@ class Error extends React.Component<IErrorProps> {
             <Box>
               <CloudSnowIcon />
               <Status>{statusCode}</Status>
-              {/* <Link route="/"> */}
               <A href="/">
                   前往首页
                 <ArrowRight style={{ marginLeft: 4 }} size={14} />
