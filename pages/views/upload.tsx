@@ -19,10 +19,11 @@ import {
   FormMessage,
   FormTag,
   FormTitle,
-  ImageBox,
   Input,
   UploadBox,
   Wapper,
+  PreviewBox,
+  Preview,
 } from '@lib/styles/views/upload';
 import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
@@ -101,9 +102,9 @@ const Upload: React.FC = () => {
         {
           imageUrl ? (
             <Grid columns="40% 1fr" gap="36px">
-              <Cell>
-                <ImageBox bg={imageUrl} />
-              </Cell>
+              <PreviewBox>
+                <Preview src={imageUrl} />
+              </PreviewBox>
               <Content>
                 <Grid columns={1}>
                   <Cell>

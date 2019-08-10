@@ -29,7 +29,7 @@ const Content = styled.div`
   padding: ${rem('32px')};
 `;
 
-export const Href = styled(A)<{active?: boolean}>`
+export const Href = styled(A)<{active: number}>`
   ${_ => href(_.active ? _.theme.styles.link.color : darken(0.6, _.theme.colors.text))}
   display: block;
 `;
@@ -44,7 +44,7 @@ export const Menu: React.FC<IUserProps> = ({
       <Wrapper>
         {
           data.map(menu => (
-            <Href route={menu.path} active={menu.value === value}>
+            <Href key={menu.name} route={menu.path} active={(menu.value === value) ? 1 : 0}>
               <Item>
                 {menu.name}
               </Item>

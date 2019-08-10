@@ -15,6 +15,7 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
 
   public render() {
     const { statusCode, error } = this.props;
+    console.log(statusCode, error);
     if (
       (statusCode && statusCode !== 200)
         || (error && error.statusCode !== 200)

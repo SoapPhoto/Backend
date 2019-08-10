@@ -28,11 +28,11 @@ export const UploadBox = styled(RCUpload)`
   flex-direction: column;
   height: ${rem('200px')};
   max-width: ${rem('1000px')};
-  width: 100%;
   border-radius: ${rem('3px')};
   border: 2px dashed ${_ => _.theme.styles.box.borderColor};
   background-color: ${_ => _.theme.styles.box.background};
   color: ${props => props.theme.colors.text};
+  margin: 24px;
   & svg {
     color: ${props => props.theme.colors.text};
     margin-bottom: ${rem('12px')};
@@ -44,18 +44,27 @@ export const Box = styled.div`
   max-width: ${rem('1000px')};
   width: 100%;
   margin: 0 auto;
+  padding: 0;
 `;
 
-export const ImageBox = styled.div<{bg: string}>`
-  height: ${rem('350px')};
+export const PreviewBox = styled(Cell)`
+  position: relative
+`;
+
+export const Preview = styled.img`
+  position: absolute;
   border-radius: ${rem('3px')};
-  background-image: url(${_ => _.bg});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  width: 100%;
+  height: auto;
+  font-family: "object-fit:cover";
+  -o-object-fit: cover;
+  object-fit: cover;
+  height: 100%;
 `;
 
 export const Content = styled(Cell)`
+  padding: ${rem('24px')};
+  padding-left: 0;
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`

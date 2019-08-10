@@ -4,6 +4,7 @@ import media from 'styled-media-query';
 
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
+import { WrapperBox } from '@lib/common/utils/themes/common';
 
 const padding = 24;
 
@@ -33,11 +34,8 @@ export const PictureContent = styled.div`
   `}
 `;
 
-export const Wapper = styled.div`
-  width: 100%;
-  max-width: ${rem('1300px')};
-  margin: ${rem(padding)} auto;
-  padding: 0 ${rem('24px')};
+export const Wrapper = styled.div`
+  ${WrapperBox()}
 `;
 
 export const Col = styled.div<{col: number; ssr: boolean}>`
@@ -73,6 +71,10 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   padding-bottom: ${props => props.height}%;
   background-color: ${props => props.background};
   width: 100%;
+  transition: .2s filter ease-in-out;
+  ${ItemWapper}:hover & {
+    filter: blur(2px);
+  }
 `;
 
 export const ItemImage = styled(Image)`

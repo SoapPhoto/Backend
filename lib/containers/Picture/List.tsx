@@ -11,7 +11,7 @@ import { debounce } from 'lodash';
 
 import useMedia from '@lib/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
-import { Footer, PictureContent, Wapper } from './styles';
+import { Footer, PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
 interface IProps {
@@ -104,7 +104,7 @@ export const PictureList: React.FC<IProps> = ({
     serverList = colArr.map(_col => listParse(data, _col));
   }
   return (
-    <Wapper>
+    <Wrapper>
       <NoSSR key="server" server={false}>
         <PictureContent>
           {
@@ -128,6 +128,6 @@ export const PictureList: React.FC<IProps> = ({
           }
         </Footer>
       </span>
-    </Wapper>
+    </Wrapper>
   );
 };

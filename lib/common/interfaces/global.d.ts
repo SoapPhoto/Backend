@@ -29,11 +29,12 @@ export interface ICustomNextPage<P = {}, IP = P> {
 }
 
 
-export interface IPaginationList {
+export interface IPaginationList<T> {
   timestamp: number;
   pageSize: number;
   page: number;
   count: number;
+  data: T[];
 }
 
 export interface IListRequest<T> {

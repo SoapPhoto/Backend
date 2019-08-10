@@ -11,6 +11,11 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
 
   @observable public type: string = '';
 
+  constructor() {
+    super();
+    this.initQuery();
+  }
+
   @action
   public initQuery = () => {
     this.listQuery = {

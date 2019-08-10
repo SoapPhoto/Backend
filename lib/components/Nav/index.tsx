@@ -23,15 +23,9 @@ export const NavItem = withRouter<INavItemProps>(({
   router,
 }) => {
   const active = router!.asPath === route;
-  const push = useCallback((e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    Router.pushRoute(route, undefined, {
-      shallow: true,
-    });
-    e.preventDefault();
-  }, [route]);
   return (
     <Item>
-      <ItemLink onClick={push} active={active} href={route}>
+      <ItemLink active={active} route={route}>
         {children}
       </ItemLink>
     </Item>

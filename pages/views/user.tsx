@@ -28,17 +28,22 @@ import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { Cell, Grid } from 'styled-css-grid';
 import { A } from '@lib/components/A';
+import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
+import { CollectionList } from '@lib/containers/Collection/List';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
   userStore: UserScreenStore;
-  listStore: UserScreenPictureList;
+  picturesStore: UserScreenPictureList;
+  collectionsStore: UserScreenCollectionList;
   accountStore: AccountStore;
+  type: string;
 }
 
 @inject((stores: IMyMobxStore) => ({
   userStore: stores.screen.userStore,
-  listStore: stores.screen.userPictureStore,
+  picturesStore: stores.screen.userPictureStore,
+  collectionsStore: stores.screen.userCollectionStore,
   accountStore: stores.accountStore,
 }))
 @observer
@@ -76,12 +81,11 @@ class User extends React.Component<IProps> {
   }
 
   public render() {
-    const { accountStore, userStore, listStore } = this.props;
+    const {
+      accountStore, userStore, picturesStore, collectionsStore, type,
+    } = this.props;
     const { isLogin, userInfo } = accountStore;
     const { user } = userStore;
-    const {
-      list, isNoMore, getPageList, like,
-    } = listStore;
     return (
       <Wrapper>
         <Head>
@@ -130,13 +134,22 @@ class User extends React.Component<IProps> {
           <NavItem route={`/@${user.username}/like`}>
             喜欢
           </NavItem>
+          <NavItem route={`/@${user.username}/collections`}>
+            收藏夹
+          </NavItem>
         </Nav>
-        <PictureList
-          noMore={isNoMore}
-          data={list}
-          like={like}
-          onPage={getPageList}
-        />
+        {
+          type === 'collections' ? (
+            <CollectionList list={collectionsStore.list} />
+          ) : (
+            <PictureList
+              noMore={picturesStore.isNoMore}
+              data={picturesStore.list}
+              like={picturesStore.like}
+              onPage={picturesStore.getPageList}
+            />
+          )
+        }
       </Wrapper>
     );
   }
@@ -160,10 +173,25 @@ User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => 
     if (!(isPop && isUsername)) {
       all.push(mobxStore.screen.userStore.getInit(...arg));
     }
-    if (isPop && isUsername && mobxStore.screen.userPictureStore.isCache(params.type)) {
-      mobxStore.screen.userPictureStore.getCache(params.type);
-    } else {
-      all.push(mobxStore.screen.userPictureStore.getList(...arg));
+    switch (params.type!) {
+      case 'collections':
+        if (isPop && isUsername && mobxStore.screen.userCollectionStore.isCache(params.username!)) {
+          mobxStore.screen.userCollectionStore.getCache(params.username);
+        } else {
+          all.push(
+            mobxStore.screen.userCollectionStore.getList(
+              params.username!,
+              req ? req.headers : undefined,
+            ),
+          );
+        }
+        break;
+      default:
+        if (isPop && isUsername && mobxStore.screen.userPictureStore.isCache(params.type)) {
+          mobxStore.screen.userPictureStore.getCache(params.type);
+        } else {
+          all.push(mobxStore.screen.userPictureStore.getList(...arg));
+        }
     }
     await Promise.all(all);
   } catch (err) {
@@ -171,6 +199,7 @@ User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => 
   }
   return {
     error,
+    type: params.type,
     username: params.username,
   };
 };

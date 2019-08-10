@@ -198,16 +198,19 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
 export function isImage(fileName: string) {
   const imgType = [
     '.jpg',
-    '.JPG',
+    '.jpeg',
     '.png',
   ];
   const ext = extname(fileName);
-  return imgType.indexOf(ext) >= 0;
+  return imgType.indexOf(ext.toLocaleLowerCase()) >= 0;
 }
 
 export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
   if (/^\/\/cdn/.test(key)) {
     return `${key}${pictureStyle[style]}`;
+  }
+  if (/^blob:/.test(key)) {
+    return key;
   }
   return `//cdn.soapphoto.com/${key}${pictureStyle[style]}`;
 }

@@ -51,7 +51,7 @@ const dev = process.env.NODE_ENV !== 'production';
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
     TypeOrmModule.forRoot({
-      logging: dev,
+      logging: false,
       keepConnectionAlive: true,
       type: 'mysql',
       port: Number(process.env.DATABASE_PORT),

@@ -37,6 +37,7 @@ const Box = styled.span<{size: number; isClick: boolean}>`
 const Img = styled(Image)`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 export const Avatar: React.FC<IAvatarProps> = ({

@@ -31,7 +31,7 @@ export class ViewsController {
     return res.nextRender('/views/user');
   }
 
-  @Get('@:username/:type(like)?')
+  @Get('@:username/:type(like|collections)?')
   public async userType(
     @Res() res: NextResponse,
   ) {

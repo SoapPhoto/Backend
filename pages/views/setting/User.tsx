@@ -56,9 +56,11 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
             <Avatar size={96} src={avatarUrl} />
           </Cell>
           <Cell width={1} middle>
-            <Upload onFileChange={handleAvatarChange}>
-              <Button>上传头像</Button>
-            </Upload>
+            <div>
+              <Upload onFileChange={handleAvatarChange}>
+                <Button>上传头像</Button>
+              </Upload>
+            </div>
           </Cell>
         </Grid>
       </Cell>
