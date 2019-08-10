@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '@lib/components/Modal';
 import { connect } from '@lib/common/utils/store';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -161,7 +161,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   useEffect(() => {
     getCollection();
   }, [visible]);
-  const onCollected = useCallback(async (collection: CollectionEntity, isCollected: boolean) => {
+  const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
+    if (loading[collection.id]) {
+      return;
+    }
     setLoading(ld => ({
       ...ld,
       [collection.id]: true,
@@ -182,7 +185,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         [collection.id]: false,
       }));
     }
-  }, [loading, current]);
+  };
   return (
     <Modal
       visible={visible}
@@ -198,7 +201,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
             return (
               <CollectionItemBox
                 key={collection.id}
-                onClick={() => onCollected(collection, isCollected)}
+                onClick={() => !isLoading && onCollected(collection, isCollected)}
               >
                 {
                   collection.preview[0] && (

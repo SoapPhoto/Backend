@@ -206,5 +206,8 @@ export function isImage(fileName: string) {
 }
 
 export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
+  if (/^\/\/cdn/.test(key)) {
+    return `${key}${pictureStyle[style]}`;
+  }
   return `//cdn.soapphoto.com/${key}${pictureStyle[style]}`;
 }

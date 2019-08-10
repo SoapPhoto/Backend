@@ -9,7 +9,7 @@ import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { NoSSR } from '../SSR';
 import {
-  Box, Content, Mask, Warpper,
+  Box, Content, Mask, Wrapper,
 } from './styles';
 
 interface IModalProps {
@@ -39,6 +39,8 @@ const maskTransitionStyles: {
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
   public contentRef = React.createRef<HTMLDivElement>();
+
+  public wrapperRef = React.createRef<HTMLDivElement>();
 
   @observable public isDestroy = !this.props.visible;
 
@@ -79,7 +81,7 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    if (e.target === this.contentRef.current) {
+    if (e.target === this.contentRef.current || e.target === this.wrapperRef.current) {
       if (isFunction(this.props.onClose)) {
         this.props.onClose();
       }
@@ -118,7 +120,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                       <Mask
                         style={{ ...maskTransitionStyles[state], transition: '.2s all ease' }}
                       />
-                      <Warpper onClick={this.handleClick}>
+                      <Wrapper onClick={this.handleClick} ref={this.wrapperRef}>
                         <Content ref={this.contentRef}>
                           <Box
                             style={{
@@ -130,7 +132,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             {children}
                           </Box>
                         </Content>
-                      </Warpper>
+                      </Wrapper>
                     </div>
                   )
                 }

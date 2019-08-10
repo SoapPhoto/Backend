@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { box } from '@lib/common/utils/themes/common';
 
-export const Warpper = styled.div`
+export const Wrapper = styled.div`
   position: fixed;
   top: 0;
   right: 0;

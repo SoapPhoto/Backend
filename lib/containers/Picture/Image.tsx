@@ -9,6 +9,7 @@ import { ImageBox, ItemImage } from './styles';
 interface IPictureImage extends IPictureItemProps {
   blur?: boolean;
   zooming?: boolean;
+  opacity?: boolean;
 }
 
 export const PictureImage: React.FC<IPictureImage> = ({

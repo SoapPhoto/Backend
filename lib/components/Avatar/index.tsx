@@ -1,6 +1,7 @@
 import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
+import { getPictureUrl } from '@lib/common/utils/image';
 
 export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
@@ -44,6 +45,6 @@ export const Avatar: React.FC<IAvatarProps> = ({
   ...restProps
 }) => (
   <Box size={size} onClick={onClick} isClick={!!onClick} {...restProps}>
-    <Img src={src} />
+    <Img src={getPictureUrl(src, 'thumb')} />
   </Box>
 );
