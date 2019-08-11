@@ -15,6 +15,7 @@ const normalize = () => css`
     font-size: ${prop => prop.theme.fontSizes[1]} !important;
     line-height: 1.5;
     overflow-y: scroll;
+    overflow-x: hidden;
     font-family: ${font};
   }
   html,body{

@@ -22,11 +22,13 @@ import {
   UserHeader,
   UserName,
   Wrapper,
+  HeaderGrid,
+  AvatarBox,
 } from '@lib/styles/views/user';
 import { computed } from 'mobx';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
-import { Cell, Grid } from 'styled-css-grid';
+import { Cell } from 'styled-css-grid';
 import { A } from '@lib/components/A';
 import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
@@ -92,10 +94,10 @@ class User extends React.Component<IProps> {
           <title>{getTitle(`${this.name} (@${user.username})`)}</title>
         </Head>
         <UserHeader>
-          <Grid columns="140px auto" gap="32px">
-            <Cell>
+          <HeaderGrid columns="140px auto" gap="32px">
+            <AvatarBox>
               <Avatar src={user.avatar} size={140} />
-            </Cell>
+            </AvatarBox>
             <Cell>
               <UserName>
                 {this.name}
@@ -125,7 +127,7 @@ class User extends React.Component<IProps> {
                 {user.bio}
               </Bio>
             </Cell>
-          </Grid>
+          </HeaderGrid>
         </UserHeader>
         <Nav>
           <NavItem route={`/@${user.username}`}>

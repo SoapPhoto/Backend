@@ -1,7 +1,6 @@
-import { Router } from '@lib/routes';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import { Item, ItemLink, Wrapper } from './styles';
 

@@ -1,8 +1,10 @@
 import { rem } from 'polished';
 import styled from 'styled-components';
+import { Grid, Cell } from 'styled-css-grid';
 
 import { href } from '@lib/common/utils/themes/common';
 import { Edit } from '@lib/icon';
+import media from 'styled-media-query';
 
 export const Wrapper = styled.div``;
 
@@ -11,6 +13,20 @@ export const UserHeader = styled.div`
   width: 100%;
   margin: 64px auto;
   padding: 0 ${rem('20px')};
+`;
+
+export const HeaderGrid = styled(Grid)`
+  ${media.lessThan('small')`
+    grid-template-columns: 1fr;
+    grid-gap: 4px;
+  `}
+`;
+
+export const AvatarBox = styled(Cell)`
+  display: flex;
+  ${media.lessThan('small')`
+    justify-content: center;
+  `}
 `;
 
 export const UserName = styled.h2`
