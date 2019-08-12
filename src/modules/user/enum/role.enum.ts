@@ -1,7 +1,9 @@
+import { $enum } from "ts-enum-util";
+
 export enum Role {
   ADMIN = 'ADMIN',
   USER = 'USER',
   OWNER = 'OWNER',
 }
 
-export const RoleValues = Object.keys(Role).map((key: any) => Role[key]);
+export const RoleValues = $enum(Role).map(key => Role[key]);

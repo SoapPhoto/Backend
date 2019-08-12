@@ -2,6 +2,7 @@ import Routes, * as routes from 'next-routes';
 import { ComponentType } from 'react';
 
 import { Link as BaseLink } from '@lib/components';
+import { SettingTypeValues, UserTypeValues } from '@common/enum/router';
 
 interface IRouteObject {
   [key: string]: string;
@@ -13,8 +14,8 @@ export const routeObject: IRouteObject = {
   '/validatoremail': 'views/auth/validatoremail',
   '/upload': 'views/upload',
   '/picture/:id([0-9]+)': 'views/picture',
-  '/setting/:type(profile|basic)': 'views/setting',
-  '/@:username/:type(like|collections)?': 'views/user',
+  [`/setting/:type(${SettingTypeValues.join('|')})`]: 'views/setting',
+  [`/@:username/:type(${UserTypeValues.join('|')})?`]: 'views/user',
   '/tag/:name': 'views/tag',
   '/collection/:id': 'views/collection',
 };

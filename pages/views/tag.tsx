@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { ICustomNextContext } from '@lib/common/interfaces/global';
+import { ICustomNextContext, ICustomNextPage } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -24,7 +24,7 @@ const Title = styled.h2`
   font-size: ${_ => rem(_.theme.fontSizes[5])};
 `;
 
-const TagDetail: React.FC<IProps> = ({
+const TagDetail: ICustomNextPage<IProps, {}> = ({
   tagStore,
 }) => {
   const { info } = tagStore;
@@ -47,7 +47,7 @@ const TagDetail: React.FC<IProps> = ({
   );
 };
 
-(TagDetail as any).getInitialProps = async (ctx: ICustomNextContext) => {
+TagDetail.getInitialProps = async (ctx: ICustomNextContext) => {
   const { params } = ctx.route;
   if (
     ctx.mobxStore.appStore.location

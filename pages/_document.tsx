@@ -4,6 +4,9 @@ import Document, {
 import React from 'react';
 import { ServerStyleSheet } from 'styled-components';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as _ from '@lib/common/utils';
+
 export default class MyDocument extends Document {
   public static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();

@@ -1,5 +1,7 @@
 /// <reference types="styled-components/cssprop" />
 
+import { parsePath, server } from '@lib/common/utils';
+
 import 'reflect-metadata';
 
 import _ from 'lodash';
@@ -8,7 +10,6 @@ import moment from 'moment';
 import App, { Container } from 'next/app';
 import React from 'react';
 
-import { parsePath, server } from '@lib/common/utils';
 import { PictureModal } from '@lib/components';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';

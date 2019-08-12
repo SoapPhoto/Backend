@@ -1,7 +1,7 @@
 import { AccountStore } from './AccountStore';
 import { AppStore } from './AppStore';
 import { I18nStore } from './i18n';
-import { ScreenStore } from './screen';
+import { IScreenStore, initScreenStore } from './screen';
 import { ThemeStore } from './ThemeStore';
 
 export interface IMyMobxStore {
@@ -9,13 +9,13 @@ export interface IMyMobxStore {
   accountStore: AccountStore;
   appStore: AppStore;
   themeStore: ThemeStore;
-  screen: typeof ScreenStore;
+  screen: IScreenStore;
 }
 export interface IInitialStore {
   i18nStore?: Partial<I18nStore>;
   accountStore?: Partial<AccountStore>;
   themeStore?: Partial<ThemeStore>;
-  screen: Partial<typeof ScreenStore>;
+  screen: Partial<IScreenStore>;
 }
 
 export const store: IMyMobxStore = {
@@ -23,7 +23,7 @@ export const store: IMyMobxStore = {
   accountStore: new AccountStore(),
   appStore: new AppStore(),
   themeStore: new ThemeStore(),
-  screen: ScreenStore,
+  screen: initScreenStore(),
 };
 
 export const initStore = (initialState: IInitialStore): IMyMobxStore => {

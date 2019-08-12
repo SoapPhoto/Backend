@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "types": [
+      "react",
+      "node"
+    ],
+    "lib": [
+      "es6",
+      "dom",
+      "es2015",
+      "es2017"
+    ],
+    "paths": {
+      "@server/*": [
+        "src/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@typings/*": [
+        "typings/*"
+      ],
+      "@common/*": [
+        "common/*"
+      ]
+    },
+  }
+}

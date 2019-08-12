@@ -2,10 +2,28 @@ import { action, observable } from 'mobx';
 
 import { UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
+import { UserType } from '@common/enum/router';
 import { BaseStore } from '../base/BaseStore';
+import { IMyMobxStore } from '../init';
+
+const server = !!(typeof window === 'undefined');
 
 export class UserScreenStore extends BaseStore {
-  @observable public type = '';
+  constructor() {
+    super();
+    if (!server) {
+      this.getStore();
+    }
+  }
+
+  private getStore = async () => {
+    const { store } = await import('../init');
+    this._store = store;
+  }
+
+  private _store!: IMyMobxStore;
+
+  @observable public type?: UserType;
 
   @observable public init = false;
 
@@ -16,7 +34,7 @@ export class UserScreenStore extends BaseStore {
   @observable public actived = false;
 
   @action
-  public getInit = async (username: string, type: string, headers?: any) => {
+  public getInit = async (username: string, type?: UserType, headers?: any) => {
     this.username = username;
     this.type = type;
     if (!(this.init && this.username === username && this.actived)) {
@@ -34,15 +52,21 @@ export class UserScreenStore extends BaseStore {
         message: 'no user',
       };
     }
+    if (this._store) {
+      this.setCache(data.username, data);
+    }
     this.user = data;
   }
 
-  /**
-   * 是否处于活跃状态
-   *
-   * @memberof UserScreenStore
-   */
-  @action public active = () => this.actived = true;
+  @action private setCache = (username: string, user: UserEntity) => {
+    this._store.appStore.userList.set(username, user);
+  }
 
-  @action public deactive = () => this.actived = false;
+  public hasCache = (username: string) => this._store.appStore.userList.has(username)
+
+  @action public getCache = (username: string) => {
+    if (this._store.appStore.userList.has(username)) {
+      this.user = this._store.appStore.userList.get(username)!;
+    }
+  }
 }

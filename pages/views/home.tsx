@@ -12,7 +12,7 @@ interface IProps {
   homeStore: HomeScreenStore;
 }
 
-const Index: ICustomNextPage<IProps, any> = ({
+const Index: ICustomNextPage<IProps, {}> = ({
   homeStore,
 }) => {
   const {

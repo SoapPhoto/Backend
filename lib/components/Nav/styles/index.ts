@@ -6,7 +6,7 @@ export const Item = styled.span`
   margin-right: 14px;
 `;
 
-export const ItemLink = styled(A)<{ active: boolean }>`
+export const ItemLink = styled(A)<{ active: number }>`
   position: relative;
   color: ${_ => (_.active ? _.theme.colors.text : _.theme.colors.secondary)};
   font-size: ${_ => rem(_.theme.fontSizes[3])};

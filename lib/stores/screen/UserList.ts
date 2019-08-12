@@ -2,6 +2,7 @@ import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/pictu
 import { request } from '@lib/common/utils/request';
 import { likePicture } from '@lib/services/picture';
 import { action, observable } from 'mobx';
+import { UserType } from '@common/enum/router';
 import { ListStore } from '../base/ListStore';
 
 export class UserScreenPictureList extends ListStore<PictureEntity> {
@@ -9,7 +10,7 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
 
   @observable public username: string = '';
 
-  @observable public type: string = '';
+  @observable public type?: UserType;
 
   constructor() {
     super();
@@ -25,16 +26,16 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     };
   }
 
-  public getList = async (username: string, type: string = '', headers: any) => {
+  public getList = async (username: string, type?: UserType, headers?: any) => {
     this.type = type;
     this.username = username;
     this.initQuery();
     const { data } = await request.get<IPictureListRequest>(
-      `/api/user/${username}/picture/${type}`,
+      `/api/user/${username}/picture/${this.type || ''}`,
       { headers: headers || {}, params: this.listQuery },
     );
     this.setData(data);
-    this.setCache(this.type, {
+    this.setCache(username, type, {
       ...data,
       data: this.list,
     });
@@ -46,7 +47,7 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
       return;
     }
     const { data } = await request.get<IPictureListRequest>(
-      `/api/user/${this.username}/picture/${this.type}`,
+      `/api/user/${this.username}/picture/${this.type || ''}`,
       {
         params: {
           ...this.listQuery,
@@ -55,7 +56,7 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
       },
     );
     this.setData(data, true);
-    this.setCache(this.type, {
+    this.setCache(this.username, this.type, {
       ...data,
       data: this.list,
     });
@@ -73,17 +74,20 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     this.listQuery.timestamp = data.timestamp;
   }
 
-  public setCache = (type: string, data: IPictureListRequest) => {
-    this.cacheList[type] = data;
+  public setCache = (username: string, type: UserType | undefined, data: IPictureListRequest) => {
+    this.cacheList[`${username}-${type || ''}`] = data;
   }
 
-  public getCache = (type: string = '') => {
-    if (this.cacheList[type]) {
-      this.setData(this.cacheList[type]);
+  public getCache = (username: string, type: UserType | undefined) => {
+    if (this.cacheList[`${username}-${type || ''}`]) {
+      this.setData(this.cacheList[`${username}-${type || ''}`]);
     }
   }
 
-  public isCache = (type: string = '') => this.cacheList[type] !== undefined;
+  public isCache = (
+    username: string,
+    type: UserType | undefined,
+  ) => this.cacheList[`${username}-${type || ''}`] !== undefined;
 
   @action
   public like = async (picture: PictureEntity) => {

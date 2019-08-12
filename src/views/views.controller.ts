@@ -8,6 +8,7 @@ import { ValidatorEmailDto } from '@server/modules/auth/dto/auth.dto';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
 import { Response } from 'express';
 import { NextResponse } from 'nest-next-module';
+import { SettingTypeValues, UserTypeValues } from '@common/enum/router';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -31,7 +32,7 @@ export class ViewsController {
     return res.nextRender('/views/user');
   }
 
-  @Get('@:username/:type(like|collections)?')
+  @Get(`@:username/:type(${UserTypeValues.join('|')})?`)
   public async userType(
     @Res() res: NextResponse,
   ) {
@@ -75,7 +76,7 @@ export class ViewsController {
     return res.nextRender('/views/upload');
   }
 
-  @Get('setting/:type(profile)')
+  @Get(`setting/:type(${SettingTypeValues.join('|')})`)
   public async setting(
     @Res() res: NextResponse,
   ) {

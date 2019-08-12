@@ -1,17 +1,14 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "module": "esnext",
     "jsx": "preserve",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "target": "es2016",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -19,33 +16,6 @@
     "strictNullChecks": true,
     "strict": true,
     "pretty": true,
-    "types": [
-      "react",
-      "node"
-    ],
-    "lib": [
-      "es6",
-      "es2015",
-      "es2017",
-      "dom"
-    ],
-    "paths": {
-      "*": [
-        "typings/*"
-      ],
-      "@server/*": [
-        "src/*"
-      ],
-      "@pages/*": [
-        "pages/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@typings/*": [
-        "typings/*"
-      ]
-    },
     "allowJs": true,
     "skipLibCheck": true,
     "noEmit": true,
@@ -56,7 +26,8 @@
     "src/**/*",
     "lib/**/*",
     "pages/**/*",
-    "typings/**/*"
+    "typings/**/*",
+    "common/**/*"
   ],
   "exclude": [
     "node_modules",

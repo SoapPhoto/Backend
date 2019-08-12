@@ -1,3 +1,5 @@
+import { $enum } from "ts-enum-util";
+
 export enum Status {
   UNVERIFIED = 'UNVERIFIED',
   VERIFIED = 'VERIFIED',
@@ -5,4 +7,4 @@ export enum Status {
   BANNED = 'BANNED',
 }
 
-export const StatusValues = Object.keys(Status).map((key: any) => Status[key]);
+export const StatusValues = $enum(Status).map((key: any) => Status[key]);

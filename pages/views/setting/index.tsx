@@ -2,16 +2,17 @@ import { WithRouterProps } from 'next/dist/client/with-router';
 import dynamic from 'next/dynamic';
 import Head from 'next/Head';
 import { withRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { ICustomNextContext } from '@lib/common/interfaces/global';
+import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { getTitle, parsePath } from '@lib/common/utils';
 import { withAuth } from '@lib/components/router/withAuth';
 import { Menu } from '@lib/components/WrapperMenu';
 import { Warpper } from '@lib/styles/views/setting';
+import { UserType } from '@common/enum/router';
 
 interface IProps extends WithRouterProps {
-  type: 'user' | 'basic';
+  type: UserType;
 }
 
 const menu = [
@@ -21,6 +22,12 @@ const menu = [
     path: '/setting/profile',
     component: dynamic(() => import('./User')),
   },
+  {
+    value: 'resetPassword',
+    name: '重置密码',
+    path: '/setting/resetPassword',
+    component: dynamic(() => import('./ResetPassword')),
+  },
   // {
   //   value: 'basic',
   //   name: '基本设置',
@@ -28,39 +35,32 @@ const menu = [
   //   component: dynamic(() => import('./Basic')),
   // },
 ];
-class Setting extends React.Component<IProps> {
-  public static async getInitialProps(ctx: ICustomNextContext) {
-    return {
-      type: ctx.route.params.type,
-    };
-  }
 
-  public static getDerivedStateFromProps(nextProps: IProps) {
-    const route = parsePath(nextProps.router!.asPath!);
-    return {
-      type: route.params.type,
-    };
-  }
+const Setting: ICustomNextPage<IProps, {type: UserType}> = ({
+  type,
+  router,
+}) => {
+  const [types, setType] = useState(type);
+  useEffect(() => {
+    const route = parsePath(router.asPath);
+    setType((route.params.type as UserType));
+  }, [router]);
+  return (
+    <Warpper>
+      <Head>
+        <title>{getTitle('设置')}</title>
+      </Head>
+      <Menu
+        value={types}
+        data={menu}
+      />
+    </Warpper>
+  );
+};
 
-  public state = {
-    type: this.props.type,
-  };
-
-  public render() {
-    const { type } = this.state;
-    return (
-      <Warpper>
-        <Head>
-          <title>{getTitle('设置')}</title>
-        </Head>
-        <Menu
-          value={type}
-          data={menu}
-        />
-      </Warpper>
-    );
-  }
-}
+Setting.getInitialProps = async ctx => ({
+  type: ctx.route.params.type as UserType,
+});
 
 export default withRouter(
   withAuth<IProps>('user')(Setting),

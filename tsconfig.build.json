@@ -1,39 +1,11 @@
 {
-  // "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": ".next/production-server",
     "target": "es2016",
     "module": "commonjs",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "baseUrl": "./",
-    "types": [
-      "react",
-      "node"
-    ],
-    "lib": [
-      "es6",
-      "dom",
-      "es2015",
-      "es2017"
-    ],
-    "paths": {
-      "@server/*": [
-        "src/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@pages/*": [
-        "pages/*"
-      ],
-      "@typings/*": [
-        "typings/*"
-      ]
-    },
     "moduleResolution": "node"
   },
-  "include": ["src/**/*", "typings/**/*"],
+  "include": ["src/**/*", "typings/**/*", "common/**/*"],
   "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*"]
 }

@@ -32,6 +32,7 @@ import { Cell } from 'styled-css-grid';
 import { A } from '@lib/components/A';
 import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
+import { UserType } from '@common/enum/router';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -39,8 +40,10 @@ interface IProps extends IBaseScreenProps, WithRouterProps {
   picturesStore: UserScreenPictureList;
   collectionsStore: UserScreenCollectionList;
   accountStore: AccountStore;
-  type: string;
+  type: UserType;
 }
+
+const server = !!(typeof window === 'undefined');
 
 @inject((stores: IMyMobxStore) => ({
   userStore: stores.screen.userStore,
@@ -48,22 +51,13 @@ interface IProps extends IBaseScreenProps, WithRouterProps {
   collectionsStore: stores.screen.userCollectionStore,
   accountStore: stores.accountStore,
 }))
+
 @observer
 class User extends React.Component<IProps> {
   public static getInitialProps: (_: ICustomNextContext) => any;
 
   constructor(props: IProps) {
     super(props);
-  }
-
-  public componentDidMount() {
-    const { userStore } = this.props;
-    userStore.active();
-  }
-
-  public componentWillUnmount() {
-    const { userStore } = this.props;
-    userStore.deactive();
   }
 
   @computed get type() {
@@ -159,38 +153,40 @@ class User extends React.Component<IProps> {
 
 User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => {
   const { params } = route;
+  const { username, type } = params as { username: string; type: UserType };
   let error: {
     message: string;
     statusCode: number;
   } | undefined;
   try {
     const all = [];
-    const arg: [string, string, any] = [params.username!, params.type!, req ? req.headers : undefined];
-    const isUsername = (
-      mobxStore.screen.userStore.init
-      && mobxStore.screen.userStore.user
-      && mobxStore.screen.userStore.user.username === params.username
-    );
-    const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
-    if (!(isPop && isUsername)) {
+    const arg: [string, UserType, any] = [username!, type!, req ? req.headers : undefined];
+    const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP' && !server;
+    if (isPop) {
+      if (await mobxStore.screen.userStore.hasCache(username)) {
+        await mobxStore.screen.userStore.getCache(username);
+      } else {
+        all.push(mobxStore.screen.userStore.getInit(...arg));
+      }
+    } else {
       all.push(mobxStore.screen.userStore.getInit(...arg));
     }
-    switch (params.type!) {
-      case 'collections':
-        if (isPop && isUsername && mobxStore.screen.userCollectionStore.isCache(params.username!)) {
-          mobxStore.screen.userCollectionStore.getCache(params.username);
+    switch (type!) {
+      case UserType.collections:
+        if (isPop && mobxStore.screen.userCollectionStore.isCache(username!)) {
+          mobxStore.screen.userCollectionStore.getCache(username);
         } else {
           all.push(
             mobxStore.screen.userCollectionStore.getList(
-              params.username!,
+              username!,
               req ? req.headers : undefined,
             ),
           );
         }
         break;
       default:
-        if (isPop && isUsername && mobxStore.screen.userPictureStore.isCache(params.type)) {
-          mobxStore.screen.userPictureStore.getCache(params.type);
+        if (isPop && mobxStore.screen.userPictureStore.isCache(username, type)) {
+          mobxStore.screen.userPictureStore.getCache(username, type);
         } else {
           all.push(mobxStore.screen.userPictureStore.getList(...arg));
         }
@@ -201,7 +197,7 @@ User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => 
   }
   return {
     error,
-    type: params.type,
+    type,
     username: params.username,
   };
 };

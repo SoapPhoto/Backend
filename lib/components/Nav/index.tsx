@@ -24,7 +24,7 @@ export const NavItem = withRouter<INavItemProps>(({
   const active = router!.asPath === route;
   return (
     <Item>
-      <ItemLink active={active} route={route}>
+      <ItemLink active={active ? 1 : 0} route={route}>
         {children}
       </ItemLink>
     </Item>

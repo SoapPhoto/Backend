@@ -46,6 +46,7 @@ export const MorePreview = styled.div``;
 export const Img = styled(Image)`
   position: absolute;
   height: 100%;
+  width: 100%;
   object-fit: cover;
 `;
 
