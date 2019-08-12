@@ -4,6 +4,10 @@ type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };
 
 type MutablePartial<T> = { -readonly [P in keyof T]?: T[P] };
 
+type RecordPartial<K extends keyof any, T> = {
+  [P in K]?: T;
+};
+
 type ID = string | number;
 
 interface IEXIF {

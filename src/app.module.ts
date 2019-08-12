@@ -114,12 +114,12 @@ const dev = process.env.NODE_ENV !== 'production';
     LoggingModule,
     AuthModule,
     OauthModule,
-    ViewsModule,
     CacheModule,
     ApiModule,
     EmailModule,
     QiniuModule,
     EventsModule,
+    ViewsModule,
   ],
   providers: [
     {

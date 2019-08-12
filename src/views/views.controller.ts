@@ -1,12 +1,12 @@
 import {
-  CacheInterceptor, Controller, Get, Query, Res, UseGuards, UseInterceptors,
+  CacheInterceptor, Controller, Get, Query, Res, UseGuards, UseInterceptors, All, Req,
 } from '@nestjs/common';
 import path from 'path';
 
 import { AuthService } from '@server/modules/auth/auth.service';
 import { ValidatorEmailDto } from '@server/modules/auth/dto/auth.dto';
 import { ViewAuthGuard } from '@server/common/guard/view-auth.guard';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { NextResponse } from 'nest-next-module';
 import { SettingTypeValues, UserTypeValues } from '@common/enum/router';
 
@@ -125,5 +125,13 @@ export class ViewsController {
   ) {
     const data = path.join(process.cwd(), '/public/favicon.ico');
     res.sendFile(data);
+  }
+
+  @All('*')
+  public async test(
+    @Res() res: NextResponse,
+    @Req() req: Request,
+  ) {
+    return res.nextRequestHandler(req, res);
   }
 }

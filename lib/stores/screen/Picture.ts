@@ -5,6 +5,7 @@ import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
 import { getPicture, likePicture } from '@lib/services/picture';
 
+import { HttpStatus } from '@lib/common/enums/http';
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
@@ -26,7 +27,7 @@ export class PictureScreenStore extends BaseStore {
     if (!data) {
       return {
         error: {
-          statusCode: 404,
+          statusCode: HttpStatus.NOT_FOUND,
         },
       };
     }

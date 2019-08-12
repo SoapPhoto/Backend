@@ -3,6 +3,7 @@ import { DefaultQuery, RouterProps } from 'next/router';
 
 import { IMyMobxStore } from '@lib/stores/init';
 import { Request, Response } from 'express';
+import { HttpStatus } from '@lib/common/enums/http';
 import { UserEntity } from './user';
 import { IPathInfo } from '../utils';
 
@@ -52,10 +53,11 @@ export interface IBaseQuery {
   [key: string]: number | string;
 }
 
+export interface IErrorStatus {
+  message?: string;
+  statusCode: HttpStatus;
+}
+
 export interface IBaseScreenProps {
-  statusCode: number;
-  error: {
-    message?: string;
-    statusCode: number;
-  };
+  error: IErrorStatus;
 }

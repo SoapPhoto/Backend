@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
 import { UserType } from '@common/enum/router';
+import { HttpStatus } from '@lib/common/enums/http';
 import { BaseStore } from '../base/BaseStore';
 import { IMyMobxStore } from '../init';
 
@@ -25,8 +26,6 @@ export class UserScreenStore extends BaseStore {
 
   @observable public type?: UserType;
 
-  @observable public init = false;
-
   @observable public user!: UserEntity;
 
   @observable public username = '';
@@ -37,10 +36,7 @@ export class UserScreenStore extends BaseStore {
   public getInit = async (username: string, type?: UserType, headers?: any) => {
     this.username = username;
     this.type = type;
-    if (!(this.init && this.username === username && this.actived)) {
-      await this.getUserInfo(username, headers);
-    }
-    this.init = true;
+    await this.getUserInfo(username, headers);
   }
 
   @action public getUserInfo = async (username: string, headers?: any) => {
@@ -48,7 +44,7 @@ export class UserScreenStore extends BaseStore {
     if (!data) {
       // eslint-disable-next-line no-throw-literal
       throw {
-        statusCode: 404,
+        statusCode: HttpStatus.NOT_FOUND,
         message: 'no user',
       };
     }

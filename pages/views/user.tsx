@@ -151,7 +151,9 @@ class User extends React.Component<IProps> {
   }
 }
 
-User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => {
+User.getInitialProps = async ({
+  mobxStore, req, route, res,
+}: ICustomNextContext) => {
   const { params } = route;
   const { username, type } = params as { username: string; type: UserType };
   let error: {
@@ -166,10 +168,10 @@ User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => 
       if (await mobxStore.screen.userStore.hasCache(username)) {
         await mobxStore.screen.userStore.getCache(username);
       } else {
-        all.push(mobxStore.screen.userStore.getInit(...arg));
+        await mobxStore.screen.userStore.getInit(...arg);
       }
     } else {
-      all.push(mobxStore.screen.userStore.getInit(...arg));
+      await mobxStore.screen.userStore.getInit(...arg);
     }
     switch (type!) {
       case UserType.collections:
@@ -193,6 +195,9 @@ User.getInitialProps = async ({ mobxStore, req, route }: ICustomNextContext) => 
     }
     await Promise.all(all);
   } catch (err) {
+    if (err && err.statusCode && res) {
+      res.status(err.statusCode);
+    }
     error = err;
   }
   return {

@@ -9,9 +9,10 @@ import { href } from '@lib/common/utils/themes/common';
 import { ThemeWrapper } from '@lib/containers/Theme';
 import { ArrowRight, CloudSnow } from '@lib/icon';
 import { IMyMobxStore, initStore } from '@lib/stores/init';
+import { HttpStatus } from '@lib/common/enums/http';
 
 interface IErrorProps {
-  statusCode: number;
+  statusCode: HttpStatus;
 }
 
 const Wrapper = styled.section`

@@ -16,6 +16,8 @@ const bootstrap = async () => {
   });
   server.use(compression());
   server.use(cookieParser());
+  // 404
+  // server.useGlobalFilters(new NoFoundExceptionFilter());
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));

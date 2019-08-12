@@ -1,14 +1,15 @@
 import Head from 'next/Head';
 import React from 'react';
 
-import { ICustomNextContext, ICustomNextPage } from '@lib/common/interfaces/global';
+import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
 import { HomeScreenStore } from '@lib/stores/screen/Home';
+import { withError } from '@lib/components/withError';
 
-interface IProps {
+interface IProps extends IBaseScreenProps {
   homeStore: HomeScreenStore;
 }
 
@@ -37,9 +38,10 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
     return {};
   }
   await _.mobxStore.screen.homeStore.getList(undefined, _.req ? _.req.headers : undefined);
+  // eslint-disable-next-line no-throw-literal
   return {};
 };
 
 export default connect((stores: IMyMobxStore) => ({
   homeStore: stores.screen.homeStore,
-}))(Index);
+}))(withError<IProps>(Index));

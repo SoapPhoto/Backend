@@ -6,11 +6,11 @@ export enum SettingType {
   // basic = 'basic'
 }
 
-export const SettingTypeValues = $enum(SettingType).map(key => SettingType[key]);
-
 export enum UserType {
   like = 'like',
   collections = 'collections'
 }
 
+
+export const SettingTypeValues = $enum(SettingType).map(key => SettingType[key]);
 export const UserTypeValues = $enum(UserType).map(key => UserType[key]);

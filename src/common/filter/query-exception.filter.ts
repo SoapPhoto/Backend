@@ -1,4 +1,6 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+  ArgumentsHost, Catch, ExceptionFilter, HttpStatus,
+} from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 
 import { Logger } from '@server/shared/logging/logging.service';
@@ -10,9 +12,9 @@ export class QueryExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     Logger.error(exception);
     response
-      .status(500)
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .json({
-        statusCode: 500,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         timestamp: new Date().toISOString(),
         message: exception.message,
       });

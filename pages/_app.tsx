@@ -1,7 +1,4 @@
 /// <reference types="styled-components/cssprop" />
-
-import { parsePath, server } from '@lib/common/utils';
-
 import 'reflect-metadata';
 
 import _ from 'lodash';
@@ -11,6 +8,8 @@ import App, { Container } from 'next/app';
 import React from 'react';
 
 import { PictureModal } from '@lib/components';
+import { HttpStatus } from '@lib/common/enums/http';
+import { parsePath, server } from '@lib/common/utils';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -46,7 +45,7 @@ class MyApp extends App {
     const { req } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;
     const route = parsePath(data.ctx.asPath);
-    let statusCode = 200;
+    let statusCode = HttpStatus.OK;
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
@@ -59,9 +58,9 @@ class MyApp extends App {
       },
     };
     if (ctx.query.error) {
-      statusCode = ctx.query.error.statusCode || 500;
+      statusCode = ctx.query.error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
     } else if (ctx.pathname === '/_error') {
-      statusCode = 404;
+      statusCode = HttpStatus.NOT_FOUND;
     }
     let pageProps = {
       ...basePageProps,
@@ -123,7 +122,7 @@ class MyApp extends App {
   public render() {
     const { Component, pageProps, router } = this.props;
     const { picture } = router.query!;
-    const isError = pageProps.error ? pageProps.statusCode : pageProps.statusCode !== 200;
+    const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <Container>
         <Provider {...this.mobxStore}>
@@ -133,6 +132,7 @@ class MyApp extends App {
                 picture
                 && <PictureModal pictureId={picture.toString()} />
               }
+              <div css="background: #ccc" />
               <Component
                 {...pageProps}
               />
