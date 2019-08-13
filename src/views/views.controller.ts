@@ -1,5 +1,5 @@
 import {
-  CacheInterceptor, Controller, Get, Query, Res, UseGuards, UseInterceptors, All, Req,
+  Controller, Get, Query, Res, UseGuards, All, Req,
 } from '@nestjs/common';
 import path from 'path';
 
@@ -11,7 +11,6 @@ import { NextResponse } from 'nest-next-module';
 import { SettingTypeValues, UserTypeValues } from '@common/enum/router';
 
 @Controller()
-@UseInterceptors(CacheInterceptor)
 @UseGuards(ViewAuthGuard)
 export class ViewsController {
   constructor(

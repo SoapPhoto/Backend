@@ -13,6 +13,7 @@ import { Check, Minus } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
+import { theme } from '@lib/common/utils/themes';
 
 interface IProps {
   visible: boolean;
@@ -24,7 +25,7 @@ interface IProps {
 }
 
 const Title = styled.h2`
-  font-size: ${_ => _.theme.fontSizes[3]};
+  font-size: ${theme('fontSizes[3]')};
   padding: ${rem('24px')};
 `;
 
@@ -82,7 +83,7 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
   background: ${_ => rgba(_.theme.colors.text, 0.3)};
   transition: all .15s ease-in-out;
   padding: 17px 20px;
-  color: ${_ => _.theme.colors.pure};
+  color: ${theme('colors.pure')};
   & ${CheckIcon} {
     opacity: 0;
   }
@@ -113,14 +114,14 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
 `;
 
 const ItemInfoTitle = styled.p`
-  color: ${_ => _.theme.colors.pure};
-  font-size: ${_ => _.theme.fontSizes[3]}px;
+  color: ${theme('colors.pure')};
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   font-weight: 700;
   margin-bottom: ${rem(6)};
 `;
 
 const ItemInfoCount = styled.p`
-  font-size: ${_ => _.theme.fontSizes[0]}px;
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
 `;
 
 const ItemHandleIcon = styled.div`

@@ -1,6 +1,8 @@
 import { rem } from 'polished';
 import styled from 'styled-components';
 
+import { theme } from '@lib/common/utils/themes';
+
 export const Wrapper = styled.div`
   display: grid;
   grid-gap: ${rem('32px')};
@@ -31,6 +33,6 @@ export const InfoBox = styled.div`
   display: grid;
   grid-template-columns: max-content;
   grid-gap: ${rem('6px')};
-  font-size: ${_ => rem(_.theme.fontSizes[0])};
-  color: ${_ => _.theme.colors.secondary};
+  font-size: ${theme('fontSizes[0]')};
+  color: ${theme('colors.secondary')};
 `;

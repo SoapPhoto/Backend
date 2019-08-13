@@ -10,6 +10,7 @@ import { ThemeWrapper } from '@lib/containers/Theme';
 import { ArrowRight, CloudSnow } from '@lib/icon';
 import { IMyMobxStore, initStore } from '@lib/stores/init';
 import { HttpStatus } from '@lib/common/enums/http';
+import { theme } from '@lib/common/utils/themes';
 
 interface IErrorProps {
   statusCode: HttpStatus;
@@ -36,7 +37,7 @@ const CloudSnowIcon = styled(CloudSnow)`
   width: calc(3vw + 3vh + .5vmin);
   height: calc(3vw + 3vh + .5vmin);
   & line {
-    stroke: ${_ => _.theme.colors.primary};
+    stroke: ${theme('colors.primary')};
   }
 `;
 

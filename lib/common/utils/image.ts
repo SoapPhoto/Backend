@@ -206,6 +206,9 @@ export function isImage(fileName: string) {
 }
 
 export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
+  if (/default.svg$/.test(key)) {
+    return `${key}`;
+  }
   if (/^\/\/cdn/.test(key)) {
     return `${key}${pictureStyle[style]}`;
   }

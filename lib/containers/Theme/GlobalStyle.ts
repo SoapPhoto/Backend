@@ -1,11 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
+
+import { theme } from '@lib/common/utils/themes';
 import normalize from './normalize';
 import { nprogress } from './nprogress';
 
 export const GlobalStyle = createGlobalStyle<{theme?: any}>`
   body {
-    background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
+    background-color: ${theme('colors.background')};
+    color: ${theme('colors.text')};
   }
   .fade-enter {
     opacity: 0;

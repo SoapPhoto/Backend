@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { href } from '@lib/common/utils/themes/common';
+import { theme } from '@lib/common/utils/themes';
 import { A } from '../A';
 
 interface IData {
@@ -18,7 +19,7 @@ export interface IUserProps {
 }
 
 const Wrapper = styled.ul`
-  border-right: 1px solid ${props => props.theme.styles.box.borderColor};
+  border-right: 1px solid ${theme('styles.box.borderColor')};
 `;
 
 const Item = styled.ul`

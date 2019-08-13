@@ -7,9 +7,9 @@ import { UserEntity } from '@lib/common/interfaces/user';
 import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
-import { Link } from '@lib/routes';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
+import { theme } from '@lib/common/utils/themes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -33,13 +33,13 @@ const UserName = styled.p`
   font-size: ${_ => rem(_.theme.fontSizes[3])};
   font-weight: 700;
   margin-bottom: ${rem('2px')};
-  color: ${_ => _.theme.colors.text};
+  color: ${theme('colors.text')};
 `;
 
 const Bio = styled.p`
   font-size: ${_ => rem(_.theme.fontSizes[0])};
   font-weight: 400;
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
 `;
 
 const PicturePrview = styled.div`

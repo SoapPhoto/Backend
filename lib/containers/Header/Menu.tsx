@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { Link } from '@lib/routes';
 import { rem } from 'polished';
+import { theme } from '@lib/common/utils/themes';
 
 
 type IProps = React.HTMLAttributes<HTMLDivElement>
@@ -17,7 +18,7 @@ interface ILinkProps {
 
 const Wrapper = styled.div`
   width: ${rem('200px')};
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
 `;
 
 const ItemWrapper = styled.div`
@@ -27,7 +28,7 @@ const ItemWrapper = styled.div`
     padding-bottom: ${rem('16px')};
   }
   &:not(:first-child) {
-    border-top: 1px solid ${props => props.theme.styles.box.borderColor};
+    border-top: 1px solid ${theme('styles.box.borderColor')};
     padding-top: ${rem('16px')};
     padding-bottom: ${rem('16px')};
   }
@@ -38,17 +39,17 @@ const MenuLink = styled.a`
   position: relative;
   display: flex;
   align-items: center;
-  color: ${props => props.theme.layout.header.menu.color};
+  color: ${theme('layout.header.menu.color')};
   text-decoration: none;
   transition: color 0.2s ease 0s;
   margin:  ${rem('-8px')} ${rem('-20px')};
   padding: ${rem('8px')} ${rem('20px')};
   transition: .2s color ease, .2s background ease;
   &:hover {
-    color: ${props => props.theme.layout.header.menu.hover.color};
-    background: ${props => props.theme.layout.header.menu.hover.background};
+    color: ${theme('layout.header.menu.hover.color')};
+    background: ${theme('layout.header.menu.hover.background')};
     & svg {
-      stroke: ${props => props.theme.layout.header.menu.hover.color};
+      stroke: ${theme('layout.header.menu.hover.color')};
     }
   }
   & svg {
@@ -57,7 +58,7 @@ const MenuLink = styled.a`
     bottom: ${rem('0px')};
     right: ${rem('20px')};
     height: ${rem('37px')};
-    stroke: ${props => props.theme.layout.header.menu.color};
+    stroke: ${theme('layout.header.menu.color')};
     transition: .2s stroke ease, .2s background ease;
   }
 `;
@@ -69,8 +70,8 @@ export const MenuArrow = styled.span`
   width: ${rem('10px')};
   height: ${rem('10px')};
   transform: rotate(45deg);
-  background-color: ${props => props.theme.styles.box.background};
-  border: 1px solid ${props => props.theme.styles.box.borderColor};
+  background-color: ${theme('styles.box.background')};
+  border: 1px solid ${theme('styles.box.borderColor')};
   margin-top: ${rem('-5px')};
   border-right-color: transparent;
   border-bottom-color: transparent;

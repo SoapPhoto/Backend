@@ -12,7 +12,7 @@ import {
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { LoggingService } from '@server/shared/logging/logging.service';
-import { RedisService } from 'nestjs-redis';
+// import { RedisService } from 'nestjs-redis';
 import { Role } from '@server/modules/user/enum/role.enum';
 
 interface IUserClientData {
@@ -28,7 +28,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   public data: Record<string, IUserClientData> = {};
 
   constructor(
-    private readonly redisService: RedisService,
+    // private readonly redisService: RedisService,
     private readonly logger: LoggingService,
   ) {}
 

@@ -11,6 +11,9 @@ declare module 'zooming';
 
 declare module 'socks-proxy-agent';
 
+declare module 'rate-limit-redis';
+
+declare module 'cache-manager-redis-store';
 
 declare module '*.json' {
   const value: any;

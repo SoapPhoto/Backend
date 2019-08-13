@@ -1,5 +1,5 @@
 import {
-  MiddlewareConsumer, Module, NestModule, CacheModule,
+  MiddlewareConsumer, Module, NestModule,
 } from '@nestjs/common';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
@@ -12,7 +12,6 @@ import { ViewsService } from './views.service';
   imports: [
     PictureModule,
     AuthModule,
-    CacheModule.register(),
   ],
   controllers: [ViewsController],
   providers: [

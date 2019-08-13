@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { href } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
 import { A } from '@lib/components/A';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
@@ -11,7 +12,7 @@ export const Wrapper = styled.header<{login: boolean}>`
   height: ${rem('80px')};
   align-items: center;
   background: ${_ => (_.login ? 'transparent' : _.theme.layout.header.background)};
-  border-bottom-color: ${_ => _.theme.layout.header.borderColor};
+  border-bottom-color: ${theme('layout.header.borderColor')};
   border-bottom-style: solid;
   border-bottom-width: ${_ => (_.login ? 0 : 1)}px;
   box-shadow:
@@ -48,7 +49,7 @@ export const MenuProfile = styled.div`
 
 export const UserName = styled.div`
   display: flex;
-  font-size: ${_ => rem(_.theme.fontSizes[2])};
+  font-size: ${theme('fontSizes[2]')};
   margin-left: ${rem('12px')};
   flex-direction: column;
   justify-content: center;

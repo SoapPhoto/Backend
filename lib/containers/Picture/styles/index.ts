@@ -5,6 +5,7 @@ import media from 'styled-media-query';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
+import { theme } from '@lib/common/utils/themes';
 
 const padding = 24;
 
@@ -57,7 +58,7 @@ export const ItemWapper = styled.div`
   position: relative;
   border-radius: ${rem('4px')};
   overflow: hidden;
-  box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+  box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   /* &:active {
     transform: scale(0.98);
     transition: transform 0.1s;
@@ -119,7 +120,7 @@ export const UserBox = styled.div`
 export const UserName = styled(A)`
   margin-left: ${rem('12px')};
   font-weight: 700;
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
   &:active {
@@ -142,6 +143,6 @@ export const Footer = styled.div`
   align-items: center;
   justify-content: center;
   font-size: ${_ => rem(_.theme.fontSizes[4])};
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
   font-weight: 100;
 `;

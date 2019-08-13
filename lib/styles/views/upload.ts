@@ -5,6 +5,7 @@ import { Cell } from 'styled-css-grid';
 import { box } from '@lib/common/utils/themes/common';
 import { Input as BaseInput } from '@lib/components/Input';
 import { Upload as RCUpload } from '@lib/components/Upload';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wapper = styled.div`
   display: flex;
@@ -29,12 +30,12 @@ export const UploadBox = styled(RCUpload)`
   height: ${rem('200px')};
   max-width: ${rem('1000px')};
   border-radius: ${rem('3px')};
-  border: 2px dashed ${_ => _.theme.styles.box.borderColor};
-  background-color: ${_ => _.theme.styles.box.background};
-  color: ${props => props.theme.colors.text};
+  border: 2px dashed ${theme('styles.box.borderColor')};
+  background-color: ${theme('styles.box.background')};
+  color: ${theme('colors.text')};
   margin: 24px;
   & svg {
-    color: ${props => props.theme.colors.text};
+    color: ${theme('colors.text')};
     margin-bottom: ${rem('12px')};
   }
 `;
@@ -75,10 +76,10 @@ export const Input = styled(BaseInput)<{isTitle?: boolean}>`
   height: auto;
   padding: ${rem('12px')} 0;
   box-shadow: none !important;
-  border-bottom: 1px solid ${_ => _.theme.colors.gray} !important;
+  border-bottom: 1px solid ${theme('colors.gray')} !important;
   border-radius: 0;
   &:focus {
-    border-color: ${_ => _.theme.colors.primary} !important;
+    border-color: ${theme('colors.primary')} !important;
   }
 `;
 
@@ -94,14 +95,14 @@ export const FormLabel = styled.div`
 `;
 
 export const FormTitle = styled.p`
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
-  color: ${_ => _.theme.colors.text};
+  font-size: ${theme('fontSizes[1]')};
+  color: ${theme('colors.text')};
   margin-bottom: 4px;
 `;
 
 export const FormMessage = styled.p`
   font-size: ${_ => rem(_.theme.fontSizes[0])};
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
 `;
 
 export const FormTag = styled(Cell)`

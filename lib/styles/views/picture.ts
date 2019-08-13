@@ -3,6 +3,7 @@ import { rem } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 import { A } from '@lib/components/A';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.div`
   max-width: ${rem('1040px')};
@@ -22,11 +23,11 @@ export const UserLink = styled(A)`
   display: flex;
   text-decoration: none;
   align-items: center;
-  color: ${_ => _.theme.colors.text};
+  color: ${theme('colors.text')};
 `;
 
 export const UserName = styled.h3`
-  font-size: ${_ => rem(_.theme.fontSizes[2])};
+  font-size: ${theme('fontSizes[2]')};
 `;
 
 export const UserInfo = styled(Cell)`
@@ -43,7 +44,7 @@ export const UserHeaderInfo = styled(Cell)`
 export const PictureBox = styled.div`
   border-radius: ${rem('3px')};
   overflow: hidden;
-  box-shadow: ${_ => _.theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+  box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
 `;
 
 export const Content = styled.div`
@@ -52,7 +53,7 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: ${_ => rem(_.theme.fontSizes[5])};
+  font-size: ${theme('fontSizes[5]')};
   margin-bottom: ${rem('18px')};
 `;
 
@@ -64,14 +65,14 @@ export const PictureBaseInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
 `;
 
 export const BaseInfoItem = styled.div`
   display: flex;
   align-items: center;
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
-  color: ${_ => _.theme.colors.secondary};
+  font-size: ${theme('fontSizes[1]')};
+  color: ${theme('colors.secondary')};
   & svg {
     margin-right: ${rem('6px')};
     margin-top: -${rem('2px')};
@@ -85,7 +86,7 @@ export const BaseInfoHandleBox = styled(Grid)`
 `;
 
 export const Bio = styled.div`
-  font-size: ${_ => rem(_.theme.fontSizes[2])};
+  font-size: ${theme('fontSizes[2]')};
   margin-top: ${rem('18px')};
 `;
 

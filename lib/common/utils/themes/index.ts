@@ -1,5 +1,6 @@
 import { parse } from 'cookie';
-import { DefaultTheme } from 'styled-components';
+import { DefaultTheme, ThemedStyledProps } from 'styled-components';
+import _ from 'lodash';
 
 import * as themeData from './theme';
 
@@ -14,5 +15,9 @@ export const getCurrentTheme = (data?: any) => {
   }
   return cookies.theme;
 };
+
+export const theme = (path: string) => <P, T>(context: ThemedStyledProps<P, T>): string => (
+  _.get(context, `theme.${path}`)
+);
 
 export default themeData;

@@ -6,6 +6,7 @@ import { QueryFailedError } from 'typeorm';
 
 import { Logger } from '@server/shared/logging/logging.service';
 import { validator } from '../utils/validator';
+import { ValidationError } from 'class-validator';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -47,7 +48,15 @@ export class AllExceptionFilter implements ExceptionFilter {
       if (validator.isString(exRes)) {
         done(status, exRes, exception.stack);
       } else if (exRes.message) {
-        doneRes(exRes, exception.stack);
+        if (Array.isArray(exRes.message)) {
+          doneRes({
+            statusCode: exRes.statusCode,
+            error: exRes.error,
+            message: this.formatValidatorClass(exRes.message)
+          }, exception.stack);
+        } else {
+          doneRes(exRes, exception.stack);
+        }
       } else {
         done(status, exRes.error);
       }
@@ -56,5 +65,16 @@ export class AllExceptionFilter implements ExceptionFilter {
     } else {
       done(500, exception.message, exception.stack);
     }
+  }
+  formatValidatorClass(errors: any[]) {
+    const formatedErrors = [];
+    for (const msg of errors) {
+      if (msg as any instanceof ValidationError) {
+        const message = Object.values(msg.constraints).join('. ');
+        const err = {param: msg.property, message};
+        formatedErrors.push(err);
+      }
+    }
+    return formatedErrors;
   }
 }

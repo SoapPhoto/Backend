@@ -5,6 +5,7 @@ import { Grid, Cell } from 'styled-css-grid';
 import { href } from '@lib/common/utils/themes/common';
 import { Edit } from '@lib/icon';
 import media from 'styled-media-query';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.div``;
 
@@ -48,7 +49,7 @@ export const ProfileItem = styled.div`
   margin-right: ${rem('24px')};
   min-width: 0;
   font-family: Rubik;
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
   & svg {
     margin-right: ${rem('4px')};
   }
@@ -61,11 +62,11 @@ export const ProfileItemLink = styled.a`
 `;
 
 export const Bio = styled.p`
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
   font-family: Rubik;
 `;
 
 export const EditIcon = styled(Edit)`
   margin-left: ${rem('24px')};
-  stroke: ${_ => _.theme.colors.secondary};
+  stroke: ${theme('colors.secondary')};
 `;

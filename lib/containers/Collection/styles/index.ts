@@ -6,6 +6,7 @@ import { WrapperBox } from '@lib/common/utils/themes/common';
 import { Image } from '@lib/components/Image';
 import { rem } from 'polished';
 import { A } from '@lib/components/A';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled(Grid)`
   ${WrapperBox()}
@@ -55,12 +56,12 @@ export const ItemInfo = styled.div`
 `;
 
 export const Title = styled(A)`
-  color: ${_ => _.theme.colors.text};
+  color: ${theme('colors.text')};
   text-decoration: none;
   font-weight: 600;
 `;
 
 export const PictureCount = styled.p`
-  color: ${_ => _.theme.colors.secondary};
-  font-size: ${_ => _.theme.fontSizes[0]}px;
+  color: ${theme('colors.secondary')};
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
 `;

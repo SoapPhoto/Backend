@@ -1,6 +1,6 @@
 
 import {
-  MiddlewareConsumer, Module, NestModule, RequestMethod,
+  MiddlewareConsumer, Module, NestModule, RequestMethod, CacheModule, CacheInterceptor,
 } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -10,12 +10,12 @@ import { GraphQLError } from 'graphql';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nest-modules/mailer';
 import { NestNextModule } from 'nest-next-module';
+import redisStore from 'cache-manager-redis-store';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
 import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
-import { CacheModule } from './shared/cache/cache.module';
 import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
 import { ViewsModule } from './views/views.module';
@@ -43,6 +43,16 @@ const dev = process.env.NODE_ENV !== 'production';
 @Module({
   imports: [
     NestNextModule.forRoot({ dev }),
+    CacheModule.register({
+      store: redisStore,
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      db: Number(process.env.REDIS_DB),
+      password: process.env.REDIS_PASSWORD,
+      keyPrefix: process.env.REDIS_PRIFIX,
+      ttl: 20, // seconds
+      max: 1000, // max number of items in cache
+    }),
     RedisModule.register({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
@@ -114,7 +124,6 @@ const dev = process.env.NODE_ENV !== 'production';
     LoggingModule,
     AuthModule,
     OauthModule,
-    CacheModule,
     ApiModule,
     EmailModule,
     QiniuModule,
@@ -125,6 +134,10 @@ const dev = process.env.NODE_ENV !== 'production';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
   ],
 })

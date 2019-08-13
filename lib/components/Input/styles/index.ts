@@ -3,6 +3,8 @@ import {
 } from 'polished';
 import styled, { css } from 'styled-components';
 
+import { theme } from '@lib/common/utils/themes';
+
 export const LabelBox = styled.label`
   position: relative;
   text-align: left;
@@ -14,9 +16,9 @@ export const Label = styled.span`
   font-weight: 500;
   line-height: ${rem('29px')};
   letter-spacing: 0.61px;
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
   margin-bottom: ${rem('8px')};
-  color: ${_ => _.theme.colors.secondary};
+  color: ${theme('colors.secondary')};
 `;
 
 export const inputCss = css<{ error?: boolean; focus?: boolean }>`
@@ -26,15 +28,15 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   padding: ${rem('5px')} ${rem('10px')};
   transition: border .25s ease;
   text-align: left;
-  color: ${props => rgba(props.theme.colors.text, 0.7)};
+  color: ${_ => rgba(theme('colors.text')(_), 0.7)};
   border: none;
   border-radius: ${rem('5px')};
   outline: 0;
   border: 1px solid ;
-  background: ${props => props.theme.styles.input.background};
-  box-shadow: ${props => props.theme.styles.input.shadow};
+  background: ${theme('styles.input.background')};
+  box-shadow: ${theme('styles.input.shadow')};
   transition: border .2s, color .2s ease-out,box-shadow .2s ease;
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
   border-color: ${
   props => (props.error
     ? `${props.theme.colors.danger} !important`
@@ -48,7 +50,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   }
   ${
   props => (props.focus ? `
-      border-color: ${props.theme.styles.input.hover.borderColor};
+      border-color: ${theme('styles.input.hover.borderColor')(props)};
       box-shadow: 0 1px 4px -1px ${
     props.error
       ? (
@@ -61,7 +63,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
     ` : '')
 }
   &:focus, &:hover {
-    border-color: ${props => props.theme.styles.input.hover.borderColor};
+    border-color: ${theme('styles.input.hover.borderColor')};
     box-shadow: 0 1px 4px -1px ${
   props => (props.error
     ? (
@@ -75,7 +77,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   &::placeholder {
   }
   &[disabled] {
-    background-color: ${_ => _.theme.styles.input.disabled.background};
+    background-color: ${theme('styles.input.disabled.background')};
     cursor: not-allowed;
     opacity: 1;
     &:hover {
@@ -94,8 +96,8 @@ export const StyleInput = styled.input<{ error: boolean }>`
 `;
 export const ErrorBox = styled.div`
   position: absolute;
-  font-size: ${_ => rem(_.theme.fontSizes[0])};
-  color: ${_ => _.theme.colors.danger};
+  font-size: ${theme('fontSizes[0]')};
+  color: ${theme('colors.danger')};
   margin-top: ${rem('4px')};
   margin-bottom: ${rem('4px')};
 `;

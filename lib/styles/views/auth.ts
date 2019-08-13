@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { box } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
+import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.section`
   ${props => box(props.theme, '480px', true)}
@@ -13,5 +14,5 @@ export const Title = styled.h2`
   margin-bottom: ${rem('32px')};
   font-weight: 500;
   font-size: ${_ => rem(_.theme.fontSizes[5])};
-  color: ${props => props.theme.colors.text};
+  color: ${theme('colors.text')};
 `;

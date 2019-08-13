@@ -5,6 +5,7 @@ import { PlusCircle, X } from 'react-feather';
 import styled from 'styled-components';
 
 import { Input as BaseInput } from '@lib/components/Input';
+import { theme } from '@lib/common/utils/themes';
 
 interface IProps {
   value: string[];
@@ -19,9 +20,9 @@ const Wrapper = styled.div`
 export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   position: relative;
   box-sizing: border-box;
-  color: ${_ => _.theme.colors.text};
+  color: ${theme('colors.text')};
   font-weight: 700;
-  border: 1px solid ${_ => _.theme.colors.gray};
+  border: 1px solid ${theme('colors.gray')};
   border-radius: ${rem('20px')};
   font-size: ${_ => rem(_.theme.fontSizes[0])};
   font-variant: tabular-nums;
@@ -31,7 +32,7 @@ export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   height: auto;
   padding: ${rem('4px')} ${rem('20px')};
   font-size: ${_ => rem(_.theme.fontSizes[0])};
-  background: ${_ => _.theme.colors.lightgray};
+  background: ${theme('colors.lightgray')};
   ${_ => (
     _.edit ? `
       font-size: ${rem(_.theme.fontSizes[1])};
@@ -46,7 +47,7 @@ export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   )}
   transition: .2s background ease, .2s border-color ease, .2s color ease;
   & svg {
-    stroke: ${_ => _.theme.colors.text};
+    stroke: ${theme('colors.text')};
   }
 `;
 
@@ -65,7 +66,7 @@ const Input = styled(BaseInput)`
   box-shadow: none !important;
   height: auto;
   line-height: ${rem('20px')};
-  font-size: ${_ => rem(_.theme.fontSizes[1])};
+  font-size: ${theme('fontSizes[1]')};
   padding: 0;
 `;
 

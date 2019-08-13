@@ -1,6 +1,7 @@
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { A } from '@lib/components/A';
+import { theme } from '@lib/common/utils/themes';
 
 export const Item = styled.span`
   margin-right: 14px;
@@ -9,13 +10,13 @@ export const Item = styled.span`
 export const ItemLink = styled(A)<{ active: number }>`
   position: relative;
   color: ${_ => (_.active ? _.theme.colors.text : _.theme.colors.secondary)};
-  font-size: ${_ => rem(_.theme.fontSizes[3])};
+  font-size: ${theme('fontSizes[3]')};
   text-decoration: none;
   transition: .2s color ease;
   letter-spacing: 2px;
   transition: .2s font-size ease, .2s color ease;
   &:before {
-    background: ${_ => _.theme.colors.primary};
+    background: ${theme('colors.primary')};
     bottom: -6px;
     content: "";
     width: 4px;
