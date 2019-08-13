@@ -62,7 +62,7 @@ export const ProfileItemLink = styled.a`
 `;
 
 export const Bio = styled.p`
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   font-family: Rubik;
 `;
 

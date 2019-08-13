@@ -16,7 +16,7 @@ export const Label = styled.span`
   font-weight: 500;
   line-height: ${rem('29px')};
   letter-spacing: 0.61px;
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   margin-bottom: ${rem('8px')};
   color: ${theme('colors.secondary')};
 `;
@@ -36,7 +36,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   background: ${theme('styles.input.background')};
   box-shadow: ${theme('styles.input.shadow')};
   transition: border .2s, color .2s ease-out,box-shadow .2s ease;
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   border-color: ${
   props => (props.error
     ? `${props.theme.colors.danger} !important`
@@ -96,7 +96,7 @@ export const StyleInput = styled.input<{ error: boolean }>`
 `;
 export const ErrorBox = styled.div`
   position: absolute;
-  font-size: ${theme('fontSizes[0]')};
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.danger')};
   margin-top: ${rem('4px')};
   margin-bottom: ${rem('4px')};

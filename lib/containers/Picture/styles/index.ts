@@ -120,7 +120,7 @@ export const UserBox = styled.div`
 export const UserName = styled(A)`
   margin-left: ${rem('12px')};
   font-weight: 700;
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
   &:active {

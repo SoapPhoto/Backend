@@ -41,6 +41,7 @@ export interface IImageInfo {
 export const pictureStyle = {
   full: '-pictureFull',
   raw: '',
+  small: '-pictureSmall',
   regular: '-pictureRegular',
   thumb: '-pictureThumb',
   blur: '-pictureThumbBlur',

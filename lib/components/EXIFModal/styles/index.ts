@@ -5,7 +5,7 @@ import { Grid } from 'styled-css-grid';
 import { theme } from '@lib/common/utils/themes';
 
 export const Title = styled.h2`
-  font-size: ${theme('fontSizes[3]')};
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   padding: ${rem('24px')};
 `;
 
@@ -15,13 +15,13 @@ export const Info = styled.div`
 `;
 
 export const EXIFTitle = styled.div`
-  font-size: ${theme('fontSizes[0]')};
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.secondary')};
   margin-bottom: ${rem('4px')};
 `;
 
 export const EXIFInfo = styled.div`
-  font-size: ${theme('fontSizes[2]')};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
 `;
 
 export const EXIFBox = styled(Grid)`

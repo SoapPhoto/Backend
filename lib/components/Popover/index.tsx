@@ -9,6 +9,7 @@ import { observable } from 'mobx';
 import { ThemeWrapper } from '@lib/containers/Theme';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
+import { server } from '@lib/common/utils';
 
 const transitionStyles: {
   [key in TransitionStatus]?: any
@@ -171,6 +172,9 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
+    if (server) {
+      return childrenRender
+    }
     return (
       <ThemeWrapper>
         <Popper

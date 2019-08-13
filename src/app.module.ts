@@ -135,10 +135,6 @@ const dev = process.env.NODE_ENV !== 'production';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
   ],
 })
 export class AppModule implements NestModule {

@@ -21,5 +21,10 @@ export class ResetPasswordDto {
   @Length(8, 30)
   @IsString()
   @Expose()
+  public password!: string
+
+  @Length(8, 30)
+  @IsString()
+  @Expose()
   public newPassword!: string
 }

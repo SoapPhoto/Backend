@@ -95,7 +95,7 @@ export const FormLabel = styled.div`
 `;
 
 export const FormTitle = styled.p`
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: ${theme('colors.text')};
   margin-bottom: 4px;
 `;

@@ -27,7 +27,7 @@ export const UserLink = styled(A)`
 `;
 
 export const UserName = styled.h3`
-  font-size: ${theme('fontSizes[2]')};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
 `;
 
 export const UserInfo = styled(Cell)`
@@ -71,7 +71,7 @@ export const PictureBaseInfo = styled.div`
 export const BaseInfoItem = styled.div`
   display: flex;
   align-items: center;
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: ${theme('colors.secondary')};
   & svg {
     margin-right: ${rem('6px')};
@@ -86,7 +86,7 @@ export const BaseInfoHandleBox = styled(Grid)`
 `;
 
 export const Bio = styled.div`
-  font-size: ${theme('fontSizes[2]')};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
   margin-top: ${rem('18px')};
 `;
 

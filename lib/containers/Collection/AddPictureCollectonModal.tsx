@@ -25,7 +25,7 @@ interface IProps {
 }
 
 const Title = styled.h2`
-  font-size: ${theme('fontSizes[3]')};
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   padding: ${rem('24px')};
 `;
 

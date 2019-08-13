@@ -22,7 +22,7 @@ export const StyleButton = styled.button<{loading: number}>`
   white-space: nowrap;
   box-sizing: border-box;
   padding: 0 ${rem('17px')};
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   border-radius: ${rem('4px')};
   border-color: ${_ => (_.loading ? _.theme.colors.gray : _.theme.colors.primary)};
   background-color: ${_ => (_.loading ? 'rgb(250, 250, 250)' : _.theme.colors.primary)};

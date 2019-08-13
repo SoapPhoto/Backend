@@ -10,7 +10,7 @@ export const Item = styled.span`
 export const ItemLink = styled(A)<{ active: number }>`
   position: relative;
   color: ${_ => (_.active ? _.theme.colors.text : _.theme.colors.secondary)};
-  font-size: ${theme('fontSizes[3]')};
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   text-decoration: none;
   transition: .2s color ease;
   letter-spacing: 2px;

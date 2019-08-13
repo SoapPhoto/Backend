@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Post, Res, UseFilters, HttpCode, HttpStatus, UseGuards,
+  Body, Controller, Post, Res, UseFilters, HttpCode, HttpStatus, UseGuards, Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -54,7 +54,7 @@ export class AuthController {
     return this.authService.resetMail(user);
   }
 
-  @Post('resetPassword')
+  @Put('resetPassword')
   @Roles(Role.USER)
   @HttpCode(HttpStatus.NO_CONTENT)
   public async resetPassword(

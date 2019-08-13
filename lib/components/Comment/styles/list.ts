@@ -33,6 +33,6 @@ export const InfoBox = styled.div`
   display: grid;
   grid-template-columns: max-content;
   grid-gap: ${rem('6px')};
-  font-size: ${theme('fontSizes[0]')};
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.secondary')};
 `;

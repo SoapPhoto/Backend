@@ -49,7 +49,7 @@ export const MenuProfile = styled.div`
 
 export const UserName = styled.div`
   display: flex;
-  font-size: ${theme('fontSizes[2]')};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
   margin-left: ${rem('12px')};
   flex-direction: column;
   justify-content: center;

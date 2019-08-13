@@ -18,7 +18,7 @@ interface ILinkProps {
 
 const Wrapper = styled.div`
   width: ${rem('200px')};
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(_.theme.fontSizes[1])};
 `;
 
 const ItemWrapper = styled.div`

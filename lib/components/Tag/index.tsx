@@ -66,7 +66,7 @@ const Input = styled(BaseInput)`
   box-shadow: none !important;
   height: auto;
   line-height: ${rem('20px')};
-  font-size: ${theme('fontSizes[1]')};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   padding: 0;
 `;
 
