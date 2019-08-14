@@ -1,4 +1,4 @@
-import { Injectable, BadGatewayException } from '@nestjs/common';
+import { Injectable, BadGatewayException, ForbiddenException } from '@nestjs/common';
 import uniqid from 'uniqid';
 
 import { UserService } from '@server/modules/user/user.service';
@@ -64,10 +64,14 @@ export class AuthService {
     }
   }
 
-  public async resetPassword(user: UserEntity, { newPassword }: ResetPasswordDto) {
-    const newPasswordData = await this.userService.getPassword(newPassword);
-    await this.userService.updateUser(user, newPasswordData);
-    await this.accessTokenService.clearUserTokenAll(user.id);
+  public async resetPassword(user: UserEntity, { password, newPassword }: ResetPasswordDto) {
+    if (await this.userService.verifyUser(user.username, password)) {
+      const newPasswordData = await this.userService.getPassword(newPassword);
+      await this.userService.updateUser(user, newPasswordData);
+      await this.accessTokenService.clearUserTokenAll(user.id);
+    } else {
+      throw new ForbiddenException('password error');
+    }
   }
 
   private async sendValidator(user: UserEntity) {

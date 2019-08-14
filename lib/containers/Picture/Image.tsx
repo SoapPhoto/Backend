@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import LazyLoad from 'react-lazyload';
-import { CSSTransition } from 'react-transition-group';
 
 import { getPictureUrl } from '@lib/common/utils/image';
 import { IPictureItemProps } from './Item';

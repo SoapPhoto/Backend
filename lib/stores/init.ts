@@ -36,5 +36,6 @@ export const initStore = (initialState: IInitialStore): IMyMobxStore => {
   store.screen.homeStore.update(initialState.screen.homeStore);
   store.screen.tagStore.update(initialState.screen.tagStore);
   store.screen.pictureStore.update(initialState.screen.pictureStore);
+  store.screen.collectionStore.update(initialState.screen.collectionStore);
   return store;
 };

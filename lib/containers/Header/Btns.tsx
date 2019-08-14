@@ -4,7 +4,6 @@ import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import { Upload, User } from '@lib/icon';
-import { Link } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { Menu, MenuItem, MenuItemLink } from './Menu';

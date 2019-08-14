@@ -50,8 +50,12 @@ export class ViewsController {
     @Query() query: ValidatorEmailDto,
     @Res() res: NextResponse,
   ) {
-    await this.authService.validatorEmail(query);
-    return res.nextRender('/views/picture');
+    try {
+      await this.authService.validatorEmail(query);
+      return res.nextRender('/views/auth/validatoremail');
+    } catch (error) {
+      return res.nextRender('/views/auth/validatoremail', { info: error.response });
+    }
   }
 
   @Get('login')

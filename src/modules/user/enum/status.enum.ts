@@ -1,4 +1,4 @@
-import { $enum } from "ts-enum-util";
+import { $enum } from 'ts-enum-util';
 
 export enum Status {
   UNVERIFIED = 'UNVERIFIED',

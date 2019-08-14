@@ -7,9 +7,9 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
 import { ThemeWrapper } from '@lib/containers/Theme';
+import { server } from '@lib/common/utils';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
-import { server } from '@lib/common/utils';
 
 const transitionStyles: {
   [key in TransitionStatus]?: any
@@ -173,14 +173,14 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       },
     });
     if (server) {
-      return childrenRender
+      return childrenRender;
     }
     return (
       <ThemeWrapper>
         <Popper
           transition
           placement={placement}
-          ref={e => {
+          ref={(e) => {
             if (e) {
               this.popper = e.popper;
             }

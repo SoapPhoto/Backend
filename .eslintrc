@@ -27,7 +27,13 @@
     "import/no-extraneous-dependencies": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/explicit-member-accessibility": ["off", { "accessibility": "no-public" }],
+    "@typescript-eslint/explicit-member-accessibility": ["error", {
+      "accessibility": "explicit",
+      "overrides": {
+        "accessors": "no-public",
+        "constructors": "off"
+      }
+    }],
     "@typescript-eslint/no-parameter-properties": ["off", { "allows": ["private", "readonly"] }],
     "@typescript-eslint/interface-name-prefix": ["error", "always"],
     "@typescript-eslint/no-use-before-define": "off",
@@ -36,6 +42,7 @@
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/click-events-have-key-events": "off",
+    "react/static-property-placement": "off",
     "react/jsx-props-no-spreading": "off",
     "react/destructuring-assignment": ["error", "always", { "ignoreClassFields": true }],
     "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
@@ -43,6 +50,7 @@
     "import/no-unresolved": "off",
     "import/no-cycle": "off",
     "import/prefer-default-export": "off",
+    "max-classes-per-file": "off",
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
     "no-empty-function": ["error", { "allow": ["constructors"] }],

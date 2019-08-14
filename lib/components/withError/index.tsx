@@ -6,7 +6,7 @@ import { HttpStatus } from '@lib/common/enums/http';
 
 // eslint-disable-next-line max-len
 export const withError = <P extends IBaseScreenProps>(Component: React.ComponentType<P>) => class extends React.Component<P> {
-  state = {
+  public state = {
     hasError: false,
     statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
   }
@@ -22,7 +22,7 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
     return { error, ...props };
   }
 
-  static getDerivedStateFromError() {
+  public static getDerivedStateFromError() {
     return { hasError: true };
   }
 

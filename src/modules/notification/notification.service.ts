@@ -22,21 +22,17 @@ export class NotificationService {
     subscribers: UserEntity,
     entityManager?: EntityManager,
   ) => {
-    try {
-      if (entityManager) {
-        const notification = await entityManager.save(this.notificationRepository.create({ publisher }));
-        await entityManager.save(
-          this.subscribersUserRepository.create({ notification, user: subscribers }),
-        );
-      } else {
-        const notification = await this.notificationRepository.save(this.notificationRepository.create({ publisher }));
-        await this.subscribersUserRepository.save(
-          this.subscribersUserRepository.create({ notification, user: subscribers }),
-        );
-      }
-      this.wss.emitMessage('notify', {});
-    } catch (err) {
-      throw err;
+    if (entityManager) {
+      const notification = await entityManager.save(this.notificationRepository.create({ publisher }));
+      await entityManager.save(
+        this.subscribersUserRepository.create({ notification, user: subscribers }),
+      );
+    } else {
+      const notification = await this.notificationRepository.save(this.notificationRepository.create({ publisher }));
+      await this.subscribersUserRepository.save(
+        this.subscribersUserRepository.create({ notification, user: subscribers }),
+      );
     }
+    this.wss.emitMessage('notify', {});
   }
 }

@@ -143,7 +143,7 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
-  info!: CollectionPictureEntity[]
+  public info!: CollectionPictureEntity[]
 
   @Expose()
   get currentCollections() {

@@ -121,7 +121,6 @@ export class UserService {
     const user = await this.getUser(username, true, [Role.ADMIN]);
     if (user) {
       const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
-      console.log(hash, user.hash);
       if (hash !== user.hash) {
         return undefined;
       }

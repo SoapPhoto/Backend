@@ -4,6 +4,7 @@ import { TagScreenStore } from './Tag';
 import { UserScreenStore } from './User';
 import { UserScreenPictureList } from './UserList';
 import { UserScreenCollectionList } from './UserCollections';
+import { CollectionScreenStore } from './Collection';
 
 export interface IScreenStore {
   homeStore: HomeScreenStore;
@@ -12,6 +13,7 @@ export interface IScreenStore {
   userCollectionStore: UserScreenCollectionList;
   tagStore: TagScreenStore;
   pictureStore: PictureScreenStore;
+  collectionStore: CollectionScreenStore;
 }
 
 export const initScreenStore = (): IScreenStore => ({
@@ -21,4 +23,5 @@ export const initScreenStore = (): IScreenStore => ({
   userCollectionStore: new UserScreenCollectionList(),
   tagStore: new TagScreenStore(),
   pictureStore: new PictureScreenStore(),
+  collectionStore: new CollectionScreenStore(),
 });

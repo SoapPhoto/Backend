@@ -6,6 +6,10 @@ export const getUserCollection = async (username: string) => (
   request.get<IListRequest<CollectionEntity[]>>(`/api/user/${username}/collection`)
 );
 
+export const getCollectionInfo = async (id: ID, headers?: any) => (
+  request.get<CollectionEntity>(`/api/collection/${id}`, { headers })
+);
+
 export const addPictureCollection = async (collectionId: ID, pictureId: ID) => (
   request.post(`/api/collection/${collectionId}/${pictureId}`)
 );

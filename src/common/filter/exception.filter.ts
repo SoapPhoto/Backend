@@ -5,8 +5,8 @@ import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
 import { Logger } from '@server/shared/logging/logging.service';
-import { validator } from '../utils/validator';
 import { ValidationError } from 'class-validator';
+import { validator } from '../utils/validator';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -52,7 +52,7 @@ export class AllExceptionFilter implements ExceptionFilter {
           doneRes({
             statusCode: exRes.statusCode,
             error: exRes.error,
-            message: this.formatValidatorClass(exRes.message)
+            message: this.formatValidatorClass(exRes.message),
           }, exception.stack);
         } else {
           doneRes(exRes, exception.stack);
@@ -66,12 +66,14 @@ export class AllExceptionFilter implements ExceptionFilter {
       done(500, exception.message, exception.stack);
     }
   }
-  formatValidatorClass(errors: any[]) {
+
+  private formatValidatorClass(errors: any[]) {
     const formatedErrors = [];
+    // eslint-disable-next-line no-restricted-syntax
     for (const msg of errors) {
       if (msg as any instanceof ValidationError) {
-        const message = Object.values(msg.constraints).join('. ');
-        const err = {param: msg.property, message};
+        const message = Object.values(msg.constraints);
+        const err = { param: msg.property, message };
         formatedErrors.push(err);
       }
     }

@@ -19,7 +19,7 @@ const reset = () => {
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const handleOk = async (
     { password, newPassword, repeatPassword }: typeof initForm,
-    setSubmitting: (isSubmitting: boolean) => void
+    setSubmitting: (isSubmitting: boolean) => void,
   ) => {
     setConfirmLoading(true);
     setSubmitting(false);

@@ -4,11 +4,7 @@ import { ComponentType } from 'react';
 import { Link as BaseLink } from '@lib/components';
 import { SettingTypeValues, UserTypeValues } from '@common/enum/router';
 
-interface IRouteObject {
-  [key: string]: string;
-}
-
-export const routeObject: IRouteObject = {
+export const routeObject: Record<string, string> = {
   '/': 'views/home',
   '/login': 'views/auth/login',
   '/validatoremail': 'views/auth/validatoremail',

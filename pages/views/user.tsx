@@ -51,7 +51,6 @@ const server = !!(typeof window === 'undefined');
   collectionsStore: stores.screen.userCollectionStore,
   accountStore: stores.accountStore,
 }))
-
 @observer
 class User extends React.Component<IProps> {
   public static getInitialProps: (_: ICustomNextContext) => any;
