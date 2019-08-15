@@ -49,7 +49,7 @@ export const Box = styled.div`
 `;
 
 export const PreviewBox = styled(Cell)`
-  position: relative
+  position: relative;
 `;
 
 export const Preview = styled.img`
@@ -81,28 +81,6 @@ export const Input = styled(BaseInput)<{isTitle?: boolean}>`
   &:focus {
     border-color: ${theme('colors.primary')} !important;
   }
-`;
-
-export const FormInfo = styled(Cell)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${() => rem('12px')};
-`;
-
-export const FormLabel = styled.div`
-
-`;
-
-export const FormTitle = styled.p`
-  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
-  color: ${theme('colors.text')};
-  margin-bottom: 4px;
-`;
-
-export const FormMessage = styled.p`
-  font-size: ${_ => rem(_.theme.fontSizes[0])};
-  color: ${theme('colors.secondary')};
 `;
 
 export const FormTag = styled(Cell)`

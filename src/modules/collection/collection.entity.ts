@@ -16,6 +16,7 @@ export class CollectionEntity extends BaseEntity {
   @Expose()
   public readonly id!: string;
 
+  /** 收藏夹名字 */
   @Column({
     nullable: true,
   })
@@ -29,6 +30,7 @@ export class CollectionEntity extends BaseEntity {
   @Expose()
   public readonly bio!: string;
 
+  /** 收藏夹是否是私人 */
   @Column({
     default: false,
   })
@@ -54,5 +56,5 @@ export class CollectionEntity extends BaseEntity {
   /** 用户的picture数量 */
   @Type(() => Number)
   @Expose()
-  public pictureCount: number = 0;
+  public pictureCount = 0;
 }

@@ -9,11 +9,12 @@ import { getPictureUrl } from '@lib/common/utils/image';
 import styled from 'styled-components';
 import { AppStore } from '@lib/stores/AppStore';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
-import { Check, Minus } from '@lib/icon';
+import { Check, Minus, PlusCircle } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme } from '@lib/common/utils/themes';
+import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
   visible: boolean;
@@ -118,6 +119,8 @@ const ItemInfoTitle = styled.p`
   font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   font-weight: 700;
   margin-bottom: ${rem(6)};
+  display: flex;
+  align-items: center;
 `;
 
 const ItemInfoCount = styled.p`
@@ -143,6 +146,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   const { key, id } = picture;
   const { getCollection, userCollection } = appStore!;
   const { themeData } = themeStore!;
+  const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
@@ -196,6 +200,18 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
     >
       <Title>添加到收藏夹</Title>
       <CollectionBox>
+        <CollectionItemBox
+          onClick={() => setAddCollectionVisible(true)}
+        >
+          <ItemInfoBox isCollected={false}>
+            <div>
+              <ItemInfoTitle style={{ marginBottom: 0 }}>
+                <PlusCircle style={{ marginRight: '12px' }} />
+                <span>新增收藏夹</span>
+              </ItemInfoTitle>
+            </div>
+          </ItemInfoBox>
+        </CollectionItemBox>
         {
           userCollection.map((collection) => {
             const isCollected = current.has(collection.id);
@@ -238,6 +254,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
           })
         }
       </CollectionBox>
+      <AddCollectionModal
+        onClose={() => setAddCollectionVisible(false)}
+        visible={addCollectionVisible}
+      />
     </Modal>
   );
 });

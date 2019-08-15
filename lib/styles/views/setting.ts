@@ -9,6 +9,7 @@ export const Warpper = styled.section`
   grid-template-columns: 180px 1fr;
   padding: 0;
   margin-top: ${rem('64px')};
+  margin-bottom: ${rem('64px')};
 `;
 
 export const Content = styled.div`

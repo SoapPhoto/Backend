@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, FormikActions } from 'formik';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import Head from 'next/Head';
 import { withRouter } from 'next/router';
@@ -20,17 +20,17 @@ interface IProps extends WithRouterProps {
   accountStore: AccountStore;
 }
 
-const initForm = {
-  username: '',
-  password: '',
-};
+interface IValues {
+  username: string;
+  password: string;
+}
 
 const Login = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
     const { login } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const handleOk = async (value: typeof initForm, setSubmitting: (isSubmitting: boolean) => void) => {
+    const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
       setConfirmLoading(true);
       setSubmitting(false);
       try {
@@ -62,11 +62,12 @@ const Login = withRouter<IProps>(
             text="登录🔑"
           />
         </Title>
-        <Formik
-          initialValues={initForm}
-          onSubmit={(values, { setSubmitting }) => {
-            handleOk(values, setSubmitting);
+        <Formik<IValues>
+          initialValues={{
+            username: '',
+            password: '',
           }}
+          onSubmit={handleOk}
           validationSchema={LoginSchema}
         >
           {({

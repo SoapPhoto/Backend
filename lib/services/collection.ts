@@ -1,5 +1,5 @@
 import { request } from '@lib/common/utils/request';
-import { CollectionEntity } from '@lib/common/interfaces/collection';
+import { CollectionEntity, CreateCollectionDot } from '@lib/common/interfaces/collection';
 import { IListRequest } from '@lib/common/interfaces/global';
 
 export const getUserCollection = async (username: string) => (
@@ -16,4 +16,8 @@ export const addPictureCollection = async (collectionId: ID, pictureId: ID) => (
 
 export const removePictureCollection = async (collectionId: ID, pictureId: ID) => (
   request.delete(`/api/collection/${collectionId}/${pictureId}`)
+);
+
+export const addCollection = async (data: CreateCollectionDot) => (
+  request.post<CollectionEntity>('/api/collection', data)
 );

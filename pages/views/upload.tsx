@@ -1,6 +1,5 @@
 import Head from 'next/Head';
 import React from 'react';
-import Switch from 'react-switch';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
@@ -14,11 +13,7 @@ import { Router } from '@lib/routes';
 import {
   Box,
   Content,
-  FormInfo,
-  FormLabel,
-  FormMessage,
   FormTag,
-  FormTitle,
   Input,
   UploadBox,
   Wapper,
@@ -27,6 +22,7 @@ import {
 } from '@lib/styles/views/upload';
 import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
+import { Switch } from '@lib/components/Switch';
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -120,46 +116,22 @@ const Upload: React.FC = () => {
                       onChange={e => data.bio = e.target.value}
                     />
                   </Cell>
-                  <FormInfo>
-                    <FormLabel>
-                      <FormTitle>私人</FormTitle>
-                      <FormMessage>仅自己可见</FormMessage>
-                    </FormLabel>
+                  <Cell>
                     <Switch
+                      label="私人"
+                      bio="仅自己可见"
                       checked={data.isPrivate}
                       onChange={checked => data.isPrivate = checked}
-                      onColor="#05f"
-                      onHandleColor="#fff"
-                      handleDiameter={18}
-                      uncheckedIcon={false}
-                      checkedIcon={false}
-                      boxShadow="none"
-                      activeBoxShadow="none"
-                      height={22}
-                      width={40}
                     />
-                  </FormInfo>
+                  </Cell>
                   {
                     imageInfo && imageInfo.exif && imageInfo.exif.location && (
-                      <FormInfo>
-                        <FormLabel>
-                          <FormTitle>分享位置信息</FormTitle>
-                          <FormMessage>所有人都可以看到你图片拍摄的位置信息</FormMessage>
-                        </FormLabel>
-                        <Switch
-                          checked={isLocation}
-                          onChange={checked => setIsLocation(checked)}
-                          onColor="#05f"
-                          onHandleColor="#fff"
-                          handleDiameter={18}
-                          uncheckedIcon={false}
-                          checkedIcon={false}
-                          boxShadow="none"
-                          activeBoxShadow="none"
-                          height={22}
-                          width={40}
-                        />
-                      </FormInfo>
+                      <Switch
+                        label="分享位置信息"
+                        bio="所有人都可以看到你图片拍摄的位置信息"
+                        checked={isLocation}
+                        onChange={checked => setIsLocation(checked)}
+                      />
                     )
                   }
                   <FormTag>
