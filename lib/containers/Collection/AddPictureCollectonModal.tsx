@@ -81,10 +81,10 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
   height: 100%;
   top: 0;
   left: 0;
-  background: ${_ => rgba(_.theme.colors.text, 0.3)};
+  background: ${theme('styles.collection.addPicture.background')};
   transition: all .15s ease-in-out;
   padding: 17px 20px;
-  color: ${theme('colors.pure')};
+  color: ${theme('styles.collection.addPicture.color')};
   & ${CheckIcon} {
     opacity: 0;
   }
@@ -99,7 +99,11 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
   ${
   _ => _.isCollected && `
       border: 2px solid ${_.theme.colors.baseGreen};
-      background: linear-gradient(45deg, ${rgba(_.theme.colors.text, 0.3)}, ${_.theme.colors.baseGreen});
+      background: linear-gradient(
+        45deg,
+        ${rgba(theme('styles.collection.addPicture.background')(_), 0.3)},
+        ${_.theme.colors.baseGreen}
+      );
       & ${CheckIcon} {
         opacity: 1;
       }
@@ -115,7 +119,7 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
 `;
 
 const ItemInfoTitle = styled.p`
-  color: ${theme('colors.pure')};
+  color: ${theme('styles.collection.addPicture.color')};
   font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   font-weight: 700;
   margin-bottom: ${rem(6)};
@@ -144,13 +148,13 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   currentCollections,
 }) => {
   const { key, id } = picture;
-  const { getCollection, userCollection } = appStore!;
+  const { getCollection, userCollection, addCollection } = appStore!;
   const { themeData } = themeStore!;
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
-  const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key)}")`;
+  const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => {
     getCollection();
   }, []);
@@ -191,6 +195,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         [collection.id]: false,
       }));
     }
+  };
+  const onAddCollectionOk = (data: CollectionEntity) => {
+    addCollection(data);
+    setAddCollectionVisible(false);
   };
   return (
     <Modal
@@ -257,6 +265,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
       <AddCollectionModal
         onClose={() => setAddCollectionVisible(false)}
         visible={addCollectionVisible}
+        onOk={onAddCollectionOk}
       />
     </Modal>
   );

@@ -56,4 +56,6 @@ export class AppStore {
       this.userCollection = data.data;
     }
   }
+
+  @action public addCollection = (data: CollectionEntity) => this.userCollection.unshift(data)
 }

@@ -223,6 +223,7 @@ export class CollectionService {
     q
       .leftJoinAndSelect('collection.user', 'user')
       .skip((query.page - 1) * query.pageSize)
+      .orderBy('collection.createTime', 'DESC')
       .take(query.pageSize);
 
     this.userService.selectInfo(q);

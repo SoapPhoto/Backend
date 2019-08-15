@@ -1,4 +1,5 @@
 import { action, computed, observable } from 'mobx';
+import cookie from 'js-cookie';
 
 import { server } from '@lib/common/utils';
 import { getTheme, ThemeType } from '@lib/common/utils/themes';
@@ -23,7 +24,7 @@ export class ThemeStore {
 
   @action public setTheme = (theme: ThemeType) => {
     if (!server) {
-      document.cookie = `theme=${theme};`;
+      cookie.set('theme', theme);
     }
     this.theme = theme;
   }

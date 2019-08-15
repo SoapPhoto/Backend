@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import * as Yup from 'yup';
 import _ from 'lodash';
 import { css } from 'styled-components';
@@ -23,6 +23,7 @@ type Values = CreateCollectionDot;
 
 export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk }) => {
   const [okLoading, setOkLoading] = useState(false);
+  const formRef = useRef<Formik<Values>>(null);
   const onSubmit = async (values: Values, { setSubmitting }: FormikActions<Values>) => {
     setOkLoading(true);
     try {
@@ -37,13 +38,18 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
     }
   };
   return (
-    <Modal boxStyle={{ width: '340px' }} visible={visible} onClose={onClose}>
+    <Modal
+      boxStyle={{ width: '340px' }}
+      visible={visible}
+      onClose={onClose}
+    >
       <Formik<Values>
         initialValues={{
           name: '',
           bio: '',
           isPrivate: false,
         }}
+        ref={formRef}
         onSubmit={onSubmit}
         validationSchema={
           Yup.object().shape({
@@ -56,11 +62,8 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
       >
         {({
           isSubmitting,
-          isValid,
-          isValidating,
         }) => (
           <Form>
-            {console.log(isValid, isValidating)}
             <FieldInput
               label="收藏夹名称"
               name="name"
@@ -81,7 +84,7 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
                 margin-top: ${rem(24)};
               `}
               loading={okLoading}
-              disabled={isSubmitting || !isValid}
+              disabled={isSubmitting}
             >
               新增收藏夹
             </Button>

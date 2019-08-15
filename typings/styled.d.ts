@@ -41,6 +41,13 @@ declare module 'styled-components' {
           borderColor: string;
         };
       };
+      collection: {
+        background: string;
+        addPicture: {
+          background: string;
+          color: string;
+        };
+      };
     };
     layout: {
       header: {

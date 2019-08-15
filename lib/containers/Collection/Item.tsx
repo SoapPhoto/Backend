@@ -4,22 +4,27 @@ import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { A } from '@lib/components/A';
+import { connect } from '@lib/common/utils/store';
+import { ThemeStore } from '@lib/stores/ThemeStore';
 import {
   ItemBox, Preview, MorePreview, Img, Collection, ItemInfo, Title, PictureCount,
 } from './styles';
 
 interface IProps {
   info: CollectionEntity;
+  themeStore?: ThemeStore;
 }
 
-export const CollectionItem: React.FC<IProps> = ({
+export const CollectionItem = connect<React.FC<IProps>>('themeStore')(({
   info,
+  themeStore,
 }) => {
+  const { themeData } = themeStore!;
   const { preview, name, pictureCount } = info;
   const one = preview[0];
   const two = preview[1];
   const three = preview[2];
-  const colors = (color?: PictureEntity) => (color ? color.color : '#ccc');
+  const colors = (color?: PictureEntity) => (color ? color.color : themeData.styles.collection.background);
   return (
     <Collection>
       <A route={`/collection/${info.id}`}>
@@ -56,4 +61,4 @@ export const CollectionItem: React.FC<IProps> = ({
       </ItemInfo>
     </Collection>
   );
-};
+});

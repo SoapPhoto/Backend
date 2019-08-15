@@ -48,6 +48,13 @@ const theme: DefaultTheme = {
         borderColor: colors.primary,
       },
     },
+    collection: {
+      background: colors.gray,
+      addPicture: {
+        background: colors.secondary,
+        color: colors.pure,
+      },
+    },
   },
   layout: {
     header: {
