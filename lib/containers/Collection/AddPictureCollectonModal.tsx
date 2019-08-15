@@ -69,10 +69,9 @@ const CollectionItemCover = styled(Image)`
   object-fit: cover;
   width: 100%;
   height: 100%;
-  filter: blur(4px);
 `;
 
-const ItemInfoBox = styled.div<{isCollected: boolean}>`
+const ItemInfoBox = styled.div<{isCollected: boolean; isPreview: boolean}>`
   position: absolute;
   display: flex;
   justify-content: space-between;
@@ -81,10 +80,11 @@ const ItemInfoBox = styled.div<{isCollected: boolean}>`
   height: 100%;
   top: 0;
   left: 0;
-  background: ${theme('styles.collection.addPicture.background')};
+  background: ${_ => rgba(theme('styles.collection.addPicture.background')(_), _.isPreview ? 0.2 : 0.8)};
   transition: all .15s ease-in-out;
   padding: 17px 20px;
   color: ${theme('styles.collection.addPicture.color')};
+  border-radius: 4px;
   & ${CheckIcon} {
     opacity: 0;
   }
@@ -154,7 +154,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
-  const background = `linear-gradient(${rgba(themeData.colors.pure, 0.8)}, ${themeData.colors.pure} 200px), url("${getPictureUrl(key, 'blur')}")`;
+  const background = `linear-gradient(${rgba(themeData.colors.gray, 0.8)}, ${themeData.colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => {
     getCollection();
   }, []);
@@ -211,7 +211,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         <CollectionItemBox
           onClick={() => setAddCollectionVisible(true)}
         >
-          <ItemInfoBox isCollected={false}>
+          <ItemInfoBox isCollected={false} isPreview={false}>
             <div>
               <ItemInfoTitle style={{ marginBottom: 0 }}>
                 <PlusCircle style={{ marginRight: '12px' }} />
@@ -231,10 +231,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
               >
                 {
                   collection.preview[0] && (
-                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'thumb')} />
+                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'small')} />
                   )
                 }
-                <ItemInfoBox isCollected={isCollected}>
+                <ItemInfoBox isCollected={isCollected} isPreview={!!collection.preview[0]}>
                   <div>
                     <ItemInfoTitle>
                       {collection.name}

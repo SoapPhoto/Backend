@@ -49,9 +49,9 @@ const theme: DefaultTheme = {
       },
     },
     collection: {
-      background: colors.gray,
+      background: colors.secondary,
       addPicture: {
-        background: colors.secondary,
+        background: colors.text,
         color: colors.pure,
       },
     },

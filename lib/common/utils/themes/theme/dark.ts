@@ -49,7 +49,7 @@ const theme: DefaultTheme = {
       },
     },
     collection: {
-      background: colors.gray,
+      background: colors.lightgray,
       addPicture: {
         background: colors.background,
         color: '#fff',
