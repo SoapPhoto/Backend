@@ -1,5 +1,5 @@
 import { inject, observer } from 'mobx-react';
-import Head from 'next/Head';
+import Head from 'next/head';
 import React from 'react';
 import parse from 'url-parse';
 

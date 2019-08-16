@@ -1,6 +1,6 @@
 import React from 'react';
 import { withError } from '@lib/components/withError';
-import Head from 'next/Head';
+import Head from 'next/head';
 import { getTitle } from '@lib/common/utils';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { CollectionScreenStore } from '@lib/stores/screen/Collection';

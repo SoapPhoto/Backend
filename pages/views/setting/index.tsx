@@ -1,6 +1,6 @@
 import { WithRouterProps } from 'next/dist/client/with-router';
 import dynamic from 'next/dynamic';
-import Head from 'next/Head';
+import Head from 'next/head';
 import { withRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 

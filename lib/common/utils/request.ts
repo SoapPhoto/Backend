@@ -9,7 +9,7 @@ import axios, { AxiosResponse } from 'axios';
 const instance = axios.create({
   // adapter: cache.adapter,
   withCredentials: true,
-  baseURL: `http://localhost.com:${process.env.PORT}`,
+  baseURL: `${process.env.URL}`,
   validateStatus(status: number) {
     return status < 500 && status !== 404;
   },

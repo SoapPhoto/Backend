@@ -2,7 +2,7 @@ import React from 'react';
 
 import { computed } from 'mobx';
 import { observer, Provider } from 'mobx-react';
-import Head from 'next/Head';
+import Head from 'next/head';
 import styled from 'styled-components';
 import { getTitle } from '@lib/common/utils';
 import { href } from '@lib/common/utils/themes/common';

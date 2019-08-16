@@ -1,4 +1,4 @@
-import Head from 'next/Head';
+import Head from 'next/head';
 import React from 'react';
 
 import { getTitle } from '@lib/common/utils';

@@ -1,6 +1,6 @@
 import { Formik, FormikActions } from 'formik';
 import { WithRouterProps } from 'next/dist/client/with-router';
-import Head from 'next/Head';
+import Head from 'next/head';
 import { withRouter } from 'next/router';
 import React from 'react';
 import { Emojione } from 'react-emoji-render';

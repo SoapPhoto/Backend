@@ -10,7 +10,7 @@ import { Input } from '@lib/components/Input';
 import Toast from '@lib/components/Toast';
 import { Upload } from '@lib/components/Upload';
 import { AccountStore } from '@lib/stores/AccountStore';
-import Head from 'next/Head';
+import Head from 'next/head';
 
 interface IUserProps {
   accountStore?: AccountStore;

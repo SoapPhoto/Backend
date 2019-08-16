@@ -1,4 +1,4 @@
-import Head from 'next/Head';
+import Head from 'next/head';
 import React, { useEffect } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';

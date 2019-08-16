@@ -7,7 +7,7 @@ import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
 import { TagScreenStore } from '@lib/stores/screen/Tag';
-import Head from 'next/Head';
+import Head from 'next/head';
 import { rem } from 'polished';
 
 interface IProps {
