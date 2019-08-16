@@ -9,7 +9,7 @@
     "build:server": "npx tsc -p tsconfig.build.json && babel --no-babelrc --config-file ./.babelrc-server -d .next/production-server .next/production-server",
     "build:view": "npx next build",
     "format": "npx prettier --write \"src/**/*.ts\"",
-    "start": "npx cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/main.js",
+    "start": "npx cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/src/main.js",
     "start:dev": "npx nodemon",
     "start:debug": "npx nodemon --config nodemon-debug.json",
     "start:prod": "npx node dist/main.js",
