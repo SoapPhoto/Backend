@@ -131,12 +131,12 @@ export class UserEntity extends BaseEntity {
   /** 喜欢的picture数量 */
   @Type(() => Number)
   @Expose()
-  public likes: number = 0;
+  public likes = 0;
 
   /** 用户的picture数量 */
   @Type(() => Number)
   @Expose()
-  public pictureCount: number = 0;
+  public pictureCount = 0;
 
   public isVerified() {
     return this.status === Status.VERIFIED;

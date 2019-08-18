@@ -74,7 +74,7 @@ export class UserService {
     return false;
   }
 
-  public async signup(data: CreateUserDto, isEmail: boolean = true) {
+  public async signup(data: CreateUserDto, isEmail = true) {
     const info: MutablePartial<UserEntity> = {};
     if (isEmail) {
       info.identifier = data.email;
@@ -105,7 +105,7 @@ export class UserService {
    * @returns
    * @memberof UserService
    */
-  public selectInfo<E>(q: SelectQueryBuilder<E>, value: string = 'user') {
+  public selectInfo<E>(q: SelectQueryBuilder<E>, value = 'user') {
     return q.loadRelationCountAndMap(
       `${value}.pictureCount`, `${value}.pictures`,
     )
@@ -148,6 +148,7 @@ export class UserService {
         'picture',
         'picture.userId = user.id AND picture.isPrivate=0',
       )
+      .orderBy('picture.createTime', 'DESC')
       .limit(3);
     const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {

@@ -48,6 +48,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   const openCollection = useCallback(() => {
     setCollectionVisible(true);
   }, []);
+  console.log(info);
   return (
     <PictureBaseInfo>
       <div>

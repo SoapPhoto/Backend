@@ -80,7 +80,7 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getOnePicture = async (id: string, user: Maybe<UserEntity>, view: boolean = false) => {
+  public getOnePicture = async (id: string, user: Maybe<UserEntity>, view = false) => {
     const q = this.select(user)
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
@@ -231,7 +231,7 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value: string = 'user') => {
+  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
     q.leftJoinAndSelect('picture.user', value)
       .loadRelationCountAndMap(
         'picture.likes', 'picture.activitys', 'activity',

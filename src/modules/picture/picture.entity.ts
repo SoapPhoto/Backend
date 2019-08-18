@@ -75,12 +75,12 @@ export class PictureEntity extends BaseEntity {
   /** 当前登录用户是否喜欢 */
   @Type(() => Boolean)
   @Expose()
-  public isLike: boolean = false;
+  public isLike = false;
 
   /** picture喜欢的数量 */
   @Type(() => Number)
   @Expose()
-  public likes: number = 0;
+  public likes = 0;
 
   /** 图片的主色调 */
   @Column()

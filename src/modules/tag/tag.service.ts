@@ -36,6 +36,11 @@ export class TagService {
   public async getTagInfo(name: string, _user: Maybe<UserEntity>) {
     return this.tagRepository.createQueryBuilder('tag')
       .where('tag.name=:name', { name })
+      .loadRelationCountAndMap(
+        'tag.pictureCount', 'tag.pictures', 'picture',
+        qb => qb
+          .where('picture.isPrivate = 0'),
+      )
       .getOne();
   }
 
