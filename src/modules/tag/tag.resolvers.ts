@@ -29,7 +29,6 @@ export class TagResolver {
     @Args('name') name: string,
     @Args() query: GetTagPictureListDto,
   ) {
-    console.log(name, query);
     return this.tagService.getTagPicture(name, user, query);
   }
 }

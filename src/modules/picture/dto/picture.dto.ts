@@ -1,10 +1,13 @@
-import { Exclude, Expose, Transform } from 'class-transformer';
+import {
+  Exclude, Expose, Transform,
+} from 'class-transformer';
 import {
   IsArray, IsBoolean, IsNotEmpty, IsString,
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { transformJson } from '@server/common/utils/transform';
+import { PictureEntity } from '../picture.entity';
 
 export class GetPictureListDto extends PaginationDto {
 
@@ -17,7 +20,7 @@ export class GetUserPictureListDto extends GetPictureListDto {
 }
 
 @Exclude()
-export class CreatePictureAddDot {
+export class CreatePictureAddDot implements Partial<PictureEntity> {
   /**
    * 图片信息
    *
@@ -53,10 +56,31 @@ export class CreatePictureAddDot {
   @Transform(transformJson)
   @IsNotEmpty()
   @IsArray()
-  public readonly tags!: string;
+  public readonly tags!: any;
 
   @IsBoolean()
   @Transform(value => (value !== '0'))
   @Expose()
   public readonly isPrivate!: boolean;
+}
+
+@Exclude()
+export class UpdatePictureDot implements Partial<PictureEntity> {
+  @IsString()
+  @Expose()
+  public readonly title!: string
+
+  @IsString()
+  @Expose()
+  public readonly bio!: string
+
+  @IsBoolean()
+  @Transform(value => (value !== '0'))
+  @Expose()
+  public readonly isPrivate!: boolean
+
+  @Expose()
+  @IsNotEmpty()
+  @IsArray()
+  public readonly tags!: any;
 }

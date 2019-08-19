@@ -18,7 +18,7 @@ import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
-import { GetPictureListDto } from './dto/picture.dto';
+import { GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 
@@ -44,6 +44,31 @@ export class PictureService {
       this.pictureRepository.create(data),
     );
     return classToPlain(createData);
+  }
+
+  public update = async (id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) => {
+    const picture = await this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.id=:id', { id })
+      .leftJoinAndSelect('picture.user', 'user')
+      .getOne();
+    if (!picture || picture.user.id !== user.id) {
+      throw new UnauthorizedException();
+    }
+    const updateData: Partial<PictureEntity> = data;
+    if (tags.length > 0) {
+      const newTags = await Promise.all(
+        (tags as string[]).map((tag: string) => this.tagService.createTag({ name: tag })),
+      );
+      updateData.tags = newTags;
+    } else {
+      updateData.tags = [];
+    }
+    return this.pictureRepository.save(
+      this.pictureRepository.merge(
+        picture,
+        updateData,
+      ),
+    );
   }
 
   /**

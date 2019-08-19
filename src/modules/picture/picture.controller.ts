@@ -26,7 +26,7 @@ import { photoUpload } from '@server/common/utils/upload';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { CreatePictureAddDot, GetPictureListDto } from './dto/picture.dto';
+import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 
 @Controller('api/picture')
@@ -76,6 +76,17 @@ export class PictureController {
     @User() user: UserEntity,
   ) {
     return this.pictureService.delete(id, user);
+  }
+
+
+  @Put(':id')
+  @Roles(Role.USER)
+  public async updatePicture(
+    @Param('id') id: number,
+    @Body() data: UpdatePictureDot,
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.update(id, data, user);
   }
 
   @Get()

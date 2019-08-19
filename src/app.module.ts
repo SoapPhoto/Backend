@@ -37,8 +37,8 @@ import { TagEntity } from './modules/tag/tag.entity';
 import { UserEntity } from './modules/user/user.entity';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 
-const dev = process.env.NODE_ENV !== 'production';
-// const dev = false;
+// const dev = process.env.NODE_ENV !== 'production';
+const dev = false;
 
 @Module({
   imports: [

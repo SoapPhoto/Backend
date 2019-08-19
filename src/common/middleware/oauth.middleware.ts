@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-triple-slash-reference
-/// <reference path="../../../typings/typing.d.ts" />
-
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
