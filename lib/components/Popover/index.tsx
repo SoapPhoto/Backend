@@ -8,6 +8,7 @@ import { observable } from 'mobx';
 
 import { ThemeWrapper } from '@lib/containers/Theme';
 import { server } from '@lib/common/utils';
+import { timingFunctions } from 'polished';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
 
@@ -222,7 +223,13 @@ export class Popover extends React.PureComponent<IPopoverProps> {
               timeout={200}
             >
               {state => (
-                <div style={{ ...transitionStyles[state], transition: '.2s all ease' }}>
+                <div
+                  style={{ ...transitionStyles[state] }}
+                  css={`
+                    transition-timing-function: ${timingFunctions('easeInOutSine')};
+                    transition: .2s all;
+                  `}
+                >
                   {
                     arrow && (
                       <Arrow

@@ -12,6 +12,8 @@ import {
   Box, Content, Mask, Wrapper,
 } from './styles';
 
+let _modalIndex = 0;
+
 interface IModalProps {
   visible: boolean;
   onClose?: () => void;
@@ -51,10 +53,14 @@ export class Modal extends React.PureComponent<IModalProps> {
     // eslint-disable-next-line react/destructuring-assignment
     reaction(() => this.props.visible, (vis) => {
       if (vis) {
-        this.initStyle = setBodyCss({
-          overflowY: 'hidden',
-          paddingRight: `${this.scrollWidth}px`,
-        });
+        if (_modalIndex === 0) {
+          this.initStyle = setBodyCss({
+            overflowY: 'hidden',
+            paddingRight: `${this.scrollWidth}px`,
+          });
+        }
+        // eslint-disable-next-line no-plusplus
+        _modalIndex++;
         this.isDestroy = false;
       }
     });
@@ -71,7 +77,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public componentWillUnmount() {
-    this.onDestroy();
+    this.onDestroy(true);
   }
 
   get scrollWidth() {
@@ -88,9 +94,13 @@ export class Modal extends React.PureComponent<IModalProps> {
     }
   }
 
-  public onDestroy = () => {
+  public onDestroy = (isDestroy = false) => {
     if (isFunction(this.initStyle)) {
       this.initStyle();
+    }
+    if (!isDestroy) {
+      // eslint-disable-next-line no-plusplus
+      _modalIndex--;
     }
     this.isDestroy = true;
   }
@@ -125,7 +135,6 @@ export class Modal extends React.PureComponent<IModalProps> {
                           <Box
                             style={{
                               ...transitionStyles[state],
-                              transition: '.2s all ease',
                               ...boxStyle || {},
                             }}
                           >

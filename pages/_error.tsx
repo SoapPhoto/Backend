@@ -1,9 +1,10 @@
 import React from 'react';
-
+import { rem } from 'polished';
 import { computed } from 'mobx';
 import { observer, Provider } from 'mobx-react';
 import Head from 'next/head';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
 import { getTitle } from '@lib/common/utils';
 import { href } from '@lib/common/utils/themes/common';
 import { ThemeWrapper } from '@lib/containers/Theme';
@@ -86,7 +87,13 @@ class Error extends React.Component<IErrorProps> {
               <Status>{statusCode}</Status>
               <A href="/">
                   前往首页
-                <ArrowRight style={{ marginLeft: 4 }} size={14} />
+                <ArrowRight
+                  css={css`
+                    margin-right: ${rem(4)};
+                    width: 100%;
+                  `}
+                  size={14}
+                />
               </A>
               {/* </Link> */}
             </Box>

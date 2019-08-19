@@ -11,6 +11,7 @@ import { debounce } from 'lodash';
 
 import useMedia from '@lib/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
+import { css } from 'styled-components';
 import { Footer, PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
@@ -115,7 +116,14 @@ export const PictureList: React.FC<IProps> = ({
         </PictureContent>
       </NoSSR>
       <NoSSR key="client">
-        <Col style={{ display: 'grid' }} like={like} col={col} list={clientList} />
+        <Col
+          css={css`
+            display: grid;
+          `}
+          like={like}
+          col={col}
+          list={clientList}
+        />
       </NoSSR>
       <span>
         <Footer key="footer">

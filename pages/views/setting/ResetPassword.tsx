@@ -7,6 +7,8 @@ import { Button } from '@lib/components/Button';
 import { ResetPasswordSchema } from '@lib/common/dto/resetPassword';
 import { resetPassword } from '@lib/services/auth';
 import Toast from '@lib/components/Toast';
+import { css } from 'styled-components';
+import { rem } from 'polished';
 
 
 const initForm = {
@@ -61,18 +63,28 @@ const reset = () => {
               type="password"
               name="newPassword"
               label="新密码"
-              style={{ marginTop: '24px' }}
+              css={css`
+                margin-top: ${rem(24)};
+              `}
             />
             <FieldInput
               type="password"
               name="repeatPassword"
               label="再次输入新密码"
-              style={{ marginTop: '24px' }}
+              css={css`
+                margin-top: ${rem(24)};
+              `}
             />
-            <div style={{ textAlign: 'right' }}>
+            <div
+              css={css`
+                  text-align: right;
+              `}
+            >
               <Button
                 loading={confirmLoading}
-                style={{ marginTop: '46px' }}
+                css={css`
+                  margin-top: ${rem(46)};
+                `}
                 type="submit"
                 disabled={isSubmitting}
               >

@@ -1,6 +1,6 @@
 import { IObservableArray, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { rem } from 'polished';
+import { rem, timingFunctions } from 'polished';
 import React from 'react';
 import { Transition, TransitionGroup } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
@@ -111,7 +111,8 @@ const Area = styled.div`
   right: ${rem('20px')};
   max-width: ${rem('420px')};
   z-index: 2000;
-  transition: transform 0.4s, opacity 0.4s ease;
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: transform 0.4s, opacity 0.4s;
   &:hover {
     div {
       filter: blur(0px) !important;
@@ -136,7 +137,8 @@ const Area = styled.div`
 
 const Container = styled.div`
   transform: translate3d(0, -0, -0) scale(1);
-  transition: all 0.4s ease;
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: all 0.4s;
   position: absolute;
   bottom: 0;
   height: ${rem(height)};
@@ -156,7 +158,8 @@ const ToastBox = styled.div<{type?: ToastType}>`
   align-items: center;
   box-shadow: 0 ${rem('4px')} ${rem('9px')} rgba(0, 0, 0, 0.12);
   font-size: ${() => rem(14)};
-  transition: transform 0.4s, opacity 0.4s ease;
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: transform 0.4s, opacity 0.4s;
 `;
 
 @observer

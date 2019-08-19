@@ -97,7 +97,7 @@ class User extends React.Component<IProps> {
                 {
                   isLogin && userInfo && userInfo.username === user.username
                   && (
-                    <A route="'/setting/profile">
+                    <A route="/setting/profile">
                       <EditIcon size={18} />
                     </A>
                   )

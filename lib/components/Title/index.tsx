@@ -2,15 +2,12 @@ import React from 'react';
 
 import { title } from '@lib/common/constants/config';
 
-export const HeadTitle: React.FC = ({ children }) => {
-  console.log(children, title);
-  return (
-    <title>
-      {children}
-      {' '}
+export const HeadTitle: React.FC = ({ children }) => (
+  <title>
+    {children}
+    {' '}
 -
-      {' '}
-      {title}
-    </title>
-  );
-};
+    {' '}
+    {title}
+  </title>
+);

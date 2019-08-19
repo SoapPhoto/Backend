@@ -32,6 +32,8 @@ import {
   Wrapper,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
+import { css } from 'styled-components';
+import { rem } from 'polished';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -71,12 +73,21 @@ const Picture: ICustomNextPage<IProps, any> = ({
       <UserHeader columns={2}>
         <UserInfo width={1}>
           <UserLink route={`/@${user.username}`}>
-            <Avatar style={{ marginRight: '15px' }} src={user.avatar} />
+            <Avatar
+              css={css`
+                margin-right: ${rem(14)};
+              `}
+              src={user.avatar}
+            />
             <UserName>{user.name}</UserName>
           </UserLink>
         </UserInfo>
         <UserHeaderInfo width={1}>
-          <BaseInfoItem style={{ marginRight: '14px' }}>
+          <BaseInfoItem
+            css={css`
+              margin-right: ${rem(14)};
+            `}
+          >
             <Eye size={20} />
             <p>{info.views}</p>
           </BaseInfoItem>
@@ -101,7 +112,13 @@ const Picture: ICustomNextPage<IProps, any> = ({
             <TagBox>
               {
                 tags.map(tag => (
-                  <A style={{ textDecoration: 'none' }} route={`/tag/${tag.name}`} key={tag.id}>
+                  <A
+                    css={css`
+                      text-decoration: none;
+                    `}
+                    route={`/tag/${tag.name}`}
+                    key={tag.id}
+                  >
                     <Tag>
                       {tag.name}
                     </Tag>

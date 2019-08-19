@@ -25,7 +25,7 @@ export const box = (theme: DefaultTheme, width: string, wrapper = false) => `
   overflow: hidden;
 `;
 
-export const WrapperBox = (width: number = 1300) => <P, T>(_context: ThemedStyledProps<P, T>) => `
+export const WrapperBox = (width = 1300) => <P, T>(_context: ThemedStyledProps<P, T>) => `
   width: 100%;
   max-width: ${rem(width)};
   margin: ${rem('24px')} auto;

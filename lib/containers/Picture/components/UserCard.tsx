@@ -1,6 +1,6 @@
 import { rem } from 'polished';
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Grid } from 'styled-css-grid';
 
 import { UserEntity } from '@lib/common/interfaces/user';
@@ -100,7 +100,14 @@ const UserCard: React.FC<IProps> = ({
         <PicturePrview>
           {
             user.pictures.map(picture => (
-              <PrviewBox key={picture.id} style={{ backgroundColor: picture.color }}>
+              <PrviewBox
+                key={picture.id}
+                css={css`
+                  background-color: ${picture.color};
+                  border-radius: 3px;
+                  overflow: hidden;
+                `}
+              >
                 <A
                   route={`/picture/${picture.id}`}
                 >

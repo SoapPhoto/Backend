@@ -23,6 +23,7 @@ import {
 import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
+import { css } from 'styled-components';
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -80,7 +81,6 @@ const Upload: React.FC = () => {
     if (isImage(file.name)) {
       imageRef.current = file;
       const [info, url] = await getImageInfo(file);
-      console.log(info);
       setImageUrl(url);
       setImageInfo(info);
     } else {
@@ -138,7 +138,9 @@ const Upload: React.FC = () => {
                     <Tag value={data.tags} onChange={tags => data.tags = tags} />
                   </FormTag>
                   <Cell
-                    style={{ textAlign: 'right' }}
+                    css={css`
+                        text-align: right;
+                    `}
                   >
                     <Button
                       onClick={addPicture}
@@ -159,8 +161,19 @@ const Upload: React.FC = () => {
               {
                 type => (
                   <>
-                    <UploadCloud size={34} style={{ pointerEvents: 'none' }} />
-                    <span style={{ pointerEvents: 'none' }}>{type === 'drop' ? '松开上传' : '拖拽照片到这里'}</span>
+                    <UploadCloud
+                      size={34}
+                      css={css`
+                        pointer-events: none;
+                      `}
+                    />
+                    <span
+                      css={css`
+                        pointer-events: none;
+                      `}
+                    >
+                      {type === 'drop' ? '松开上传' : '拖拽照片到这里'}
+                    </span>
                   </>
                 )
               }

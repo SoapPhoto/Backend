@@ -15,6 +15,8 @@ import Toast from '@lib/components/Toast';
 import { Router } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { Title, Wrapper } from '@lib/styles/views/auth';
+import rem from 'polished/lib/helpers/rem';
+import { css } from 'styled-components';
 
 interface IProps extends WithRouterProps {
   accountStore: AccountStore;
@@ -83,11 +85,16 @@ const Login = withRouter<IProps>(
                 type="password"
                 name="password"
                 label="密码"
-                style={{ marginTop: '24px' }}
+                css={css`
+                  margin-top: ${rem(24)};
+                `}
               />
               <Button
                 loading={confirmLoading}
-                style={{ marginTop: '46px', width: '100%' }}
+                css={css`
+                  margin-top: ${rem(46)};
+                  width: 100%;
+                `}
                 type="submit"
                 disabled={isSubmitting}
               >

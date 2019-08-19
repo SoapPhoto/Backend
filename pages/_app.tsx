@@ -60,7 +60,7 @@ class MyApp extends App {
     if (ctx.query.error) {
       statusCode = ctx.query.error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
     } else if (ctx.pathname === '/_error') {
-      statusCode = HttpStatus.NOT_FOUND;
+      statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
     let pageProps = {
       ...basePageProps,

@@ -1,5 +1,6 @@
 import { isFunction } from 'lodash';
 import React from 'react';
+import { css } from 'styled-components';
 
 type DragType = 'leave' | 'drop' | 'over';
 
@@ -86,7 +87,11 @@ export const Upload: React.FC<IUploadProps> = ({
         type="file"
         ref={inputRef}
         onChange={handleChange}
-        style={{ visibility: 'hidden', width: '0px', height: '0px' }}
+        css={css`
+          visibility: hidden;
+          width: 0px;
+          height: 0px;
+        `}
       />
       {isFunction(children) ? children(dragType) : children}
     </span>

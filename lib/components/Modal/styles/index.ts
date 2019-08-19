@@ -1,4 +1,4 @@
-import { rem } from 'polished';
+import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
 
 import { box } from '@lib/common/utils/themes/common';
@@ -29,6 +29,8 @@ export const Box = styled.div`
   max-width: ${rem('560px')};
   border: none;
   margin: ${rem('24px')} auto;
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: .2s all;
 `;
 
 export const Content = styled.div`
@@ -49,4 +51,6 @@ export const Mask = styled.div`
   height: 100%;
   user-select: none;
   background-color: rgba(0,0,0,0.4);
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: .2s all;
 `;

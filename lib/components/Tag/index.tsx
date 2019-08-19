@@ -2,7 +2,7 @@ import { isFunction } from 'lodash';
 import { rem } from 'polished';
 import React, { useEffect } from 'react';
 import { PlusCircle, X } from 'react-feather';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Input as BaseInput } from '@lib/components/Input';
 import { theme } from '@lib/common/utils/themes';
@@ -106,7 +106,10 @@ export default function ({
         value.map(e => (
           <Tag
             edit
-            style={{ marginRight: '12px', marginBottom: '12px' }}
+            css={css`
+              margin-right: ${rem(12)};
+              margin-bottom: ${rem(12)};
+            `}
             key={e}
             close
           >
