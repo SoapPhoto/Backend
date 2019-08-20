@@ -1,4 +1,6 @@
 import React from 'react';
+import { cover } from 'polished';
+import { css } from 'styled-components';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { PictureStyle } from '@lib/common/utils/image';
@@ -38,9 +40,10 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
     <ItemWapper>
       <A
         route={`/picture/${detail.id}`}
-        style={{
-          position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, zIndex: 2,
-        }}
+        css={css`
+          ${cover()}
+          z-index: 2;
+        `}
       />
       <InfoBox>
         <UserBox>

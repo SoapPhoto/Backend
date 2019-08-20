@@ -48,6 +48,7 @@ export const Input: Component = ({
   style,
   error,
   type = 'input',
+  className,
   ...restProps
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -59,7 +60,7 @@ export const Input: Component = ({
     }
   };
   return (
-    <LabelBox style={style}>
+    <LabelBox style={style} className={className}>
       {
         label
         && <Label>{label}</Label>

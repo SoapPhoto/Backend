@@ -3,7 +3,7 @@ import { rem } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 import { A } from '@lib/components/A';
-import { theme } from '@lib/common/utils/themes';
+import { theme, activte } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.div`
   max-width: ${rem('1040px')};
@@ -94,9 +94,7 @@ export const InfoButton = styled(Info)`
   cursor: pointer;
   user-select: none;
   transition: transform 0.1s;
-  &:active {
-    transform: scale(0.7);
-  }
+  ${activte(0.7)}
 `;
 
 export const TagBox = styled.div`

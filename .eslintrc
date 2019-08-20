@@ -43,6 +43,7 @@
     "jsx-a11y/click-events-have-key-events": "off",
     "react/static-property-placement": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/state-in-constructor": "off",
     "react/destructuring-assignment": ["error", "always", { "ignoreClassFields": true }],
     "react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
     "react/prop-types": "off",

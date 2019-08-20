@@ -151,7 +151,7 @@ class User extends React.Component<IProps> {
 }
 
 User.getInitialProps = async ({
-  mobxStore, req, route, res,
+  mobxStore, req, route,
 }: ICustomNextContext) => {
   const { params } = route;
   const { username, type } = params as { username: string; type: UserType };
@@ -159,46 +159,39 @@ User.getInitialProps = async ({
     message: string;
     statusCode: number;
   } | undefined;
-  try {
-    const all = [];
-    const arg: [string, UserType, any] = [username!, type!, req ? req.headers : undefined];
-    const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP' && !server;
-    if (isPop) {
-      if (await mobxStore.screen.userStore.hasCache(username)) {
-        await mobxStore.screen.userStore.getCache(username);
-      } else {
-        await mobxStore.screen.userStore.getInit(...arg);
-      }
+  const all = [];
+  const arg: [string, UserType, any] = [username!, type!, req ? req.headers : undefined];
+  const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP' && !server;
+  if (isPop) {
+    if (await mobxStore.screen.userStore.hasCache(username)) {
+      await mobxStore.screen.userStore.getCache(username);
     } else {
       await mobxStore.screen.userStore.getInit(...arg);
     }
-    switch (type!) {
-      case UserType.collections:
-        if (isPop && mobxStore.screen.userCollectionStore.isCache(username!)) {
-          mobxStore.screen.userCollectionStore.getCache(username);
-        } else {
-          all.push(
-            mobxStore.screen.userCollectionStore.getList(
-              username!,
-              req ? req.headers : undefined,
-            ),
-          );
-        }
-        break;
-      default:
-        if (isPop && mobxStore.screen.userPictureStore.isCache(username, type)) {
-          mobxStore.screen.userPictureStore.getCache(username, type);
-        } else {
-          all.push(mobxStore.screen.userPictureStore.getList(...arg));
-        }
-    }
-    await Promise.all(all);
-  } catch (err) {
-    if (err && err.statusCode && res) {
-      res.status(err.statusCode);
-    }
-    error = err;
+  } else {
+    await mobxStore.screen.userStore.getInit(...arg);
   }
+  switch (type!) {
+    case UserType.collections:
+      if (isPop && mobxStore.screen.userCollectionStore.isCache(username!)) {
+        mobxStore.screen.userCollectionStore.getCache(username);
+      } else {
+        all.push(
+          mobxStore.screen.userCollectionStore.getList(
+            username!,
+            req ? req.headers : undefined,
+          ),
+        );
+      }
+      break;
+    default:
+      if (isPop && mobxStore.screen.userPictureStore.isCache(username, type)) {
+        mobxStore.screen.userPictureStore.getCache(username, type);
+      } else {
+        all.push(mobxStore.screen.userPictureStore.getList(...arg));
+      }
+  }
+  await Promise.all(all);
   return {
     error,
     type,

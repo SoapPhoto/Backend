@@ -30,7 +30,7 @@ const Box = styled.div`
 `;
 
 const Status = styled.h2`
-  font-weight: 300;
+  font-weight: 700;
   font-size: calc(4vw + 4vh + .5vmin);
 `;
 
@@ -86,16 +86,14 @@ class Error extends React.Component<IErrorProps> {
               <CloudSnowIcon />
               <Status>{statusCode}</Status>
               <A href="/">
-                  前往首页
+                前往首页
                 <ArrowRight
                   css={css`
                     margin-right: ${rem(4)};
-                    width: 100%;
                   `}
                   size={14}
                 />
               </A>
-              {/* </Link> */}
             </Box>
           </Wrapper>
         </ThemeWrapper>

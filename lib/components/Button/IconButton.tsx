@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popover } from '@lib/components/Popover';
 import styled from 'styled-components';
+import { activte } from '@lib/common/utils/themes';
 
 interface IProps {
   popover?: string;
@@ -14,9 +15,7 @@ const Wrapper = styled.div`
     cursor: pointer;
     user-select: none;
     transition: transform 0.1s;
-    &:active {
-      transform: scale(0.7);
-    }
+    ${activte(0.7)}
   }
 `;
 

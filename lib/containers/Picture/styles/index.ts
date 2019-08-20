@@ -5,7 +5,7 @@ import media from 'styled-media-query';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
-import { theme } from '@lib/common/utils/themes';
+import { theme, activte } from '@lib/common/utils/themes';
 
 const padding = 24;
 
@@ -123,10 +123,7 @@ export const UserName = styled(A)`
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
-  &:active {
-    transform: scale(0.96);
-    transition: transform 0.1s;
-  }
+  ${activte()}
 `;
 
 export const HandleBox = styled.div`

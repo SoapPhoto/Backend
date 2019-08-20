@@ -8,7 +8,7 @@ import { ListStore } from '../base/ListStore';
 export class UserScreenPictureList extends ListStore<PictureEntity> {
   public cacheList: Record<string, IPictureListRequest> = {};
 
-  @observable public username: string = '';
+  @observable public username = '';
 
   @observable public type?: UserType;
 
@@ -62,7 +62,7 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     });
   }
 
-  @action public setData = (data: IPictureListRequest, plus: boolean = false) => {
+  @action public setData = (data: IPictureListRequest, plus = false) => {
     if (plus) {
       this.list = this.list.concat(data.data);
     } else {

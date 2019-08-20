@@ -13,7 +13,7 @@ import { Check, Minus, PlusCircle } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
-import { theme } from '@lib/common/utils/themes';
+import { theme, activte } from '@lib/common/utils/themes';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
@@ -52,9 +52,7 @@ const CollectionItemBox = styled.button`
   position: relative;
   text-align: inherit;
   transition: transform 0.1s;
-  &:active {
-    transform: scale(0.98);
-  }
+  ${activte()}
 `;
 
 const CollectionBox = styled.div`

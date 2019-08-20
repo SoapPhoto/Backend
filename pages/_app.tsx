@@ -1,7 +1,6 @@
 /// <reference types="styled-components/cssprop" />
 import 'reflect-metadata';
 
-import _ from 'lodash';
 import { Provider } from 'mobx-react';
 import moment from 'moment';
 import App, { Container } from 'next/app';
@@ -62,24 +61,18 @@ class MyApp extends App {
     } else if (ctx.pathname === '/_error') {
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
-    let pageProps = {
-      ...basePageProps,
-    };
+    const mobxStore = initStore(basePageProps.initialStore);
     ctx.route = route;
-    ctx.mobxStore = initStore(pageProps.initialStore);
-    pageProps.initialStore = ctx.mobxStore;
+    ctx.mobxStore = mobxStore;
+    let pageProps = {};
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps({
-        ...basePageProps,
-        ...ctx,
-      });
-      pageProps = {
-        ...pageProps,
-        initialStore: _.merge(basePageProps.initialStore, pageProps.initialStore || {}),
-      };
-      pageProps.initialStore = ctx.mobxStore;
+      pageProps = await Component.getInitialProps(ctx);
+    }
+    if (statusCode !== HttpStatus.OK) {
+      ctx.res.status(statusCode);
     }
     return {
+      initialMobxState: mobxStore,
       pageProps: {
         ...pageProps,
         statusCode,
@@ -91,7 +84,7 @@ class MyApp extends App {
 
   constructor(props: any) {
     super(props);
-    this.mobxStore = server ? props.pageProps.initialStore : initStore(props.pageProps.initialStore);
+    this.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState);
   }
 
   public componentDidMount() {
@@ -132,7 +125,6 @@ class MyApp extends App {
                 picture
                 && <PictureModal pictureId={picture.toString()} />
               }
-              <div css="background: #ccc" />
               <Component
                 {...pageProps}
               />

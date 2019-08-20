@@ -13,12 +13,26 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
 
   public static async getInitialProps(ctx: ICustomNextContext) {
     let props;
+    let error;
     if ((Component as any).getInitialProps) {
-      props = await (Component as any).getInitialProps(ctx);
+      try {
+        props = await (Component as any).getInitialProps(ctx);
+      } catch (err) {
+        if (err && err.statusCode) {
+          error = err;
+        } else {
+          error = {
+            statusCode: 500,
+          };
+          console.error(err);
+        }
+      }
     }
-    const error = {
-      statusCode: ctx.res ? ctx.res.statusCode : undefined,
-    };
+    if (!error && ctx.res && ctx.res.statusCode >= 400) {
+      error = {
+        statusCode: ctx.res.statusCode,
+      };
+    }
     return { error, ...props };
   }
 

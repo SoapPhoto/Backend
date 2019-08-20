@@ -1,6 +1,7 @@
 import { request } from '@lib/common/utils/request';
-import { CollectionEntity, CreateCollectionDot } from '@lib/common/interfaces/collection';
+import { CollectionEntity, CreateCollectionDot, GetCollectionPictureListDto } from '@lib/common/interfaces/collection';
 import { IListRequest } from '@lib/common/interfaces/global';
+import { IPictureListRequest } from '@lib/common/interfaces/picture';
 
 export const getUserCollection = async (username: string) => (
   request.get<IListRequest<CollectionEntity[]>>(`/api/user/${username}/collection`)
@@ -8,6 +9,13 @@ export const getUserCollection = async (username: string) => (
 
 export const getCollectionInfo = async (id: ID, headers?: any) => (
   request.get<CollectionEntity>(`/api/collection/${id}`, { headers })
+);
+
+export const getCollectionPictureList = async (id: ID, params: GetCollectionPictureListDto, headers?: any) => (
+  request.get<IPictureListRequest>(`/api/collection/${id}/pictures`, {
+    headers,
+    params,
+  })
 );
 
 export const addPictureCollection = async (collectionId: ID, pictureId: ID) => (

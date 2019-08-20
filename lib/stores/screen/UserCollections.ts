@@ -7,7 +7,7 @@ import { ListStore } from '../base/ListStore';
 export class UserScreenCollectionList extends ListStore<CollectionEntity> {
   public cacheList: Record<string, ICollectionListRequest> = {};
 
-  @observable public username: string = '';
+  @observable public username = '';
 
   constructor() {
     super();
@@ -37,7 +37,7 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity> {
     });
   }
 
-  @action public setData = (data: ICollectionListRequest, plus: boolean = false) => {
+  @action public setData = (data: ICollectionListRequest, plus = false) => {
     if (plus) {
       this.list = this.list.concat(data.data);
     } else {
@@ -55,7 +55,7 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity> {
 
   public isCache = (username: string) => !!this.cacheList[username];
 
-  public getCache = (username: string = '') => {
+  public getCache = (username = '') => {
     const data = this.cacheList[username];
     if (data) {
       this.setData(data);

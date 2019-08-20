@@ -12,7 +12,7 @@ const normalize = () => css`
     -webkit-text-size-adjust: 100%; /* 2 */
   }
   body {
-    font-size: ${prop => prop.theme.fontSizes[1]} !important;
+    font-size: ${prop => prop.theme.fontSizes[1]}px !important;
     line-height: 1.5;
     overflow-y: scroll;
     overflow-x: hidden;

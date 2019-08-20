@@ -43,8 +43,8 @@ export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: c
       default:
         break;
     }
-    const componentProps = ((WrappedComponent as any) as NextComponentType).getInitialProps
-        && (await ((WrappedComponent as any) as NextComponentType).getInitialProps!(ctx));
+    const componentProps = ((WrappedComponent as any) as any).getInitialProps
+        && (await ((WrappedComponent as any) as any).getInitialProps!(ctx));
 
     return { ...componentProps };
   }
