@@ -131,15 +131,29 @@ export class CollectionService {
    * @memberof CollectionService
    */
   public async getCollectionDetail(id: ID, user: Maybe<UserEntity>) {
+    let sql = '';
+    const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
+    if (user) {
+      sql = `(collection.userId=${user.id} AND ${qO}) OR `;
+    }
     const q = this.collectionEntity.createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user')
-      .leftJoinAndSelect('collection.info', 'info')
-      .leftJoinAndSelect('info.picture', 'picture')
-      .andWhere('picture.isPrivate=0')
+      .leftJoin('collection.info', 'info')
+      .leftJoin('info.picture', 'picture')
+      .leftJoinAndMapMany(
+        'collection.info',
+        CollectionPictureEntity,
+        'collection_info',
+        `
+          collection_info.collectionId = collection.id AND
+          collection_info.pictureId = picture.id AND
+          (${sql}picture.isPrivate=0)
+        `,
+      )
+      .leftJoinAndSelect('collection_info.picture', 'collection_info_picture')
       .orderBy('info.createTime', 'DESC')
-      .skip(0)
-      .take(3);
+      .limit(3);
 
     this.selectInfo(q, user);
     this.userService.selectInfo(q);

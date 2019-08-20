@@ -57,7 +57,7 @@ export class CollectionController {
     return this.collectionService.getCollectionDetail(collectionId, user);
   }
 
-  @Get('/:collectionId/picture')
+  @Get('/:collectionId/pictures')
   public async collectionPictureList(
     @Param('collectionId') collectionId: string,
     @Query() query: GetCollectionPictureListDto,
