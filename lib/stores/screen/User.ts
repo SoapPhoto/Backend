@@ -10,20 +10,6 @@ import { IMyMobxStore } from '../init';
 const server = !!(typeof window === 'undefined');
 
 export class UserScreenStore extends BaseStore {
-  constructor() {
-    super();
-    if (!server) {
-      this.getStore();
-    }
-  }
-
-  private getStore = async () => {
-    const { store } = await import('../init');
-    this._store = store;
-  }
-
-  private _store!: IMyMobxStore;
-
   @observable public type?: UserType;
 
   @observable public user!: UserEntity;
@@ -31,6 +17,15 @@ export class UserScreenStore extends BaseStore {
   @observable public username = '';
 
   @observable public actived = false;
+
+  private _store!: IMyMobxStore;
+
+  constructor() {
+    super();
+    if (!server) {
+      this.getStore();
+    }
+  }
 
   @action
   public getInit = async (username: string, type?: UserType, headers?: any) => {
@@ -54,15 +49,20 @@ export class UserScreenStore extends BaseStore {
     this.user = data;
   }
 
-  @action private setCache = (username: string, user: UserEntity) => {
-    this._store.appStore.userList.set(username, user);
-  }
-
-  public hasCache = (username: string) => this._store.appStore.userList.has(username)
-
   @action public getCache = (username: string) => {
     if (this._store.appStore.userList.has(username)) {
       this.user = this._store.appStore.userList.get(username)!;
     }
+  }
+
+  public hasCache = (username: string) => this._store.appStore.userList.has(username)
+
+  @action private setCache = (username: string, user: UserEntity) => {
+    this._store.appStore.userList.set(username, user);
+  }
+
+  private getStore = async () => {
+    const { store } = await import('../init');
+    this._store = store;
   }
 }

@@ -1,4 +1,3 @@
-import { NextComponentType } from 'next';
 import React from 'react';
 
 import { ICustomNextContext } from '@lib/common/interfaces/global';

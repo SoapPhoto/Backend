@@ -14,7 +14,7 @@
     "start:debug": "nodemon --config nodemon-debug.json",
     "start:prod": "node dist/main.js",
     "env": "sync-dotenv",
-    "lint": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx",
+    "lint": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx --ignore-pattern .eslintignore",
     "lint:fix": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx --fix",
     "commitlint": "commitlint -E HUSKY_GIT_PARAMS"
   },

@@ -6,7 +6,9 @@ import { connect } from '@lib/common/utils/store';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
 import { Popover } from '@lib/components/Popover';
-import { Clock, Bookmark, Info } from '@lib/icon';
+import {
+  Clock, Bookmark, Info, Settings,
+} from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { IMyMobxStore } from '@lib/stores/init';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -14,9 +16,11 @@ import {
   BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
 } from '@lib/styles/views/picture';
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
+import { EditMPictureModal } from '@lib/containers/Picture/EditModal';
 
 interface IProps {
   info: PictureEntity;
+  isOwner: boolean;
   accountStore?: AccountStore;
   themeStore?: ThemeStore;
   onLike: () => Promise<void>;
@@ -30,9 +34,11 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   accountStore,
   themeStore,
   onLike,
+  isOwner,
 }) => {
   const [EXIFVisible, setEXIFVisible] = useState(false);
-  const [CollectionVisible, setCollectionVisible] = useState(false);
+  const [collectionVisible, setCollectionVisible] = useState(false);
+  const [editVisible, setEditVisible] = useState(false);
   const { isLogin } = accountStore!;
   const { themeData } = themeStore!;
 
@@ -47,6 +53,9 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   }, []);
   const openCollection = useCallback(() => {
     setCollectionVisible(true);
+  }, []);
+  const openEdit = useCallback(() => {
+    setEditVisible(true);
   }, []);
   return (
     <PictureBaseInfo>
@@ -75,8 +84,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           />
         </IconButton>
         {
-          isLogin
-          && (
+          isLogin && (
             <LikeButton
               color={themeData.colors.secondary}
               isLike={info.isLike}
@@ -86,8 +94,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           )
         }
         {
-          isLogin
-          && (
+          isLogin && (
             <IconButton popover="添加收藏" onClick={openCollection}>
               <Bookmark
                 color={themeData.colors.secondary}
@@ -95,7 +102,19 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             </IconButton>
           )
         }
+        {
+          isOwner && (
+            <IconButton popover="添加收藏" onClick={openEdit}>
+              <Settings
+                color={themeData.colors.secondary}
+              />
+            </IconButton>
+          )
+        }
       </BaseInfoHandleBox>
+      <EditMPictureModal
+        visible={editVisible}
+      />
       <EXIFModal
         visible={EXIFVisible}
         onClose={closeEXIF}
@@ -103,7 +122,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
       />
       <AddPictureCollectonModal
         picture={info}
-        visible={CollectionVisible}
+        visible={collectionVisible}
         onClose={closeCollection}
         currentCollections={info.currentCollections || []}
       />

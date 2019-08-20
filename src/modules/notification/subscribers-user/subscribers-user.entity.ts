@@ -15,7 +15,7 @@ export class NotificationSubscribersUserEntity extends BaseEntity {
 
   /** 是否已读 */
   @Column({ default: false })
-  public read: boolean = false;
+  public read = false;
 
   @ManyToOne(() => NotificationEntity)
   @JoinColumn()

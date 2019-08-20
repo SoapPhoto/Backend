@@ -15,6 +15,10 @@ const OAuth2Server = require('oauth2-server');
 export class OauthServerService {
   public server: any;
 
+  private getAccessToken = this.accessTokenService.getAccessToken
+
+  private getRefreshToken = this.accessTokenService.getRefreshToken
+
   constructor(
     private readonly clientService: ClientService,
     private readonly userService: UserService,
@@ -51,9 +55,7 @@ export class OauthServerService {
     return newToken;
   }
 
-  private getAccessToken = this.accessTokenService.getAccessToken
-
-  private getRefreshToken = this.accessTokenService.getRefreshToken
+  private verifyScope = async () => true
 
   private revokeToken = async (token: AccessTokenEntity) => {
     if (token) {
@@ -63,8 +65,6 @@ export class OauthServerService {
     }
     return false;
   }
-
-  private verifyScope = async () => true
 
   private getUser = async (email: string, password: string) => {
     const user = await this.userService.verifyUser(email, password);

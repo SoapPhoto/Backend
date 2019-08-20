@@ -61,7 +61,7 @@ const dev = false;
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
     TypeOrmModule.forRoot({
-      logging: false,
+      logging: true,
       keepConnectionAlive: true,
       type: 'mysql',
       port: Number(process.env.DATABASE_PORT),

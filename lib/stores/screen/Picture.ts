@@ -66,11 +66,11 @@ export class PictureScreenStore extends BaseStore {
     this.cacheData[id] = data;
   }
 
-  public getCache = (type: string = '') => {
+  public getCache = (type = '') => {
     if (this.cacheData[type]) {
       this.setInfo(this.cacheData[type]);
     }
   }
 
-  public isCache = (type: string = '') => this.cacheData[type] !== undefined;
+  public isCache = (type = '') => this.cacheData[type] !== undefined;
 }

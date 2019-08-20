@@ -6,11 +6,6 @@ import { HttpStatus } from '@lib/common/enums/http';
 
 // eslint-disable-next-line max-len
 export const withError = <P extends IBaseScreenProps>(Component: React.ComponentType<P>) => class extends React.Component<P> {
-  public state = {
-    hasError: false,
-    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-  }
-
   public static async getInitialProps(ctx: ICustomNextContext) {
     let props;
     let error;
@@ -38,6 +33,11 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
 
   public static getDerivedStateFromError() {
     return { hasError: true };
+  }
+
+  public state = {
+    hasError: false,
+    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
   }
 
   public render() {

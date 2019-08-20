@@ -47,11 +47,14 @@ interface IProps extends IInitialProps {
 
 const Picture: ICustomNextPage<IProps, any> = ({
   pictureStore,
+  accountStore,
 }) => {
   const {
     info, like, getComment, comment, addComment,
   } = pictureStore;
+  const { userInfo } = accountStore;
   const { user, tags } = info;
+  const isOwner = (userInfo && userInfo.id === user.id) || false;
 
   useEffect(() => {
     getComment();
@@ -104,6 +107,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
         <Title>{info.title}</Title>
         <PictureInfo
           info={info}
+          isOwner={isOwner}
           onLike={like}
         />
         {

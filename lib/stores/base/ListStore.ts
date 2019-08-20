@@ -10,7 +10,7 @@ export class ListStore<L, Q = {}> extends BaseStore {
 
   @observable public listQuery!: Q & IBaseQuery;
 
-  @observable public count: number = 0;
+  @observable public count = 0;
 
   constructor() {
     super();
