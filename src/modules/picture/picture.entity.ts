@@ -24,7 +24,7 @@ export class PictureEntity extends BaseEntity {
   public readonly id!: number;
 
   /** 七牛的key */
-  @Column()
+  @Column({ unique: true })
   @Expose()
   public readonly key!: string;
 

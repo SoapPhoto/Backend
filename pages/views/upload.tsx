@@ -24,6 +24,8 @@ import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
 import { css } from 'styled-components';
+import { getQiniuToken, upload } from '@lib/services/file';
+import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -46,22 +48,36 @@ const Upload: React.FC = () => {
     tags: [],
   });
 
+  const uploadQiniu = async (file: File) => {
+    const { data: token } = await getQiniuToken('PICTURE');
+    const formData = new FormData();
+    const key = `${uniqid('PICTURE')}-${uniqidTime()}`;
+    formData.append('file', file);
+    formData.append('key', key);
+    formData.append(
+      'token',
+      token,
+    );
+    await upload(formData);
+    return key;
+  };
+
   const addPicture = async () => {
     setUploadLoading(true);
     if (imageRef.current) {
-      const form = new FormData();
+      const key = await uploadQiniu(imageRef.current);
       const info = imageInfo;
       if (!isLocation && info && info.exif && info.exif.location) {
         delete info.exif.location;
       }
-      form.append('photo', imageRef.current);
-      form.append('info', JSON.stringify(info));
-      form.append('title', data.title);
-      form.append('bio', data.bio);
-      form.append('isPrivate', data.isPrivate ? '1' : '0');
-      form.append('tags', JSON.stringify(data.tags.map(tag => ({ name: tag }))));
+      const addData = {
+        info,
+        ...data,
+        key,
+        tags: data.tags.map(name => ({ name })),
+      };
       try {
-        await request.post('/api/picture/upload', form);
+        await request.post('/api/picture', addData);
         setDisabled(true);
         Toast.success('上传成功！');
         setTimeout(() => {

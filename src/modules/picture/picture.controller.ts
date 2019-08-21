@@ -36,7 +36,7 @@ export class PictureController {
     private readonly fileService: FileService,
   ) {}
 
-  @Post('upload')
+  @Post()
   @Roles(Role.USER)
   public async upload(
     @Body() body: CreatePictureAddDot,
@@ -45,7 +45,7 @@ export class PictureController {
     const { info, tags = [], ...restInfo } = body;
     const file = await this.fileService.getOne(body.key);
     if (file) {
-      const picture = await this.pictureService.create({
+      await this.pictureService.create({
         ...info,
         ...restInfo,
         tags,
@@ -56,7 +56,8 @@ export class PictureController {
         key: file.key,
         hash: file.hash,
       });
-      return picture;
+      this.fileService.actived(body.key);
+      return;
     }
     throw new BadRequestException('no file');
   }

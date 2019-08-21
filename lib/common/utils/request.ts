@@ -7,8 +7,6 @@ import axios, { AxiosResponse } from 'axios';
 //   maxAge: 15 * 60 * 1000,
 // });
 const instance = axios.create({
-  // adapter: cache.adapter,
-  withCredentials: true,
   baseURL: `${process.env.URL}`,
   validateStatus(status: number) {
     return status < 500 && status !== 404;

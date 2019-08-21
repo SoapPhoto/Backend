@@ -17,7 +17,7 @@ export class QiniuService {
     key: '$(key)',
     hash: '$(etag)',
     size: '$(fsize)',
-    mimetype: '$(mimetype)',
+    mimetype: '$(mimeType)',
     originalname: '$(fname)',
   }
 

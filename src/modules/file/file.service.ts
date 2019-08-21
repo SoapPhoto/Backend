@@ -17,7 +17,7 @@ export class FileService {
 
   public async create(data: CreateFileDot) {
     const user = await this.userService.getUser(data.userId, false);
-    return this.fileRepository
+    await this.fileRepository
       .createQueryBuilder()
       .insert()
       .into(FileEntity)
@@ -29,5 +29,14 @@ export class FileService {
     return this.fileRepository.createQueryBuilder('file')
       .where('file.key=:key', { key })
       .getOne();
+  }
+
+  public async actived(key: string) {
+    return this.fileRepository
+      .createQueryBuilder()
+      .update(FileEntity)
+      .set({ active: true })
+      .where('key=:key', { key })
+      .execute();
   }
 }

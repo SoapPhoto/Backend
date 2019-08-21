@@ -6,7 +6,6 @@ import {
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
-import { transformJson } from '@server/common/utils/transform';
 import { PictureEntity } from '../picture.entity';
 
 export class GetPictureListDto extends PaginationDto {
@@ -31,7 +30,6 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
    * @type {string}
    * @memberof CreateUserDto
    */
-  @Transform(transformJson)
   @Expose()
   @IsNotEmpty()
   public readonly info!: any;
@@ -57,13 +55,11 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
   public readonly bio!: string;
 
   @Expose()
-  @Transform(transformJson)
   @IsNotEmpty()
   @IsArray()
   public readonly tags!: any;
 
   @IsBoolean()
-  @Transform(value => (value !== '0'))
   @Expose()
   public readonly isPrivate!: boolean;
 }

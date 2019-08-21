@@ -61,13 +61,15 @@ const PlusIcon = styled(PlusCircle)`
 `;
 
 const Input = styled(BaseInput)`
-  background-color: transparent;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  height: auto;
-  line-height: ${rem('20px')};
-  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
-  padding: 0;
+  input {
+    background-color: transparent;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    height: auto;
+    line-height: ${rem('20px')};
+    font-size: ${_ => rem(theme('fontSizes[1]')(_))};
+    padding: 0;
+  }
 `;
 
 export default function ({

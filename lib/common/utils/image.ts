@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
 
+import { validator } from './validator';
 import { changeToDu } from './gps';
 import { round } from './math';
 
@@ -63,6 +64,9 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
     case ExifProperties.ExposureBias:
       return round(value, 1);
     case ExifProperties.ExposureTime:
+      if (validator.isEmpty(value)) {
+        return null;
+      }
       return round(value >= 1 ? value : 1 / value, 1);
     case ExifProperties._Location:
       if (!exifData.GPSLatitude) {
