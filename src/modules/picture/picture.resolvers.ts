@@ -47,6 +47,6 @@ export class PictureResolver {
     @Context('user') user: UserEntity,
     @Args('id') id: string,
   ) {
-    return this.pictureService.likePicture(id, user);
+    return this.pictureService.likePicture(id, user, true);
   }
 }

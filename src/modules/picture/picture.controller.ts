@@ -100,11 +100,21 @@ export class PictureController {
 
   @Put('like/:id([0-9]+)')
   @Roles(Role.USER)
-  public async updatePictureActivity(
+  public async likePicture(
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.likePicture(id, user);
+    return this.pictureService.likePicture(id, user, true);
+  }
+
+
+  @Put('unlike/:id([0-9]+)')
+  @Roles(Role.USER)
+  public async unlikePicture(
+    @Param('id') id: string,
+    @User() user: UserEntity,
+  ) {
+    return this.pictureService.likePicture(id, user, false);
   }
 
   @Get(':id([0-9]+)/comments')

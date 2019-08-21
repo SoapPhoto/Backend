@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, getManager, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
 import { validator } from '@server/common/utils/validator';
 import { NotificationService } from '@server/modules/notification/notification.service';
@@ -29,36 +29,38 @@ export class PictureUserActivityService {
   public like = async (
     picture: PictureEntity,
     user: UserEntity,
+    data: boolean,
   ) => {
     const activity = await this.getOne(picture.id, user.id);
-    await getManager().transaction(async (entityManager) => {
+    if (!activity || activity.like === !data) {
       if (activity) {
-        await entityManager.save(
-          this.activityRepository.merge(activity, {
-            like: !activity.like,
-            ...!activity.like ? {
-              likedTime: new Date(),
-            } : {},
-          }),
-        );
+        await this.activityRepository.createQueryBuilder()
+          .update(PictureUserActivityEntity)
+          .set({ like: data })
+          .where('id=:id', { id: activity.id })
+          .execute();
       } else {
-        await entityManager.save(
-          this.activityRepository.create({
+        await this.activityRepository
+          .createQueryBuilder()
+          .insert()
+          .into(PictureUserActivityEntity)
+          .values({
             picture,
             user,
-            like: true,
+            like: data,
             likedTime: new Date(),
-          }),
-        );
+          })
+          .execute();
       }
-    });
-    if (!activity || activity.like) {
-      this.notificationService.publishNotification(user, picture.user);
+      if (!activity || activity.like) {
+        this.notificationService.publishNotification(user, picture.user);
+      }
+      return {
+        isLike: activity ? activity.like : false,
+        count: await this.activityRepository.count({ picture, like: true }),
+      };
     }
-    return {
-      isLike: activity ? activity.like : false,
-      count: await this.activityRepository.count({ picture, like: true }),
-    };
+    throw new BadRequestException('liked');
   }
 
   public setInfo = async (

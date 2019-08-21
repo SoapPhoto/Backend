@@ -133,7 +133,7 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public readonly comments!: CommentEntity[];
 
-  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture)
+  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture, { onDelete: 'CASCADE' })
   @Expose()
   public readonly activitys!: PictureUserActivityEntity[];
 

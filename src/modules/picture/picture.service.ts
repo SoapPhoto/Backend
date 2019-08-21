@@ -128,12 +128,12 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public likePicture = async (id: string, user: UserEntity) => {
+  public likePicture = async (id: string, user: UserEntity, data: boolean) => {
     const picture = await this.getOne(id);
     if (!picture) {
       throw new BadRequestException('no_picture');
     }
-    return this.activityService.like(picture, user);
+    return this.activityService.like(picture, user, data);
   }
 
   /**
