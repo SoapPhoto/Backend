@@ -13,6 +13,7 @@ import { PictureEntity } from './picture.entity';
 import { PictureResolver } from './picture.resolvers';
 import { PictureService } from './picture.service';
 import { PictureUserActivityModule } from './user-activity/user-activity.module';
+import { FileModule } from '../file/file.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PictureUserActivityModule } from './user-activity/user-activity.module'
     forwardRef(() => CommentModule),
     forwardRef(() => TagModule),
     forwardRef(() => UserModule),
+    forwardRef(() => FileModule),
   ],
   providers: [PictureService, PictureResolver],
   controllers: [PictureController],

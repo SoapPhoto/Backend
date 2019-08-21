@@ -35,7 +35,7 @@ export class UserEntity extends BaseEntity {
 
   /** 用户类型 */
   @Exclude()
-  @Column({ type: 'enum', enum: RoleValues, default: `${Role.USER}` })
+  @Column({ type: 'enum', enum: Role, default: `${Role.USER}` })
   public role!: Role;
 
   /** 显示的名称 */
@@ -59,12 +59,12 @@ export class UserEntity extends BaseEntity {
   @Expose({ groups: [Role.ADMIN] })
   public verificationToken!: string;
 
-  @Column({ type: 'enum', enum: StatusValues, default: `${Status.UNVERIFIED}` })
+  @Column({ type: 'enum', enum: Status, default: `${Status.UNVERIFIED}` })
   @Expose({ groups: [Role.ADMIN] })
   public status!: Status;
 
   /** 注册的类型 */
-  @Column({ type: 'enum', enum: SignupTypeValues, default: `${SignupType.EMAIL}` })
+  @Column({ type: 'enum', enum: SignupType, default: `${SignupType.EMAIL}` })
   @Expose({ groups: [Role.ADMIN] })
   public signupType!: SignupType;
 

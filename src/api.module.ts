@@ -8,6 +8,7 @@ import { PictureModule } from './modules/picture/picture.module';
 import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
 import { OptionModule } from './modules/option/option.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { OptionModule } from './modules/option/option.module';
     CollectionModule,
     CommentModule,
     OptionModule,
+    FileModule,
   ],
   exports: [
     ClientModule,

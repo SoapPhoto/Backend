@@ -6,20 +6,29 @@ import { File } from '../../common/interface/file.interface';
 
 @Injectable()
 export class QiniuService {
+  private config: qiniu.rs.PutPolicyOptions = {
+    scope: process.env.QN_BUCKET,
+    callbackUrl: 'https://eniluiqxyujmi.x.pipedream.net/',
+    // callbackUrl: `${process.env.QN_BUCKET}/api/upload/callback`,
+    callbackBodyType: 'application/json',
+  }
+
+  private baseCallbackBody = {
+    key: '$(key)',
+    hash: '$(etag)',
+    size: '$(fsize)',
+    mimetype: '$(mimetype)',
+    originalname: '$(fname)',
+  }
+
   public uploadFile(file: File): Promise<{hash: string; key: string}> {
-    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
-    const qiniuConfig = {
-      scope: process.env.QN_BUCKET,
-    };
     const uploadConfig = new qiniu.conf.Config() as any;
     uploadConfig.zone = qiniu.zone.Zone_z0;
     const formUploader = new qiniu.form_up.FormUploader(uploadConfig);
-    const putPolicy = new qiniu.rs.PutPolicy(qiniuConfig);
     const putExtra = new qiniu.form_up.PutExtra();
-    const uploadToken = putPolicy.uploadToken(mac);
     return new Promise((resolve, reject) => {
       formUploader.putFile(
-        uploadToken,
+        this.createToken(),
         file.filename,
         path.join(process.cwd(), file.path),
         putExtra,
@@ -35,6 +44,18 @@ export class QiniuService {
         },
       );
     });
+  }
+
+  public createToken(callbackData: Record<string, string> = {}) {
+    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
+    const putPolicy = new qiniu.rs.PutPolicy({
+      ...this.config,
+      callbackBody: JSON.stringify({
+        ...callbackData,
+        ...this.baseCallbackBody,
+      }),
+    });
+    return putPolicy.uploadToken(mac);
   }
 
   public createBucketManager() {
@@ -58,5 +79,10 @@ export class QiniuService {
         }
       });
     });
+  }
+
+  public isQiniuCallback(url: string, authorization: string) {
+    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
+    return qiniu.util.isQiniuCallback(mac, url, null, authorization);
   }
 }

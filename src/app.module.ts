@@ -36,9 +36,11 @@ import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { TagEntity } from './modules/tag/tag.entity';
 import { UserEntity } from './modules/user/user.entity';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
+import { FileEntity } from './modules/file/file.entity';
 
-// const dev = process.env.NODE_ENV !== 'production';
-const dev = false;
+const dev = process.env.NODE_ENV !== 'production';
+// const dev = false;
+
 
 @Module({
   imports: [
@@ -61,7 +63,7 @@ const dev = false;
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
     TypeOrmModule.forRoot({
-      logging: true,
+      logging: false,
       keepConnectionAlive: true,
       type: 'mysql',
       port: Number(process.env.DATABASE_PORT),
@@ -82,6 +84,7 @@ const dev = false;
         CollectionEntity,
         CollectionPictureEntity,
         CommentEntity,
+        FileEntity,
       ],
     }),
     GraphQLModule.forRoot({

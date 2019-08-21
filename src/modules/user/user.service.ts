@@ -132,10 +132,10 @@ export class UserService {
     return undefined;
   }
 
-  public async getUser(query: string, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
+  public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user');
     this.selectInfo<UserEntity>(q);
-    const isId = validator.isNumberString(query) || validator.isNumber(query);
+    const isId = validator.isNumber(query) || validator.isNumberString(query as string);
     if (isId) {
       q.where('user.id=:id', { id: query });
     } else {

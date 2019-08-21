@@ -14,7 +14,7 @@ export class NotificationSubscribersUserEntity extends BaseEntity {
   @PrimaryGeneratedColumn() public id!: number;
 
   /** 是否已读 */
-  @Column({ default: false })
+  @Column({ type: 'bool', default: false })
   public read = false;
 
   @ManyToOne(() => NotificationEntity)

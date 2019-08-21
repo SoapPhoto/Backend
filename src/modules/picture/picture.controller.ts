@@ -8,12 +8,9 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
   UseFilters,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import fs from 'fs';
 
 import { CommentService } from '@server/modules/comment/comment.service';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
@@ -21,13 +18,12 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
-import { File } from '@server/common/interface/file.interface';
-import { photoUpload } from '@server/common/utils/upload';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
+import { FileService } from '../file/file.service';
 
 @Controller('api/picture')
 @UseGuards(AuthGuard)
@@ -37,36 +33,32 @@ export class PictureController {
     private readonly qiniuService: QiniuService,
     private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
+    private readonly fileService: FileService,
   ) {}
 
   @Post('upload')
   @Roles(Role.USER)
-  @UseInterceptors(photoUpload('photo'))
   public async upload(
-    @UploadedFile() file: File,
     @Body() body: CreatePictureAddDot,
     @User() user: UserEntity,
   ) {
-    if (!file) {
-      throw new BadRequestException('error file');
-    }
-    try {
-      const { info, tags = [], ...restInfo } = body;
-      const data = await this.qiniuService.uploadFile(file);
+    const { info, tags = [], ...restInfo } = body;
+    const file = await this.fileService.getOne(body.key);
+    if (file) {
       const picture = await this.pictureService.create({
+        ...info,
+        ...restInfo,
         tags,
         user,
         originalname: file.originalname,
         mimetype: file.mimetype,
         size: file.size,
-        ...info,
-        ...restInfo,
-        ...data,
+        key: file.key,
+        hash: file.hash,
       });
       return picture;
-    } finally {
-      fs.unlink(file.path, () => null);
     }
+    throw new BadRequestException('no file');
   }
 
   @Delete(':id')

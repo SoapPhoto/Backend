@@ -21,6 +21,10 @@ export class GetUserPictureListDto extends GetPictureListDto {
 
 @Exclude()
 export class CreatePictureAddDot implements Partial<PictureEntity> {
+  @IsString()
+  @Expose()
+  public readonly key!: string;
+
   /**
    * 图片信息
    *
