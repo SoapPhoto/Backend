@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
-import { getPicture, likePicture } from '@lib/services/picture';
+import { getPicture, likePicture, unlikePicture } from '@lib/services/picture';
 
 import { HttpStatus } from '@lib/common/enums/http';
 import { BaseStore } from '../base/BaseStore';
@@ -53,7 +53,11 @@ export class PictureScreenStore extends BaseStore {
   @action
   public like = async () => {
     try {
-      const { data } = await likePicture(this.info.id);
+      let func = unlikePicture;
+      if (!this.info.isLike) {
+        func = likePicture;
+      }
+      const { data } = await func(this.info.id);
       this.info.isLike = data.isLike;
       this.info.likes = data.count;
     // tslint:disable-next-line: no-empty

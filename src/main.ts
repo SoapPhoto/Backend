@@ -41,7 +41,7 @@ const bootstrap = async () => {
     transform: true,
   }));
   server.enableCors({
-    origin: false,
+    origin: '*',
   });
 
   await server.listen(process.env.PORT!);

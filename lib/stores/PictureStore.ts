@@ -3,7 +3,7 @@ import { action, observable } from 'mobx';
 import { IBaseQuery } from '@lib/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { request } from '@lib/common/utils/request';
-import { likePicture } from '@lib/services/picture';
+import { likePicture, unlikePicture } from '@lib/services/picture';
 import { ListStore } from './base/ListStore';
 
 export class PictureStore extends ListStore<PictureEntity> {
@@ -68,7 +68,11 @@ export class PictureStore extends ListStore<PictureEntity> {
   @action
   public like = async (picture: PictureEntity) => {
     try {
-      const { data } = await likePicture(picture.id);
+      let func = unlikePicture;
+      if (!picture.isLike) {
+        func = likePicture;
+      }
+      const { data } = await func(picture.id);
       picture.isLike = data.isLike;
     // tslint:disable-next-line: no-empty
     } catch (err) {

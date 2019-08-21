@@ -8,8 +8,8 @@ import { File } from '../../common/interface/file.interface';
 export class QiniuService {
   private config: qiniu.rs.PutPolicyOptions = {
     scope: process.env.QN_BUCKET,
-    callbackUrl: 'https://eniluiqxyujmi.x.pipedream.net/',
-    // callbackUrl: `${process.env.QN_BUCKET}/api/upload/callback`,
+    callbackUrl: 'http://49dbe1de.ngrok.io/api/file/upload/callback',
+    // callbackUrl: `${process.env.QN_BUCKET}/api/file/upload/callback`,
     callbackBodyType: 'application/json',
   }
 

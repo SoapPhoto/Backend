@@ -56,7 +56,7 @@ export class PictureUserActivityService {
         this.notificationService.publishNotification(user, picture.user);
       }
       return {
-        isLike: activity ? activity.like : false,
+        isLike: data,
         count: await this.activityRepository.count({ picture, like: true }),
       };
     }

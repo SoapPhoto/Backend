@@ -20,15 +20,16 @@ const Wrapper = styled.div``;
 const Header = styled.div`
   padding: 0 ${rem('24px')};
   margin: ${rem('46px')} auto;
+  max-width: ${rem('1300px')};
 `;
 
 const Title = styled.h2`
   width: 100%;
-  max-width: ${rem('1300px')};
   font-size: ${_ => rem(_.theme.fontSizes[5])};
   text-align: center;
-  font-size: ${rem('50px')};
-  margin: ${rem(5)} 0 ${rem(25)};
+  font-size: ${rem(50)};
+  margin-top: ${rem(5)};
+  margin-bottom: ${rem(25)};
 `;
 
 const PictureNumber = styled.p`

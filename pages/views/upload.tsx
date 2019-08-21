@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
@@ -19,6 +19,7 @@ import {
   Wapper,
   PreviewBox,
   Preview,
+  Progress,
 } from '@lib/styles/views/upload';
 import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
@@ -41,12 +42,20 @@ const Upload: React.FC = () => {
   const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
+  const [percentComplete, setPercentComplete] = React.useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_formatSpeed, seFormatSpeed] = React.useState('0Kb/s');
   const data = useObservable<ICreatePictureData>({
     isPrivate: false,
     title: '',
     bio: '',
     tags: [],
   });
+
+  const onUploadProgress = (speed: string, percent: number) => {
+    setPercentComplete(percent);
+    seFormatSpeed(speed);
+  };
 
   const uploadQiniu = async (file: File) => {
     const { data: token } = await getQiniuToken('PICTURE');
@@ -58,11 +67,11 @@ const Upload: React.FC = () => {
       'token',
       token,
     );
-    await upload(formData);
+    await upload(formData, onUploadProgress);
     return key;
   };
 
-  const addPicture = async () => {
+  const addPicture = useCallback(async () => {
     setUploadLoading(true);
     if (imageRef.current) {
       const key = await uploadQiniu(imageRef.current);
@@ -83,11 +92,14 @@ const Upload: React.FC = () => {
         setTimeout(() => {
           Router.pushRoute('/');
         }, 100);
+      } catch (err) {
+        Toast.error('图片上传失败!');
       } finally {
         setUploadLoading(false);
+        setPercentComplete(0);
       }
     }
-  };
+  }, [data, uploadLoading]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);
@@ -114,7 +126,8 @@ const Upload: React.FC = () => {
         {
           imageUrl ? (
             <Grid columns="40% 1fr" gap="36px">
-              <PreviewBox>
+              <PreviewBox loading={uploadLoading}>
+                <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 1 : 0 }} />
                 <Preview src={imageUrl} />
               </PreviewBox>
               <Content>

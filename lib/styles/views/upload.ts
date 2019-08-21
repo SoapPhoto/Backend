@@ -1,4 +1,4 @@
-import { rem } from 'polished';
+import { rem, rgba } from 'polished';
 import styled from 'styled-components';
 import { Cell } from 'styled-css-grid';
 
@@ -48,8 +48,36 @@ export const Box = styled.div`
   padding: 0;
 `;
 
-export const PreviewBox = styled(Cell)`
+export const Progress = styled.div`
+  position: absolute;
+  height: ${rem(3)};
+  background: ${theme('colors.primary')};
+  bottom: 0;
+  left: 0;
+  width: 0px;
+  z-index: 2;
+  transition: .2s width ease;
+`;
+
+export const PreviewBox = styled(Cell)<{loading: boolean}>`
   position: relative;
+  &::before {
+    content: "";
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: ${rgba('#000', 0.3)};
+    width: 100%;
+    z-index: 1;
+    opacity: 0;
+    transition: .2s opacity ease;
+  }
+  ${_ => _.loading && `
+    &::before {
+      opacity: 1;
+    }
+  `}
 `;
 
 export const Preview = styled.img`
