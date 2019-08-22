@@ -9,6 +9,7 @@ import React from 'react';
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
 import { parsePath, server } from '@lib/common/utils';
+import { request } from '@lib/common/utils/request';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -41,10 +42,14 @@ class MyApp extends App {
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
     const { ctx, Component } = data;
-    const { req } = ctx;
-    const theme = getCurrentTheme(req ? req.cookies : document ? document.cookie : '') as ThemeType;
+    const { req, res } = ctx;
+    const theme = getCurrentTheme(req ? req.cookies : (document ? document.cookie : '')) as ThemeType;
     const route = parsePath(data.ctx.asPath);
     let statusCode = HttpStatus.OK;
+    // if (req && req.cookies.Authorization) {
+    //   // const user = await request.get('/api/user/whoami');
+    //   // console.log(user);
+    // }
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
@@ -58,6 +63,8 @@ class MyApp extends App {
     };
     if (ctx.query.error) {
       statusCode = ctx.query.error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
+    } else if (res && res.statusCode >= 400) {
+      statusCode = res.statusCode;
     } else if (ctx.pathname === '/_error') {
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }

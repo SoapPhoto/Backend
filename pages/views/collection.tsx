@@ -10,7 +10,7 @@ import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { Package } from '@lib/icon';
 import { Avatar } from '@lib/components';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
 

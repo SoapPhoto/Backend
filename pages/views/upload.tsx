@@ -8,14 +8,12 @@ import { Button } from '@lib/components/Button';
 import { withAuth } from '@lib/components/router/withAuth';
 import Tag from '@lib/components/Tag';
 import Toast from '@lib/components/Toast';
-import { UploadCloud } from '@lib/icon';
 import { Router } from '@lib/routes';
 import {
   Box,
   Content,
   FormTag,
   Input,
-  UploadBox,
   Wapper,
   PreviewBox,
   Preview,
@@ -27,6 +25,7 @@ import { Switch } from '@lib/components/Switch';
 import { css } from 'styled-components';
 import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
+import { UploadBox } from '@lib/containers/Upload/UploadBox';
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -99,7 +98,7 @@ const Upload: React.FC = () => {
         setPercentComplete(0);
       }
     }
-  }, [data, uploadLoading]);
+  }, [data, uploadLoading, imageInfo]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);
@@ -183,30 +182,7 @@ const Upload: React.FC = () => {
               </Content>
             </Grid>
           ) : (
-            <UploadBox
-              onFileChange={handleChange}
-              drag
-            >
-              {
-                type => (
-                  <>
-                    <UploadCloud
-                      size={34}
-                      css={css`
-                        pointer-events: none;
-                      `}
-                    />
-                    <span
-                      css={css`
-                        pointer-events: none;
-                      `}
-                    >
-                      {type === 'drop' ? '松开上传' : '拖拽照片到这里'}
-                    </span>
-                  </>
-                )
-              }
-            </UploadBox>
+            <UploadBox onFileChange={handleChange} />
           )
         }
       </Box>

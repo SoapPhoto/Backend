@@ -56,6 +56,7 @@ const nextConfig = {
       ...{
         alias: {
           ...config.resolve.alias,
+          '@lib': path.resolve(__dirname, 'lib'),
           '@common': path.resolve(__dirname, 'common'),
           '@pages': path.resolve(__dirname, 'pages'),
         },

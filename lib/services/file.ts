@@ -14,7 +14,8 @@ export const getQiniuToken = async (type: string) => (
 export const upload = async (formData: FormData, onUploadProgress: onUploadProgress) => {
   let taking: number;
   const startDate = new Date().getTime();
-  return request.post('http://up.qiniu.com', formData, {
+  return request.post('//upload.qiniup.com', formData, {
+    withCredentials: false,
     onUploadProgress(progressEvent: any) {
       if (progressEvent.lengthComputable) {
         const nowDate = new Date().getTime();

@@ -1,4 +1,4 @@
-import { routeObject } from '@lib/routes';
+import { routeObject } from '@lib/routesObject';
 import { pick } from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import parse from 'url-parse';

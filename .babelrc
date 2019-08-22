@@ -24,6 +24,7 @@
         "alias": {
           "@lib": "./lib",
           "@pages": "./pages",
+          "@comment": "./comment",
           "@server": "./src"
         },
         "extensions": [

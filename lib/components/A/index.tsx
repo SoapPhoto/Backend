@@ -4,7 +4,7 @@ import { Link } from '@lib/routes';
 
 interface IAProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>, LinkProps {}
 
-export const A: React.FC<IAProps> = ({
+const A: React.FC<IAProps> = ({
   children,
   route,
   params,
@@ -16,3 +16,5 @@ export const A: React.FC<IAProps> = ({
     </a>
   </Link>
 );
+
+export default A;

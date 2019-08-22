@@ -3,7 +3,7 @@ import React from 'react';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { connect } from '@lib/common/utils/store';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import {

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { href } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.header<{login: boolean}>`

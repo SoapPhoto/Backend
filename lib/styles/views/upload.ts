@@ -20,26 +20,6 @@ export const Image = styled.img`
   max-height: ${rem('600px')};
 `;
 
-export const UploadBox = styled(RCUpload)`
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  height: ${rem('200px')};
-  max-width: ${rem('1000px')};
-  border-radius: ${rem('3px')};
-  border: 2px dashed ${theme('styles.box.borderColor')};
-  background-color: ${theme('styles.box.background')};
-  color: ${theme('colors.text')};
-  margin: 24px;
-  & svg {
-    color: ${theme('colors.text')};
-    margin-bottom: ${rem('12px')};
-  }
-`;
-
 export const Box = styled.div`
   ${props => box(props.theme, '100%', true)}
   max-width: ${rem('1000px')};

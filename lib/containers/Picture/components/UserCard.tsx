@@ -8,7 +8,7 @@ import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {

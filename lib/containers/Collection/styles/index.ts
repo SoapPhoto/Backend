@@ -5,7 +5,7 @@ import media from 'styled-media-query';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { Image } from '@lib/components/Image';
 import { rem } from 'polished';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled(Grid)`

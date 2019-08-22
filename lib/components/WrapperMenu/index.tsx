@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { href } from '@lib/common/utils/themes/common';
 import { theme } from '@lib/common/utils/themes';
-import { A } from '../A';
+import A from '../A';
 
 interface IData {
   value: string;

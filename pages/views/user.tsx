@@ -29,7 +29,7 @@ import { computed } from 'mobx';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { Cell } from 'styled-css-grid';
-import { A } from '@lib/components/A';
+import A from '@lib/components/A';
 import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';

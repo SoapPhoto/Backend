@@ -50,7 +50,7 @@ export class FileController {
     @Req() req: Request,
     @Headers('authorization') token: string,
   ) {
-    if (this.qiniuService.isQiniuCallback(req.url, token) && data.userId) {
+    if (this.qiniuService.isQiniuCallback(req.originalUrl, token) && data.userId) {
       try {
         return this.fileService.create(data);
       } catch (err) {
@@ -58,6 +58,7 @@ export class FileController {
         throw err;
       }
     }
+    this.qiniuService.deleteFile(data.key);
     throw new UnauthorizedException();
   }
 }
