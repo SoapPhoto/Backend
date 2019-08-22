@@ -9,7 +9,9 @@ import React from 'react';
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
 import { parsePath, server } from '@lib/common/utils';
-import { request } from '@lib/common/utils/request';
+import { whoami } from '@lib/services/user';
+import { UserEntity } from '@lib/common/interfaces/user';
+import { ICustomNextAppContext } from '@lib/common/interfaces/global';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -41,19 +43,25 @@ Router.events.on('routeChangeError', () => store.appStore.setLoading(false));
 class MyApp extends App {
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
-    const { ctx, Component } = data;
+    const { ctx, Component } = data as ICustomNextAppContext;
     const { req, res } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : (document ? document.cookie : '')) as ThemeType;
     const route = parsePath(data.ctx.asPath);
     let statusCode = HttpStatus.OK;
-    // if (req && req.cookies.Authorization) {
-    //   // const user = await request.get('/api/user/whoami');
-    //   // console.log(user);
-    // }
+    let user: UserEntity | undefined;
+    if (req && req.cookies.Authorization && req.path !== '/authenticate') {
+      try {
+        ({ data: user } = await whoami(req.cookies));
+      } catch (err) {
+        if (err.status === 401) {
+          res!.redirect(302, `/authenticate?redirectUrl=${req.path}`);
+        }
+      }
+    }
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
-          userInfo: req ? req.user : undefined,
+          userInfo: user,
         },
         themeStore: {
           theme,
@@ -75,8 +83,8 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-    if (statusCode !== HttpStatus.OK) {
-      ctx.res.status(statusCode);
+    if (res && statusCode !== HttpStatus.OK) {
+      res.status(statusCode);
     }
     return {
       initialMobxState: mobxStore,

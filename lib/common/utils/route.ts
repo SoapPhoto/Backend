@@ -1,7 +1,9 @@
-import { routeObject } from '@lib/routesObject';
+
 import { pick } from 'lodash';
 import pathToRegexp from 'path-to-regexp';
 import parse from 'url-parse';
+
+import { routeObject } from '@common/routes';
 
 interface IKey {
   name: string;

@@ -10,4 +10,5 @@ export const routeObject: Record<string, string> = {
   [`/@:username/:type(${UserTypeValues.join('|')})?`]: 'views/user',
   '/tag/:name': 'views/tag',
   '/collection/:id': 'views/collection',
+  '/authenticate': 'views/auth/authenticate',
 };

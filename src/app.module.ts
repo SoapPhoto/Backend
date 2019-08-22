@@ -9,7 +9,6 @@ import { Request } from 'express';
 import { GraphQLError } from 'graphql';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nest-modules/mailer';
-import { NestNextModule } from 'nest-next-module';
 import redisStore from 'cache-manager-redis-store';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
@@ -18,7 +17,6 @@ import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
 import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
-import { ViewsModule } from './views/views.module';
 
 import { CollectionEntity } from './modules/collection/collection.entity';
 import { CollectionPictureEntity } from './modules/collection/picture/collection-picture.entity';
@@ -38,13 +36,13 @@ import { UserEntity } from './modules/user/user.entity';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 import { FileEntity } from './modules/file/file.entity';
 
-const dev = process.env.NODE_ENV !== 'production';
+// const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
 
 
 @Module({
   imports: [
-    NestNextModule.forRoot({ dev }),
+    // NestNextModule.forRoot({ dev }),
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,
@@ -131,7 +129,7 @@ const dev = process.env.NODE_ENV !== 'production';
     EmailModule,
     QiniuModule,
     EventsModule,
-    ViewsModule,
+    // ViewsModule,
   ],
   providers: [
     {

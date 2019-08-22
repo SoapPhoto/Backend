@@ -2,7 +2,7 @@ import { Info } from '@lib/icon';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.div`

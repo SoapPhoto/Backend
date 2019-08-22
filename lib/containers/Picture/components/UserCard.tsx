@@ -8,7 +8,7 @@ import { Avatar } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,6 +34,7 @@ const UserName = styled.p`
   font-weight: 700;
   margin-bottom: ${rem('2px')};
   color: ${theme('colors.text')};
+  text-decoration-color: ${theme('colors.primary')};
 `;
 
 const Bio = styled.p`
@@ -42,10 +43,10 @@ const Bio = styled.p`
   color: ${theme('colors.secondary')};
 `;
 
-const PicturePrview = styled.div`
+const PicturePreview = styled.div`
   display: grid;
   grid-template-columns: repeat(3,1fr);
-  grid-gap: ${rem('8px')};
+  grid-gap: ${rem('6px')};
 `;
 
 const PrviewBox = styled.div`
@@ -97,14 +98,17 @@ const UserCard: React.FC<IProps> = ({
             <Bio>{user.bio}</Bio>
           </UserBox>
         </Header>
-        <PicturePrview>
+        <PicturePreview>
           {
-            user.pictures.map(picture => (
+            user.pictures.map((picture, index) => (
               <PrviewBox
                 key={picture.id}
                 css={css`
                   background-color: ${picture.color};
-                  border-radius: 3px;
+                  border-top-left-radius: ${rem(index === 0 ? 4 : 0)};
+                  border-bottom-left-radius: ${rem(index === 0 ? 4 : 0)};
+                  border-top-right-radius: ${rem(index === 2 ? 4 : 0)};
+                  border-bottom-right-radius: ${rem(index === 2 ? 4 : 0)};
                   overflow: hidden;
                 `}
               >
@@ -116,7 +120,7 @@ const UserCard: React.FC<IProps> = ({
               </PrviewBox>
             ))
           }
-        </PicturePrview>
+        </PicturePreview>
       </Wrapper>
     </div>
   );

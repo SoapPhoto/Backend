@@ -31,7 +31,7 @@ import {
   UserName,
   Wrapper,
 } from '@lib/styles/views/picture';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { css } from 'styled-components';
 import { rem } from 'polished';
 

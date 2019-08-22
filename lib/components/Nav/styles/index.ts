@@ -1,6 +1,6 @@
 import { rem } from 'polished';
 import styled from 'styled-components';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
 export const Item = styled.span`

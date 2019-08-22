@@ -1,14 +1,16 @@
 /* eslint-disable import/first */
 require('dotenv').config();
 
-const next = require('next');
-const express = require('express');
-const mobxReact = require('mobx-react');
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
-const LRUCache = require('lru-cache');
-const responseTime = require('response-time');
-const proxy = require('http-proxy-middleware');
+import next from 'next';
+import express, { Request, Response } from 'express';
+import mobxReact from 'mobx-react';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import LRUCache from 'lru-cache';
+import responseTime from 'response-time';
+import proxy from 'http-proxy-middleware';
+import apicache from 'apicache';
+import { routeObject } from '@common/routes';
 
 const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -18,10 +20,15 @@ const handle = app.getRequestHandler();
 
 mobxReact.useStaticRendering(true);
 
+const cache = apicache.middleware;
+apicache.options({
+  debug: true,
+});
+
 const ssrCache = new LRUCache({
   max: 1000, // cache item count
   // maxAge: 1000 * 60 * 60, // 1hour
-  maxAge: 1000 * 30, // 30 ses
+  maxAge: 1000 * 10, // 30 ses
 });
 
 app.prepare().then(() => {
@@ -36,38 +43,31 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  const routeObject = {
-    '/': 'views/home',
-    '/login': 'views/auth/login',
-    '/validatoremail': 'views/auth/validatoremail',
-    '/upload': 'views/upload',
-    '/picture/:id([0-9]+)': 'views/picture',
-    // [`/setting/:type()`]: 'views/setting',
-    // [`/@:username/:type()?`]: 'views/user',
-    '/tag/:name': 'views/tag',
-    '/collection/:id': 'views/collection',
-  };
+  // server.get('/', cache('1 minutes'), (req, res) => app.render(req, res, '/views/home', req.query));
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in routeObject) {
     if (key) {
-      server.get(key, (req, res) => renderAndCache(req, res, `/${routeObject[key]}`, req.query));
+      server.get(key, (req, res) => app.render(req, res, `/${routeObject[key]}`, req.query));
     }
   }
-  // server.get('/', (req, res) => handle(req, res, '/views/home', req.query));
 
   if (dev) {
     server.use(
       '/api',
-      proxy({ target: 'http://localhost.com:3001' }),
+      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );
     server.use(
       '/oauth',
-      proxy({ target: 'http://localhost.com:3001' }),
+      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
+    );
+    server.use(
+      '/auth',
+      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );
     server.use(
       '/graphql',
-      proxy({ target: 'http://localhost.com:3001' }),
+      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );
   }
 
@@ -78,9 +78,9 @@ app.prepare().then(() => {
   });
 });
 
-const getCacheKey = req => `${req.url}`;
+const getCacheKey = (req: Request) => `${req.url}`;
 
-async function renderAndCache(req, res, pagePath, queryParams) {
+async function renderAndCache(req: Request, res: Response, pagePath: string, queryParams: any) {
   const key = getCacheKey(req);
 
   // If we have a page in the cache, let's serve it

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { connect } from '@lib/common/utils/store';
 import { ThemeStore } from '@lib/stores/ThemeStore';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { Btns } from './Btns';
 import { Icon } from './Icon';
 import { Logo, MenuWapper, Wrapper } from './styles';

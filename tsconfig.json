@@ -27,6 +27,7 @@
     "lib/**/*",
     "pages/**/*",
     "typings/**/*",
+    "server.ts",
     "common/**/*"
   ],
   "exclude": [

@@ -8,7 +8,7 @@ import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
 import { LikeButton } from '@lib/components/Button';
 import { AccountStore } from '@lib/stores/AccountStore';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName,

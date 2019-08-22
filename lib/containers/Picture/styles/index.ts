@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import media from 'styled-media-query';
 
 import { Image } from '@lib/components/Image';
-import A from '@lib/components/A';
+import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { theme, activte } from '@lib/common/utils/themes';
 

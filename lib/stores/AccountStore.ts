@@ -2,6 +2,7 @@ import { action, computed, observable } from 'mobx';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
+import { oauthToken } from '@lib/services/oauth';
 
 export class AccountStore {
   @computed get isLogin() {
@@ -57,12 +58,8 @@ export class AccountStore {
     params.append('username', username);
     params.append('password', password);
     params.append('grant_type', 'password');
-    const data = await request.post('oauth/token', params, {
-      headers: {
-        Authorization: `Basic ${process.env.BASIC_TOKEN}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
+    const data = await oauthToken(params);
+    localStorage.setItem('token', JSON.stringify(data.data));
     this.setUserInfo(data.data.user);
   }
 
