@@ -11,8 +11,10 @@ import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
+import { WithTranslation } from 'react-i18next';
+import { withTranslation } from '@common/i18n';
 
-interface IProps extends IBaseScreenProps, WithRouterProps {
+interface IProps extends IBaseScreenProps, WithRouterProps, WithTranslation {
   accountStore: AccountStore;
 }
 
@@ -52,4 +54,4 @@ const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
   );
 };
 
-export default withRouter(connect('accountStore')(Authenticate));
+export default withRouter(connect('accountStore')(withTranslation('common')(Authenticate)));

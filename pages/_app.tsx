@@ -12,6 +12,7 @@ import { parsePath, server } from '@lib/common/utils';
 import { whoami } from '@lib/services/user';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
+import { appWithTranslation } from '@common/i18n';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -151,4 +152,4 @@ class MyApp extends App {
   }
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

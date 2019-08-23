@@ -1,3 +1,6 @@
+import { i18n } from '@common/i18n';
+import { TFunction } from 'i18next';
+
 export * from './route';
 export * from './math';
 
@@ -84,4 +87,4 @@ export const ua = server ? '' : window.navigator.userAgent;
 
 export const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !== -1;
 
-export const getTitle = (title: string) => `${title} - ${process.env.TITLE}`;
+export const getTitle = (title: string, t?: TFunction) => `${title} - ${t ? t('title') : process.env.TITLE}`;
