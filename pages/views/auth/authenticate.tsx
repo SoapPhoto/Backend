@@ -7,13 +7,13 @@ import Router, { withRouter } from 'next/router';
 import { store } from '@lib/stores/init';
 import Toast from '@lib/components/Toast';
 
-import moment from 'moment';
-import { oauthToken } from '@lib/services/oauth';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { WithRouterProps } from 'next/dist/client/with-router';
-import { ParsedUrlQuery } from 'querystring';
+import { connect } from '@lib/common/utils/store';
+import { AccountStore } from '@lib/stores/AccountStore';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
+  accountStore: AccountStore;
 }
 
 const Wrapper = styled.div`
@@ -22,29 +22,9 @@ const Wrapper = styled.div`
   margin-top: ${rem(24)};
 `;
 
-const refreshToken = async ({ redirectUrl = '/' }: ParsedUrlQuery) => {
-  try {
-    const token = JSON.parse(localStorage.getItem('token') || 'null');
-    if (token && token.refreshTokenExpiresAt && moment(token.refreshTokenExpiresAt) > moment()) {
-      const params = new URLSearchParams();
-      params.append('refresh_token', token.refreshToken);
-      params.append('grant_type', 'refresh_token');
-      const { data } = await oauthToken(params);
-      localStorage.setItem('token', JSON.stringify(data));
-      Toast.success('登录成功！正在跳转');
-      setTimeout(() => {
-        window.location.href = redirectUrl as string;
-      }, 300);
-    }
-  } catch (_) {
-    Toast.error('认证失败，正在返回登录页重新登录');
-    setTimeout(() => {
-      window.location.href = `/login?redirectUrl=${redirectUrl}`;
-    }, 300);
-  }
-};
-
-const Authenticate: React.FC<IProps> = ({ router }) => {
+const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
+  const { query } = router;
+  const { refreshToken } = accountStore;
   useEffect(() => {
     store.appStore.setLoading(true);
     Router.events.on('routeChangeStart', (data) => {
@@ -52,11 +32,24 @@ const Authenticate: React.FC<IProps> = ({ router }) => {
     });
   }, []);
   useEffect(() => {
-    refreshToken(router.query);
+    refreshToken((err?: any) => {
+      const redirectUrl = query.redirectUrl || '/';
+      if (err) {
+        Toast.success('登录成功！正在跳转');
+        setTimeout(() => {
+          window.location.href = query.redirectUrl as string;
+        }, 300);
+      } else {
+        Toast.error('认证失败，正在返回登录页重新登录');
+        setTimeout(() => {
+          window.location.href = `/login?redirectUrl=${redirectUrl}`;
+        }, 300);
+      }
+    });
   }, []);
   return (
     <Wrapper>认证用户信息中...</Wrapper>
   );
 };
 
-export default withRouter(Authenticate);
+export default withRouter(connect('accountStore')(Authenticate));

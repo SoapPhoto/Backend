@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import LRUCache from 'lru-cache';
 import responseTime from 'response-time';
 import proxy from 'http-proxy-middleware';
-import apicache from 'apicache';
+// import apicache from 'apicache';
 import { routeObject } from '@common/routes';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -20,10 +20,10 @@ const handle = app.getRequestHandler();
 
 mobxReact.useStaticRendering(true);
 
-const cache = apicache.middleware;
-apicache.options({
-  debug: true,
-});
+// const cache = apicache.middleware;
+// apicache.options({
+//   debug: true,
+// });
 
 const ssrCache = new LRUCache({
   max: 1000, // cache item count

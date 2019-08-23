@@ -15,6 +15,23 @@ const instance = axios.create({
   },
 });
 
+// 请求前预先判断token是否失效
+instance.interceptors.request.use(config => new Promise((resolve, rejects) => {
+  if (server) {
+    return resolve(config);
+  }
+  const { refreshToken, isTokenOk } = store.accountStore;
+  if (!isTokenOk()) {
+    refreshToken((err) => {
+      if (err) {
+        return rejects(err);
+      }
+      return resolve(config);
+    });
+  }
+  return resolve(config);
+}));
+
 instance.interceptors.response.use(
   (response: AxiosResponse<any>) => {
     if (response.status >= 400) {

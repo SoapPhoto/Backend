@@ -1,4 +1,5 @@
 import { action, computed, observable } from 'mobx';
+import moment from 'moment';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
@@ -61,6 +62,32 @@ export class AccountStore {
     const data = await oauthToken(params);
     localStorage.setItem('token', JSON.stringify(data.data));
     this.setUserInfo(data.data.user);
+  }
+
+  public refreshToken = async (callback: (err?: any) => void) => {
+    try {
+      const token = JSON.parse(localStorage.getItem('token') || 'null');
+      if (token && token.refreshTokenExpiresAt && moment(token.refreshTokenExpiresAt) > moment()) {
+        const params = new URLSearchParams();
+        params.append('refresh_token', token.refreshToken);
+        params.append('grant_type', 'refresh_token');
+        const { data } = await oauthToken(params);
+        localStorage.setItem('token', JSON.stringify(data));
+        callback();
+      } else {
+        callback('invalid');
+      }
+    } catch (err) {
+      callback(err);
+    }
+  }
+
+  public isTokenOk = () => {
+    const token = JSON.parse(localStorage.getItem('token') || 'null');
+    if (token && token.accessTokenExpiresAt && moment(token.accessTokenExpiresAt) > moment()) {
+      return true;
+    }
+    return false;
   }
 
   public logout = async () => {
