@@ -8,20 +8,21 @@ import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
 import { HomeScreenStore } from '@lib/stores/screen/Home';
 import { withError } from '@lib/components/withError';
-import { withTranslation } from '@common/i18n';
-import { WithT } from 'i18next';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { Namespace } from '@lib/i18n/Namespace';
+import { useTranslation } from 'react-i18next';
 
-interface IProps extends IBaseScreenProps, WithT {
+interface IProps extends IBaseScreenProps {
   homeStore: HomeScreenStore;
 }
 
 const Index: ICustomNextPage<IProps, {}> = ({
   homeStore,
-  t,
 }) => {
   const {
     list, like, getPageList, isNoMore,
   } = homeStore;
+  const { t } = useTranslation();
   return (
     <div>
       <Head>
@@ -45,7 +46,7 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
   return { namespacesRequired: ['common'] };
 };
 
-export default withTranslation(['common'])(
+export default pageWithTranslation([Namespace.Common])(
   connect((stores: IMyMobxStore) => ({
     homeStore: stores.screen.homeStore,
   }))(withError(Index)),

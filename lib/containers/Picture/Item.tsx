@@ -47,15 +47,15 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
       />
       <InfoBox>
         <UserBox>
-          <UserPopper username={detail.user.username}>
-            <div style={{ fontSize: 0 }}>
-              <A
-                route={`/@${detail.user.username}`}
-              >
-                <Avatar src={detail.user.avatar} size={30} />
-              </A>
-            </div>
-          </UserPopper>
+          {/* <UserPopper username={detail.user.username}> */}
+          <div style={{ fontSize: 0 }}>
+            <A
+              route={`/@${detail.user.username}`}
+            >
+              <Avatar src={detail.user.avatar} size={30} />
+            </A>
+          </div>
+          {/* </UserPopper> */}
           <UserName
             route={`/@${detail.user.username}`}
           >

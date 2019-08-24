@@ -17,8 +17,10 @@ import { AccountStore } from '@lib/stores/AccountStore';
 import { Title, Wrapper } from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
 import { css } from 'styled-components';
+import { withTranslation } from '@common/i18n';
+import { WithTranslation } from 'react-i18next';
 
-interface IProps extends WithRouterProps {
+interface IProps extends WithRouterProps, WithTranslation {
   accountStore: AccountStore;
 }
 
@@ -109,5 +111,5 @@ const Login = withRouter<IProps>(
 );
 
 export default withAuth('guest')(
-  connect('accountStore')(Login),
+  connect('accountStore')(withTranslation('common')(Login)),
 );

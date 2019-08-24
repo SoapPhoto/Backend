@@ -26,6 +26,14 @@ import { css } from 'styled-components';
 import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
+import { withTranslation } from '@common/i18n';
+import { WithTranslation } from 'react-i18next';
+import { ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IProps extends WithTranslation {
+
+}
 
 interface ICreatePictureData {
   isPrivate: boolean;
@@ -34,7 +42,7 @@ interface ICreatePictureData {
   tags: string[];
 }
 
-const Upload: React.FC = () => {
+const Upload: ICustomNextPage<IProps, any> = () => {
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
@@ -190,6 +198,10 @@ const Upload: React.FC = () => {
   ));
 };
 
+Upload.getInitialProps = async (_: ICustomNextContext) => ({
+  namespacesRequired: ['common'],
+});
+
 export default withAuth('user')(
-  Upload,
+  withTranslation()(Upload),
 );

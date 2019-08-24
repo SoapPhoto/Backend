@@ -44,7 +44,7 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
     const { error } = this.props;
     const { hasError, statusCode } = this.state;
     if ((error && error.statusCode >= HttpStatus.BAD_REQUEST) || hasError) {
-      return <ErrorPage statusCode={error ? error.statusCode : statusCode} />;
+      return <ErrorPage error={error} statusCode={error ? error.statusCode : statusCode} />;
     }
     return <Component {...this.props} />;
   }

@@ -47,7 +47,7 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  // server.get('/', cache('1 minutes'), (req, res) => app.render(req, res, '/views/home', req.query));
+  // server.get('/', (req, res) => app.render(req, res, '/views/home', req.query));
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key in routeObject) {

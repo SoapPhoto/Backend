@@ -9,6 +9,10 @@ const i18Next = new NextI18Next({
     en: '',
     zh: '',
   },
+  react: {
+    wait: true,
+    nsMode: 'default',
+  },
 });
 
 export default i18Next;

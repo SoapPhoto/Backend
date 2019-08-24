@@ -37,9 +37,6 @@ instance.interceptors.response.use(
     if (response.status >= 400) {
       if (!server) {
         let message;
-        if (response.data && response.data.message) {
-          message = store.i18nStore.__(response.data.message);
-        }
         switch (response.status) {
           case 401:
             if (message) Toast.error(message);

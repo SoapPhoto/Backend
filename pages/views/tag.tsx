@@ -10,6 +10,7 @@ import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
 import { TagScreenStore } from '@lib/stores/screen/Tag';
 import { Package } from '@lib/icon';
+import { withTranslation } from '@common/i18n';
 
 interface IProps {
   tagStore: TagScreenStore;
@@ -82,12 +83,13 @@ TagDetail.getInitialProps = async (ctx: ICustomNextContext) => {
     && ctx.mobxStore.screen.tagStore.init
     && ctx.mobxStore.screen.tagStore.name === params.name!
   ) {
-    return {};
+    return { namespacesRequired: ['common'] };
   }
   await ctx.mobxStore.screen.tagStore.getInit(params.name!, ctx.req ? ctx.req.headers : undefined);
-  return {};
+
+  return { namespacesRequired: ['common'] };
 };
 
-export default connect((stores: IMyMobxStore) => ({
+export default withTranslation()(connect((stores: IMyMobxStore) => ({
   tagStore: stores.screen.tagStore,
-}))(TagDetail);
+}))(TagDetail));
