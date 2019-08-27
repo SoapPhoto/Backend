@@ -8,25 +8,26 @@ import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
 import { HomeScreenStore } from '@lib/stores/screen/Home';
 import { withError } from '@lib/components/withError';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { Namespace } from '@lib/i18n/Namespace';
-import { useTranslation } from 'react-i18next';
 
 interface IProps extends IBaseScreenProps {
   homeStore: HomeScreenStore;
 }
 
-const Index: ICustomNextPage<IProps, {}> = ({
+const Index: ICustomNextPage<IProps> = ({
   homeStore,
 }) => {
+  const { value } = useTranslation();
   const {
     list, like, getPageList, isNoMore,
   } = homeStore;
-  const { t } = useTranslation();
+  console.log(value);
   return (
     <div>
       <Head>
-        <title>{getTitle(t('home'), t)}</title>
+        <title>test</title>
       </Head>
       <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
     </div>
@@ -39,15 +40,13 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
     && _.mobxStore.appStore.location.action === 'POP'
     && _.mobxStore.screen.homeStore.init
   ) {
-    return { namespacesRequired: ['common'] };
+    return { namespacesRequired: [I18nNamespace.Common] };
   }
   await _.mobxStore.screen.homeStore.getList(undefined, _.req ? _.req.headers : undefined);
   // eslint-disable-next-line no-throw-literal
-  return { namespacesRequired: ['common'] };
+  return { namespacesRequired: [I18nNamespace.Common] };
 };
 
-export default pageWithTranslation([Namespace.Common])(
-  connect((stores: IMyMobxStore) => ({
-    homeStore: stores.screen.homeStore,
-  }))(withError(Index)),
-);
+export default connect((stores: IMyMobxStore) => ({
+  homeStore: stores.screen.homeStore,
+}))(withError(pageWithTranslation()(Index)));

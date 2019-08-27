@@ -226,9 +226,9 @@ export class Popover extends React.PureComponent<IPopoverProps> {
                 <div
                   style={{ ...transitionStyles[state] }}
                   css={`
-                    transition-timing-function: ${timingFunctions('easeInOutSine')};
-                    transition: .2s all;
-                  `}
+                      transition-timing-function: ${timingFunctions('easeInOutSine')};
+                      transition: .2s all;
+                    `}
                 >
                   {
                     arrow && (

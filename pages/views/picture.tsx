@@ -34,14 +34,14 @@ import {
 import { A } from '@lib/components/A';
 import { css } from 'styled-components';
 import { rem } from 'polished';
-import { withTranslation } from '@common/i18n';
-import { WithTranslation } from 'react-i18next';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
 }
 
-interface IProps extends IInitialProps, WithTranslation {
+interface IProps extends IInitialProps {
   accountStore: AccountStore;
   themeStore: ThemeStore;
   pictureStore: PictureScreenStore;
@@ -182,5 +182,5 @@ export default withError<IProps>(
     pictureStore: stores.screen.pictureStore,
     accountStore: stores.accountStore,
     themeStore: stores.themeStore,
-  }))(withTranslation()(Picture)),
+  }))(pageWithTranslation(I18nNamespace.Message)(Picture)),
 );

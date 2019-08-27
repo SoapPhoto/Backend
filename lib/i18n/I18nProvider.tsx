@@ -1,27 +1,40 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import _ from 'lodash';
 
-import { withTranslation } from '@common/i18n';
-import { WithTranslation } from 'react-i18next';
+import { LocaleType } from '@common/enum/locale';
 import { I18nContext } from './I18nContext';
-import { Namespace } from './Namespace';
+import { I18nNamespace } from './Namespace';
 
-interface IChildrenProps {
-  children: ReactNode;
+export interface II18nValue {
+  locale: LocaleType;
+  value: RecordPartial<I18nNamespace, any>;
+  namespacesRequired: I18nNamespace[];
+  currentNamespace: I18nNamespace[];
 }
 
-const RawProvider = ({ children, ...i18nProps }: IChildrenProps & WithTranslation) => (
-  <I18nContext.Provider value={i18nProps}>{children}</I18nContext.Provider>
-);
-
-interface IProviderProps {
-  namespaces: Namespace[] | Namespace;
+interface IProps {
+  value: II18nValue;
 }
 
-export const I18nProvider = ({
+const i18n = (data: II18nValue) => ({
+  t: (value: string) => {
+    let title = value;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const type of data.namespacesRequired) {
+      if (type) {
+        const v = _.get(data.value, `${type}.${value}`);
+        if (v) {
+          title = v;
+          break;
+        }
+      }
+    }
+    return title;
+  },
+  ...data,
+});
+
+export const I18nProvider: React.FC<IProps> = ({
   children,
-  namespaces,
-}: IChildrenProps & IProviderProps) => {
-  const Component = withTranslation(namespaces)(RawProvider);
-
-  return <Component>{children}</Component>;
-};
+  value,
+}) => <I18nContext.Provider value={i18n(value)}>{children}</I18nContext.Provider>;

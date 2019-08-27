@@ -2,14 +2,17 @@ import { flatten } from 'lodash';
 import React, { Component, ComponentType } from 'react';
 
 
-import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
-import { I18nProvider } from './I18nProvider';
-import { Namespace } from './Namespace';
+import { ICustomNextContext } from '@lib/common/interfaces/global';
+import { I18nNamespace } from './Namespace';
 
-export const pageWithTranslation = <P extends IBaseScreenProps>(namespaces: Namespace | Namespace[]) => (
+export const pageWithTranslation = (namespaces?: I18nNamespace | I18nNamespace[]) => <P extends {}>(
+  // eslint-disable-next-line arrow-parens
   Page: ComponentType<P>,
 ) => {
-  const namespacesRequired = [...flatten([namespaces]), Namespace.Common];
+  let namespacesRequired = [I18nNamespace.Common];
+  if (namespaces) {
+    namespacesRequired = [...flatten([namespaces]), I18nNamespace.Common];
+  }
 
   return class PageWithTranslation extends Component<P> {
     public static async getInitialProps(appContext: ICustomNextContext) {
@@ -26,9 +29,7 @@ export const pageWithTranslation = <P extends IBaseScreenProps>(namespaces: Name
 
     public render() {
       return (
-        <I18nProvider namespaces={namespacesRequired}>
-          <Page {...this.props} />
-        </I18nProvider>
+        <Page {...this.props} />
       );
     }
   };

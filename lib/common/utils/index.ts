@@ -1,4 +1,3 @@
-import { i18n } from '@common/i18n';
 import { TFunction } from 'i18next';
 
 export * from './route';

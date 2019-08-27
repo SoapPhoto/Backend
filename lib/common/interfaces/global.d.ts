@@ -4,6 +4,7 @@ import { DefaultQuery, RouterProps } from 'next/router';
 import { IMyMobxStore } from '@lib/stores/init';
 import { Request, Response } from 'express';
 import { HttpStatus } from '@lib/common/enums/http';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 import { UserEntity } from './user';
 import { IPathInfo } from '../utils';
 
@@ -24,7 +25,11 @@ export interface ICustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
   ctx: ICustomNextContext<Q>;
 }
 
-export interface ICustomNextPage<P = {}, IP = P> {
+export interface ICustomInitProps {
+  namespacesRequired: I18nNamespace[];
+}
+
+export interface ICustomNextPage<P = {}, IP = ICustomInitProps> {
   (props: P): JSX.Element;
   getInitialProps?(ctx: ICustomNextContext): Promise<IP>;
 }

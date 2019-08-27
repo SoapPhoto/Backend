@@ -1,9 +1,13 @@
 import { createContext } from 'react';
 
-import { WithT } from 'i18next';
+import { II18nValue } from './I18nProvider';
 
-const defaultContext: WithT = {
-  t: () => 'error' as any,
+interface II18nContext extends II18nValue {
+  t: (title: string) => string;
+}
+
+const defaultContext: any = {
+  t: () => '' as any,
 };
 
-export const I18nContext = createContext<WithT>(defaultContext);
+export const I18nContext = createContext<II18nContext>(defaultContext);

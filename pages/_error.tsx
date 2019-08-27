@@ -12,8 +12,6 @@ import { ArrowRight, CloudSnow } from '@lib/icon';
 import { IMyMobxStore, initStore } from '@lib/stores/init';
 import { HttpStatus } from '@lib/common/enums/http';
 import { theme } from '@lib/common/utils/themes';
-import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { Namespace } from '@lib/i18n/Namespace';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
 
 interface IErrorProps extends IBaseScreenProps {
@@ -110,4 +108,4 @@ Error.getInitialProps = ({ res, err }: any) => {
   return { statusCode };
 };
 
-export default pageWithTranslation<IErrorProps>([Namespace.Common])(Error);
+export default Error;

@@ -48,6 +48,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.0.0",
+    "express-locale": "^1.2.0",
     "express-rate-limit": "^5.0.0",
     "formik": "^1.5.8",
     "fs-extra": "^8.1.0",

@@ -12,7 +12,8 @@ import { parsePath, server } from '@lib/common/utils';
 import { whoami } from '@lib/services/user';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
-import { appWithTranslation } from '@common/i18n';
+import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
+import { initLocale, initI18n } from '@lib/i18n/utils';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -41,7 +42,7 @@ Router.events.on('routeChangeStart', () => {
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () => store.appStore.setLoading(false));
 
-class MyApp extends App {
+export default class MyApp extends App {
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
     const { ctx, Component } = data as ICustomNextAppContext;
@@ -80,15 +81,17 @@ class MyApp extends App {
     const mobxStore = initStore(basePageProps.initialStore);
     ctx.route = route;
     ctx.mobxStore = mobxStore;
-    let pageProps = {};
+    let pageProps: any = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
+    const i18n = await initLocale(pageProps.namespacesRequired, req);
     if (res && statusCode !== HttpStatus.OK) {
       res.status(statusCode);
     }
     return {
       initialMobxState: mobxStore,
+      i18n,
       pageProps: {
         ...pageProps,
         statusCode,
@@ -98,9 +101,12 @@ class MyApp extends App {
 
   public mobxStore: IMyMobxStore;
 
+  public i18n: II18nValue;
+
   constructor(props: any) {
     super(props);
     this.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState);
+    this.i18n = server ? props.i18n : initI18n(props.i18n);
   }
 
   public componentDidMount() {
@@ -129,27 +135,29 @@ class MyApp extends App {
   }
 
   public render() {
-    const { Component, pageProps, router } = this.props;
+    const {
+      Component, pageProps, router,
+    } = this.props;
     const { picture } = router.query!;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <Container>
-        <Provider {...this.mobxStore}>
-          <ThemeWrapper>
-            <BodyLayout header={!isError}>
-              {
-                picture
-                && <PictureModal pictureId={picture.toString()} />
-              }
-              <Component
-                {...pageProps}
-              />
-            </BodyLayout>
-          </ThemeWrapper>
-        </Provider>
+        <I18nProvider value={this.i18n}>
+          <Provider {...this.mobxStore}>
+            <ThemeWrapper>
+              <BodyLayout header={!isError}>
+                {
+                  picture
+                  && <PictureModal pictureId={picture.toString()} />
+                }
+                <Component
+                  {...pageProps}
+                />
+              </BodyLayout>
+            </ThemeWrapper>
+          </Provider>
+        </I18nProvider>
       </Container>
     );
   }
 }
-
-export default appWithTranslation(MyApp);
