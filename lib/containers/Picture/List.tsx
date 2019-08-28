@@ -12,6 +12,7 @@ import { debounce } from 'lodash';
 import useMedia from '@lib/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
 import { css } from 'styled-components';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Footer, PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
@@ -63,6 +64,7 @@ export const PictureList: React.FC<IProps> = ({
   let serverList: PictureEntity[][][] = [];
   const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
   const pageLock = React.useRef<boolean>(false);
+  const { t } = useTranslation();
   const col = useMedia(
     mediaArr.map(media => media.media),
     mediaArr.map(media => media.col),
@@ -129,7 +131,7 @@ export const PictureList: React.FC<IProps> = ({
         <Footer key="footer">
           {
             noMore ? (
-              <span>没有更多内容啦</span>
+              <span>{t('no_more')}</span>
             ) : (
               <Loading size={8} />
             )

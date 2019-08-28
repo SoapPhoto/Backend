@@ -17,7 +17,9 @@ import { AccountStore } from '@lib/stores/AccountStore';
 import { Title, Wrapper } from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
 import { css } from 'styled-components';
-import { withTranslation } from '@common/i18n';
+import { I18nNamespace } from '@lib/i18n/Namespace';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps extends WithRouterProps {
   accountStore: AccountStore;
@@ -32,6 +34,7 @@ const Login = withRouter<IProps>(
   ({ accountStore, router }) => {
     const { query } = parsePath(router!.asPath!);
     const { login } = accountStore;
+    const { t } = useTranslation();
     const [confirmLoading, setConfirmLoading] = React.useState(false);
     const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
       setConfirmLoading(true);
@@ -57,12 +60,12 @@ const Login = withRouter<IProps>(
     return (
       <Wrapper>
         <Head>
-          <title>{getTitle('登录🔑')}</title>
+          <title>{getTitle('login', t)}</title>
         </Head>
         <Title>
           <Emojione
             svg
-            text="登录🔑"
+            text={t('login')}
           />
         </Title>
         <Formik<IValues>
@@ -71,7 +74,7 @@ const Login = withRouter<IProps>(
             password: '',
           }}
           onSubmit={handleOk}
-          validationSchema={LoginSchema}
+          validationSchema={LoginSchema(t)}
         >
           {({
             handleSubmit,
@@ -80,12 +83,12 @@ const Login = withRouter<IProps>(
             <form onSubmit={handleSubmit}>
               <FieldInput
                 name="username"
-                label="用户名"
+                label={t('username')}
               />
               <FieldInput
                 type="password"
                 name="password"
-                label="密码"
+                label={t('password')}
                 css={css`
                   margin-top: ${rem(24)};
                 `}
@@ -110,5 +113,5 @@ const Login = withRouter<IProps>(
 );
 
 export default withAuth('guest')(
-  connect('accountStore')(Login),
+  connect('accountStore')(pageWithTranslation(I18nNamespace.Auth)(Login)),
 );

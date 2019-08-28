@@ -2,7 +2,6 @@ import Head from 'next/head';
 import React from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
-import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
 import { IMyMobxStore } from '@lib/stores/init';
@@ -11,6 +10,7 @@ import { withError } from '@lib/components/withError';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { getTitle } from '@lib/common/utils';
 
 interface IProps extends IBaseScreenProps {
   homeStore: HomeScreenStore;
@@ -19,15 +19,15 @@ interface IProps extends IBaseScreenProps {
 const Index: ICustomNextPage<IProps> = ({
   homeStore,
 }) => {
-  const { value } = useTranslation();
+  const { t } = useTranslation();
   const {
     list, like, getPageList, isNoMore,
   } = homeStore;
-  console.log(value);
+
   return (
     <div>
       <Head>
-        <title>test</title>
+        <title>{getTitle('home', t)}</title>
       </Head>
       <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
     </div>

@@ -86,4 +86,4 @@ export const ua = server ? '' : window.navigator.userAgent;
 
 export const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !== -1;
 
-export const getTitle = (title: string, t?: TFunction) => `${title} - ${t ? t('title') : process.env.TITLE}`;
+export const getTitle = (title: string, t?: (title: string) => string) => `${t ? t(title) : title} - ${t ? t('title') : process.env.TITLE}`;

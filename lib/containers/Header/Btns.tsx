@@ -6,6 +6,7 @@ import { Popover } from '@lib/components/Popover';
 import { Upload, User } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
   Href, MenuProfile, RightWarpper, UserName,
@@ -18,6 +19,7 @@ export interface IProps {
 
 export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
   ({ accountStore, themeStore }) => {
+    const { t } = useTranslation();
     const PopoverRef = React.useRef<Popover>(null);
     const { isLogin, userInfo } = accountStore!;
     const { theme, setTheme } = themeStore!;
@@ -59,23 +61,23 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
               </MenuItem>
               <MenuItem>
                 <MenuItemLink onClick={closeMenu} route="/upload">
-                  上传图片
+                  {t('menu.upload')}
                   <Upload size={18} />
                 </MenuItemLink>
               </MenuItem>
               <MenuItem>
                 <MenuItemLink onClick={closeMenu} route="/setting/profile">
-                  设置
+                  {t('menu.setting')}
                 </MenuItemLink>
               </MenuItem>
               <MenuItem>
                 <MenuItemLink onClick={switchTheme}>
-                  {theme === 'dark' ? '日间模式' : '夜间模式'}
+                  {theme === 'dark' ? t('menu.light') : t('menu.dark')}
                 </MenuItemLink>
               </MenuItem>
               <MenuItem>
                 <MenuItemLink onClick={logout}>
-                  退出
+                  {t('menu.signup')}
                 </MenuItemLink>
               </MenuItem>
             </Menu>

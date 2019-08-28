@@ -1,8 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
+import format from 'string-format';
 
 import { LocaleType } from '@common/enum/locale';
-import { I18nContext } from './I18nContext';
+import { I18nContext, II18nContext } from './I18nContext';
 import { I18nNamespace } from './Namespace';
 
 export interface II18nValue {
@@ -16,15 +17,15 @@ interface IProps {
   value: II18nValue;
 }
 
-const i18n = (data: II18nValue) => ({
-  t: (value: string) => {
+const i18n = (data: II18nValue): II18nContext => ({
+  t: (value, ...arg) => {
     let title = value;
     // eslint-disable-next-line no-restricted-syntax
     for (const type of data.namespacesRequired) {
       if (type) {
         const v = _.get(data.value, `${type}.${value}`);
         if (v) {
-          title = v;
+          title = format(v, ...arg);
           break;
         }
       }

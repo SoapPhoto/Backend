@@ -7,7 +7,7 @@ import { server } from '@lib/common/utils';
 import { I18nNamespace } from './Namespace';
 import { II18nValue } from './I18nProvider';
 
-const globalValue: Map<I18nNamespace, any> = new Map();
+let globalValue: RecordPartial<I18nNamespace, any> = {};
 
 const currentNamespace: Set<I18nNamespace> = new Set([]);
 
@@ -32,21 +32,35 @@ export const initLocale = async (namespacesRequired: I18nNamespace[], req?: Requ
   let locale = LocaleType['zh-CN'];
   if (server && req) {
     locale = req.locale;
+    if (LocaleTypeValues.includes(req.cookies.locale)) {
+      locale = req.cookies.locale;
+    }
   } else if (cookie.get('locale') && LocaleTypeValues.includes(cookie.get('locale') as LocaleType)) {
     locale = cookie.get('locale') as LocaleType;
   }
-  const data = await fetchI18n(locale, namespacesRequired);
-  console.log(data, [...currentNamespace], { ...globalValue });
+  const noFetch = namespacesRequired.filter((v) => {
+    if (!currentNamespace.has(v)) {
+      currentNamespace.add(v);
+      return true;
+    }
+    return false;
+  });
+  const data = await fetchI18n(locale, noFetch);
+  const value = {
+    ...globalValue,
+    ...data,
+  };
+  globalValue = value;
   return {
     namespacesRequired,
     locale,
-    value: {},
-    currentNamespace: [],
+    value,
+    currentNamespace: [...currentNamespace],
   };
 };
 
 export const initI18n = (value: II18nValue) => {
-  Object.keys(value.value).map(v => globalValue.set(v as I18nNamespace, (value.value as any)[v]));
+  Object.keys(value.value).map(v => globalValue[v as I18nNamespace] = (value.value as any)[v]);
   value.namespacesRequired.forEach(v => currentNamespace.add(v));
   return value;
 };

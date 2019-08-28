@@ -1,9 +1,10 @@
 import { createContext } from 'react';
 
 import { II18nValue } from './I18nProvider';
+import { TFunction } from './interface';
 
-interface II18nContext extends II18nValue {
-  t: (title: string) => string;
+export interface II18nContext extends II18nValue {
+  t: TFunction;
 }
 
 const defaultContext: any = {

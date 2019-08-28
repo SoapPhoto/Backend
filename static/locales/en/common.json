@@ -1,4 +1,15 @@
 {
   "title": "Soap",
-  "home": "Home"
+  "home": "Home",
+  "menu": {
+    "upload": "Upload",
+    "setting": "Setting",
+    "signup": "Sign Up",
+    "dark": "Dark Mode",
+    "light": "Light Mode"
+  },
+  "no_more": "No more content!",
+  "yup_required": "Please input your {label}!",
+  "yup_longer": "{0} must be longer than or equal to {1} characters!",
+  "yup_greater": "{0} must not be greater than {1}!"
 }

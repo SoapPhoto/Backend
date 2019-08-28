@@ -134,6 +134,12 @@ export default class MyApp extends App {
     });
   }
 
+  public componentDidUpdate(props: any) {
+    if (props.i18n !== (this.props as any).i18n) {
+      this.i18n = props.i18n;
+    }
+  }
+
   public render() {
     const {
       Component, pageProps, router,
