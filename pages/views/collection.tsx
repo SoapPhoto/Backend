@@ -13,7 +13,6 @@ import { Avatar } from '@lib/components';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
-import { withTranslation } from '@common/i18n';
 
 interface IProps extends IBaseScreenProps {
   collectionStore: CollectionScreenStore;
@@ -124,11 +123,11 @@ Collection.getInitialProps = async (ctx) => {
     await collectionStore.getList(id!, headers);
   }
 
-  return { namespacesRequired: ['common'] };
+  return {};
 };
 
-export default withTranslation()(withError(
+export default withError(
   connect((stores: IMyMobxStore) => ({
     collectionStore: stores.screen.collectionStore,
   }))(Collection),
-));
+);

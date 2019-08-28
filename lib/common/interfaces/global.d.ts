@@ -25,11 +25,7 @@ export interface ICustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
   ctx: ICustomNextContext<Q>;
 }
 
-export interface ICustomInitProps {
-  namespacesRequired: I18nNamespace[];
-}
-
-export interface ICustomNextPage<P = {}, IP = ICustomInitProps> {
+export interface ICustomNextPage<P = {}, IP = P> {
   (props: P): JSX.Element;
   getInitialProps?(ctx: ICustomNextContext): Promise<IP>;
 }

@@ -33,7 +33,6 @@ import { A } from '@lib/components/A';
 import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';
-import { withTranslation } from '@common/i18n';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -200,4 +199,4 @@ User.getInitialProps = async ({
   };
 };
 
-export default (withTranslation as any)()(withRouter(withError<IProps>(User)));
+export default withRouter(withError<IProps>(User));

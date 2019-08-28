@@ -28,7 +28,7 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
   }
 };
 
-export const initLocale = async (namespacesRequired: I18nNamespace[], req?: Request): Promise<II18nValue> => {
+export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?: Request): Promise<II18nValue> => {
   let locale = LocaleType['zh-CN'];
   if (server && req) {
     locale = req.locale;

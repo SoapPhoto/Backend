@@ -26,12 +26,10 @@ import { css } from 'styled-components';
 import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
-import { withTranslation } from '@common/i18n';
-import { WithTranslation } from 'react-i18next';
 import { ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IProps extends WithTranslation {
+interface IProps {
 
 }
 
@@ -203,5 +201,5 @@ Upload.getInitialProps = async (_: ICustomNextContext) => ({
 });
 
 export default withAuth('user')(
-  withTranslation()(Upload),
+  Upload,
 );

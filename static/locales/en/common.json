@@ -1,6 +1,7 @@
 {
   "title": "Soap",
   "home": "Home",
+  "setting": "Setting",
   "menu": {
     "upload": "Upload",
     "setting": "Setting",
@@ -8,8 +9,12 @@
     "dark": "Dark Mode",
     "light": "Light Mode"
   },
+  "username": "Username",
+  "password": "Password",
+  "email": "Email",
   "no_more": "No more content!",
-  "yup_required": "Please input your {label}!",
+  "yup_required": "Please input your {0}!",
+  "yup_format": "{0} format is incorrect!",
   "yup_longer": "{0} must be longer than or equal to {1} characters!",
   "yup_greater": "{0} must not be greater than {1}!"
 }

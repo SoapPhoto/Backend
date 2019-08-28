@@ -24,6 +24,12 @@ import {
 
 moment.locale('zh-cn');
 
+interface IProps {
+  i18n: II18nValue;
+  initialMobxState: IMyMobxStore;
+  pageProps: IPageProps;
+}
+
 interface IPageError {
   error?: string;
   statusCode: number;
@@ -42,7 +48,7 @@ Router.events.on('routeChangeStart', () => {
 Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
 Router.events.on('routeChangeError', () => store.appStore.setLoading(false));
 
-export default class MyApp extends App {
+export default class MyApp extends App<IProps> {
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
     const { ctx, Component } = data as ICustomNextAppContext;
@@ -99,14 +105,21 @@ export default class MyApp extends App {
     };
   }
 
-  public mobxStore: IMyMobxStore;
+  public static getDerivedStateFromProps(props: IProps) {
+    return {
+      i18n: props.i18n,
+    };
+  }
 
-  public i18n: II18nValue;
+  public state = {
+    i18n: this.props.i18n,
+    mobxStore: this.props.initialMobxState,
+  }
 
-  constructor(props: any) {
-    super(props);
-    this.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState);
-    this.i18n = server ? props.i18n : initI18n(props.i18n);
+  constructor(props: IProps) {
+    super(props as any);
+    this.state.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState);
+    this.state.i18n = server ? props.i18n : initI18n(props.i18n);
   }
 
   public componentDidMount() {
@@ -134,22 +147,17 @@ export default class MyApp extends App {
     });
   }
 
-  public componentDidUpdate(props: any) {
-    if (props.i18n !== (this.props as any).i18n) {
-      this.i18n = props.i18n;
-    }
-  }
-
   public render() {
     const {
       Component, pageProps, router,
     } = this.props;
+    const { i18n, mobxStore } = this.state;
     const { picture } = router.query!;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <Container>
-        <I18nProvider value={this.i18n}>
-          <Provider {...this.mobxStore}>
+        <I18nProvider value={i18n}>
+          <Provider {...mobxStore}>
             <ThemeWrapper>
               <BodyLayout header={!isError}>
                 {

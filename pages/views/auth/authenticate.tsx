@@ -11,7 +11,9 @@ import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
-import { withTranslation } from '@common/i18n';
+import { I18nNamespace } from '@lib/i18n/Namespace';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   accountStore: AccountStore;
@@ -26,6 +28,7 @@ const Wrapper = styled.div`
 const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
   const { query } = router;
   const { refreshToken } = accountStore;
+  const { t } = useTranslation();
   useEffect(() => {
     store.appStore.setLoading(true);
     Router.events.on('routeChangeStart', (data) => {
@@ -35,13 +38,10 @@ const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
   useEffect(() => {
     refreshToken((err?: any) => {
       const redirectUrl = query.redirectUrl || '/';
-      if (err) {
-        Toast.success('登录成功！正在跳转');
-        setTimeout(() => {
-          window.location.href = query.redirectUrl as string;
-        }, 300);
+      if (!err) {
+        window.location.href = query.redirectUrl as string;
       } else {
-        Toast.error('认证失败，正在返回登录页重新登录');
+        Toast.error(t('authenticate.error_message'));
         setTimeout(() => {
           window.location.href = `/login?redirectUrl=${redirectUrl}`;
         }, 300);
@@ -49,8 +49,10 @@ const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
     });
   }, []);
   return (
-    <Wrapper>认证用户信息中...</Wrapper>
+    <Wrapper>{t('authentication user information')}</Wrapper>
   );
 };
 
-export default withRouter(connect('accountStore')(Authenticate));
+export default withRouter(connect('accountStore')(
+  pageWithTranslation(I18nNamespace.Auth)(Authenticate),
+));

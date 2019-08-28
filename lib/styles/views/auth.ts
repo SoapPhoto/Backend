@@ -7,6 +7,7 @@ import { theme } from '@lib/common/utils/themes';
 export const Wrapper = styled.section`
   ${props => box(props.theme, '480px', true)}
   margin-top: ${rem('64px')};
+  margin-bottom: ${rem('64px')};
   padding: ${rem('52px')} ${rem('80px')};
 `;
 

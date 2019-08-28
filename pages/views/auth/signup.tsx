@@ -17,6 +17,9 @@ import { AccountStore } from '@lib/stores/AccountStore';
 import { Title, Wrapper } from '@lib/styles/views/auth';
 import { css } from 'styled-components';
 import { rem } from 'polished';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 
 interface IProps extends WithRouterProps {
   accountStore: AccountStore;
@@ -30,6 +33,7 @@ interface IValues {
 
 const SignUp = withRouter<IProps>(
   ({ accountStore, router }) => {
+    const { t } = useTranslation();
     const { query } = parsePath(router!.asPath!);
     const { signup } = accountStore;
     const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -57,12 +61,12 @@ const SignUp = withRouter<IProps>(
     return (
       <Wrapper>
         <Head>
-          <title>{getTitle('注册🔑')}</title>
+          <title>{getTitle('signup', t)}</title>
         </Head>
         <Title>
           <Emojione
             svg
-            text="注册🔑"
+            text={t('signup')}
           />
         </Title>
         <Formik<IValues>
@@ -72,7 +76,7 @@ const SignUp = withRouter<IProps>(
             password: '',
           }}
           onSubmit={handleOk}
-          validationSchema={SignUpSchema}
+          validationSchema={SignUpSchema(t)}
         >
           {({
             handleSubmit,
@@ -81,21 +85,21 @@ const SignUp = withRouter<IProps>(
             <form onSubmit={handleSubmit}>
               <FieldInput
                 name="email"
-                label="电子邮箱"
+                label={t('email')}
               />
               <FieldInput
                 name="username"
-                label="用户名"
+                label={t('username')}
                 css={css`
-                  margin-right: ${rem(24)};
+                  margin-top: ${rem(24)};
                 `}
               />
               <FieldInput
                 type="password"
                 name="password"
-                label="密码"
+                label={t('password')}
                 css={css`
-                  margin-right: ${rem(24)};
+                  margin-top: ${rem(24)};
                 `}
               />
               <Button
@@ -107,7 +111,7 @@ const SignUp = withRouter<IProps>(
                 type="submit"
                 disabled={isSubmitting}
               >
-                注册
+                {t('signup_btn')}
               </Button>
             </form>
           )}
@@ -118,5 +122,5 @@ const SignUp = withRouter<IProps>(
 );
 
 export default withAuth('guest')(
-  connect('accountStore')(SignUp),
+  connect('accountStore')(pageWithTranslation(I18nNamespace.Auth)(SignUp)),
 );

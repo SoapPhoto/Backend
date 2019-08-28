@@ -3,6 +3,9 @@ import { AppStore } from './AppStore';
 import { IScreenStore, initScreenStore } from './screen';
 import { ThemeStore } from './ThemeStore';
 
+
+let __init__ = false;
+
 export interface IMyMobxStore {
   accountStore: AccountStore;
   appStore: AppStore;
@@ -23,6 +26,10 @@ export const store: IMyMobxStore = {
 };
 
 export const initStore = (initialState: IInitialStore): IMyMobxStore => {
+  if (__init__) {
+    return store;
+  }
+  __init__ = true;
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
   store.screen.userStore.update(initialState.screen.userStore);

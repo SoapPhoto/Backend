@@ -8,7 +8,6 @@ import { IMyMobxStore } from '@lib/stores/init';
 import { HomeScreenStore } from '@lib/stores/screen/Home';
 import { withError } from '@lib/components/withError';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { I18nNamespace } from '@lib/i18n/Namespace';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { getTitle } from '@lib/common/utils';
 
@@ -16,7 +15,7 @@ interface IProps extends IBaseScreenProps {
   homeStore: HomeScreenStore;
 }
 
-const Index: ICustomNextPage<IProps> = ({
+const Index: ICustomNextPage<IProps, {}> = ({
   homeStore,
 }) => {
   const { t } = useTranslation();
@@ -40,11 +39,11 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
     && _.mobxStore.appStore.location.action === 'POP'
     && _.mobxStore.screen.homeStore.init
   ) {
-    return { namespacesRequired: [I18nNamespace.Common] };
+    return {};
   }
   await _.mobxStore.screen.homeStore.getList(undefined, _.req ? _.req.headers : undefined);
   // eslint-disable-next-line no-throw-literal
-  return { namespacesRequired: [I18nNamespace.Common] };
+  return {};
 };
 
 export default connect((stores: IMyMobxStore) => ({

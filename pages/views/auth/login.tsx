@@ -102,7 +102,7 @@ const Login = withRouter<IProps>(
                 type="submit"
                 disabled={isSubmitting}
               >
-                登录
+                {t('login_btn')}
               </Button>
             </form>
           )}
