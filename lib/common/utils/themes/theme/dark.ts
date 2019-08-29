@@ -16,6 +16,7 @@ const colors = {
 };
 
 const theme: DefaultTheme = {
+  name: 'DARK',
   colors,
   fontSizes: [
     12, 14, 16, 18, 24, 32, 48, 64, 72,

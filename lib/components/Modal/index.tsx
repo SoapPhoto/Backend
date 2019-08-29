@@ -21,7 +21,7 @@ interface IModalProps {
 }
 
 const transitionStyles: {
-  [key in TransitionStatus]?: any
+  [key in TransitionStatus]?: CSSProperties
 } = {
   entering: { opacity: 0, transform: 'scale(.98)' },
   entered: { opacity: 1, transform: 'scale(1)' },
