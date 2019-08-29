@@ -6,7 +6,6 @@ import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
-import { ThemeWrapper } from '@lib/containers/Theme';
 import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
 import { Popper } from '../Popper';
@@ -44,7 +43,7 @@ interface IPopoverProps {
    * @memberof IPopoverProps
    */
   arrow?: boolean;
-  theme: PopoverTheme;
+  theme: PopoverTheme | null;
   /**
    * Popover 显示位置，默认`bottom`
    *
@@ -177,80 +176,78 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       return childrenRender;
     }
     return (
-      <ThemeWrapper>
-        <Popper
-          transition
-          placement={placement}
-          ref={(e) => {
-            if (e) {
-              this.popper = e.popper;
+      <Popper
+        transition
+        placement={placement}
+        ref={(e) => {
+          if (e) {
+            this.popper = e.popper;
+          }
+        }}
+        modifiers={{
+          offset: {
+            enabled: true,
+            offset: '0, 10',
+          },
+          preventOverflow: {
+            boundariesElement: 'scrollParent',
+          },
+          arrow: {
+            enabled: arrow,
+            element: this.arrow,
+          },
+        }}
+        onCreate={(data: Data) => {
+          if (arrow) {
+            if (this.placement !== data.placement) {
+              this.placement = data.placement;
             }
-          }}
-          modifiers={{
-            offset: {
-              enabled: true,
-              offset: '0, 10',
-            },
-            preventOverflow: {
-              boundariesElement: 'scrollParent',
-            },
-            arrow: {
-              enabled: arrow,
-              element: this.arrow,
-            },
-          }}
-          onCreate={(data: Data) => {
-            if (arrow) {
-              if (this.placement !== data.placement) {
-                this.placement = data.placement;
-              }
+          }
+        }}
+        onUpdate={(data: Data) => {
+          if (arrow) {
+            if (this.placement !== data.placement) {
+              this.placement = data.placement;
             }
-          }}
-          onUpdate={(data: Data) => {
-            if (arrow) {
-              if (this.placement !== data.placement) {
-                this.placement = data.placement;
-              }
-            }
-          }}
-          visible={this.visible}
-          onClose={this.onClose}
-          content={({ visible, close }) => (
-            <Transition
-              onExited={() => close()}
-              in={visible}
-              appear
-              timeout={200}
-            >
-              {state => (
-                <div
-                  style={{ ...transitionStyles[state] }}
-                  css={`
+          }
+        }}
+        visible={this.visible}
+        onClose={this.onClose}
+        content={({ visible, close }) => (
+          <Transition
+            onExited={() => close()}
+            in={visible}
+            appear
+            timeout={200}
+          >
+            {state => (
+              <div
+                style={{ ...transitionStyles[state] }}
+                css={`
                       transition-timing-function: ${timingFunctions('easeInOutSine')};
                       transition: .2s all;
                     `}
-                >
-                  {
-                    arrow && (
-                      <Arrow
-                        x-theme={theme}
-                        x-placement={this.placement}
-                        placement={this.placement}
-                        ref={this.arrowRef}
-                      />
-                    )
-                  }
-                  <Content x-theme={theme} style={contentStyle}>
-                    {cntentRender}
-                  </Content>
-                </div>
-              )}
-            </Transition>
-          )}
-        >
-          {childrenRender}
-        </Popper>
-      </ThemeWrapper>
+              >
+                {
+                  arrow && (
+                    <Arrow
+                      x-theme={theme}
+                      x-placement={this.placement}
+                      placement={this.placement}
+                      ref={this.arrowRef}
+                    />
+                  )
+                }
+                <Content x-theme={theme} style={contentStyle}>
+                  {cntentRender}
+                </Content>
+              </div>
+            )}
+          </Transition>
+        )}
+      >
+        {childrenRender}
+      </Popper>
     );
   }
 }

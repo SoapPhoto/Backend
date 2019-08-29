@@ -14,7 +14,7 @@ stories.addDecorator(withThemesProvider([dark, base]));
 stories
   .add('with Avatar', () => (
     <Avatar
-      src={text('src', '')}
+      src={text('src', '//cdn.soapphoto.com/c8dc42efb01a6fc7614701d140ec0010.jpg')}
       size={number('size', 40)}
     />
   ));

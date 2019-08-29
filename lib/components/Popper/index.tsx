@@ -149,7 +149,7 @@ export class Popper extends React.Component<IPopperProps> {
         <NoSSR>
           {!server && ReactDOM.createPortal(
             this.renderContent(),
-            getContainer || document.querySelector('#__next')!,
+            getContainer || document.querySelector('body')!,
           )}
         </NoSSR>
       </>

@@ -12,4 +12,11 @@ stories.addDecorator(withKnobs);
 stories.addDecorator(withThemesProvider([dark, base]));
 
 stories
-  .add('with Button', () => <Button loading={boolean('Disabled', false)}>test</Button>);
+  .add('with Button', () => (
+    <Button
+      loading={boolean('loading', false)}
+      disabled={boolean('disabled', false)}
+    >
+      test
+    </Button>
+  ));
