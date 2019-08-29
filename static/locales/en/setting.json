@@ -1,0 +1,14 @@
+{
+  "setting_menu": {
+    "profile": "Profile",
+    "resetPassword": "Reset Password"
+  },
+  "setting_upload_avatar": "Upload avatar",
+  "setting_update": "Update settings",
+  "setting_label": {
+    "username": "Username (login name)",
+    "name": "name (name displayed)",
+    "website": "Website",
+    "bio": "Bio"
+  }
+}

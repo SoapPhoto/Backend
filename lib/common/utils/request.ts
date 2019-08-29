@@ -1,12 +1,12 @@
-import Toast from '@lib/components/Toast';
-import { store } from '@lib/stores/init';
 import axios, { AxiosResponse } from 'axios';
-import { server } from '.';
-// import { setupCache } from 'axios-cache-adapter';
 
-// const cache = setupCache({
-//   maxAge: 15 * 60 * 1000,
-// });
+import { store } from '@lib/stores/init';
+import { server } from '.';
+
+let isRefreshing = false;
+// 待请求队列
+let requests: any[] = [];
+
 const instance = axios.create({
   withCredentials: true,
   baseURL: `${process.env.URL}`,
@@ -16,39 +16,52 @@ const instance = axios.create({
 });
 
 // 请求前预先判断token是否失效
-instance.interceptors.request.use(config => new Promise((resolve, rejects) => {
+instance.interceptors.request.use(async (config) => {
   if (server) {
-    return resolve(config);
+    return config;
   }
-  const { refreshToken, isTokenOk } = store.accountStore;
-  if (!isTokenOk()) {
-    refreshToken((err) => {
-      if (err) {
-        return rejects(err);
-      }
-      return resolve(config);
-    });
+  const { refreshToken, isAccessTokenOk } = store.accountStore;
+  if (!isAccessTokenOk()) {
+    await refreshToken();
+    return config;
   }
-  return resolve(config);
-}));
+  return config;
+});
 
 instance.interceptors.response.use(
-  (response: AxiosResponse<any>) => {
+  async (response: AxiosResponse<any>) => {
+    const { refreshToken, isRefreshTokenOk } = store.accountStore;
+    const { config } = response;
     if (response.status >= 400) {
       if (!server) {
-        let message;
+        // const message = t(response.data.message);
         switch (response.status) {
           case 401:
-            if (message) Toast.error(message);
+            if (isRefreshTokenOk && response.data.message === 'Unauthorized') {
+              if (!isRefreshing) {
+                isRefreshing = true;
+                try {
+                  await refreshToken();
+                  Promise.all(requests.map(r => r()));
+                  requests = [];
+                  return instance(config);
+                } catch (err) {
+                  console.error('refreshToken error =>', err);
+                }
+              } else {
+                requests.push(() => instance(config));
+              }
+            }
+            // if (message) Toast.error(message);
             break;
           case 400:
-            if (message) Toast.error(message);
+            // if (message) Toast.error(message);
             break;
           default:
             break;
         }
       }
-      return Promise.reject(response);
+      return Promise.reject(response.data);
     }
     return Promise.resolve(response);
   },

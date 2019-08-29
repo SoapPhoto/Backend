@@ -5,7 +5,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository, SelectQueryBuilder } from 'typeorm';
@@ -54,7 +54,7 @@ export class PictureService {
       .leftJoinAndSelect('picture.user', 'user')
       .getOne();
     if (!picture || picture.user.id !== user.id) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
     const updateData: Partial<PictureEntity> = data;
     if (tags.length > 0) {
@@ -208,7 +208,7 @@ export class PictureService {
         message: 'ok',
       };
     }
-    throw new UnauthorizedException();
+    throw new ForbiddenException();
   }
 
   /**

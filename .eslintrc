@@ -102,6 +102,8 @@
             "afterOpening": "never"
         }
     ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "import/no-unresolved": "off",
     "import/no-cycle": "off",
     "import/prefer-default-export": "off",

@@ -1,11 +1,14 @@
 import { Request } from 'express';
 import cookie from 'js-cookie';
+import format from 'string-format';
+import _ from 'lodash';
 
 import { LocaleType, LocaleTypeValues } from '@common/enum/locale';
 import { request } from '@lib/common/utils/request';
 import { server } from '@lib/common/utils';
 import { I18nNamespace } from './Namespace';
 import { II18nValue } from './I18nProvider';
+import { TFunction } from './interface';
 
 let globalValue: RecordPartial<I18nNamespace, any> = {};
 
@@ -23,7 +26,8 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
       test[name[i]] = data;
     });
     return test;
-  } catch (_) {
+  } catch (err) {
+    console.error('fetchI18n Error:', err);
     return {};
   }
 };
@@ -64,3 +68,27 @@ export const initI18n = (value: II18nValue) => {
   value.namespacesRequired.forEach(v => currentNamespace.add(v));
   return value;
 };
+
+export const getT = (
+  data: Pick<II18nValue, 'namespacesRequired' | 'value'>,
+  value: string,
+  ...arg: Array<({ [k: string]: any } | string)>
+) => {
+  let title = value;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const type of data.namespacesRequired) {
+    if (type) {
+      const v = _.get(data.value, `${type}.${value}`);
+      if (v && typeof v === 'string') {
+        title = format(v, ...arg);
+        break;
+      }
+    }
+  }
+  return title;
+};
+
+export const t: TFunction = (...arg) => getT(
+  { namespacesRequired: [...currentNamespace], value: globalValue },
+  ...arg,
+);

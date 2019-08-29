@@ -1,10 +1,9 @@
 import React from 'react';
-import _ from 'lodash';
-import format from 'string-format';
 
 import { LocaleType } from '@common/enum/locale';
 import { I18nContext, II18nContext } from './I18nContext';
 import { I18nNamespace } from './Namespace';
+import { getT } from './utils';
 
 export interface II18nValue {
   locale: LocaleType;
@@ -18,20 +17,7 @@ interface IProps {
 }
 
 const i18n = (data: II18nValue): II18nContext => ({
-  t: (value, ...arg) => {
-    let title = value;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const type of data.namespacesRequired) {
-      if (type) {
-        const v = _.get(data.value, `${type}.${value}`);
-        if (v) {
-          title = format(v, ...arg);
-          break;
-        }
-      }
-    }
-    return title;
-  },
+  t: (value, ...arg) => getT(data, value, ...arg),
   ...data,
 });
 

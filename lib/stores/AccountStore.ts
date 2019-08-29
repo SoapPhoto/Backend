@@ -64,27 +64,41 @@ export class AccountStore {
     this.setUserInfo(data.data.user);
   }
 
-  public refreshToken = async (callback: (err?: any) => void) => {
-    try {
-      const token = JSON.parse(localStorage.getItem('token') || 'null');
-      if (token && token.refreshTokenExpiresAt && moment(token.refreshTokenExpiresAt) > moment()) {
-        const params = new URLSearchParams();
-        params.append('refresh_token', token.refreshToken);
-        params.append('grant_type', 'refresh_token');
-        const { data } = await oauthToken(params);
-        localStorage.setItem('token', JSON.stringify(data));
-        callback();
-      } else {
-        callback('invalid');
-      }
-    } catch (err) {
-      callback(err);
+  public refreshToken = async () => {
+    const token = JSON.parse(localStorage.getItem('token') || 'null');
+    if (token && token.refreshTokenExpiresAt && moment(token.refreshTokenExpiresAt) > moment()) {
+      const params = new URLSearchParams();
+      params.append('refresh_token', token.refreshToken);
+      params.append('grant_type', 'refresh_token');
+      const { data } = await oauthToken(params);
+      localStorage.setItem('token', JSON.stringify(data));
+    } else {
+      throw new Error('invalid token');
     }
   }
 
-  public isTokenOk = () => {
+  public existToken = () => {
     const token = JSON.parse(localStorage.getItem('token') || 'null');
-    if (token && token.accessTokenExpiresAt && moment(token.accessTokenExpiresAt) > moment()) {
+    return token && token.accessTokenExpiresAt && token.refreshTokenExpiresAt;
+  }
+
+  public isRefreshTokenOk = () => {
+    const token = JSON.parse(localStorage.getItem('token') || 'null');
+    if (!token || !token.refreshTokenOkExpiresAt) {
+      return true;
+    }
+    if (moment(token.refreshTokenOkExpiresAt) > moment()) {
+      return true;
+    }
+    return false;
+  }
+
+  public isAccessTokenOk = () => {
+    const token = JSON.parse(localStorage.getItem('token') || 'null');
+    if (!token || !token.accessTokenExpiresAt) {
+      return true;
+    }
+    if (moment(token.accessTokenExpiresAt) > moment()) {
       return true;
     }
     return false;

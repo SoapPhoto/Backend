@@ -11,6 +11,7 @@ import Toast from '@lib/components/Toast';
 import { Upload } from '@lib/components/Upload';
 import { AccountStore } from '@lib/stores/AccountStore';
 import Head from 'next/head';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IUserProps {
   accountStore?: AccountStore;
@@ -18,6 +19,7 @@ interface IUserProps {
 
 const User: React.FC<IUserProps> = ({ accountStore }) => {
   const { userInfo, updateProfile } = accountStore!;
+  const { t } = useTranslation();
 
   const [data, setData] = React.useState({
     name: userInfo!.name || userInfo!.username,
@@ -48,7 +50,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
   return (
     <Grid columns="1lf" rowGap="24px">
       <Head>
-        <title>{getTitle('用户设置')}</title>
+        <title>{getTitle('setting', t)}</title>
       </Head>
       <Cell>
         <Grid columns="96px auto" gap="24px">
@@ -58,7 +60,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
           <Cell width={1} middle>
             <div>
               <Upload onFileChange={handleAvatarChange}>
-                <Button>上传头像</Button>
+                <Button>{t('setting_upload_avatar')}</Button>
               </Upload>
             </div>
           </Cell>
@@ -67,11 +69,11 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
       <Cell>
         <Grid gap="24px" columns={2}>
           <Cell width={1} middle>
-            <Input label="用户名（登录名）" disabled defaultValue={userInfo!.username} />
+            <Input label={t('setting_label.username')} disabled defaultValue={userInfo!.username} />
           </Cell>
           <Cell width={1} center>
             <Input
-              label="昵称（显示的名称）"
+              label={t('setting_label.name')}
               value={data.name}
               onChange={e => setData({ ...data, name: e.target.value })}
             />
@@ -81,7 +83,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
       <Cell>
         <Grid columns={1} gap="24px">
           <Input
-            label="个人网站"
+            label={t('setting_label.website')}
             placeholder="https://"
             value={data.website}
             onChange={e => setData({ ...data, website: e.target.value })}
@@ -91,7 +93,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
       <Cell>
         <Grid columns={1} gap="24px">
           <Input
-            label="简介"
+            label={t('setting_label.bio')}
             value={data.bio}
             onChange={e => setData({ ...data, bio: e.target.value })}
           />
@@ -100,7 +102,7 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
       <Cell>
         <Grid columns="auto" justifyContent="right">
           <Cell>
-            <Button loading={btnLoading} onClick={handleOk}>更新设置</Button>
+            <Button loading={btnLoading} onClick={handleOk}>{t('setting_update')}</Button>
           </Cell>
         </Grid>
       </Cell>

@@ -5,11 +5,11 @@ import {
   Param,
   Post,
   Query,
-  UnauthorizedException,
   UploadedFile,
   UseFilters,
   UseGuards,
   UseInterceptors,
+  ForbiddenException,
 } from '@nestjs/common';
 import fs from 'fs';
 
@@ -81,7 +81,7 @@ export class UserController {
     }
     try {
       if (user.username !== username) {
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
       }
       return this.userService.updateUserProfile(user, body, avatar);
     } finally {

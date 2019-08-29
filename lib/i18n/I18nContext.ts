@@ -8,7 +8,7 @@ export interface II18nContext extends II18nValue {
 }
 
 const defaultContext: any = {
-  t: () => '' as any,
+  t: (value: string) => value as any,
 };
 
 export const I18nContext = createContext<II18nContext>(defaultContext);

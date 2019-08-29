@@ -18,26 +18,6 @@ interface IProps extends WithRouterProps {
   type: UserType;
 }
 
-const menu = [
-  {
-    value: 'profile',
-    name: '用户设置',
-    path: '/setting/profile',
-    component: dynamic(() => import('./User')),
-  },
-  {
-    value: 'resetPassword',
-    name: '重置密码',
-    path: '/setting/resetPassword',
-    component: dynamic(() => import('./ResetPassword')),
-  },
-  // {
-  //   value: 'basic',
-  //   name: '基本设置',
-  //   path: '/setting/basic',
-  //   component: dynamic(() => import('./Basic')),
-  // },
-];
 
 const Setting: ICustomNextPage<IProps, {type: UserType}> = ({
   type,
@@ -49,6 +29,26 @@ const Setting: ICustomNextPage<IProps, {type: UserType}> = ({
     const route = parsePath(router.asPath);
     setType((route.params.type as UserType));
   }, [router]);
+  const menu = [
+    {
+      value: 'profile',
+      name: t('setting_menu.profile'),
+      path: '/setting/profile',
+      component: dynamic(() => import('./User')),
+    },
+    {
+      value: 'resetPassword',
+      name: t('setting_menu.resetPassword'),
+      path: '/setting/resetPassword',
+      component: dynamic(() => import('./ResetPassword')),
+    },
+    // {
+    //   value: 'basic',
+    //   name: '基本设置',
+    //   path: '/setting/basic',
+    //   component: dynamic(() => import('./Basic')),
+    // },
+  ];
   return (
     <Warpper>
       <Head>

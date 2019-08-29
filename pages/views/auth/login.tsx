@@ -49,10 +49,10 @@ const Login = withRouter<IProps>(
             Router.replaceRoute('/');
           }
         }, 400);
-        Toast.success('登录成功！');
+        Toast.success(t('login_successful'));
       } catch (error) {
         setSubmitting(false);
-        // Toast.error('登录失败');
+        Toast.error(t(error.message));
       } finally {
         setConfirmLoading(false);
       }

@@ -50,9 +50,10 @@ const SignUp = withRouter<IProps>(
             Router.replaceRoute('/');
           }
         }, 400);
-        Toast.success('注册成功！');
+        Toast.success(t('signup_success'));
       } catch (error) {
         console.error(error);
+        Toast.error(t(error.message));
         setSubmitting(false);
       } finally {
         setConfirmLoading(false);

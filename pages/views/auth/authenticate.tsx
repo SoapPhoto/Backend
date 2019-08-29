@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 
@@ -35,19 +35,22 @@ const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
       window.location.href = data;
     });
   }, []);
+  const refresh = useCallback(async () => {
+    const redirectUrl = query.redirectUrl || '/';
+    try {
+      await refreshToken();
+      window.location.href = query.redirectUrl as string;
+    } catch (err) {
+      console.error(err);
+      Toast.error(t('authenticate.error_message'));
+      setTimeout(() => {
+        window.location.href = `/login?redirectUrl=${redirectUrl}`;
+      }, 300);
+    }
+  }, [query.redirectUrl, refreshToken, t]);
   useEffect(() => {
-    refreshToken((err?: any) => {
-      const redirectUrl = query.redirectUrl || '/';
-      if (!err) {
-        window.location.href = query.redirectUrl as string;
-      } else {
-        Toast.error(t('authenticate.error_message'));
-        setTimeout(() => {
-          window.location.href = `/login?redirectUrl=${redirectUrl}`;
-        }, 300);
-      }
-    });
-  }, []);
+    refresh();
+  }, [refresh]);
   return (
     <Wrapper>{t('authentication user information')}</Wrapper>
   );

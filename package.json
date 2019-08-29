@@ -13,7 +13,7 @@
     "start:server": "cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/src/main.js",
     "start:view": "nodemon server.ts",
     "dev:server": "nodemon src/main.ts",
-    "dev:view": "nodemon server.ts --watch server.ts",
+    "dev:view": "nodemon server.ts --watch server.ts common",
     "format": "prettier --write \"src/**/*.ts\"",
     "env": "sync-dotenv",
     "lint": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx --ignore-pattern .eslintignore",
