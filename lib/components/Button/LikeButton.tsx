@@ -2,6 +2,7 @@ import { Heart } from '@lib/icon';
 import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { Popover } from '@lib/components/Popover';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
   size?: number;
@@ -39,6 +40,7 @@ export const LikeButton: React.FC<IProps> = ({
   size = 18,
   onLike = () => null,
 }) => {
+  const { t } = useTranslation();
   const disabled = useRef<boolean>(false);
   const onClick = useCallback(async () => {
     if (disabled.current) {
@@ -60,7 +62,7 @@ export const LikeButton: React.FC<IProps> = ({
         placement="top"
         theme="dark"
         openDelay={100}
-        content={<span>{isLike ? '取消喜欢' : '喜欢'}</span>}
+        content={<span>{isLike ? t('un_like') : t('like')}</span>}
       >
         {content}
       </Popover>

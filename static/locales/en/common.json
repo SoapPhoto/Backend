@@ -2,6 +2,10 @@
   "title": "Soap",
   "home": "Home",
   "setting": "Setting",
+  "picture_info": "Picture Info",
+  "add_collection": "Add Collection",
+  "un_like": "Un Like",
+  "like": "Like",
   "menu": {
     "upload": "Upload",
     "setting": "Setting",
@@ -16,5 +20,9 @@
   "yup_required": "Please input your {0}!",
   "yup_format": "{0} format is incorrect!",
   "yup_longer": "{0} must be longer than or equal to {1} characters!",
-  "yup_greater": "{0} must not be greater than {1}!"
+  "yup_greater": "{0} must not be greater than {1}!",
+  "comment": {
+    "placeholder": "Input comment",
+    "send": "Comment"
+  }
 }

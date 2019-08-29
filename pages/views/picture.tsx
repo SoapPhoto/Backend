@@ -36,6 +36,7 @@ import { css } from 'styled-components';
 import { rem } from 'polished';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -60,7 +61,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
 
   useEffect(() => {
     getComment();
-  }, []);
+  }, [getComment]);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
   const onConfirm = async (value: string) => {
@@ -182,5 +183,5 @@ export default withError<IProps>(
     pictureStore: stores.screen.pictureStore,
     accountStore: stores.accountStore,
     themeStore: stores.themeStore,
-  }))(pageWithTranslation(I18nNamespace.Message)(Picture)),
+  }))(pageWithTranslation(I18nNamespace.Picture)(Picture)),
 );

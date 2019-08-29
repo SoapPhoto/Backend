@@ -16,17 +16,17 @@ const instance = axios.create({
 });
 
 // 请求前预先判断token是否失效
-instance.interceptors.request.use(async (config) => {
-  if (server) {
-    return config;
-  }
-  const { refreshToken, isAccessTokenOk } = store.accountStore;
-  if (!isAccessTokenOk()) {
-    await refreshToken();
-    return config;
-  }
-  return config;
-});
+// instance.interceptors.request.use(async (config) => {
+//   if (server) {
+//     return config;
+//   }
+//   const { refreshToken, isAccessTokenOk } = store.accountStore;
+//   if (!isAccessTokenOk()) {
+//     await refreshToken();
+//     return config;
+//   }
+//   return config;
+// });
 
 instance.interceptors.response.use(
   async (response: AxiosResponse<any>) => {

@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { rem } from 'polished';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Textarea } from '../Input';
@@ -17,6 +18,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
   accountStore,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -34,7 +36,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
     } finally {
       setLoading(false);
     }
-  }, [value]);
+  }, [onConfirm, value]);
   return (
     <Wrapper>
       <Avatar src={userInfo!.avatar} />
@@ -42,7 +44,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
         <Textarea
           value={value}
           minRows={1}
-          placeholder="输入评论"
+          placeholder={t('comment.placeholder')}
           boxStyle={{
             paddingBottom: rem('48px'),
           }}
@@ -53,7 +55,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
           onClick={setInputFocus}
         >
           <span />
-          <Button loading={loading} onClick={onConfirmClick} disabled={!value}>评论</Button>
+          <Button loading={loading} onClick={onConfirmClick} disabled={!value}>{t('comment.send')}</Button>
         </HandleBox>
       </div>
     </Wrapper>

@@ -8,6 +8,7 @@ import { getPictureUrl } from '@lib/common/utils/image';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { computed } from 'mobx';
 import { Cell } from 'styled-css-grid';
+import { I18nContext } from '@lib/i18n/I18nContext';
 import { Modal } from '../Modal';
 import {
   EXIFBox, EXIFInfo, EXIFTitle, Info, Title,
@@ -45,43 +46,49 @@ export class EXIFModal extends React.Component<IProps> {
         onClose={onClose}
         boxStyle={{ backgroundImage: this.background, padding: 0 }}
       >
-        <Title>信息</Title>
-        <Info>
-          <EXIFBox columns="repeat(auto-fit, minmax(150px, 1fr))">
-            <Cell>
-              <EXIFTitle>设备</EXIFTitle>
-              <EXIFInfo>{make || '--'}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>型号</EXIFTitle>
-              <EXIFInfo>{model || '--'}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>焦距</EXIFTitle>
-              <EXIFInfo>{focalLength ? `${focalLength}mm` : '--'}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>光圈</EXIFTitle>
-              <EXIFInfo>{aperture ? `f/${aperture}` : '--'}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>快门速度</EXIFTitle>
-              <EXIFInfo>{exposureTime === undefined ? '--' : `${exposureTime}s`}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>ISO</EXIFTitle>
-              <EXIFInfo>{ISO || '--'}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>尺寸</EXIFTitle>
-              <EXIFInfo>{`${width} x ${height}`}</EXIFInfo>
-            </Cell>
-            <Cell>
-              <EXIFTitle>大小</EXIFTitle>
-              <EXIFInfo>{bytes(size)}</EXIFInfo>
-            </Cell>
-          </EXIFBox>
-        </Info>
+        <I18nContext.Consumer>
+          {({ t }) => (
+            <>
+              <Title>{t('picture_info.title')}</Title>
+              <Info>
+                <EXIFBox columns="repeat(auto-fit, minmax(150px, 1fr))">
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.make')}</EXIFTitle>
+                    <EXIFInfo>{make || '--'}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.model')}</EXIFTitle>
+                    <EXIFInfo>{model || '--'}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.focalLength')}</EXIFTitle>
+                    <EXIFInfo>{focalLength ? `${focalLength}mm` : '--'}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.aperture')}</EXIFTitle>
+                    <EXIFInfo>{aperture ? `f/${aperture}` : '--'}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.exposureTime')}</EXIFTitle>
+                    <EXIFInfo>{exposureTime === undefined ? '--' : `${exposureTime}s`}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.ISO')}</EXIFTitle>
+                    <EXIFInfo>{ISO || '--'}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.dimensions')}</EXIFTitle>
+                    <EXIFInfo>{`${width} x ${height}`}</EXIFInfo>
+                  </Cell>
+                  <Cell>
+                    <EXIFTitle>{t('picture_info.size')}</EXIFTitle>
+                    <EXIFInfo>{bytes(size)}</EXIFInfo>
+                  </Cell>
+                </EXIFBox>
+              </Info>
+            </>
+          )}
+        </I18nContext.Consumer>
       </Modal>
     );
   }

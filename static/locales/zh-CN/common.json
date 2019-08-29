@@ -2,6 +2,10 @@
   "title": "肥皂",
   "home": "首页",
   "setting": "设置",
+  "picture_info": "图片信息",
+  "add_collection": "添加收藏",
+  "un_like": "取消喜欢",
+  "like": "喜欢",
   "menu": {
     "upload": "上传",
     "setting": "设置",
@@ -16,5 +20,9 @@
   "yup_required": "请输入{0}！",
   "yup_format": "{0}格式不正确!",
   "yup_longer": "{0}必须大于{1}位！",
-  "yup_greater": "{0}不得大于{1}位！"
+  "yup_greater": "{0}不得大于{1}位！",
+  "comment": {
+    "placeholder": "输入评论",
+    "send": "评论"
+  }
 }

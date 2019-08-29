@@ -17,6 +17,7 @@ import {
 } from '@lib/styles/views/picture';
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
 import { EditMPictureModal } from '@lib/containers/Picture/EditModal';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
   info: PictureEntity;
@@ -36,6 +37,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   onLike,
   isOwner,
 }) => {
+  const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
   const [collectionVisible, setCollectionVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
@@ -78,7 +80,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
         columns="auto"
         justifyContent="right"
       >
-        <IconButton popover="图片信息" onClick={openEXIF}>
+        <IconButton popover={t('picture_info')} onClick={openEXIF}>
           <Info
             color={themeData.colors.secondary}
           />
@@ -95,14 +97,14 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
         }
         {
           isLogin && (
-            <IconButton popover="添加收藏" onClick={openCollection}>
+            <IconButton popover={t('add_collection')} onClick={openCollection}>
               <Bookmark
                 color={themeData.colors.secondary}
               />
             </IconButton>
           )
         }
-        {
+        {/* {
           isOwner && (
             <IconButton popover="添加收藏" onClick={openEdit}>
               <Settings
@@ -110,7 +112,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
               />
             </IconButton>
           )
-        }
+        } */}
       </BaseInfoHandleBox>
       <EditMPictureModal
         visible={editVisible}

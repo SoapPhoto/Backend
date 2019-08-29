@@ -33,6 +33,9 @@ import { A } from '@lib/components/A';
 import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { I18nNamespace } from '@lib/i18n/Namespace';
+import { I18nContext } from '@lib/i18n/I18nContext';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -82,70 +85,76 @@ class User extends React.Component<IProps> {
     const { isLogin, userInfo } = accountStore;
     const { user } = userStore;
     return (
-      <Wrapper>
-        <Head>
-          <title>{getTitle(`${this.name} (@${user.username})`)}</title>
-        </Head>
-        <UserHeader>
-          <HeaderGrid columns="140px auto" gap="32px">
-            <AvatarBox>
-              <Avatar src={user.avatar} size={140} />
-            </AvatarBox>
-            <Cell>
-              <UserName>
-                {this.name}
-                {
-                  isLogin && userInfo && userInfo.username === user.username
-                  && (
-                    <A route="/setting/profile">
-                      <EditIcon size={18} />
-                    </A>
-                  )
-                }
-              </UserName>
-              <Profile>
-                {
-                  user.website
-                  && (
-                    <ProfileItem>
-                      <ProfileItemLink href={user.website} target="__blank">
-                        <LinkIcon size={14} />
-                        {this.parseWebsite(user.website)}
-                      </ProfileItemLink>
-                    </ProfileItem>
-                  )
-                }
-              </Profile>
-              <Bio>
-                {user.bio}
-              </Bio>
-            </Cell>
-          </HeaderGrid>
-        </UserHeader>
-        <Nav>
-          <NavItem route={`/@${user.username}`}>
-            照片
-          </NavItem>
-          <NavItem route={`/@${user.username}/like`}>
-            喜欢
-          </NavItem>
-          <NavItem route={`/@${user.username}/collections`}>
-            收藏夹
-          </NavItem>
-        </Nav>
+      <I18nContext.Consumer>
         {
-          type === 'collections' ? (
-            <CollectionList list={collectionsStore.list} />
-          ) : (
-            <PictureList
-              noMore={picturesStore.isNoMore}
-              data={picturesStore.list}
-              like={picturesStore.like}
-              onPage={picturesStore.getPageList}
-            />
+          ({ t }) => (
+            <Wrapper>
+              <Head>
+                <title>{getTitle(`${this.name} (@${user.username})`)}</title>
+              </Head>
+              <UserHeader>
+                <HeaderGrid columns="140px auto" gap="32px">
+                  <AvatarBox>
+                    <Avatar src={user.avatar} size={140} />
+                  </AvatarBox>
+                  <Cell>
+                    <UserName>
+                      {this.name}
+                      {
+                        isLogin && userInfo && userInfo.username === user.username
+                        && (
+                          <A route="/setting/profile">
+                            <EditIcon size={18} />
+                          </A>
+                        )
+                      }
+                    </UserName>
+                    <Profile>
+                      {
+                        user.website
+                        && (
+                          <ProfileItem>
+                            <ProfileItemLink href={user.website} target="__blank">
+                              <LinkIcon size={14} />
+                              {this.parseWebsite(user.website)}
+                            </ProfileItemLink>
+                          </ProfileItem>
+                        )
+                      }
+                    </Profile>
+                    <Bio>
+                      {user.bio}
+                    </Bio>
+                  </Cell>
+                </HeaderGrid>
+              </UserHeader>
+              <Nav>
+                <NavItem route={`/@${user.username}`}>
+                  {t('user_menu.picture')}
+                </NavItem>
+                <NavItem route={`/@${user.username}/like`}>
+                  {t('user_menu.like')}
+                </NavItem>
+                <NavItem route={`/@${user.username}/collections`}>
+                  {t('user_menu.collection')}
+                </NavItem>
+              </Nav>
+              {
+                type === 'collections' ? (
+                  <CollectionList list={collectionsStore.list} />
+                ) : (
+                  <PictureList
+                    noMore={picturesStore.isNoMore}
+                    data={picturesStore.list}
+                    like={picturesStore.like}
+                    onPage={picturesStore.getPageList}
+                  />
+                )
+              }
+            </Wrapper>
           )
         }
-      </Wrapper>
+      </I18nContext.Consumer>
     );
   }
 }
@@ -199,4 +208,4 @@ User.getInitialProps = async ({
   };
 };
 
-export default withRouter(withError<IProps>(User));
+export default withRouter(withError<IProps>(pageWithTranslation(I18nNamespace.User)(User)));
