@@ -16,7 +16,7 @@ import {
   BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
 } from '@lib/styles/views/picture';
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
-import { EditMPictureModal } from '@lib/containers/Picture/EditModal';
+import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
@@ -49,6 +49,9 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   }, []);
   const closeCollection = useCallback(() => {
     setCollectionVisible(false);
+  }, []);
+  const closeEdit = useCallback(() => {
+    setEditVisible(false);
   }, []);
   const openEXIF = useCallback(() => {
     setEXIFVisible(true);
@@ -106,7 +109,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
         }
         {
           isOwner && (
-            <IconButton popover="添加收藏" onClick={openEdit}>
+            <IconButton popover="编辑设置" onClick={openEdit}>
               <Settings
                 color={themeData.colors.secondary}
               />
@@ -114,8 +117,9 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           )
         }
       </BaseInfoHandleBox>
-      <EditMPictureModal
+      <EditPictureModal
         visible={editVisible}
+        onClose={closeEdit}
       />
       <EXIFModal
         visible={EXIFVisible}

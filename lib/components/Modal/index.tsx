@@ -9,7 +9,7 @@ import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { NoSSR } from '../SSR';
 import {
-  Box, Content, Mask, Wrapper,
+  Box, Content, Mask, Wrapper, XIcon,
 } from './styles';
 
 let _modalIndex = 0;
@@ -17,6 +17,7 @@ let _modalIndex = 0;
 interface IModalProps {
   visible: boolean;
   onClose?: () => void;
+  closeIcon?: boolean;
   boxStyle?: React.CSSProperties;
 }
 
@@ -40,6 +41,11 @@ const maskTransitionStyles: {
 
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+  static defaultProps = {
+    closeIcon: true,
+  }
+
   public contentRef = React.createRef<HTMLDivElement>();
 
   public wrapperRef = React.createRef<HTMLDivElement>();
@@ -88,9 +94,13 @@ export class Modal extends React.PureComponent<IModalProps> {
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     if (e.target === this.contentRef.current || e.target === this.wrapperRef.current) {
-      if (isFunction(this.props.onClose)) {
-        this.props.onClose();
-      }
+      this.onClose();
+    }
+  }
+
+  public onClose = () => {
+    if (isFunction(this.props.onClose)) {
+      this.props.onClose();
     }
   }
 
@@ -106,7 +116,9 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public render() {
-    const { visible, boxStyle, children } = this.props;
+    const {
+      visible, boxStyle, children, closeIcon,
+    } = this.props;
     if (this.isDestroy) {
       return null;
     }
@@ -131,6 +143,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                         style={{ ...maskTransitionStyles[state], transition: '.2s all ease' }}
                       />
                       <Wrapper onClick={this.handleClick} ref={this.wrapperRef}>
+
                         <Content ref={this.contentRef}>
                           <Box
                             style={{
@@ -138,6 +151,10 @@ export class Modal extends React.PureComponent<IModalProps> {
                               ...boxStyle || {},
                             }}
                           >
+                            {
+                              closeIcon
+                              && <XIcon onClick={this.onClose} />
+                            }
                             {children}
                           </Box>
                         </Content>

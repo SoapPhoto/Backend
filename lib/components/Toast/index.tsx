@@ -20,30 +20,34 @@ class Toast {
     }
   }
 
-  public base = (title: string) => {
+  public base = (title: string, duration?: number) => {
     this.ref.add({
       title,
+      duration,
       type: 'base',
     });
   }
 
-  public success = (title: string) => {
+  public success = (title: string, duration?: number) => {
     this.ref.add({
       title,
+      duration,
       type: 'success',
     });
   }
 
-  public warning = (title: string) => {
+  public warning = (title: string, duration?: number) => {
     this.ref.add({
       title,
+      duration,
       type: 'warning',
     });
   }
 
-  public error = (title: string) => {
+  public error = (title: string, duration?: number) => {
     this.ref.add({
       title,
+      duration,
       type: 'error',
     });
   }

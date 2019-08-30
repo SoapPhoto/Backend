@@ -1,15 +1,13 @@
 import * as React from 'react';
-import { withThemesProvider } from 'storybook-addon-styled-component-theme';
-import { withKnobs, text } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 
 import { storiesOf } from '@storybook/react';
-import { dark, base } from '@lib/common/utils/themes/theme';
+import { withGlobalStyle } from '@lib/common/storybook/withGlobalStyle';
 import { Image } from './index';
 
 const stories = storiesOf('Image', module);
 
-stories.addDecorator(withKnobs);
-stories.addDecorator(withThemesProvider([dark, base]));
+stories.addDecorator(withGlobalStyle);
 
 stories
   .add('with Image', () => (

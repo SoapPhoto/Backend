@@ -1,24 +1,29 @@
 import * as React from 'react';
-import { withThemesProvider } from 'storybook-addon-styled-component-theme';
-import { withKnobs, boolean } from '@storybook/addon-knobs';
+import useState from 'storybook-addon-state';
 
 import { storiesOf } from '@storybook/react';
-import { dark, base } from '@lib/common/utils/themes/theme';
 import { css } from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
+import { withGlobalStyle } from '@lib/common/storybook/withGlobalStyle';
 import { Modal } from './index';
+import { Button } from '../Button';
 
 const stories = storiesOf('Modal', module);
 
-stories.addDecorator(withKnobs);
-stories.addDecorator(withThemesProvider([dark, base]));
+stories.addDecorator(withGlobalStyle);
 
 stories
   .add('with Modal', () => {
-    const visible = boolean('visible', false);
+    const [visible, setVisible] = useState('clicks', false);
     return (
-      <Modal visible={visible}>
-        <div css={css`color: ${theme('colors.text')};`}>12312</div>
-      </Modal>
+      <>
+        <Button onClick={() => setVisible(true)}>打开</Button>
+        <Modal
+          visible={visible}
+          onClose={() => setVisible(false)}
+        >
+          <div css={css`color: ${theme('colors.text')};`}>12312</div>
+        </Modal>
+      </>
     );
   });

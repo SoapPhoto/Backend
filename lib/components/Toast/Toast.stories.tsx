@@ -1,26 +1,25 @@
 import * as React from 'react';
-import { withThemesProvider } from 'storybook-addon-styled-component-theme';
-import { withKnobs, text } from '@storybook/addon-knobs';
+import { text, number } from '@storybook/addon-knobs';
 
 import { storiesOf } from '@storybook/react';
-import { dark, base } from '@lib/common/utils/themes/theme';
+import { withGlobalStyle } from '@lib/common/storybook/withGlobalStyle';
 import { Button } from '../Button';
 import Toast from './index';
 
 const stories = storiesOf('Toast', module);
 
-stories.addDecorator(withKnobs);
-stories.addDecorator(withThemesProvider([dark, base]));
+stories.addDecorator(withGlobalStyle);
 
 stories
   .add('with Toast', () => {
     const content = text('content', 'Hello workd');
+    const duration = number('duration', 100000);
     return (
       <>
-        <Button onClick={() => Toast.base(content)}>base</Button>
-        <Button onClick={() => Toast.error(content)}>error</Button>
-        <Button onClick={() => Toast.success(content)}>success</Button>
-        <Button onClick={() => Toast.warning(content)}>warning</Button>
+        <Button onClick={() => Toast.base(content, duration)}>base</Button>
+        <Button onClick={() => Toast.error(content, duration)}>error</Button>
+        <Button onClick={() => Toast.success(content, duration)}>success</Button>
+        <Button onClick={() => Toast.warning(content, duration)}>warning</Button>
       </>
     );
   });

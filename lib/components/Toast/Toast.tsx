@@ -6,6 +6,7 @@ import { Transition, TransitionGroup } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 import styled from 'styled-components';
 import uniqid from 'uniqid';
+import media from 'styled-media-query';
 
 type ToastType = 'success' | 'warning' | 'error' | 'base';
 
@@ -149,7 +150,7 @@ const ToastBox = styled.div<{type?: ToastType}>`
   padding: 0 ${rem('20px')};
   border-radius: ${rem('5px')};
   border: 0;
-  width: ${rem('420px')};
+  width: ${rem('320px')};
   height: ${rem('60px')};
   color: ${_ => styleColor[_.type || 'base']};
   background-color: ${_ => style[_.type || 'base']};
@@ -160,6 +161,9 @@ const ToastBox = styled.div<{type?: ToastType}>`
   font-size: ${() => rem(14)};
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: transform 0.4s, opacity 0.4s;
+  ${media.lessThan('small')`
+    width: calc(100vw - ${rem('60px')});
+  `}
 `;
 
 @observer

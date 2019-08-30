@@ -2,6 +2,8 @@ import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
 
 import { box } from '@lib/common/utils/themes/common';
+import media from 'styled-media-query';
+import { X } from '@lib/icon';
 
 export const Wrapper = styled.div`
   position: fixed;
@@ -31,6 +33,13 @@ export const Box = styled.div`
   margin: ${rem('24px')} auto;
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
+  position: relative;
+  ${media.lessThan('small')`
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+  `}
 `;
 
 export const Content = styled.div`
@@ -39,6 +48,9 @@ export const Content = styled.div`
   text-align: left;
   vertical-align: middle;
   width: 100%;
+  ${media.lessThan('small')`
+    height: 100%;
+  `}
 `;
 
 export const Mask = styled.div`
@@ -53,4 +65,15 @@ export const Mask = styled.div`
   background-color: rgba(0,0,0,0.4);
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
+`;
+
+export const XIcon = styled(X)`
+  display: none;
+  position: absolute;
+  right: ${rem(24)};
+  top: ${rem(24)};
+  cursor: pointer;
+  ${media.lessThan('small')`
+    display: block;
+  `}
 `;
