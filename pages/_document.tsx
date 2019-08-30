@@ -37,14 +37,12 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
-          <link href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" rel="stylesheet" />
+          <link rel="preload" as="style" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
         </Head>
         <body id="body">
           <Main />
           <NextScript />
         </body>
-        <script src="//unpkg.com/matchmedia-polyfill@0.3.2/matchMedia.js" />
-        <script src="//unpkg.com/matchmedia-polyfill@0.3.2/matchMedia.addListener" />
       </html>
     );
   }

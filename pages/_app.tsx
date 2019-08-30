@@ -2,9 +2,12 @@
 import 'reflect-metadata';
 
 import { Provider } from 'mobx-react';
-import moment from 'moment';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import React from 'react';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+import 'dayjs/locale/zh-cn';
 
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
@@ -22,7 +25,6 @@ import {
   IInitialStore, IMyMobxStore, initStore, store,
 } from '../lib/stores/init';
 
-moment.locale('zh-cn');
 
 interface IProps {
   i18n: II18nValue;
@@ -41,6 +43,10 @@ interface IPageProps {
   error?: IPageError;
   statusCode?: number;
 }
+
+
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
 
 Router.events.on('routeChangeStart', () => {
   store.appStore.setLoading(true);
@@ -155,23 +161,21 @@ export default class MyApp extends App<IProps> {
     const { picture } = router.query!;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
-      <Container>
-        <I18nProvider value={i18n}>
-          <Provider {...mobxStore}>
-            <ThemeWrapper>
-              <BodyLayout header={!isError}>
-                {
-                  picture
+      <I18nProvider value={i18n}>
+        <Provider {...mobxStore}>
+          <ThemeWrapper>
+            <BodyLayout header={!isError}>
+              {
+                picture
                   && <PictureModal pictureId={picture.toString()} />
-                }
-                <Component
-                  {...pageProps}
-                />
-              </BodyLayout>
-            </ThemeWrapper>
-          </Provider>
-        </I18nProvider>
-      </Container>
+              }
+              <Component
+                {...pageProps}
+              />
+            </BodyLayout>
+          </ThemeWrapper>
+        </Provider>
+      </I18nProvider>
     );
   }
 }

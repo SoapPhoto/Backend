@@ -9,5 +9,9 @@
     "ISO": "ISO",
     "dimensions": "Dimensions",
     "size": "Size"
+  },
+  "collection_picture": {
+    "title": "Add to Collection",
+    "add": "Add Collection"
   }
 }

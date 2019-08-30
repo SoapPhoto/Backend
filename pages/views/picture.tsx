@@ -55,6 +55,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
   const {
     info, like, getComment, comment, addComment,
   } = pictureStore;
+  const { t } = useTranslation();
   const { userInfo } = accountStore;
   const { user, tags } = info;
   const isOwner = (userInfo && userInfo.id === user.id) || false;
@@ -70,7 +71,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
   return (
     <Wrapper>
       <Head>
-        <title>{getTitle(`${info.title} (@${user.username})`)}</title>
+        <title>{getTitle(`${info.title} (@${user.username})`, t)}</title>
         <script
           type="text/javascript"
           src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"

@@ -1,5 +1,5 @@
 import { action, computed, observable } from 'mobx';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
@@ -66,7 +66,7 @@ export class AccountStore {
 
   public refreshToken = async () => {
     const token = JSON.parse(localStorage.getItem('token') || 'null');
-    if (token && token.refreshTokenExpiresAt && moment(token.refreshTokenExpiresAt) > moment()) {
+    if (token && token.refreshTokenExpiresAt && dayjs(token.refreshTokenExpiresAt) > dayjs()) {
       const params = new URLSearchParams();
       params.append('refresh_token', token.refreshToken);
       params.append('grant_type', 'refresh_token');
@@ -87,7 +87,7 @@ export class AccountStore {
     if (!token || !token.refreshTokenOkExpiresAt) {
       return true;
     }
-    if (moment(token.refreshTokenOkExpiresAt) > moment()) {
+    if (dayjs(token.refreshTokenOkExpiresAt) > dayjs()) {
       return true;
     }
     return false;
@@ -98,7 +98,7 @@ export class AccountStore {
     if (!token || !token.accessTokenExpiresAt) {
       return true;
     }
-    if (moment(token.accessTokenExpiresAt) > moment()) {
+    if (dayjs(token.accessTokenExpiresAt) > dayjs()) {
       return true;
     }
     return false;

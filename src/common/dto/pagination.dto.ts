@@ -3,7 +3,7 @@ import {
 } from 'class-validator';
 
 import { Type } from 'class-transformer';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export class PaginationDto {
   @IsOptional()
@@ -24,7 +24,7 @@ export class PaginationDto {
 
   get time() {
     if (this.timestamp) {
-      return moment(this.timestamp).format();
+      return dayjs(this.timestamp).format();
     }
     return undefined;
   }

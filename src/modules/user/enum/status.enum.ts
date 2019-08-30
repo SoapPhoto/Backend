@@ -7,4 +7,4 @@ export enum Status {
   BANNED = 'BANNED',
 }
 
-export const StatusValues = $enum(Status).map((key: any) => Status[key]);
+export const StatusValues = $enum(Status).map(key => Status[key]);

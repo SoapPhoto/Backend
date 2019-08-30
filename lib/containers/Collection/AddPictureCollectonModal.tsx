@@ -14,6 +14,7 @@ import { removePictureCollection, addPictureCollection } from '@lib/services/col
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme, activte } from '@lib/common/utils/themes';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
@@ -145,6 +146,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   onClose,
   currentCollections,
 }) => {
+  const { t } = useTranslation();
   const { key, id } = picture;
   const { getCollection, userCollection, addCollection } = appStore!;
   const { themeData } = themeStore!;
@@ -155,7 +157,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   const background = `linear-gradient(${rgba(themeData.colors.gray, 0.8)}, ${themeData.colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => {
     getCollection();
-  }, []);
+  }, [getCollection]);
   useEffect(() => {
     setCurrent(
       new Map(currentCollections.map(collection => [collection.id, collection])),
@@ -168,7 +170,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   }, [userCollection]);
   useEffect(() => {
     getCollection();
-  }, [visible]);
+  }, [getCollection, visible]);
   const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
     if (loading[collection.id]) {
       return;
@@ -204,7 +206,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
       onClose={onClose}
       boxStyle={{ backgroundImage: background, padding: 0 }}
     >
-      <Title>添加到收藏夹</Title>
+      <Title>{t('collection_picture.title')}</Title>
       <CollectionBox>
         <CollectionItemBox
           onClick={() => setAddCollectionVisible(true)}
@@ -213,7 +215,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
             <div>
               <ItemInfoTitle style={{ marginBottom: 0 }}>
                 <PlusCircle style={{ marginRight: '12px' }} />
-                <span>新增收藏夹</span>
+                <span>{t('collection_picture.add')}</span>
               </ItemInfoTitle>
             </div>
           </ItemInfoBox>
@@ -238,8 +240,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
                       {collection.name}
                     </ItemInfoTitle>
                     <ItemInfoCount>
-                      <span>{collection.pictureCount}</span>
-                      <span>个图片</span>
+                      <span>{t('img_count', collection.pictureCount.toString())}</span>
                     </ItemInfoCount>
                   </div>
                   <ItemHandleIcon>

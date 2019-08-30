@@ -1,4 +1,4 @@
-import moment from 'moment';
+import day from 'dayjs';
 import React from 'react';
 import { Emojione } from 'react-emoji-render';
 import { observer } from 'mobx-react';
@@ -40,9 +40,9 @@ export const CommentList: React.FC<IProps> = observer(({
                 trigger="hover"
                 placement="top"
                 theme="dark"
-                content={<span>{moment(createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+                content={<span>{day(createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
               >
-                <p>{moment(createTime).from()}</p>
+                <p>{day(createTime).fromNow()}</p>
               </Popover>
             </InfoBox>
           </MainBox>

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -67,11 +67,11 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           trigger="hover"
           placement="top"
           theme="dark"
-          content={<span>{moment(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+          content={<span>{dayjs(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
         >
           <BaseInfoItem>
             <Clock size={20} />
-            <p>{moment(info.createTime).from()}</p>
+            <p>{dayjs(info.createTime).fromNow()}</p>
           </BaseInfoItem>
         </Popover>
       </div>
@@ -104,7 +104,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
             </IconButton>
           )
         }
-        {/* {
+        {
           isOwner && (
             <IconButton popover="添加收藏" onClick={openEdit}>
               <Settings
@@ -112,7 +112,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
               />
             </IconButton>
           )
-        } */}
+        }
       </BaseInfoHandleBox>
       <EditMPictureModal
         visible={editVisible}

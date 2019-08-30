@@ -24,9 +24,6 @@ const nextConfig = {
   },
   useFileSystemPublicRoutes: false,
   webpack(config) {
-    config.plugins.push(
-      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(zh-cn)/),
-    );
     // config.plugins.push(
     //   new SWPrecacheWebpackPlugin({
     //     navigateFallback: '/index',

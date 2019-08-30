@@ -2,12 +2,12 @@ import { Injectable, LoggerService } from '@nestjs/common';
 import appRoot from 'app-root-path';
 import chalk from 'chalk';
 import fs from 'fs';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import winston from 'winston';
 import WinstonDailyRotate from 'winston-daily-rotate-file';
 
 const LOGGER_COMMON_CONFIG = {
-  timestamp: moment().format('YYYY-MM-DD HH:mm:ss:SSS'),
+  timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss:SSS'),
   prepend: true,
   datePattern: 'yyyy-MM-dd.',
   maxsize: 1024 * 1024 * 10,
@@ -60,7 +60,7 @@ export class LoggingService implements LoggerService {
           winston.format.timestamp(),
           winston.format.printf((info) => {
             const { timestamp, level, message } = info;
-            const time = moment(timestamp).format('YYYY-MM-DD HH:mm:ss');
+            const time = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
             let newMessage = message;
             if (typeof message === 'object') {
               newMessage = JSON.stringify(message);
