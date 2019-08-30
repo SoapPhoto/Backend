@@ -62,7 +62,7 @@ export const Switch: React.FC<ISwitchProps> = ({ label, bio, ...props }) => {
                 css={css`
                   font-size: ${_ => rem(_.theme.fontSizes[0])};
                   color: ${theme('colors.secondary')};
-                  margin-top: ${rem(12)};
+                  margin-top: ${rem(4)};
                 `}
               >
                 {bio}

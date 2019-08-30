@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
+import _ from 'lodash';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { connect } from '@lib/common/utils/store';
@@ -120,6 +121,10 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
       <EditPictureModal
         visible={editVisible}
         onClose={closeEdit}
+        defaultValue={{
+          ..._.pick(info, ['title', 'bio', 'isPrivate']),
+          tags: info.tags.map(tag => tag.name),
+        }}
       />
       <EXIFModal
         visible={EXIFVisible}

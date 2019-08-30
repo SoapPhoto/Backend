@@ -104,7 +104,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setPercentComplete(0);
       }
     }
-  }, [data, uploadLoading, imageInfo]);
+  }, [uploadQiniu, imageInfo, isLocation, data]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);

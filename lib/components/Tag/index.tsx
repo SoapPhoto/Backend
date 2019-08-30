@@ -7,7 +7,7 @@ import styled, { css } from 'styled-components';
 import { Input as BaseInput } from '@lib/components/Input';
 import { theme } from '@lib/common/utils/themes';
 
-interface IProps {
+interface IProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'value' | 'onChange'> {
   value: string[];
   onChange?: (tags: string[]) => void;
 }
@@ -72,10 +72,11 @@ const Input = styled(BaseInput)`
   }
 `;
 
-export default function ({
+const TagContent: React.FC<IProps> = ({
   value,
   onChange,
-}: IProps) {
+  ...restProps
+}) => {
   const [isClick, setClick] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -95,7 +96,9 @@ export default function ({
 
   const deleteTag = (tag: string) => isFunction(onChange) && onChange(value.filter(item => item !== tag));
 
-  const keyDown = () => {
+  const keyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (isFunction(onChange)) {
       onChange([...new Set([...value, inputRef.current!.value])]);
     }
@@ -103,7 +106,7 @@ export default function ({
   };
 
   return (
-    <Wrapper>
+    <Wrapper {...restProps}>
       {
         value.map(e => (
           <Tag
@@ -140,4 +143,5 @@ export default function ({
       </Tag>
     </Wrapper>
   );
-}
+};
+export default TagContent;

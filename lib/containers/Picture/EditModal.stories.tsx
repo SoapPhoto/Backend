@@ -4,6 +4,7 @@ import useState from 'storybook-addon-state';
 import { storiesOf } from '@storybook/react';
 import { Button } from '@lib/components/Button';
 import { withGlobalStyle } from '@lib/common/storybook/withGlobalStyle';
+import { object } from '@storybook/addon-knobs';
 import { EditPictureModal } from './EditModal';
 
 const stories = storiesOf('Picture', module);
@@ -19,6 +20,12 @@ stories
         <EditPictureModal
           onClose={() => setVisible(false)}
           visible={visible}
+          defaultValue={object('defaultValue', {
+            title: '哈哈哈哈',
+            bio: '还行吧',
+            isPrivate: false,
+            tags: ['test'],
+          })}
         />
       </>
     );

@@ -23,18 +23,26 @@ export const IconButton: React.FC<IProps> = ({
   onClick,
   popover,
   children,
-}) => (
-  <Popover
-    trigger="hover"
-    placement="top"
-    theme="dark"
-    openDelay={100}
-    content={<span>{popover}</span>}
-  >
+}) => {
+  const content = (
     <Wrapper
       onClick={onClick}
     >
       {children}
     </Wrapper>
-  </Popover>
-);
+  );
+  if (popover) {
+    return (
+      <Popover
+        trigger="hover"
+        placement="top"
+        theme="dark"
+        openDelay={100}
+        content={<span>{popover}</span>}
+      >
+        {content}
+      </Popover>
+    );
+  }
+  return content;
+};

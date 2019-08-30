@@ -19,7 +19,7 @@ const animate = keyframes`
   }
 `;
 
-export const Box = styled.div<{size: number; color: string}>`
+export const Box = styled.div<{size: number; color?: string}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@ export const Box = styled.div<{size: number; color: string}>`
     animation-fill-mode: both;
     width: ${_ => rem(_.size)};
     height: ${_ => rem(_.size)};
-    background-color: ${_ => _.color};
+    background-color: ${_ => _.color || _.theme.colors.text};
     display: inline-block;
     border-radius: 50%;
     margin: 0px ${_ => rem(_.size / 2)};
@@ -45,7 +45,7 @@ export const Box = styled.div<{size: number; color: string}>`
 
 export const Loading: React.FC<ILoadingProps> = ({
   size = 4,
-  color = 'rgb(68, 68, 68)',
+  color,
 }) => (
   <Box size={size} color={color}>
     <span />

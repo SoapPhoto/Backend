@@ -33,12 +33,12 @@ export const Box = styled.div`
   margin: ${rem('24px')} auto;
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
-  position: relative;
   ${media.lessThan('small')`
     width: 100%;
     height: 100%;
     margin: 0;
     border-radius: 0;
+    overflow-y: auto;
   `}
 `;
 
@@ -69,7 +69,7 @@ export const Mask = styled.div`
 
 export const XIcon = styled(X)`
   display: none;
-  position: absolute;
+  position: fixed;
   right: ${rem(24)};
   top: ${rem(24)};
   cursor: pointer;

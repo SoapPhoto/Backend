@@ -13,6 +13,7 @@ stories
     <Button
       loading={boolean('loading', false)}
       disabled={boolean('disabled', false)}
+      danger={boolean('danger', false)}
     >
       test
     </Button>

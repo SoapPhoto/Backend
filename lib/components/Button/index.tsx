@@ -13,6 +13,7 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
    * @memberof IButtonProps
    */
   loading?: boolean;
+  danger?: boolean;
 }
 
 type Component = React.FC<IButtonProps>;
@@ -20,10 +21,12 @@ type Component = React.FC<IButtonProps>;
 export const Button: Component = ({
   children,
   loading = false,
+  danger,
   ...restProps
 }) => (
   <StyleButton
     {...restProps}
+    danger={danger ? 1 : 0}
     loading={loading ? 1 : 0}
   >
     <>
