@@ -26,6 +26,8 @@ stories
             isPrivate: false,
             tags: ['test'],
           })}
+          onOk={() => {}}
+          update={async (data: any) => console.log(data)}
         />
       </>
     );

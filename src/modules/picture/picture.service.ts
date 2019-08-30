@@ -21,6 +21,7 @@ import { CollectionPictureEntity } from '@server/modules/collection/picture/coll
 import { GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
+import { Role } from '../user/enum/role.enum';
 
 @Injectable()
 export class PictureService {
@@ -116,11 +117,13 @@ export class PictureService {
       this.addViewCount(data.id);
       data.views += 1;
     }
-    const isUser = data && data.user.id === (user ? user.id : null);
-    if (data && data.isPrivate && !isUser) {
+    const isOwner = data && data.user.id === (user ? user.id : null);
+    if (data && data.isPrivate && !isOwner) {
       throw new NotFoundException();
     }
-    return classToPlain(data);
+    return classToPlain(data, {
+      groups: isOwner ? [Role.OWNER] : [],
+    });
   }
 
   /**

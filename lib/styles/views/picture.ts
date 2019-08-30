@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
+import media from 'styled-media-query';
 
 export const Wrapper = styled.div`
   max-width: ${rem('1040px')};
@@ -45,6 +46,11 @@ export const PictureBox = styled.div`
   border-radius: ${rem('3px')};
   overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+  ${media.lessThan('small')`
+    width: calc(100% + ${rem(40)});
+    margin-left: -${rem(20)};
+    border-radius: 0;
+  `}
 `;
 
 export const Content = styled.div`

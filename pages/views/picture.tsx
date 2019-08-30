@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -53,7 +53,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
   accountStore,
 }) => {
   const {
-    info, like, getComment, comment, addComment,
+    info, like, getComment, comment, addComment, updateInfo,
   } = pictureStore;
   const { t } = useTranslation();
   const { userInfo } = accountStore;
@@ -68,6 +68,9 @@ const Picture: ICustomNextPage<IProps, any> = ({
   const onConfirm = async (value: string) => {
     await addComment(value);
   };
+  const onOk = useCallback((picture: PictureEntity) => {
+    updateInfo(picture);
+  }, [updateInfo]);
   return (
     <Wrapper>
       <Head>
@@ -113,6 +116,7 @@ const Picture: ICustomNextPage<IProps, any> = ({
           info={info}
           isOwner={isOwner}
           onLike={like}
+          onOk={onOk}
         />
         {
           tags.length > 0
@@ -180,9 +184,11 @@ Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) 
 };
 
 export default withError<IProps>(
-  connect((stores: IMyMobxStore) => ({
-    pictureStore: stores.screen.pictureStore,
-    accountStore: stores.accountStore,
-    themeStore: stores.themeStore,
-  }))(pageWithTranslation(I18nNamespace.Picture)(Picture)),
+  pageWithTranslation(I18nNamespace.Picture)(
+    connect((stores: IMyMobxStore) => ({
+      pictureStore: stores.screen.pictureStore,
+      accountStore: stores.accountStore,
+      themeStore: stores.themeStore,
+    }))(Picture),
+  ),
 );

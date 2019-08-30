@@ -17,6 +17,8 @@
   "username": "用户名",
   "password": "密码",
   "email": "邮箱",
+  "picture_title": "标题",
+  "picture_bio": "介绍",
   "no_more": "没有更多内容啦！",
   "yup_required": "请输入{0}！",
   "yup_format": "{0}格式不正确!",

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import React, { useCallback, useState } from 'react';
 import _ from 'lodash';
 
-import { PictureEntity } from '@lib/common/interfaces/picture';
+import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { connect } from '@lib/common/utils/store';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
@@ -19,6 +19,7 @@ import {
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { updatePicture } from '@lib/services/picture';
 
 interface IProps {
   info: PictureEntity;
@@ -26,6 +27,7 @@ interface IProps {
   accountStore?: AccountStore;
   themeStore?: ThemeStore;
   onLike: () => Promise<void>;
+  onOk: (info: PictureEntity) => void;
 }
 
 export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => ({
@@ -37,6 +39,7 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   themeStore,
   onLike,
   isOwner,
+  onOk,
 }) => {
   const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
@@ -63,6 +66,9 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   const openEdit = useCallback(() => {
     setEditVisible(true);
   }, []);
+
+  const update = async (data: UpdatePictureDot) => updatePicture(info.id, data);
+
   return (
     <PictureBaseInfo>
       <div>
@@ -125,6 +131,8 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
           ..._.pick(info, ['title', 'bio', 'isPrivate']),
           tags: info.tags.map(tag => tag.name),
         }}
+        onOk={onOk}
+        update={update}
       />
       <EXIFModal
         visible={EXIFVisible}

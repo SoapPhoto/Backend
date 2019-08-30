@@ -30,7 +30,7 @@ export const Box = styled.div<{size: number; color?: string}>`
     animation-fill-mode: both;
     width: ${_ => rem(_.size)};
     height: ${_ => rem(_.size)};
-    background-color: ${_ => _.color || _.theme.colors.text};
+    background-color: ${_ => _.color || '#fff'};
     display: inline-block;
     border-radius: 50%;
     margin: 0px ${_ => rem(_.size / 2)};

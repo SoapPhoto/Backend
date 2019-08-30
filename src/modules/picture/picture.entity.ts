@@ -15,6 +15,7 @@ import { TagEntity } from '@server/modules/tag/tag.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
+import { Role } from '../user/enum/role.enum';
 
 @Exclude()
 @Entity('picture')
@@ -50,6 +51,7 @@ export class PictureEntity extends BaseEntity {
   @Column({
     default: false,
   })
+  @Expose({ groups: [Role.OWNER] })
   public readonly isPrivate!: boolean;
 
   /** 浏览次数 */

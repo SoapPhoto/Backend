@@ -1,5 +1,5 @@
 import {
-  Exclude, Expose, Transform,
+  Exclude, Expose,
 } from 'class-transformer';
 import {
   IsArray, IsBoolean, IsNotEmpty, IsString,
@@ -75,7 +75,6 @@ export class UpdatePictureDot implements Partial<PictureEntity> {
   public readonly bio!: string
 
   @IsBoolean()
-  @Transform(value => (value !== '0'))
   @Expose()
   public readonly isPrivate!: boolean
 

@@ -1,7 +1,8 @@
 import React from 'react';
+import { rem } from 'polished';
+
 import { Modal } from '@lib/components/Modal';
 import styled, { css } from 'styled-components';
-import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikActions, Field } from 'formik';
 import { FieldInput, FieldSwitch } from '@lib/components/Formik';
@@ -9,10 +10,16 @@ import { Button, IconButton } from '@lib/components/Button';
 import { Trash2 } from '@lib/icon';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import Tag from '@lib/components/Tag';
+import { EditPictureSchema } from '@lib/common/dto/picture';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import Toast from '@lib/components/Toast';
+import { UpdatePictureDot, PictureEntity } from '@lib/common/interfaces/picture';
 
 interface IProps {
   visible: boolean;
   onClose: () => void;
+  onOk: (info: PictureEntity) => void;
+  update: (data: UpdatePictureDot) => Promise<any>;
   defaultValue: IValues;
 }
 
@@ -40,11 +47,27 @@ const Title = styled.h2`
 export const EditPictureModal: React.FC<IProps> = ({
   visible,
   onClose,
+  onOk,
   defaultValue,
+  update,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
-    console.log(value, setSubmitting);
+    setConfirmLoading(true);
+    setSubmitting(false);
+    try {
+      const { data } = await update(value);
+      onClose();
+      onOk(data);
+      Toast.success(t('picture_update_sccuess'));
+    } catch (error) {
+      setSubmitting(false);
+      Toast.error(t(error.message));
+    } finally {
+      setConfirmLoading(false);
+    }
   };
   return (
     <Modal
@@ -58,19 +81,19 @@ export const EditPictureModal: React.FC<IProps> = ({
           <Formik<IValues>
             initialValues={defaultValue}
             onSubmit={handleOk}
-          // validationSchema={LoginSchema(t)}
+            validationSchema={EditPictureSchema(t)}
           >
-            {() => (
+            {({ handleSubmit, isSubmitting }) => (
               <>
                 <FieldInput
                   name="title"
-                  label="标题"
-                  css={css`margin-bottom: ${rem(12)};`}
+                  label={t('picture_title')}
+                  css={css`margin-bottom: ${rem(24)};`}
                 />
                 <FieldInput
                   name="bio"
-                  label="介绍"
-                  css={css`margin-bottom: ${rem(24)};`}
+                  label={t('picture_bio')}
+                  css={css`margin-bottom: ${rem(32)};`}
                 />
                 <Field
                   name="tags"
@@ -109,7 +132,14 @@ export const EditPictureModal: React.FC<IProps> = ({
                       color={colors.danger}
                     />
                   </IconButton>
-                  <Button>修改</Button>
+                  <Button
+                    loading={confirmLoading}
+                    onClick={() => handleSubmit()}
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
+                    修改
+                  </Button>
                 </div>
               </>
             )}

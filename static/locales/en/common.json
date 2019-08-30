@@ -16,6 +16,8 @@
   },
   "username": "Username",
   "password": "Password",
+  "picture_title": "Title",
+  "picture_bio": "Bio",
   "email": "Email",
   "no_more": "No more content!",
   "yup_required": "Please input your {0}!",

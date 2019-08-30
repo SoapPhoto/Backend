@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx';
+import { merge, pick } from 'lodash';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -77,4 +78,9 @@ export class PictureScreenStore extends BaseStore {
   }
 
   public isCache = (type = '') => this.cacheData[type] !== undefined;
+
+  public updateInfo = (picture: PictureEntity) => {
+    const data = merge(this.info, pick(picture, ['title', 'bio', 'tags', 'isPrivate']));
+    this.setInfo(data);
+  }
 }
