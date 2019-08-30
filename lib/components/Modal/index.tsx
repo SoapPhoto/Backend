@@ -46,6 +46,8 @@ export class Modal extends React.PureComponent<IModalProps> {
     closeIcon: true,
   }
 
+  public shouldClose: null | boolean = null;
+
   public contentRef = React.createRef<HTMLDivElement>();
 
   public wrapperRef = React.createRef<HTMLDivElement>();
@@ -93,10 +95,26 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    if (e.target === this.contentRef.current || e.target === this.wrapperRef.current) {
+    if (this.shouldClose === null) {
+      this.shouldClose = true;
+    }
+    if (this.shouldClose && (e.target === this.contentRef.current || e.target === this.wrapperRef.current)) {
       this.onClose();
     }
+    this.shouldClose = null;
   }
+
+  public handleContentOnMouseUp = () => {
+    this.shouldClose = false;
+  };
+
+  public handleContentOnClick = () => {
+    this.shouldClose = false;
+  };
+
+  public handleContentOnMouseDown = () => {
+    this.shouldClose = false;
+  };
 
   public onClose = () => {
     if (isFunction(this.props.onClose)) {
@@ -150,6 +168,9 @@ export class Modal extends React.PureComponent<IModalProps> {
                               ...transitionStyles[state],
                               ...boxStyle || {},
                             }}
+                            onMouseDown={this.handleContentOnMouseDown}
+                            onMouseUp={this.handleContentOnMouseUp}
+                            onClick={this.handleContentOnMouseUp}
                           >
                             {
                               closeIcon
