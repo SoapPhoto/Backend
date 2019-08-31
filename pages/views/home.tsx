@@ -46,6 +46,6 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
   return {};
 };
 
-export default connect((stores: IMyMobxStore) => ({
+export default pageWithTranslation()(connect((stores: IMyMobxStore) => ({
   homeStore: stores.screen.homeStore,
-}))(withError(pageWithTranslation()(Index)));
+}))(withError(Index)));

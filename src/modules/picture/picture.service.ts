@@ -201,12 +201,11 @@ export class PictureService {
       throw new BadRequestException();
     }
     if (data.user.id === user.id) {
-      await getManager().transaction(async (entityManager) => {
-        await Promise.all([
-          entityManager.remove(data),
-          this.qiniuService.deleteFile(data.key),
-        ]);
-      });
+      this.pictureRepository.createQueryBuilder()
+        .delete()
+        .from(PictureEntity)
+        .where('id=:id', { id })
+        .execute();
       return {
         message: 'ok',
       };
