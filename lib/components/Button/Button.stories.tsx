@@ -14,6 +14,7 @@ stories
       loading={boolean('loading', false)}
       disabled={boolean('disabled', false)}
       danger={boolean('danger', false)}
+      text={boolean('text', false)}
     >
       test
     </Button>

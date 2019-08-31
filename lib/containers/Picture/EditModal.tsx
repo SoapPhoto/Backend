@@ -14,6 +14,7 @@ import { EditPictureSchema } from '@lib/common/dto/picture';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import Toast from '@lib/components/Toast';
 import { UpdatePictureDot, PictureEntity } from '@lib/common/interfaces/picture';
+import { Confirm } from '@lib/components/Confirm';
 
 interface IProps {
   visible: boolean;
@@ -53,6 +54,7 @@ export const EditPictureModal: React.FC<IProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const [confirmVisible, setConfirmVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
     setConfirmLoading(true);
@@ -127,6 +129,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                 >
                   <IconButton
                     popover="删除图片"
+                    onClick={() => setConfirmVisible(true)}
                   >
                     <Trash2
                       color={colors.danger}
@@ -146,6 +149,14 @@ export const EditPictureModal: React.FC<IProps> = ({
           </Formik>
         </Content>
       </Wrapper>
+      <Confirm
+        title="确认要删除吗？删除后将不可恢复。"
+        visible={confirmVisible}
+        confirmText="删除"
+        confirmProps={{ danger: true }}
+        confirmIcon={<Trash2 size={14} />}
+        onClose={() => setConfirmVisible(false)}
+      />
     </Modal>
 
   );

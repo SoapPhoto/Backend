@@ -7,6 +7,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 
 import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
 import { isFunction } from 'lodash';
+import { DefaultTheme } from 'styled-components';
 import { NoSSR } from '../SSR';
 import {
   Box, Content, Mask, Wrapper, XIcon,
@@ -14,10 +15,12 @@ import {
 
 let _modalIndex = 0;
 
-interface IModalProps {
-  visible: boolean;
+export interface IModalProps {
+  visible?: boolean;
   onClose?: () => void;
+  afterClose?: () => void;
   closeIcon?: boolean;
+  theme?: DefaultTheme;
   boxStyle?: React.CSSProperties;
 }
 
@@ -125,6 +128,9 @@ export class Modal extends React.PureComponent<IModalProps> {
   public onDestroy = (isDestroy = false) => {
     if (isFunction(this.initStyle)) {
       this.initStyle();
+    }
+    if (isFunction(this.props.afterClose)) {
+      this.props.afterClose();
     }
     if (!isDestroy) {
       // eslint-disable-next-line no-plusplus

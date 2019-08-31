@@ -8,13 +8,18 @@ const loadingCss = ({ loading }: {loading: number}) => (loading
   ` : '');
 
 export const StyleButton = styled.button.attrs<
-{loading: number; danger: number},
-{background: string; danger: number; borderColor: string}
+{loading: number; danger: number; text: number},
+{background: string; danger: number; text: number; borderColor: string}
 >(
-  ({ danger, theme: themes }) => ({
+  ({
+    danger, theme: themes, text,
+  }) => ({
     background: (() => {
       if (danger) {
         return themes.colors.danger;
+      }
+      if (text) {
+        return 'transparent';
       }
       return themes.colors.primary;
     })(),
@@ -22,9 +27,19 @@ export const StyleButton = styled.button.attrs<
       if (danger) {
         return themes.colors.danger;
       }
+      if (text) {
+        return 'transparent';
+      }
       return themes.colors.primary;
     })(),
+    color: (() => {
+      if (text) {
+        return themes.colors.primary;
+      }
+      return '#fff';
+    })(),
     danger,
+    text,
   }),
 )`
   position: relative;
@@ -45,13 +60,17 @@ export const StyleButton = styled.button.attrs<
   border-radius: ${rem('4px')};
   border-color: ${_ => _.borderColor};
   background-color: ${_ => _.background};
-  color: ${_ => (_.loading ? _.background : '#fff')};
+  color: ${_ => (_.loading ? _.background : _.color)};
   transition: .2s color ease, .2s background ease;
   ${loadingCss}
   &:disabled {
     cursor: not-allowed;
     opacity: .25;
     pointer-events: none;
+  }
+  &>svg {
+    vertical-align: -${rem(1)};
+    margin-right: ${rem(12)};
   }
   &:hover {
     border-color: ${_ => lighten(0.05, _.borderColor)};
@@ -61,6 +80,14 @@ export const StyleButton = styled.button.attrs<
     border-color: ${_ => darken(0.05, _.borderColor)};
     background-color: ${_ => darken(0.05, _.background)};
   }
+  ${_ => _.text && `
+    &:hover {
+      color: ${lighten(0.05, _.color!)};
+    }
+    &:active {
+      color: ${darken(0.05, _.color!)};
+    }
+  `}
 `;
 
 export const LoadingBox = styled.div`
