@@ -17,32 +17,19 @@ import { LoggingInterceptor } from '@server/shared/logging/logging.interceptor';
 import { ApiModule } from './api.module';
 import { EmailModule } from './shared/email/email.module';
 import { LoggingModule } from './shared/logging/logging.module';
-
-import { CollectionEntity } from './modules/collection/collection.entity';
-import { CollectionPictureEntity } from './modules/collection/picture/collection-picture.entity';
-import { CommentEntity } from './modules/comment/comment.entity';
-import { OauthMiddleware } from './common/middleware/oauth.middleware';
-import { EventsModule } from './events/events.module';
-import { NotificationEntity } from './modules/notification/notification.entity';
-import { NotificationSubscribersUserEntity } from './modules/notification/subscribers-user/subscribers-user.entity';
-import { AccessTokenEntity } from './modules/oauth/access-token/access-token.entity';
-import { ClientEntity } from './modules/oauth/client/client.entity';
-import { PictureEntity } from './modules/picture/picture.entity';
-import { PictureUserActivityEntity } from './modules/picture/user-activity/user-activity.entity';
-import { Logger } from './shared/logging/logging.service';
 import { QiniuModule } from './shared/qiniu/qiniu.module';
-import { TagEntity } from './modules/tag/tag.entity';
-import { UserEntity } from './modules/user/user.entity';
+import { EventsModule } from './events/events.module';
+
+import { OauthMiddleware } from './common/middleware/oauth.middleware';
+import { Logger } from './shared/logging/logging.service';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
-import { FileEntity } from './modules/file/file.entity';
+import ormconfig from './ormconfig';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
 
-
 @Module({
   imports: [
-    // NestNextModule.forRoot({ dev }),
     CacheModule.register({
       store: redisStore,
       host: process.env.REDIS_HOST,
@@ -60,31 +47,7 @@ import { FileEntity } from './modules/file/file.entity';
       password: process.env.REDIS_PASSWORD,
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
-    TypeOrmModule.forRoot({
-      logging: false,
-      keepConnectionAlive: true,
-      type: 'mysql',
-      port: Number(process.env.DATABASE_PORT),
-      host: process.env.DATABASE_HOST,
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      synchronize: true, // TODO: Remove in production!
-      entities: [
-        UserEntity,
-        PictureEntity,
-        ClientEntity,
-        PictureUserActivityEntity,
-        NotificationEntity,
-        NotificationSubscribersUserEntity,
-        TagEntity,
-        AccessTokenEntity,
-        CollectionEntity,
-        CollectionPictureEntity,
-        CommentEntity,
-        FileEntity,
-      ],
-    }),
+    TypeOrmModule.forRoot(ormconfig),
     GraphQLModule.forRoot({
       resolverValidationOptions: {
         requireResolversForResolveType: false,
@@ -129,7 +92,6 @@ import { FileEntity } from './modules/file/file.entity';
     EmailModule,
     QiniuModule,
     EventsModule,
-    // ViewsModule,
   ],
   providers: [
     {
