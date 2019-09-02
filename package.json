@@ -11,7 +11,7 @@
     "build:server": "tsc -p tsconfig.build.json && babel --no-babelrc --config-file ./.babelrc-server -d .next/production-server .next/production-server",
     "build:view": "next build",
     "start:server": "cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/src/main.js",
-    "start:view": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register --project ./tsconfig.server.json server.ts",
+    "start:view": "cross-env NODE_ENV=production node .next/production-server/src/server.ts",
     "dev:server": "nodemon src/main.ts",
     "dev:view": "nodemon server.ts --watch server.ts common",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -210,7 +210,7 @@
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.8.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.5.3"
   },
   "husky": {
     "hooks": {
