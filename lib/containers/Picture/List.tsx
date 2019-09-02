@@ -42,11 +42,7 @@ const mediaArr = [
     col: 3,
   },
   {
-    media: `(max-width: ${defaultBreakpoints.medium}) and (min-width: ${defaultBreakpoints.small})`,
-    col: 2,
-  },
-  {
-    media: `(max-width: ${defaultBreakpoints.small})`,
+    media: `(max-width: ${defaultBreakpoints.medium})`,
     col: 1,
   },
 ];
@@ -68,7 +64,7 @@ export const PictureList: React.FC<IProps> = ({
   const col = useMedia(
     mediaArr.map(media => media.media),
     mediaArr.map(media => media.col),
-    4,
+    3,
   );
 
   const scrollEvent = debounce(async () => {
@@ -89,6 +85,7 @@ export const PictureList: React.FC<IProps> = ({
   };
   useEffect(() => {
     scrollEvent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // 滚动事件绑定
   useEffect(() => {
@@ -97,10 +94,12 @@ export const PictureList: React.FC<IProps> = ({
       return () => window.removeEventListener('scroll', scrollEvent);
     }
     return () => null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // 处理客户端列表数据
   useEffect(() => {
     pictureList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [col, data]);
   // 服务端渲染列表
   if (server) {

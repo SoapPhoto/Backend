@@ -10,13 +10,13 @@ import { theme } from '@lib/common/utils/themes';
 
 export const Wrapper = styled(Grid)`
   ${WrapperBox()}
-  ${media.lessThan('small')`
+  ${media.lessThan('medium')`
     grid-template-columns: repeat(1,1fr);
   `}
 
-  ${media.between('small', 'medium')`
+  /* ${media.between('small', 'medium')`
     grid-template-columns: repeat(2,1fr);
-  `}
+  `} */
 
   ${media.between('medium', 'large')`
     grid-template-columns: repeat(3,1fr);

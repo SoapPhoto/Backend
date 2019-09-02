@@ -13,7 +13,7 @@
     "start:server": "cross-env NODE_ENV=production node --require reflect-metadata .next/production-server/src/main.js",
     "start:view": "cross-env NODE_ENV=production node .next/production-server/src/server.js",
     "dev:server": "nodemon src/main.ts",
-    "dev:view": "nodemon server.ts --watch server.ts common",
+    "dev:view": "nodemon src/server.ts --watch src/server.ts common",
     "typeorm": "ts-node -r tsconfig-paths/register --project ./tsconfig.server.json ./node_modules/typeorm/cli.js --config src/ormconfig.ts",
     "typeorm:migrate": "npm run typeorm migration:generate -- -n",
     "typeorm:run": "npm run typeorm migration:run",

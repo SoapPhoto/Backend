@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
@@ -20,6 +20,9 @@ import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureC
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { updatePicture } from '@lib/services/picture';
+import { NextRouter, withRouter } from 'next/router';
+import { pushRoute } from '@lib/routes';
+import { parsePath } from '@lib/common/utils';
 
 interface IProps {
   info: PictureEntity;
@@ -28,19 +31,19 @@ interface IProps {
   themeStore?: ThemeStore;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
+  router?: NextRouter;
 }
 
-export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => ({
-  accountStore: stores.accountStore,
-  themeStore: stores.themeStore,
-}))(({
+const PictureInfoComponent: React.FC<IProps> = ({
   info,
   accountStore,
   themeStore,
   onLike,
   isOwner,
   onOk,
+  router,
 }) => {
+  const { query, asPath } = router!;
   const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
   const [collectionVisible, setCollectionVisible] = useState(false);
@@ -48,9 +51,28 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
   const { isLogin } = accountStore!;
   const { themeData } = themeStore!;
 
+  useEffect(() => {
+    if (query.exif === '1') {
+      setEXIFVisible(true);
+    } else {
+      setEXIFVisible(false);
+    }
+  }, [query]);
+  // nononononono
+  const push = useCallback((label: string, value?: string) => {
+    const { pathname } = parsePath(asPath);
+    const data: Record<string, string> = {};
+    if (value) {
+      data[label] = value;
+    }
+    pushRoute(pathname, data, {
+      shallow: true,
+    });
+  }, [asPath]);
+
   const closeEXIF = useCallback(() => {
-    setEXIFVisible(false);
-  }, []);
+    push('exif');
+  }, [push]);
   const closeCollection = useCallback(() => {
     setCollectionVisible(false);
   }, []);
@@ -58,8 +80,8 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
     setEditVisible(false);
   }, []);
   const openEXIF = useCallback(() => {
-    setEXIFVisible(true);
-  }, []);
+    push('exif', '1');
+  }, [push]);
   const openCollection = useCallback(() => {
     setCollectionVisible(true);
   }, []);
@@ -147,4 +169,9 @@ export const PictureInfo = connect<React.FC<IProps>>((stores: IMyMobxStore) => (
       />
     </PictureBaseInfo>
   );
-});
+};
+
+export const PictureInfo = withRouter(connect((stores: IMyMobxStore) => ({
+  accountStore: stores.accountStore,
+  themeStore: stores.themeStore,
+}))(PictureInfoComponent));

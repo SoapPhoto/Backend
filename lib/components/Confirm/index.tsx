@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 import { HelpCircle } from '@lib/icon';
+import { defaultBreakpoints } from 'styled-media-query';
 import { Modal, IModalProps } from '../Modal';
 import { Button, IButtonProps } from '../Button';
 
@@ -43,7 +44,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
   confirmText = '确定',
   confirmLoading,
 }) => (
-  <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: '450px' }}>
+  <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.mediun }}>
     <Content>
       <HelpCircle css={css`margin-right: ${rem(24)};`} />
       <div>

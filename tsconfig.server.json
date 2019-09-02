@@ -7,5 +7,5 @@
     "moduleResolution": "node"
   },
   "include": ["src/**/*", "typings/**/*", "common/**/*"],
-  "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*"]
+  "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*", "src/ormconfig.ts"]
 }

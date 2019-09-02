@@ -3,7 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, server } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { Avatar, GpsImage } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
@@ -170,10 +170,10 @@ Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) 
   const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
   if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
     mobxStore.screen.pictureStore.getCache();
-    mobxStore.screen.pictureStore.getPictureInfo(
-      params.id!,
-      req ? req.headers : undefined,
-    );
+    // mobxStore.screen.pictureStore.getPictureInfo(
+    //   params.id!,
+    //   req ? req.headers : undefined,
+    // );
     return {};
   }
   await mobxStore.screen.pictureStore.getPictureInfo(

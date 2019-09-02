@@ -10,17 +10,17 @@ import { theme, activte } from '@lib/common/utils/themes';
 const padding = 24;
 
 export const PictureContent = styled.div`
-  ${media.lessThan('small')`
-    &>div:nth-child(4) {
-      display: grid;
-    }
-  `}
-
-  ${media.between('small', 'medium')`
+  ${media.lessThan('medium')`
     &>div:nth-child(3) {
       display: grid;
     }
   `}
+
+  /* ${media.between('small', 'medium')`
+    &>div:nth-child(3) {
+      display: grid;
+    }
+  `} */
 
   ${media.between('medium', 'large')`
     &>div:nth-child(2) {

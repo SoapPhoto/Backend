@@ -11,6 +11,11 @@ export enum UserType {
   collections = 'collections'
 }
 
+export enum PictureType {
+  info = 'info'
+}
+
 
 export const SettingTypeValues = $enum(SettingType).map(key => SettingType[key]);
 export const UserTypeValues = $enum(UserType).map(key => UserType[key]);
+export const PictureTypeValues = $enum(PictureType).map(key => PictureType[key]);

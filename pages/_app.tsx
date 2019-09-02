@@ -44,15 +44,29 @@ interface IPageProps {
   statusCode?: number;
 }
 
+let isOk = false;
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 Router.events.on('routeChangeStart', () => {
-  store.appStore.setLoading(true);
+  isOk = false;
+  setTimeout(() => {
+    if (!isOk) {
+      store.appStore.setLoading(true);
+    } else {
+      isOk = false;
+    }
+  }, 200);
 });
-Router.events.on('routeChangeComplete', () => store.appStore.setLoading(false));
-Router.events.on('routeChangeError', () => store.appStore.setLoading(false));
+Router.events.on('routeChangeComplete', () => {
+  isOk = true;
+  store.appStore.setLoading(false);
+});
+Router.events.on('routeChangeError', () => {
+  isOk = true;
+  store.appStore.setLoading(false);
+});
 
 export default class MyApp extends App<IProps> {
   // 初始化页面数据，初始化store

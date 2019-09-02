@@ -1,4 +1,7 @@
 /* eslint-disable import/first */
+/// <reference types="../typings/index" />
+/// <reference types="../typings/typing" />
+
 require('dotenv').config();
 
 import next from 'next';
@@ -28,7 +31,7 @@ app.prepare().then(() => {
   server.use(cookieParser());
   server.use(responseTime());
   server.use(express.static('static'));
-  server.use((req, res, nextCb) => {
+  server.use((req: any, res: any, nextCb) => {
     const header = req.get('accept-language');
     const cookie = req.cookies.locate;
     const acceptedLanguages = (cookie || header || '').split(';');

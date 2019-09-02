@@ -161,7 +161,7 @@ const ToastBox = styled.div<{type?: ToastType}>`
   font-size: ${() => rem(14)};
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: transform 0.4s, opacity 0.4s;
-  ${media.lessThan('small')`
+  ${media.lessThan('medium')`
     width: calc(100vw - ${rem('60px')});
   `}
 `;

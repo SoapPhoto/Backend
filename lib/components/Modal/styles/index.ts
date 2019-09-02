@@ -1,9 +1,13 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
+// eslint-disable-next-line import/no-duplicates
+import media from 'styled-media-query';
+// eslint-disable-next-line import/no-duplicates
+import { defaultBreakpoints } from 'styled-media-query';
 
 import { box } from '@lib/common/utils/themes/common';
-import media from 'styled-media-query';
 import { X } from '@lib/icon';
+
 
 export const Wrapper = styled.div`
   position: fixed;
@@ -28,12 +32,12 @@ export const Box = styled.div`
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
-  max-width: ${rem('560px')};
+  max-width: ${rem(defaultBreakpoints.medium)};
   border: none;
   margin: ${rem('24px')} auto;
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
-  ${media.lessThan('small')`
+  ${media.lessThan('medium')`
     width: 100%;
     height: 100%;
     margin: 0;
@@ -48,7 +52,7 @@ export const Content = styled.div`
   text-align: left;
   vertical-align: middle;
   width: 100%;
-  ${media.lessThan('small')`
+  ${media.lessThan('medium')`
     height: 100%;
   `}
 `;
@@ -73,7 +77,7 @@ export const XIcon = styled(X)`
   right: ${rem(24)};
   top: ${rem(24)};
   cursor: pointer;
-  ${media.lessThan('small')`
+  ${media.lessThan('medium')`
     display: block;
   `}
 `;
