@@ -4,7 +4,9 @@ import { merge, pick } from 'lodash';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
-import { getPicture, likePicture, unlikePicture } from '@lib/services/picture';
+import {
+  getPicture, likePicture, unlikePicture, deletePicture,
+} from '@lib/services/picture';
 
 import { HttpStatus } from '@lib/common/enums/http';
 import { BaseStore } from '../base/BaseStore';
@@ -45,6 +47,11 @@ export class PictureScreenStore extends BaseStore {
   public addComment = async (content: string) => {
     const { data } = await addComment(content, this.id);
     this.pushComment(data);
+  }
+
+  public deletePicture = async () => {
+    await deletePicture(this.id);
+    delete this.cacheData[this.id];
   }
 
   @action public pushComment = (comment: CommentEntity) => {

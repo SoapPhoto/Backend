@@ -27,6 +27,7 @@ stories
             tags: ['test'],
           })}
           onOk={() => {}}
+          deletePicture={async () => {}}
           update={async (data: any) => console.log(data)}
         />
       </>

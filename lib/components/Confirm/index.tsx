@@ -44,7 +44,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
   confirmText = '确定',
   confirmLoading,
 }) => (
-  <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.mediun }}>
+  <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.small }}>
     <Content>
       <HelpCircle css={css`margin-right: ${rem(24)};`} />
       <div>

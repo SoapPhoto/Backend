@@ -13,7 +13,10 @@ export const getPicture = async (id: ID, headers?: any) => (
   request.get<PictureEntity>(`/api/picture/${id}`, { headers })
 );
 
-
 export const updatePicture = async (id: ID, data: UpdatePictureDot, headers?: any) => (
   request.put<PictureEntity>(`/api/picture/${id}`, data, { headers })
+);
+
+export const deletePicture = async (id: ID) => (
+  request.delete<PictureEntity>(`/api/picture/${id}`)
 );

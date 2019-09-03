@@ -43,7 +43,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = () => {
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
   const {
-    info, like, getComment, comment, addComment, updateInfo,
+    info, like, getComment, comment, addComment, updateInfo, deletePicture,
   } = pictureStore;
   const { user, tags } = info;
   const isOwner = (userInfo && userInfo.id === user.id) || false;
@@ -105,6 +105,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = () => {
           isOwner={isOwner}
           onLike={like}
           onOk={onOk}
+          deletePicture={deletePicture}
         />
         {
           tags.length > 0

@@ -26,6 +26,7 @@ interface IProps {
   isOwner: boolean;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
+  deletePicture: () => Promise<void>;
 }
 
 export const PictureInfo: React.FC<IProps> = ({
@@ -33,6 +34,7 @@ export const PictureInfo: React.FC<IProps> = ({
   onLike,
   isOwner,
   onOk,
+  deletePicture,
 }) => {
   const {
     pushRoute, params, back, replaceRoute,
@@ -47,7 +49,7 @@ export const PictureInfo: React.FC<IProps> = ({
     let func = pushRoute;
     if (replace) func = replaceRoute;
     if (value) {
-      func(`/picture/${info.id}/${label}`, {}, {
+      func(`/picture/${params.id}/${label}`, {}, {
         shallow: true,
         state: {
           data: `child-${label}`,
@@ -58,12 +60,12 @@ export const PictureInfo: React.FC<IProps> = ({
       if (child === `child-${label}`) {
         back();
       } else {
-        func(`/picture/${info.id}`, {}, {
+        func(`/picture/${params.id}`, {}, {
           shallow: true,
         });
       }
     }
-  }, [back, info.id, pushRoute, replaceRoute]);
+  }, [back, params.id, pushRoute, replaceRoute]);
 
   useEffect(() => {
     const { type } = params;
@@ -175,6 +177,7 @@ export const PictureInfo: React.FC<IProps> = ({
         }}
         onOk={onOk}
         update={update}
+        deletePicture={deletePicture}
       />
       <EXIFModal
         visible={EXIFVisible}

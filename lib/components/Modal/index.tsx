@@ -59,11 +59,14 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   public initStyle?: () => void;
 
+  private isClose = false;
+
   constructor(props: IModalProps) {
     super(props);
     // eslint-disable-next-line react/destructuring-assignment
     reaction(() => this.props.visible, (vis) => {
       if (vis) {
+        this.isClose = false;
         if (_modalIndex === 0) {
           this.initStyle = setBodyCss({
             overflowY: 'hidden',
@@ -120,6 +123,8 @@ export class Modal extends React.PureComponent<IModalProps> {
   };
 
   public onClose = () => {
+    if (this.isClose) return;
+    this.isClose = true;
     if (isFunction(this.props.onClose)) {
       this.props.onClose();
     }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router as RouterProps } from 'next/router';
 
-import { parsePath, histore, Histore } from '@lib/common/utils';
+import { parsePath, Histore } from '@lib/common/utils';
 import { Router as BaseRouter } from '@lib/routes';
 import { store } from '@lib/stores/init';
 import { RouterAction } from '@lib/stores/AppStore';
@@ -13,16 +13,17 @@ interface IProps {
 
 const hybridRouter = (route: RouterProps): IRouter => {
   const data = parsePath(route.asPath);
-  const func: (fu: RouterPush, action: RouterAction) => RouterPush = (fu, action) => (routes, params, options) => {
+  // eslint-disable-next-line max-len
+  const func: (fu: RouterPush, action: RouterAction) => RouterPush = (fu, action) => async (routes, params, options) => {
+    if (options && options.state && Histore) {
+      Histore!.set(options.state);
+    }
     store.appStore.setRoute({
       as: route.route,
       options,
       href: data.href,
       action,
     });
-    if (options && options.state && Histore) {
-      Histore!.set(options.state);
-    }
     return fu(routes, params, options);
   };
   return {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { rem } from 'polished';
 
 import { Modal } from '@lib/components/Modal';
@@ -15,6 +15,8 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import Toast from '@lib/components/Toast';
 import { UpdatePictureDot, PictureEntity } from '@lib/common/interfaces/picture';
 import { Confirm } from '@lib/components/Confirm';
+import { useRouter } from '@lib/router';
+import { useAccountStore } from '@lib/stores/hooks';
 
 interface IProps {
   visible: boolean;
@@ -22,6 +24,7 @@ interface IProps {
   onOk: (info: PictureEntity) => void;
   update: (data: UpdatePictureDot) => Promise<any>;
   defaultValue: IValues;
+  deletePicture: () => Promise<any>;
 }
 
 interface IValues {
@@ -51,11 +54,22 @@ export const EditPictureModal: React.FC<IProps> = ({
   onOk,
   defaultValue,
   update,
+  deletePicture,
 }) => {
+  const { replaceRoute } = useRouter();
+  const { userInfo } = useAccountStore();
   const { t } = useTranslation();
   const { colors } = useTheme();
   const [confirmVisible, setConfirmVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const [deleteConfirmLoading, setDeleteConfirmLoading] = React.useState(false);
+  const [deleteConfirmDisabled, setDeleteConfirmDisabled] = React.useState(false);
+  useEffect(() => {
+    if (!visible) setConfirmVisible(false);
+    return () => {
+      // setConfirmVisible(false);
+    };
+  }, [onClose, visible]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(false);
@@ -71,6 +85,18 @@ export const EditPictureModal: React.FC<IProps> = ({
       setConfirmLoading(false);
     }
   };
+
+  const deleteConfirm = useCallback(async () => {
+    if (deleteConfirmLoading) return;
+    setDeleteConfirmLoading(true);
+    await deletePicture();
+    Toast.success('删除成功！');
+    setDeleteConfirmLoading(false);
+    setDeleteConfirmDisabled(true);
+    await replaceRoute(`/@${userInfo!.username}`);
+    window.scrollTo(0, 0);
+    // onClose();
+  }, [deleteConfirmLoading, deletePicture, replaceRoute, userInfo]);
   return (
     <Modal
       visible={visible}
@@ -153,7 +179,12 @@ export const EditPictureModal: React.FC<IProps> = ({
         title="确认要删除吗？删除后将不可恢复。"
         visible={confirmVisible}
         confirmText="删除"
-        confirmProps={{ danger: true }}
+        confirmProps={{
+          disabled: deleteConfirmDisabled,
+          danger: true,
+          onClick: deleteConfirm,
+        }}
+        confirmLoading={deleteConfirmLoading}
         confirmIcon={<Trash2 size={14} />}
         onClose={() => setConfirmVisible(false)}
       />

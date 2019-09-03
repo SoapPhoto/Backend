@@ -2,7 +2,6 @@ import { Request } from 'express';
 import cookie from 'js-cookie';
 import format from 'string-format';
 import _ from 'lodash';
-import dayjs from 'dayjs';
 
 import { LocaleType, LocaleTypeValues } from '@common/enum/locale';
 import { request } from '@lib/common/utils/request';
