@@ -3,17 +3,13 @@ import styled from 'styled-components';
 import Head from 'next/head';
 import { rem } from 'polished';
 
-import { ICustomNextContext, ICustomNextPage } from '@lib/common/interfaces/global';
+import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
-import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
-import { IMyMobxStore } from '@lib/stores/init';
-import { TagScreenStore } from '@lib/stores/screen/Tag';
 import { Package } from '@lib/icon';
-
-interface IProps {
-  tagStore: TagScreenStore;
-}
+import { withError } from '@lib/components/withError';
+import { useScreenStores } from '@lib/stores/hooks';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 
 const Wrapper = styled.div``;
 
@@ -42,9 +38,8 @@ const PictureNumber = styled.p`
   }
 `;
 
-const TagDetail: ICustomNextPage<IProps, {}> = ({
-  tagStore,
-}) => {
+const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = () => {
+  const { tagStore } = useScreenStores();
   const { info } = tagStore;
   return (
     <Wrapper>
@@ -82,13 +77,11 @@ TagDetail.getInitialProps = async (ctx: ICustomNextContext) => {
     && ctx.mobxStore.screen.tagStore.init
     && ctx.mobxStore.screen.tagStore.name === params.name!
   ) {
-    return { namespacesRequired: ['common'] };
+    return {};
   }
   await ctx.mobxStore.screen.tagStore.getInit(params.name!, ctx.req ? ctx.req.headers : undefined);
 
-  return { namespacesRequired: ['common'] };
+  return {};
 };
 
-export default connect((stores: IMyMobxStore) => ({
-  tagStore: stores.screen.tagStore,
-}))(TagDetail);
+export default withError(pageWithTranslation()(TagDetail));

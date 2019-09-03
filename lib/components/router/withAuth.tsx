@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 
 import { ICustomNextContext } from '@lib/common/interfaces/global';
 import { server } from '@lib/common/utils';
@@ -7,16 +7,16 @@ import { AccountStore } from '@lib/stores/AccountStore';
 import { store } from '@lib/stores/init';
 import { reaction } from 'mobx';
 
-type component<P> = React.ComponentClass<P> | React.FC<P>;
+type Props = {accountStore?: AccountStore};
 
-type Props = object & {accountStore?: AccountStore};
+const getDisplayName = <P extends {}>(
+  Component: ComponentType<P>,
+) => Component.displayName || Component.name || 'Component';
 
-// eslint-disable-next-line max-len
-const getDisplayName = <P extends Props>(Component: component<P>) => Component.displayName || Component.name || 'Component';
-
-// eslint-disable-next-line max-len
-export const withAuth = <P extends Props>(role?: string) => (WrappedComponent: component<P>) => class extends React.Component<P> {
-  public static displayName = `withAuthSync(${getDisplayName<P>(WrappedComponent)})`;
+export const withAuth = <P extends any>(role?: string) => (
+  WrappedComponent: ComponentType<P>,
+) => class extends React.Component<P> {
+  public static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`;
 
   public static async getInitialProps(ctx: ICustomNextContext) {
     const { isLogin } = store.accountStore;

@@ -102,7 +102,7 @@ const Collection: ICustomNextPage<IProps, {}> = ({
       </Header>
       <PictureList
         data={list}
-        like={() => {}}
+        like={() => console.log(123)}
         noMore
       />
     </div>

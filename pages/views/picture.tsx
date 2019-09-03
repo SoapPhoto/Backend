@@ -4,7 +4,6 @@ import React, { useEffect, useCallback } from 'react';
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getTitle } from '@lib/common/utils';
-import { connect } from '@lib/common/utils/store';
 import { Avatar, GpsImage } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
@@ -12,10 +11,6 @@ import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import { Eye, Heart } from '@lib/icon';
-import { AccountStore } from '@lib/stores/AccountStore';
-import { IMyMobxStore } from '@lib/stores/init';
-import { PictureScreenStore } from '@lib/stores/screen/Picture';
-import { ThemeStore } from '@lib/stores/ThemeStore';
 import {
   BaseInfoItem,
   Bio,
@@ -37,26 +32,19 @@ import { rem } from 'polished';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
 }
 
-interface IProps extends IInitialProps {
-  accountStore: AccountStore;
-  themeStore: ThemeStore;
-  pictureStore: PictureScreenStore;
-}
-
-const Picture: ICustomNextPage<IProps, any> = ({
-  pictureStore,
-  accountStore,
-}) => {
+const Picture: ICustomNextPage<IInitialProps, any> = () => {
+  const { userInfo } = useAccountStore();
+  const { pictureStore } = useScreenStores();
+  const { t } = useTranslation();
   const {
     info, like, getComment, comment, addComment, updateInfo,
   } = pictureStore;
-  const { t } = useTranslation();
-  const { userInfo } = accountStore;
   const { user, tags } = info;
   const isOwner = (userInfo && userInfo.id === user.id) || false;
 
@@ -192,12 +180,8 @@ Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) 
   return {};
 };
 
-export default withError<IProps>(
+export default withError(
   pageWithTranslation(I18nNamespace.Picture)(
-    connect((stores: IMyMobxStore) => ({
-      pictureStore: stores.screen.pictureStore,
-      accountStore: stores.accountStore,
-      themeStore: stores.themeStore,
-    }))(Picture),
+    Picture,
   ),
 );

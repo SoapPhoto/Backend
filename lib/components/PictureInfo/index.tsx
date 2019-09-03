@@ -3,16 +3,12 @@ import React, { useCallback, useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
-import { connect } from '@lib/common/utils/store';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
 import { Popover } from '@lib/components/Popover';
 import {
   Clock, Bookmark, Info, Settings,
 } from '@lib/icon';
-import { AccountStore } from '@lib/stores/AccountStore';
-import { IMyMobxStore } from '@lib/stores/init';
-import { ThemeStore } from '@lib/stores/ThemeStore';
 import {
   BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
 } from '@lib/styles/views/picture';
@@ -22,20 +18,18 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { updatePicture } from '@lib/services/picture';
 import { useRouter } from '@lib/router/useRouter';
 import { Histore } from '@lib/common/utils';
+import { useAccountStore } from '@lib/stores/hooks';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 
 interface IProps {
   info: PictureEntity;
   isOwner: boolean;
-  accountStore?: AccountStore;
-  themeStore?: ThemeStore;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
 }
 
-const PictureInfoComponent: React.FC<IProps> = ({
+export const PictureInfo: React.FC<IProps> = ({
   info,
-  accountStore,
-  themeStore,
   onLike,
   isOwner,
   onOk,
@@ -47,8 +41,8 @@ const PictureInfoComponent: React.FC<IProps> = ({
   const [EXIFVisible, setEXIFVisible] = useState(false);
   const [collectionVisible, setCollectionVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
-  const { isLogin } = accountStore!;
-  const { themeData } = themeStore!;
+  const { isLogin } = useAccountStore();
+  const { colors } = useTheme();
   const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
     let func = pushRoute;
     if (replace) func = replaceRoute;
@@ -140,13 +134,13 @@ const PictureInfoComponent: React.FC<IProps> = ({
       >
         <IconButton popover={t('picture_info')} onClick={openEXIF}>
           <Info
-            color={themeData.colors.secondary}
+            color={colors.secondary}
           />
         </IconButton>
         {
           isLogin && (
             <LikeButton
-              color={themeData.colors.secondary}
+              color={colors.secondary}
               isLike={info.isLike}
               size={22}
               onLike={onLike}
@@ -157,7 +151,7 @@ const PictureInfoComponent: React.FC<IProps> = ({
           isLogin && (
             <IconButton popover={t('add_collection')} onClick={openCollection}>
               <Bookmark
-                color={themeData.colors.secondary}
+                color={colors.secondary}
               />
             </IconButton>
           )
@@ -166,7 +160,7 @@ const PictureInfoComponent: React.FC<IProps> = ({
           isOwner && (
             <IconButton popover="编辑设置" onClick={openEdit}>
               <Settings
-                color={themeData.colors.secondary}
+                color={colors.secondary}
               />
             </IconButton>
           )
@@ -196,8 +190,3 @@ const PictureInfoComponent: React.FC<IProps> = ({
     </PictureBaseInfo>
   );
 };
-
-export const PictureInfo = connect((stores: IMyMobxStore) => ({
-  accountStore: stores.accountStore,
-  themeStore: stores.themeStore,
-}))(PictureInfoComponent);

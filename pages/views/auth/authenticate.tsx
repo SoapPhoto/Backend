@@ -3,21 +3,17 @@ import styled from 'styled-components';
 import { rem } from 'polished';
 
 import { theme } from '@lib/common/utils/themes';
-import Router, { withRouter } from 'next/router';
+import Router from 'next/router';
 import { store } from '@lib/stores/init';
 import Toast from '@lib/components/Toast';
 
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
-import { WithRouterProps } from 'next/dist/client/with-router';
-import { connect } from '@lib/common/utils/store';
-import { AccountStore } from '@lib/stores/AccountStore';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { useTranslation } from '@lib/i18n/useTranslation';
-
-interface IProps extends IBaseScreenProps, WithRouterProps {
-  accountStore: AccountStore;
-}
+import { useRouter } from '@lib/router';
+import { useAccountStore } from '@lib/stores/hooks';
+import { withError } from '@lib/components/withError';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -25,9 +21,9 @@ const Wrapper = styled.div`
   margin-top: ${rem(24)};
 `;
 
-const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
-  const { query } = router;
-  const { refreshToken } = accountStore;
+const Authenticate: React.FC<IBaseScreenProps> = () => {
+  const { query } = useRouter();
+  const { refreshToken } = useAccountStore();
   const { t } = useTranslation();
   useEffect(() => {
     store.appStore.setLoading(true);
@@ -56,6 +52,4 @@ const Authenticate: React.FC<IProps> = ({ router, accountStore }) => {
   );
 };
 
-export default withRouter(connect('accountStore')(
-  pageWithTranslation(I18nNamespace.Auth)(Authenticate),
-));
+export default withError(pageWithTranslation(I18nNamespace.Auth)(Authenticate));

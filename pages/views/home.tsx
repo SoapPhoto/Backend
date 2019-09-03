@@ -2,23 +2,16 @@ import Head from 'next/head';
 import React from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
-import { connect } from '@lib/common/utils/store';
 import { PictureList } from '@lib/containers/Picture/List';
-import { IMyMobxStore } from '@lib/stores/init';
-import { HomeScreenStore } from '@lib/stores/screen/Home';
 import { withError } from '@lib/components/withError';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { getTitle } from '@lib/common/utils';
+import { useScreenStores } from '@lib/stores/hooks';
 
-interface IProps extends IBaseScreenProps {
-  homeStore: HomeScreenStore;
-}
-
-const Index: ICustomNextPage<IProps, {}> = ({
-  homeStore,
-}) => {
+const Index: ICustomNextPage<IBaseScreenProps, {}> = () => {
   const { t } = useTranslation();
+  const { homeStore } = useScreenStores();
   const {
     list, like, getPageList, isNoMore,
   } = homeStore;
@@ -46,6 +39,4 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
   return {};
 };
 
-export default pageWithTranslation()(connect((stores: IMyMobxStore) => ({
-  homeStore: stores.screen.homeStore,
-}))(withError(Index)));
+export default pageWithTranslation()(withError(Index));

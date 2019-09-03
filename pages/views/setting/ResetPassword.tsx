@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Wrapper, Title } from '@lib/containers/Auth/resetPassword';
 import { Formik } from 'formik';
@@ -17,8 +17,9 @@ const initForm = {
   repeatPassword: '',
 };
 
-const reset = () => {
-  const [confirmLoading, setConfirmLoading] = React.useState(false);
+const reset: React.FC = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const handleOk = async (
     { password, newPassword, repeatPassword }: typeof initForm,
     setSubmitting: (isSubmitting: boolean) => void,

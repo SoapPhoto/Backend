@@ -25,8 +25,9 @@ import { css } from 'styled-components';
 import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
-import { ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
+import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { useRouter } from '@lib/router';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -197,10 +198,6 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   ));
 };
 
-Upload.getInitialProps = async (_: ICustomNextContext) => ({
-  namespacesRequired: ['common'],
-});
-
 export default withAuth('user')(
-  Upload,
+  pageWithTranslation()(Upload),
 );

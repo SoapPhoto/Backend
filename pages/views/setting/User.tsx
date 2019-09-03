@@ -1,35 +1,30 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageUrl } from '@lib/common/utils/image';
-import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
 import { Button } from '@lib/components/Button';
 import { Input } from '@lib/components/Input';
 import Toast from '@lib/components/Toast';
 import { Upload } from '@lib/components/Upload';
-import { AccountStore } from '@lib/stores/AccountStore';
 import Head from 'next/head';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { useAccountStore } from '@lib/stores/hooks';
 
-interface IUserProps {
-  accountStore?: AccountStore;
-}
-
-const User: React.FC<IUserProps> = ({ accountStore }) => {
-  const { userInfo, updateProfile } = accountStore!;
+const User: React.FC = () => {
+  const { userInfo, updateProfile } = useAccountStore();
   const { t } = useTranslation();
 
-  const [data, setData] = React.useState({
+  const [data, setData] = useState({
     name: userInfo!.name || userInfo!.username,
     website: userInfo!.website,
     bio: userInfo!.bio,
   });
-  const [btnLoading, setBtnLoading] = React.useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
 
-  const [avatarUrl, setAvatarUrl] = React.useState(userInfo!.avatar);
-  const avatarFile = React.useRef<File>();
+  const [avatarUrl, setAvatarUrl] = useState(userInfo!.avatar);
+  const avatarFile = useRef<File>();
 
   const handleOk = async () => {
     setBtnLoading(true);
@@ -110,4 +105,4 @@ const User: React.FC<IUserProps> = ({ accountStore }) => {
   );
 };
 
-export default connect('accountStore')(User);
+export default User;
