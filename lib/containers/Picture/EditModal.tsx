@@ -75,7 +75,7 @@ export const EditPictureModal: React.FC<IProps> = ({
     <Modal
       visible={visible}
       onClose={onClose}
-      boxStyle={{ padding: 0 }}
+      boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
       <Wrapper>
         <Title>编辑</Title>

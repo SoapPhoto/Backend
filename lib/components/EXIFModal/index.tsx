@@ -44,7 +44,7 @@ export class EXIFModal extends React.Component<IProps> {
       <Modal
         visible={visible}
         onClose={onClose}
-        boxStyle={{ backgroundImage: this.background, padding: 0, width: rem(500) }}
+        boxStyle={{ backgroundImage: this.background, padding: 0, maxWidth: rem(500) }}
       >
         <I18nContext.Consumer>
           {({ t }) => (

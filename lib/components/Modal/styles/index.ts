@@ -38,6 +38,7 @@ export const Box = styled.div`
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
   ${media.lessThan('medium')`
+    max-width: 100% !important;
     width: 100%;
     height: 100%;
     margin: 0;

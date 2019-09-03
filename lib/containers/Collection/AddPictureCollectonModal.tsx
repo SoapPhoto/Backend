@@ -155,6 +155,12 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(themeData.colors.gray, 0.8)}, ${themeData.colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
+  useEffect(() => () => setAddCollectionVisible(false), []);
+  useEffect(() => {
+    if (!visible) {
+      setAddCollectionVisible(false);
+    }
+  }, [visible]);
   useEffect(() => {
     getCollection();
   }, [getCollection]);
@@ -204,7 +210,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
     <Modal
       visible={visible}
       onClose={onClose}
-      boxStyle={{ backgroundImage: background, padding: 0 }}
+      boxStyle={{ backgroundImage: background, padding: 0, maxWidth: rem(500) }}
     >
       <Title>{t('collection_picture.title')}</Title>
       <CollectionBox>
