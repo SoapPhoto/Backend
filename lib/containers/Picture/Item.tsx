@@ -1,5 +1,5 @@
 import React from 'react';
-import { cover } from 'polished';
+import { cover, rem } from 'polished';
 import { css } from 'styled-components';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -9,6 +9,8 @@ import { Avatar } from '@lib/components';
 import { LikeButton } from '@lib/components/Button';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { A } from '@lib/components/A';
+import { Lock } from '@lib/icon';
+import { Popover } from '@lib/components/Popover';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName,
@@ -45,6 +47,36 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
           z-index: 2;
         `}
       />
+      {
+        detail.isPrivate && (
+          <Popover
+            openDelay={100}
+            trigger="hover"
+            placement="top"
+            theme="dark"
+            content={<span>私人图片</span>}
+          >
+            <div
+              css={css`
+                position: absolute;
+                z-index: 2;
+                background: #ccc;
+                right: ${rem(6)};
+                top: ${rem(6)};
+                background: #ff6282;
+                border-radius: 50%;
+                width: 25px;
+                height: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              `}
+            >
+              <Lock css={css`stroke-width: 3;`} size={12} color="#fff" />
+            </div>
+          </Popover>
+        )
+      }
       <InfoBox>
         <UserBox>
           <UserPopper username={detail.user.username}>

@@ -1,10 +1,10 @@
 import PopperJS, { Data, Modifiers, Placement } from 'popper.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import NoSSR from 'react-no-ssr';
 import styled from 'styled-components';
 
 import { server } from '@lib/common/utils';
+import { NoSSR } from '../SSR';
 
 interface IChildProps {
   visible: boolean;

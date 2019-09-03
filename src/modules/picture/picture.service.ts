@@ -8,7 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { validator } from '@server/common/utils/validator';
@@ -146,19 +146,21 @@ export class PictureService {
    */
   public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const q = this.selectList(user, query);
-    let isMe = false;
+    let isOwner = false;
     if (validator.isNumberString(idOrName)) {
-      if (user && user.id === idOrName) isMe = true;
+      if (user && user.id === idOrName) isOwner = true;
       q.andWhere('picture.userId=:id', { id: idOrName });
     } else {
-      if (user && user.username === idOrName) isMe = true;
+      if (user && user.username === idOrName) isOwner = true;
       q.andWhere('picture.userUsername=:id', { id: idOrName });
     }
-    if (!isMe) {
+    if (!isOwner) {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, classToPlain(data), count);
+    return listRequest(query, classToPlain(data, {
+      groups: isOwner ? [Role.OWNER] : undefined,
+    }), count);
   }
 
   /**

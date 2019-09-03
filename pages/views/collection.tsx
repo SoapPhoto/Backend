@@ -8,11 +8,12 @@ import { connect } from '@lib/common/utils/store';
 import { IMyMobxStore } from '@lib/stores/init';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
-import { Package } from '@lib/icon';
+import { Package, Lock } from '@lib/icon';
 import { Avatar } from '@lib/components';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
+import { Popover } from '@lib/components/Popover';
 
 interface IProps extends IBaseScreenProps {
   collectionStore: CollectionScreenStore;
@@ -26,6 +27,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
+  position: relative;
   width: 100%;
   font-size: ${_ => rem(_.theme.fontSizes[5])};
   text-align: center;
@@ -70,7 +72,7 @@ const Collection: ICustomNextPage<IProps, {}> = ({
 }) => {
   const { info, list } = collectionStore!;
   const {
-    name, user, pictureCount,
+    name, user, pictureCount, isPrivate,
   } = info!;
   return (
     <div>
@@ -79,6 +81,25 @@ const Collection: ICustomNextPage<IProps, {}> = ({
       </Head>
       <Header>
         <Title>
+          {
+            isPrivate && (
+              <Popover
+                trigger="hover"
+                placement="top"
+                theme="dark"
+                openDelay={100}
+                content={<span>私人收藏夹</span>}
+              >
+                <Lock
+                  size={32}
+                  css={css`
+                    stroke-width: 3;
+                    margin-right: ${rem(8)};
+                  `}
+                />
+              </Popover>
+            )
+          }
           {name}
         </Title>
         <Info>

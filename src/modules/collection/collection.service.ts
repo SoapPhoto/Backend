@@ -220,18 +220,18 @@ export class CollectionService {
   }
 
   public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
-    let isMe = false;
+    let isOwner = false;
     const q = this.collectionEntity.createQueryBuilder('collection');
     let userValue;
     if (validator.isNumberString(idOrName)) {
-      if (user && user.id === idOrName) isMe = true;
+      if (user && user.id === idOrName) isOwner = true;
       userValue = 'userId';
     } else {
-      if (user && user.username === idOrName) isMe = true;
+      if (user && user.username === idOrName) isOwner = true;
       userValue = 'userUsername';
     }
     q.andWhere(`collection.${userValue}=:id`, { id: idOrName });
-    if (!isMe) {
+    if (!isOwner) {
       q.andWhere('collection.isPrivate=:private', { private: false });
     }
     q
@@ -272,7 +272,9 @@ export class CollectionService {
       }
       return collection;
     });
-    return listRequest(query, classToPlain(newData), count);
+    return listRequest(query, classToPlain(newData, {
+      groups: isOwner ? [Role.OWNER] : undefined,
+    }), count);
   }
 
   /**
