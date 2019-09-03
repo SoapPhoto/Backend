@@ -6,13 +6,17 @@ import { getUserCollection } from '@lib/services/collection';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { store } from './init';
 
-export type RouterAction = 'POP' | 'PUSH' | 'REPLACE';
+export enum RouterAction {
+  POP = 'POP',
+  PUSH = 'PUSH',
+  REPLACE = 'REPLACE',
+}
 
 interface ILocation {
   href: string;
   options?: {
     shallow?: boolean;
-    [key: string]: string | boolean | number | undefined;
+    [key: string]: any;
   };
   as: string;
   action: RouterAction;

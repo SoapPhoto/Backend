@@ -3,7 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { getTitle, server } from '@lib/common/utils';
+import { getTitle } from '@lib/common/utils';
 import { connect } from '@lib/common/utils/store';
 import { Avatar, GpsImage } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
@@ -163,11 +163,20 @@ const Picture: ICustomNextPage<IProps, any> = ({
 /// TODO: mobx-react@6 @inject 不执行 getIInitialProps 的暂时解决方案
 Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) => {
   const { params } = route;
+  const { appStore } = mobxStore;
   const isPicture = (
     mobxStore.screen.pictureStore.id
     && mobxStore.screen.pictureStore.id === Number(params.id || 0)
   );
-  const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP';
+  let isPop = false;
+  if (appStore.location) {
+    if (appStore.location.action === 'POP') isPop = true;
+    if (
+      appStore.location.options
+      && appStore.location.options.state
+      && /^child/g.test(appStore.location.options.state.data)
+    ) isPop = true;
+  }
   if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
     mobxStore.screen.pictureStore.getCache();
     // mobxStore.screen.pictureStore.getPictureInfo(

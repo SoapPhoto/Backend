@@ -8,7 +8,6 @@ import { Button } from '@lib/components/Button';
 import { withAuth } from '@lib/components/router/withAuth';
 import Tag from '@lib/components/Tag';
 import Toast from '@lib/components/Toast';
-import { Router } from '@lib/routes';
 import {
   Box,
   Content,
@@ -27,6 +26,7 @@ import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
+import { useRouter } from '@lib/router';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -41,6 +41,7 @@ interface ICreatePictureData {
 }
 
 const Upload: ICustomNextPage<IProps, any> = () => {
+  const { pushRoute } = useRouter();
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
@@ -62,7 +63,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     seFormatSpeed(speed);
   };
 
-  const uploadQiniu = async (file: File) => {
+  const uploadQiniu = useCallback(async (file: File) => {
     const { data: token } = await getQiniuToken('PICTURE');
     const formData = new FormData();
     const key = `${uniqid('PICTURE')}-${uniqidTime()}`;
@@ -74,7 +75,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     );
     await upload(formData, onUploadProgress);
     return key;
-  };
+  }, []);
 
   const addPicture = useCallback(async () => {
     setUploadLoading(true);
@@ -95,7 +96,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setDisabled(true);
         Toast.success('上传成功！');
         setTimeout(() => {
-          Router.pushRoute('/');
+          pushRoute('/');
         }, 100);
       } catch (err) {
         Toast.error('图片上传失败!');
@@ -104,7 +105,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setPercentComplete(0);
       }
     }
-  }, [uploadQiniu, imageInfo, isLocation, data]);
+  }, [uploadQiniu, imageInfo, isLocation, data, pushRoute]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);

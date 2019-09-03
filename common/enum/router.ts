@@ -12,7 +12,9 @@ export enum UserType {
 }
 
 export enum PictureType {
-  info = 'info'
+  info = 'info',
+  addCollection = 'addCollection',
+  setting = 'setting',
 }
 
 

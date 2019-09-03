@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import 'dayjs/locale/zh-cn';
 
+import { Router as RouterProvider } from '@lib/router';
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
 import { parsePath, server } from '@lib/common/utils';
@@ -17,6 +18,7 @@ import { UserEntity } from '@lib/common/interfaces/user';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
 import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
 import { initLocale, initI18n } from '@lib/i18n/utils';
+import { RouterAction } from '@lib/stores/AppStore';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -44,27 +46,22 @@ interface IPageProps {
   statusCode?: number;
 }
 
-let isOk = false;
+let timer: NodeJS.Timeout | undefined;
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 Router.events.on('routeChangeStart', () => {
-  isOk = false;
-  setTimeout(() => {
-    if (!isOk) {
-      store.appStore.setLoading(true);
-    } else {
-      isOk = false;
-    }
+  timer = setTimeout(() => {
+    store.appStore.setLoading(true);
   }, 200);
 });
 Router.events.on('routeChangeComplete', () => {
-  isOk = true;
+  clearTimeout(timer!);
   store.appStore.setLoading(false);
 });
 Router.events.on('routeChangeError', () => {
-  isOk = true;
+  clearTimeout(timer!);
   store.appStore.setLoading(false);
 });
 
@@ -161,7 +158,7 @@ export default class MyApp extends App<IProps> {
         as,
         options,
         href: url,
-        action: 'POP',
+        action: RouterAction.POP,
       });
       return true;
     });
@@ -176,19 +173,21 @@ export default class MyApp extends App<IProps> {
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <I18nProvider value={i18n}>
-        <Provider {...mobxStore}>
-          <ThemeWrapper>
-            <BodyLayout header={!isError}>
-              {
-                picture
-                  && <PictureModal pictureId={picture.toString()} />
-              }
-              <Component
-                {...pageProps}
-              />
-            </BodyLayout>
-          </ThemeWrapper>
-        </Provider>
+        <RouterProvider route={router}>
+          <Provider {...mobxStore}>
+            <ThemeWrapper>
+              <BodyLayout header={!isError}>
+                {
+                  picture
+                    && <PictureModal pictureId={picture.toString()} />
+                }
+                <Component
+                  {...pageProps}
+                />
+              </BodyLayout>
+            </ThemeWrapper>
+          </Provider>
+        </RouterProvider>
       </I18nProvider>
     );
   }

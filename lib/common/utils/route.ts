@@ -46,3 +46,20 @@ function setUrlPath(url: string) {
   }
   return undefined;
 }
+
+export const histore = () => {
+  if (typeof window === 'undefined') return undefined;
+  type func = (data: any, title: string, url?: string | null) => void;
+  const get = (key: string) => window.history.state && window.history.state[key];
+  const set = (state: Record<string, string>) => {
+    window.history.replaceState(state, '');
+  };
+  const wrap = (m: func) => (state: Record<string, string>, title: string, url?: string) => (
+    m.call(window.history, { ...window.history.state, ...state || {} }, title, url)
+  );
+  window.history.pushState = wrap(window.history.pushState);
+  window.history.replaceState = wrap(window.history.replaceState);
+  return { set, get };
+};
+
+export const Histore = histore();

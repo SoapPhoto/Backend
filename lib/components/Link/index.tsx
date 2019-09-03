@@ -4,6 +4,7 @@ import React, { Children } from 'react';
 import { UrlObject } from 'url';
 
 import { store } from '@lib/stores/init';
+import { RouterAction } from '@lib/stores/AppStore';
 
 type Url = string | UrlObject;
 
@@ -35,7 +36,7 @@ export const Link: React.FC<ILinkProps> = (props) => {
             as: as as string,
             href: href as string,
             options: { shallow: props.shallow },
-            action: props.shallow ? 'REPLACE' : 'PUSH',
+            action: RouterAction.PUSH,
           });
           if (child.props && isFunction(child.props.onClick)) {
             child.props.onClick(e);

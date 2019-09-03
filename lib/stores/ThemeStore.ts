@@ -8,7 +8,6 @@ export class ThemeStore {
   @observable public theme: ThemeType = 'base';
 
   // 用来初始化
-  @action
   public update = (store?: Partial<ThemeStore>) => {
     if (store) {
       if (store.theme !== undefined) {

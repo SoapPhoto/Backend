@@ -19,11 +19,11 @@ export class PictureStore extends ListStore<PictureEntity> {
   }
 
   @action public initQuery = () => {
-    this.listQuery = observable({
+    this.listQuery = {
       page: 1,
       pageSize: Number(process.env.LIST_PAGE_SIZE),
       timestamp: Number(Date.parse(new Date().toISOString())),
-    });
+    };
   }
 
   @action

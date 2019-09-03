@@ -19,7 +19,6 @@ export class AccountStore {
   @observable public userInfo?: UserEntity;
 
   // 用来初始化
-  @action
   public update = (store?: Partial<AccountStore>) => {
     if (store) {
       if (store.userInfo !== undefined) {
@@ -33,7 +32,6 @@ export class AccountStore {
     this.userInfo = userInfo;
   }
 
-  @action
   public updateProfile = async (userInfo: UpdateProfileSettingDto, avatar?: File) => {
     const params = new FormData();
     // eslint-disable-next-line no-restricted-syntax

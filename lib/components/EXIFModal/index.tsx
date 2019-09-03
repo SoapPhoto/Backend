@@ -1,6 +1,6 @@
 import bytes from 'bytes';
 import { inject, observer } from 'mobx-react';
-import { rgba } from 'polished';
+import { rgba, rem } from 'polished';
 import React from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -44,7 +44,7 @@ export class EXIFModal extends React.Component<IProps> {
       <Modal
         visible={visible}
         onClose={onClose}
-        boxStyle={{ backgroundImage: this.background, padding: 0 }}
+        boxStyle={{ backgroundImage: this.background, padding: 0, width: rem(500) }}
       >
         <I18nContext.Consumer>
           {({ t }) => (

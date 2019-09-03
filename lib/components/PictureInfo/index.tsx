@@ -20,9 +20,8 @@ import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureC
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { updatePicture } from '@lib/services/picture';
-import { NextRouter, withRouter } from 'next/router';
-import { pushRoute } from '@lib/routes';
-import { parsePath } from '@lib/common/utils';
+import { useRouter } from '@lib/router/useRouter';
+import { Histore } from '@lib/common/utils';
 
 interface IProps {
   info: PictureEntity;
@@ -31,7 +30,6 @@ interface IProps {
   themeStore?: ThemeStore;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
-  router?: NextRouter;
 }
 
 const PictureInfoComponent: React.FC<IProps> = ({
@@ -41,53 +39,81 @@ const PictureInfoComponent: React.FC<IProps> = ({
   onLike,
   isOwner,
   onOk,
-  router,
 }) => {
-  const { query, asPath } = router!;
+  const {
+    pushRoute, params, back, replaceRoute,
+  } = useRouter();
   const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
   const [collectionVisible, setCollectionVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const { isLogin } = accountStore!;
   const { themeData } = themeStore!;
+  const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
+    let func = pushRoute;
+    if (replace) func = replaceRoute;
+    if (value) {
+      func(`/picture/${info.id}/${label}`, {}, {
+        shallow: true,
+        state: {
+          data: `child-${label}`,
+        },
+      });
+    } else {
+      const child = Histore!.get('data');
+      if (child === `child-${label}`) {
+        back();
+      } else {
+        func(`/picture/${info.id}`, {}, {
+          shallow: true,
+        });
+      }
+    }
+  }, [back, info.id, pushRoute, replaceRoute]);
 
   useEffect(() => {
-    if (query.exif === '1') {
-      setEXIFVisible(true);
+    const { type } = params;
+    if (type) {
+      switch (type) {
+        case 'info':
+          setEXIFVisible(true);
+          break;
+        case 'setting':
+          setEditVisible(isOwner);
+          if (!isOwner) push('setting', false, true);
+          break;
+        case 'addCollection':
+          setCollectionVisible(isLogin);
+          if (!isLogin) push('addCollection', false, true);
+          break;
+        default:
+          break;
+      }
     } else {
       setEXIFVisible(false);
+      setCollectionVisible(false);
+      setEditVisible(false);
     }
-  }, [query]);
-  // nononononono
-  const push = useCallback((label: string, value?: string) => {
-    const { pathname } = parsePath(asPath);
-    const data: Record<string, string> = {};
-    if (value) {
-      data[label] = value;
-    }
-    pushRoute(pathname, data, {
-      shallow: true,
-    });
-  }, [asPath]);
+  }, [isLogin, isOwner, params, push]);
 
   const closeEXIF = useCallback(() => {
-    push('exif');
+    push('info');
   }, [push]);
   const closeCollection = useCallback(() => {
-    setCollectionVisible(false);
-  }, []);
+    push('addCollection');
+  }, [push]);
   const closeEdit = useCallback(() => {
-    setEditVisible(false);
-  }, []);
+    push('setting');
+  }, [push]);
   const openEXIF = useCallback(() => {
-    push('exif', '1');
+    push('info', true);
   }, [push]);
   const openCollection = useCallback(() => {
-    setCollectionVisible(true);
-  }, []);
+    push('addCollection', true);
+  }, [push]);
   const openEdit = useCallback(() => {
-    setEditVisible(true);
-  }, []);
+    push('setting', true);
+  }, [push]);
 
   const update = async (data: UpdatePictureDot) => updatePicture(info.id, data);
 
@@ -171,7 +197,7 @@ const PictureInfoComponent: React.FC<IProps> = ({
   );
 };
 
-export const PictureInfo = withRouter(connect((stores: IMyMobxStore) => ({
+export const PictureInfo = connect((stores: IMyMobxStore) => ({
   accountStore: stores.accountStore,
   themeStore: stores.themeStore,
-}))(PictureInfoComponent));
+}))(PictureInfoComponent);
