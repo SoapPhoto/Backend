@@ -43,7 +43,8 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
   } else if (cookie.get('locale') && LocaleTypeValues.includes(cookie.get('locale') as LocaleType)) {
     locale = cookie.get('locale') as LocaleType;
   }
-  const noFetch = namespacesRequired.filter((v) => {
+  const required = [I18nNamespace.Common, ...namespacesRequired];
+  const noFetch = required.filter((v) => {
     if (!currentNamespace.has(v)) {
       currentNamespace.add(v);
       return true;
@@ -57,7 +58,7 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
   };
   globalValue = value;
   return {
-    namespacesRequired,
+    namespacesRequired: required,
     locale,
     value,
     currentNamespace: [...currentNamespace],

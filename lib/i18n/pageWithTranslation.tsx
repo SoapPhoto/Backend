@@ -20,7 +20,6 @@ export const pageWithTranslation = (namespaces?: I18nNamespace | I18nNamespace[]
       if (typeof (Page as any).getInitialProps === 'function') {
         appProps = await (Page as any).getInitialProps(appContext);
       }
-
       return {
         ...appProps,
         namespacesRequired,

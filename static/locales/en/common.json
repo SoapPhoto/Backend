@@ -28,6 +28,7 @@
   "ok": "OK",
   "save": "Save",
   "no_more": "No more content!",
+  "go_home": "Go Home",
   "visible_yourself": "This {0} is only visible to yourself.",
   "delete_confirm": "Are you sure you want to delete this {0}? It will not be recoverable after deletion.",
   "yup_required": "Please input your {0}!",
@@ -37,5 +38,9 @@
   "comment": {
     "placeholder": "Input comment",
     "send": "Comment"
+  },
+  "error_message": {
+    "404": "We couldn’t find this page.",
+    "500": "Internal server error."
   }
 }

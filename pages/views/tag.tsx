@@ -10,6 +10,7 @@ import { Package } from '@lib/icon';
 import { withError } from '@lib/components/withError';
 import { useScreenStores } from '@lib/stores/hooks';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 const Wrapper = styled.div``;
 
@@ -40,11 +41,12 @@ const PictureNumber = styled.p`
 
 const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = () => {
   const { tagStore } = useScreenStores();
+  const { t } = useTranslation();
   const { info } = tagStore;
   return (
     <Wrapper>
       <Head>
-        <title>{getTitle(`# ${info.name}`)}</title>
+        <title>{getTitle(`# ${info.name}`, t)}</title>
       </Head>
       <Header>
         <Title>
@@ -53,9 +55,7 @@ const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = () => {
         <PictureNumber>
           <Package />
           <span>
-            {info.pictureCount}
-            {' '}
-            个照片
+            {t('img_count', info.pictureCount.toString())}
           </span>
         </PictureNumber>
       </Header>

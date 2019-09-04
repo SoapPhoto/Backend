@@ -1,18 +1,17 @@
 import React from 'react';
 import { rem } from 'polished';
 import { computed } from 'mobx';
-import { observer, Provider } from 'mobx-react';
+import { observer } from 'mobx-react';
 import Head from 'next/head';
 import styled, { css } from 'styled-components';
 
 import { getTitle } from '@lib/common/utils';
 import { href } from '@lib/common/utils/themes/common';
-import { ThemeWrapper } from '@lib/containers/Theme';
 import { ArrowRight, CloudSnow } from '@lib/icon';
-import { IMyMobxStore, initStore } from '@lib/stores/init';
 import { HttpStatus } from '@lib/common/enums/http';
 import { theme } from '@lib/common/utils/themes';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
+import { I18nContext } from '@lib/i18n/I18nContext';
 
 interface IErrorProps extends IBaseScreenProps {
   statusCode: HttpStatus;
@@ -35,6 +34,12 @@ const Status = styled.h2`
   font-size: calc(4vw + 4vh + .5vmin);
 `;
 
+const Message = styled.p`
+  font-weight: 700;
+  font-size: calc(1vw + 1vh + .5vmin);
+  margin-bottom: ${rem(12)};
+`;
+
 const CloudSnowIcon = styled(CloudSnow)`
   width: calc(3vw + 3vh + .5vmin);
   height: calc(3vw + 3vh + .5vmin);
@@ -45,6 +50,7 @@ const CloudSnowIcon = styled(CloudSnow)`
 
 const A = styled.a`
   ${_ => href(_.theme.colors.primary)}
+  font-weight: 500;
   & svg {
     transition: .3s transform ease;
     transform: translate3d(0, 0, 0);
@@ -58,15 +64,6 @@ const A = styled.a`
 
 @observer
 class Error extends React.Component<IErrorProps> {
-  public static getInitialProps: (data: any) => any;
-
-  public mobxStore: IMyMobxStore;
-
-  constructor(props: IErrorProps) {
-    super(props);
-    this.mobxStore = initStore({ screen: {} });
-  }
-
   @computed get error() {
     const { statusCode } = this.props;
     return {
@@ -77,35 +74,35 @@ class Error extends React.Component<IErrorProps> {
   public render() {
     const { statusCode } = this.error;
     return (
-      <Provider {...this.mobxStore}>
-        <ThemeWrapper>
+      <I18nContext.Consumer>
+        {({ t }) => (
           <Wrapper>
             <Head>
-              <title>{getTitle(String(statusCode))}</title>
+              <title>{getTitle(String(statusCode), t)}</title>
             </Head>
             <Box>
               <CloudSnowIcon />
               <Status>{statusCode}</Status>
+              {
+                (statusCode === 500 || statusCode === 404) && (
+                  <Message>{t(`error_message.${statusCode}`)}</Message>
+                )
+              }
               <A href="/">
-                前往首页
+                <span>{t('go_home')}</span>
                 <ArrowRight
                   css={css`
-                    margin-right: ${rem(4)};
-                  `}
+                      margin-right: ${rem(4)};
+                    `}
                   size={14}
                 />
               </A>
             </Box>
           </Wrapper>
-        </ThemeWrapper>
-      </Provider>
+        )}
+      </I18nContext.Consumer>
     );
   }
 }
-
-Error.getInitialProps = ({ res, err }: any) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : null;
-  return { statusCode };
-};
 
 export default Error;

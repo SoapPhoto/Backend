@@ -79,7 +79,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   return (
     <div>
       <Head>
-        <title>{getTitle(`${name} (@${user.username})`)}</title>
+        <title>{getTitle(`${name} (@${user.username})`, t)}</title>
       </Head>
       <Header>
         <Title>
