@@ -11,6 +11,7 @@ import { Lock } from '@lib/icon';
 import { Popover } from '@lib/components/Popover';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
+import { observer } from 'mobx-react';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName,
@@ -24,7 +25,7 @@ export interface IPictureItemProps {
   like?: (data: PictureEntity) => void;
 }
 
-export const PictureItem: React.FC<IPictureItemProps> = ({
+export const PictureItem: React.FC<IPictureItemProps> = observer(({
   detail,
   like,
   lazyload,
@@ -103,4 +104,4 @@ export const PictureItem: React.FC<IPictureItemProps> = ({
       <PictureImage lazyload={lazyload} detail={detail} {...restProps} />
     </ItemWapper>
   );
-};
+});

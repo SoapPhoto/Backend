@@ -65,7 +65,6 @@ export class PictureStore extends ListStore<PictureEntity> {
     this.count = data.count;
   }
 
-  @action
   public like = async (picture: PictureEntity) => {
     try {
       let func = unlikePicture;
@@ -73,10 +72,12 @@ export class PictureStore extends ListStore<PictureEntity> {
         func = likePicture;
       }
       const { data } = await func(picture.id);
-      picture.isLike = data.isLike;
+      this.setLike(picture, data.isLike);
     // tslint:disable-next-line: no-empty
     } catch (err) {
       console.error(err);
     }
   }
+
+  @action public setLike = (picture: PictureEntity, like: boolean) => picture.isLike = like
 }
