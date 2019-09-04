@@ -90,7 +90,7 @@ class User extends React.Component<IProps> {
           ({ t }) => (
             <Wrapper>
               <Head>
-                <title>{getTitle(`${this.name} (@${user.username})`)}</title>
+                <title>{getTitle(`${this.name} (@${user.username})`, t)}</title>
               </Head>
               <UserHeader>
                 <HeaderGrid columns="140px auto" gap="32px">
@@ -208,4 +208,4 @@ User.getInitialProps = async ({
   };
 };
 
-export default withRouter(withError<IProps>(pageWithTranslation(I18nNamespace.User)(User)));
+export default withRouter(withError(pageWithTranslation([I18nNamespace.User, I18nNamespace.Collection])(User)));

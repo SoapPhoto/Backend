@@ -104,7 +104,7 @@ export const EditPictureModal: React.FC<IProps> = ({
       boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
       <Wrapper>
-        <Title>编辑</Title>
+        <Title>{t('picture_edit.title')}</Title>
         <Content>
           <Formik<IValues>
             initialValues={defaultValue}
@@ -142,8 +142,8 @@ export const EditPictureModal: React.FC<IProps> = ({
                 />
                 <FieldSwitch
                   name="isPrivate"
-                  label="私人"
-                  bio="仅自己可见"
+                  label={t('private')}
+                  bio={t('visible_yourself', t('picture'))}
                 />
                 <div
                   css={css`
@@ -154,7 +154,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                   `}
                 >
                   <IconButton
-                    popover="删除图片"
+                    popover={t('delete_picture')}
                     onClick={() => setConfirmVisible(true)}
                   >
                     <Trash2
@@ -167,7 +167,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                     disabled={isSubmitting}
                     type="submit"
                   >
-                    修改
+                    {t('save')}
                   </Button>
                 </div>
               </>
@@ -176,9 +176,9 @@ export const EditPictureModal: React.FC<IProps> = ({
         </Content>
       </Wrapper>
       <Confirm
-        title="确认要删除吗？删除后将不可恢复。"
+        title={t('delete_confirm', t('picture'))}
         visible={confirmVisible}
-        confirmText="删除"
+        confirmText={t('delete')}
         confirmProps={{
           disabled: deleteConfirmDisabled,
           danger: true,

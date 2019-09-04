@@ -4,5 +4,6 @@ export enum I18nNamespace {
   User = 'user',
   Message = 'message',
   Auth = 'auth',
-  Setting = 'setting'
+  Setting = 'setting',
+  Collection = 'collection'
 }

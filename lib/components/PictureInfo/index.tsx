@@ -160,7 +160,7 @@ export const PictureInfo: React.FC<IProps> = ({
         }
         {
           isOwner && (
-            <IconButton popover="编辑设置" onClick={openEdit}>
+            <IconButton popover={t('picture_edit.title')} onClick={openEdit}>
               <Settings
                 color={colors.secondary}
               />

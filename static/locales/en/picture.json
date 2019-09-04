@@ -10,6 +10,10 @@
     "dimensions": "Dimensions",
     "size": "Size"
   },
+  "picture_edit": {
+    "title": "Edit Picture"
+  },
+  "delete_picture": "Delete Picture",
   "picture_update_sccuess": "Update Sccuess",
   "collection_picture": {
     "title": "Add to Collection",

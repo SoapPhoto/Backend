@@ -59,6 +59,7 @@ export const Title = styled(A)`
   color: ${theme('colors.text')};
   text-decoration: none;
   font-weight: 600;
+  font-size: ${_ => rem(_.theme.fontSizes[2])};
 `;
 
 export const PictureCount = styled.p`

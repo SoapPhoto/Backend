@@ -5,6 +5,7 @@ import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 import { HelpCircle } from '@lib/icon';
 import { defaultBreakpoints } from 'styled-media-query';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Modal, IModalProps } from '../Modal';
 import { Button, IButtonProps } from '../Button';
 
@@ -37,33 +38,36 @@ export const Confirm: React.FC<IConfirmProps> = ({
   visible,
   onClose,
   title,
-  cancelText = '关闭',
+  cancelText,
   cancelProps = {},
   confirmIcon,
   confirmProps = {},
-  confirmText = '确定',
+  confirmText,
   confirmLoading,
-}) => (
-  <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.small }}>
-    <Content>
-      <HelpCircle css={css`margin-right: ${rem(24)};`} />
-      <div>
-        <Title>{title}</Title>
-      </div>
-    </Content>
-    <Btns>
-      <Button
-        text
-        css={css`margin-right: ${rem(12)};`}
-        {...cancelProps}
-        onClick={onClose}
-      >
-        {cancelText}
-      </Button>
-      <Button {...confirmProps} loading={confirmLoading}>
-        {confirmIcon}
-        {confirmText}
-      </Button>
-    </Btns>
-  </Modal>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.small }}>
+      <Content>
+        <HelpCircle css={css`margin-right: ${rem(24)};`} />
+        <div>
+          <Title>{title}</Title>
+        </div>
+      </Content>
+      <Btns>
+        <Button
+          text
+          css={css`margin-right: ${rem(12)};`}
+          {...cancelProps}
+          onClick={onClose}
+        >
+          {cancelText || t('cancel')}
+        </Button>
+        <Button {...confirmProps} loading={confirmLoading}>
+          {confirmIcon}
+          {confirmText || t('ok')}
+        </Button>
+      </Btns>
+    </Modal>
+  );
+};

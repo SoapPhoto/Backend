@@ -10,6 +10,7 @@ import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { css } from 'styled-components';
 import { rem } from 'polished';
 import { Popover } from '@lib/components/Popover';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import {
   ItemBox, Preview, MorePreview, Img, Collection, ItemInfo, Title, PictureCount,
 } from './styles';
@@ -23,6 +24,7 @@ export const CollectionItem: React.FC<IProps> = ({
   info,
 }) => {
   const { styles, colors } = useTheme();
+  const { t } = useTranslation();
   const { preview, name, pictureCount } = info;
   const one = preview[0];
   const two = preview[1];
@@ -62,11 +64,11 @@ export const CollectionItem: React.FC<IProps> = ({
                 placement="top"
                 theme="dark"
                 openDelay={100}
-                content={<span>私人收藏夹</span>}
+                content={<span>{t('private_xx', t('collection'))}</span>}
               >
                 <Lock
-                  css={css`margin-right: ${rem(4)};margin-bottom: ${rem(-1.5)};`}
-                  size={14}
+                  css={css`stroke-width: 3;margin-right: ${rem(6)};margin-bottom: ${rem(-1)};`}
+                  size={16}
                   color={colors.secondary}
                 />
               </Popover>
@@ -75,8 +77,7 @@ export const CollectionItem: React.FC<IProps> = ({
           {name}
         </Title>
         <PictureCount>
-          <span>{pictureCount}</span>
-          <span>张照片</span>
+          {t('img_count', pictureCount.toString())}
         </PictureCount>
       </ItemInfo>
     </Collection>

@@ -73,9 +73,9 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   background-color: ${props => props.background};
   width: 100%;
   transition: .2s filter ease-in-out;
-  ${ItemWapper}:hover & {
+  /* ${ItemWapper}:hover & {
     filter: blur(2px);
-  }
+  } */
 `;
 
 export const ItemImage = styled(Image)`

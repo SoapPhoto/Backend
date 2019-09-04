@@ -4,13 +4,13 @@ import { css } from 'styled-components';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { PictureStyle } from '@lib/common/utils/image';
-import { connect } from '@lib/common/utils/store';
 import { Avatar } from '@lib/components';
 import { LikeButton } from '@lib/components/Button';
-import { AccountStore } from '@lib/stores/AccountStore';
 import { A } from '@lib/components/A';
 import { Lock } from '@lib/icon';
 import { Popover } from '@lib/components/Popover';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import { useAccountStore } from '@lib/stores/hooks';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName,
@@ -22,17 +22,16 @@ export interface IPictureItemProps {
   lazyload?: boolean;
   size?: PictureStyle;
   like?: (data: PictureEntity) => void;
-  accountStore?: AccountStore;
 }
 
-export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(({
+export const PictureItem: React.FC<IPictureItemProps> = ({
   detail,
   like,
-  accountStore,
   lazyload,
   ...restProps
 }) => {
-  const { isLogin } = accountStore!;
+  const { isLogin } = useAccountStore();
+  const { t } = useTranslation();
   const onLike = async () => {
     if (like) {
       await like(detail);
@@ -54,7 +53,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
             trigger="hover"
             placement="top"
             theme="dark"
-            content={<span>私人图片</span>}
+            content={<span>{t('private_xx', t('picture'))}</span>}
           >
             <div
               css={css`
@@ -63,7 +62,7 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
                 background: #ccc;
                 right: ${rem(6)};
                 top: ${rem(6)};
-                background: #ff6282;
+                background: #000;
                 border-radius: 50%;
                 width: 25px;
                 height: 25px;
@@ -104,4 +103,4 @@ export const PictureItem = connect<React.FC<IPictureItemProps>>('accountStore')(
       <PictureImage lazyload={lazyload} detail={detail} {...restProps} />
     </ItemWapper>
   );
-});
+};
