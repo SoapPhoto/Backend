@@ -61,7 +61,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         done(status, exRes.error);
       }
     } else if (exception instanceof QueryFailedError) {
-      done(500, exception.message);
+      done(500, exception.message, exception.stack);
     } else {
       done(500, exception.message, exception.stack);
     }

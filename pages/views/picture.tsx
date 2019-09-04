@@ -33,12 +33,13 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
+import { observer } from 'mobx-react';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
 }
 
-const Picture: ICustomNextPage<IInitialProps, any> = () => {
+const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { userInfo } = useAccountStore();
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
@@ -147,7 +148,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = () => {
       <Comment onConfirm={onConfirm} comment={comment} />
     </Wrapper>
   );
-};
+});
 
 /// TODO: mobx-react@6 @inject 不执行 getIInitialProps 的暂时解决方案
 Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) => {

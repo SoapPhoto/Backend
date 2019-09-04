@@ -57,8 +57,12 @@ export class AppStore {
     const { accountStore } = store;
     if (accountStore.userInfo) {
       const { data } = await getUserCollection(accountStore.userInfo.username);
-      this.userCollection = data.data;
+      this.setCollection(data.data);
     }
+  }
+
+  @action public setCollection = (data: CollectionEntity[]) => {
+    this.userCollection = data;
   }
 
   @action public addCollection = (data: CollectionEntity) => this.userCollection.unshift(data)

@@ -25,6 +25,10 @@ export class PictureScreenStore extends BaseStore {
     this.info = data;
   }
 
+  @action public setComment = (data: CommentEntity[]) => {
+    this.comment = data;
+  }
+
   public getPictureInfo = async (id: string, header?: any) => {
     const { data } = await getPicture(id, header);
     if (!data) {
@@ -41,7 +45,7 @@ export class PictureScreenStore extends BaseStore {
 
   @action public getComment = async () => {
     const { data } = await getPictureComment(this.id);
-    this.comment = data.data;
+    this.setComment(data.data);
   }
 
   public addComment = async (content: string) => {

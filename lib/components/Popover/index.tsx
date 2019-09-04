@@ -4,7 +4,7 @@ import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 
 import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
@@ -74,6 +74,8 @@ export class Popover extends React.PureComponent<IPopoverProps> {
 
   public popper?: PopperJS;
 
+  @action public setVisible = (value: boolean) => this.visible = value;
+
   public arrowRef = (ref: HTMLDivElement) => {
     if (ref) {
       this.arrow = ref;
@@ -85,17 +87,17 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     if (isFunction(this.props.onClose)) {
       this.props.onClose();
     }
-    this.visible = false;
+    this.setVisible(false);
   }
 
   public close = (isDelay = false) => {
     clearTimeout(this._timer!);
     if (isDelay) {
       this._timer = setTimeout(() => {
-        this.visible = false;
+        this.setVisible(false);
       }, 150);
     } else {
-      this.visible = false;
+      this.setVisible(false);
     }
   }
 
@@ -106,13 +108,13 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         if (isFunction(this.props.onOpen)) {
           this.props.onOpen();
         }
-        this.visible = true;
+        this.setVisible(true);
       }, this.props.openDelay);
     } else {
       if (isFunction(this.props.onOpen)) {
         this.props.onOpen();
       }
-      this.visible = true;
+      this.setVisible(true);
     }
   }
 
@@ -161,7 +163,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       onMouseOver: (e: any) => {
         if (trigger === 'hover') {
           clearTimeout(this._timer!);
-          this.visible = true;
+          this.setVisible(true);
         }
         this.selfEvents(contentChild, 'onMouseOver', e);
       },

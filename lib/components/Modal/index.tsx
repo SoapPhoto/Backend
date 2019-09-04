@@ -1,4 +1,4 @@
-import { observable, reaction } from 'mobx';
+import { observable, reaction, action } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
@@ -75,7 +75,7 @@ export class Modal extends React.PureComponent<IModalProps> {
         }
         // eslint-disable-next-line no-plusplus
         _modalIndex++;
-        this.isDestroy = false;
+        this.setDestroy(false);
       }
     });
   }
@@ -97,6 +97,8 @@ export class Modal extends React.PureComponent<IModalProps> {
   get scrollWidth() {
     return getScrollWidth();
   }
+
+  @action public setDestroy = (value: boolean) => this.isDestroy = value;
 
 
   public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -141,7 +143,8 @@ export class Modal extends React.PureComponent<IModalProps> {
       // eslint-disable-next-line no-plusplus
       _modalIndex--;
     }
-    this.isDestroy = true;
+
+    this.setDestroy(true);
   }
 
   public render() {

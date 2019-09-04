@@ -18,11 +18,14 @@ const LOGGER_COMMON_CONFIG = {
 };
 
 const LOGGER_COMMON_FORMAT = winston.format.combine(
-  winston.format.timestamp({
-    format: 'YYYY-MM-DD HH:mm:ss',
-  }),
   winston.format.splat(),
-  winston.format.json(),
+  winston.format.printf((info) => {
+    const {
+      timestamp, level, message, stack,
+    } = info;
+    const time = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+    return `${time} [${level.toUpperCase()}] ${message} ${stack || ''}`;
+  }),
 );
 
 @Injectable()
@@ -76,7 +79,7 @@ export class LoggingService implements LoggerService {
               default:
                 break;
             }
-            return `${chalk.green(time)} ${color(`[${level}]`)} ${newMessage}`;
+            return `${chalk.green(time)} ${color(`[${level.toUpperCase()}]`)} ${newMessage}`;
           }),
         ),
       }),

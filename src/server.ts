@@ -7,6 +7,7 @@ require('dotenv').config();
 import next from 'next';
 import express, { Request, Response } from 'express';
 import mobxReact from 'mobx-react';
+import { configure } from 'mobx';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import responseTime from 'response-time';

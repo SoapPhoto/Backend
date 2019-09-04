@@ -27,6 +27,8 @@ export class UserScreenStore extends BaseStore {
     }
   }
 
+  @action public setUser = (value: UserEntity) => this.user = value;
+
   @action
   public getInit = async (username: string, type?: UserType, headers?: any) => {
     this.username = username;
@@ -46,7 +48,7 @@ export class UserScreenStore extends BaseStore {
     if (this._store) {
       this.setCache(data.username, data);
     }
-    this.user = data;
+    this.setUser(data);
   }
 
   @action public getCache = (username: string) => {
