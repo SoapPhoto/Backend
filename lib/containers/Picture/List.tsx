@@ -13,6 +13,7 @@ import useMedia from '@lib/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
 import { css } from 'styled-components';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { Empty } from '@lib/components/Empty';
 import { Footer, PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
@@ -126,17 +127,7 @@ export const PictureList: React.FC<IProps> = ({
           list={clientList}
         />
       </NoSSR>
-      <span>
-        <Footer key="footer">
-          {
-            noMore ? (
-              <span>{t('no_more')}</span>
-            ) : (
-              <Loading size={8} />
-            )
-          }
-        </Footer>
-      </span>
+      <Empty loading={!noMore} />
     </Wrapper>
   );
 };

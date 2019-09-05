@@ -1,4 +1,4 @@
-import { IObservableArray, observable } from 'mobx';
+import { IObservableArray, observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { rem, timingFunctions } from 'polished';
 import React from 'react';
@@ -175,14 +175,18 @@ export class ToastComponent extends React.Component {
       ...config,
       key: uniqid(),
     };
-    this.configList.push(newConfig);
+    this.addConfig(newConfig);
     if (config.duration !== 0) {
       setTimeout(() => {
         const data = this.configList.find(item => item.key === newConfig.key);
-        if (data) this.configList.remove(data);
+        if (data) this.removeConfig(data);
       }, config.duration || 6000);
     }
   }
+
+  @action public addConfig = (newConfig: IToastConfig) => this.configList.push(newConfig)
+
+  @action public removeConfig = (config: IToastConfig) => this.configList.remove(config)
 
   public animate = (state: TransitionStatus, key: number) => {
     if (state === 'exiting') {

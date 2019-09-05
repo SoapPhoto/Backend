@@ -1,7 +1,10 @@
 import { rem } from 'polished';
-import React from 'react';
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 import styled from 'styled-components';
+
 import { ICustomNextPage } from '@lib/common/interfaces/global';
+import { validatorEmail } from '@lib/services/auth';
 
 const Wrapper = styled.div`
   width: ${rem('700px')};
@@ -20,20 +23,32 @@ interface IProps {
   };
 }
 
-const ValidatorEmail: ICustomNextPage<IProps, IProps> = ({ info }) => (
-  <Wrapper>
-    {
-      info ? (
-        <Title>{info.message}</Title>
-      ) : (
-        <Title>验证成功</Title>
-      )
-    }
-  </Wrapper>
-);
+const ValidatorEmail: ICustomNextPage<IProps, IProps> = ({ info }) => {
+  useEffect(() => {
+    Router.events.on('routeChangeStart', (data) => {
+      window.location.href = data;
+    });
+  }, []);
+  return (
+    <Wrapper>
+      {
+        info ? (
+          <Title>{info.message}</Title>
+        ) : (
+          <Title>验证成功</Title>
+        )
+      }
+    </Wrapper>
+  );
+};
 
-ValidatorEmail.getInitialProps = async ctx => ({
-  info: ctx.query.info,
-});
+ValidatorEmail.getInitialProps = async (ctx) => {
+  try {
+    await validatorEmail(ctx.query);
+    return {};
+  } catch (err) {
+    return { info: err.response.data };
+  }
+};
 
 export default ValidatorEmail;

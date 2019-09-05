@@ -18,7 +18,7 @@ export const Upload = styled(RCUpload)`
   justify-content: center;
   flex-direction: column;
   height: ${rem('200px')};
-  max-width: ${rem('1000px')};
+  max-width: ${_ => rem(theme('width.wrapper')(_))};
   border-radius: ${rem('3px')};
   border: 2px dashed ${theme('styles.box.borderColor')};
   background-color: ${theme('styles.box.background')};

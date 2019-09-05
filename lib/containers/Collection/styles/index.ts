@@ -8,8 +8,11 @@ import { rem } from 'polished';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 
-export const Wrapper = styled(Grid)`
+export const Wrapper = styled.div`
   ${WrapperBox()}
+`;
+
+export const List = styled(Grid)`
   ${media.lessThan('medium')`
     grid-template-columns: repeat(1,1fr);
   `}

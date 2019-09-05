@@ -5,13 +5,12 @@ import { Cell, Grid } from 'styled-css-grid';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import media from 'styled-media-query';
+import { WrapperBox } from '@lib/common/utils/themes/common';
 
 export const Wrapper = styled.div`
-  max-width: ${rem('1040px')};
-  width: 100%;
+  ${WrapperBox(1000)}
   margin: 0 auto;
-  margin-top: ${rem('40px')};
-  padding: 0 ${rem('20px')};
+  margin-top: ${rem('32px')};
 `;
 
 export const UserHeader = styled(Grid)`
@@ -47,8 +46,8 @@ export const PictureBox = styled.div`
   overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   ${media.lessThan('medium')`
-    width: calc(100% + ${rem(40)});
-    margin-left: -${rem(20)};
+    width: calc(100% + ${rem(64)});
+    margin-left: -${rem(32)};
     border-radius: 0;
   `}
 `;

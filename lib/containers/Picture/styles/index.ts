@@ -7,7 +7,7 @@ import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { theme, activte } from '@lib/common/utils/themes';
 
-const padding = 24;
+const padding = 30;
 
 export const PictureContent = styled.div`
   ${media.lessThan('medium')`
@@ -47,7 +47,7 @@ export const Col = styled.div<{col: number; ssr: boolean}>`
 
 export const ColItem = styled.div`
   &>div {
-    margin-bottom: ${rem('24px')};
+    margin-bottom: ${rem(padding)};
   }
   &:last-child {
     margin-bottom: ${rem('0px')};

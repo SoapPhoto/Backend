@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 
 import { CollectionEntity, GetCollectionPictureListDto } from '@lib/common/interfaces/collection';
 import { getCollectionInfo, getCollectionPictureList } from '@lib/services/collection';
@@ -10,6 +10,8 @@ export class CollectionScreenStore extends BaseStore {
   public _infoCache: Record<string, CollectionEntity> = {}
 
   public _pictureListCache: Record<string, IPictureListRequest> = {}
+
+  @observable public id = '';
 
   @observable public info?: CollectionEntity;
 
@@ -28,16 +30,41 @@ export class CollectionScreenStore extends BaseStore {
     };
   }
 
+  @computed get maxPage() {
+    const { pageSize } = this.listQuery;
+    return Math.ceil(this.count / pageSize);
+  }
+
+  @computed get isNoMore() {
+    const { pageSize, page } = this.listQuery;
+    const maxPage = Math.ceil(this.count / pageSize);
+    return maxPage <= page;
+  }
+
   public getInfo = async (id: string, headers?: any) => {
+    this.id = id;
     const { data } = await getCollectionInfo(id, headers);
     this.setInfo(data);
     return '';
   }
 
   public getList = async (id: string, headers?: any) => {
+    this.id = id;
     this.initQuery();
     const { data } = await getCollectionPictureList(id, this.listQuery, headers);
     this.setList(id, data);
+  }
+
+  public getPageList = async () => {
+    const page = this.listQuery.page + 1;
+    if (page > this.maxPage) {
+      return;
+    }
+    const { data } = await getCollectionPictureList(this.id, {
+      ...this.listQuery,
+      page,
+    });
+    this.setList(this.id, data, true);
   }
 
   @action

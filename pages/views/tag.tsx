@@ -11,13 +11,13 @@ import { withError } from '@lib/components/withError';
 import { useScreenStores } from '@lib/stores/hooks';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { WrapperBox } from '@lib/common/utils/themes/common';
 
 const Wrapper = styled.div``;
 
 const Header = styled.div`
-  padding: 0 ${rem('24px')};
+  ${WrapperBox()}
   margin: ${rem('46px')} auto;
-  max-width: ${rem('1300px')};
 `;
 
 const Title = styled.h2`

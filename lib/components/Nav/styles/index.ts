@@ -2,6 +2,7 @@ import { rem } from 'polished';
 import styled from 'styled-components';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
+import { WrapperBox } from '@lib/common/utils/themes/common';
 
 export const Item = styled.span`
   margin-right: 14px;
@@ -32,10 +33,7 @@ export const ItemLink = styled(A)<{ active: number }>`
 `;
 
 export const Wrapper = styled.section`
-  width: 100%;
-  max-width: ${rem('1300px')};
-  margin: 0 auto;
-  padding: 0 ${rem('24px')};
+  ${WrapperBox()}
   padding-bottom: 12px;
   & :last-child {
     font-size: 42px;

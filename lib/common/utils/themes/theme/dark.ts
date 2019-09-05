@@ -25,6 +25,9 @@ const theme: DefaultTheme = {
     body: 1.75,
     heading: 1.25,
   },
+  width: {
+    wrapper: 1440,
+  },
   styles: {
     nprogress: colors.primary,
     link: {

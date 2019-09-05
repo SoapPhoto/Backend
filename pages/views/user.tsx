@@ -141,7 +141,10 @@ class User extends React.Component<IProps> {
               </Nav>
               {
                 type === 'collections' ? (
-                  <CollectionList list={collectionsStore.list} />
+                  <CollectionList
+                    list={collectionsStore.list}
+                    noMore={collectionsStore.isNoMore}
+                  />
                 ) : (
                   <PictureList
                     noMore={picturesStore.isNoMore}

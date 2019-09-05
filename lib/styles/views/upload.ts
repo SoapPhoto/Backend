@@ -4,7 +4,6 @@ import { Cell } from 'styled-css-grid';
 
 import { box } from '@lib/common/utils/themes/common';
 import { Input as BaseInput } from '@lib/components/Input';
-import { Upload as RCUpload } from '@lib/components/Upload';
 import { theme } from '@lib/common/utils/themes';
 
 export const Wapper = styled.div`

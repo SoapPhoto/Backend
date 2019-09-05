@@ -18,6 +18,9 @@ declare module 'styled-components' {
       lightgray: string;
       baseGreen: string;
     };
+    width: {
+      wrapper: number;
+    };
     styles: {
       nprogress: string;
       link: {

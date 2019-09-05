@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Grid, Cell } from 'styled-css-grid';
 
 import { href } from '@lib/common/utils/themes/common';
-import { Edit } from '@lib/icon';
+import { Edit, Settings } from '@lib/icon';
 import media from 'styled-media-query';
 import { theme } from '@lib/common/utils/themes';
 
@@ -66,7 +66,7 @@ export const Bio = styled.p`
   font-family: Rubik;
 `;
 
-export const EditIcon = styled(Edit)`
+export const EditIcon = styled(Settings)`
   margin-left: ${rem('24px')};
   stroke: ${theme('colors.secondary')};
 `;
