@@ -7,7 +7,7 @@ require('dotenv').config();
 import next from 'next';
 import express, { Request, Response } from 'express';
 import mobxReact from 'mobx-react';
-import { configure } from 'mobx';
+import path from 'path';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import responseTime from 'response-time';
@@ -48,6 +48,11 @@ app.prepare().then(() => {
   server.get('/_next/*', (req, res) => {
     /* serving _next static content using next.js handler */
     handle(req, res);
+  });
+
+  server.get('/service-worker.js', (req, res) => {
+    const data = path.join(process.cwd(), '.next', 'service-worker.js');
+    res.sendFile(data);
   });
 
   // eslint-disable-next-line no-restricted-syntax
