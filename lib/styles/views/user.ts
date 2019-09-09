@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Grid, Cell } from 'styled-css-grid';
 
 import { href } from '@lib/common/utils/themes/common';
-import { Edit, Settings } from '@lib/icon';
+import { Settings } from '@lib/icon';
 import media from 'styled-media-query';
 import { theme } from '@lib/common/utils/themes';
 

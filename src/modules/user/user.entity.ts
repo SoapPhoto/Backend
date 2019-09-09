@@ -13,9 +13,9 @@ import { CollectionEntity } from '@server/modules/collection/collection.entity';
 import { CommentEntity } from '@server/modules/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/modules/picture/user-activity/user-activity.entity';
-import { Role, RoleValues } from './enum/role.enum';
-import { Status, StatusValues } from './enum/status.enum';
-import { SignupTypeValues, SignupType } from './enum/signup.type.enum';
+import { Role } from './enum/role.enum';
+import { Status } from './enum/status.enum';
+import { SignupType } from './enum/signup.type.enum';
 
 @Exclude()
 @Entity('user')

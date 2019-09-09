@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 /// <reference types="../typings/index" />
 /// <reference types="../typings/typing" />
 

@@ -4,7 +4,6 @@ import { DefaultQuery, RouterProps } from 'next/router';
 import { IMyMobxStore } from '@lib/stores/init';
 import { Request, Response } from 'express';
 import { HttpStatus } from '@lib/common/enums/http';
-import { I18nNamespace } from '@lib/i18n/Namespace';
 import { UserEntity } from './user';
 import { IPathInfo } from '../utils';
 

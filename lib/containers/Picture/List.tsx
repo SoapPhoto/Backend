@@ -5,16 +5,14 @@ import {
   getScrollHeight, getScrollTop, getWindowHeight, server,
 } from '@lib/common/utils';
 import { listParse } from '@lib/common/utils/waterfall';
-import { Loading } from '@lib/components/Loading';
 import { NoSSR } from '@lib/components/SSR';
 import { debounce } from 'lodash';
 
 import useMedia from '@lib/common/utils/useMedia';
 import { defaultBreakpoints } from 'styled-media-query';
 import { css } from 'styled-components';
-import { useTranslation } from '@lib/i18n/useTranslation';
 import { Empty } from '@lib/components/Empty';
-import { Footer, PictureContent, Wrapper } from './styles';
+import { PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
 interface IProps {
@@ -61,7 +59,6 @@ export const PictureList: React.FC<IProps> = ({
   let serverList: PictureEntity[][][] = [];
   const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
   const pageLock = React.useRef<boolean>(false);
-  const { t } = useTranslation();
   const col = useMedia(
     mediaArr.map(media => media.media),
     mediaArr.map(media => media.col),
