@@ -81,5 +81,11 @@ declare namespace NodeJS {
     REDIS_DB: string;
     REDIS_PASSWORD: string;
     REDIS_PRIFIX: string;
+
+    OAUTH_GITHUB_CLIENT_ID: string;
+    OAUTH_GITHUB_CLIENT_SECRET: string;
+
+    OAUTH_GOOGLE_CLIENT_ID: string;
+    OAUTH_GOOGLE_CLIENT_SECRET: string;
   }
 }
