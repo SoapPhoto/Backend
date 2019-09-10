@@ -13,7 +13,7 @@ import { validator } from '@server/common/utils/validator';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionEntity } from './collection.entity';
 import {
-  CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto,
+  CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto, UpdateCollectionDot,
 } from './dto/collection.dto';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
@@ -46,6 +46,22 @@ export class CollectionService {
     return classToPlain(data, {
       groups: [Role.OWNER],
     });
+  }
+
+  public async updateCollection(body: UpdateCollectionDot, id: ID, user: UserEntity) {
+    const collection = await this.collectionEntity.createQueryBuilder('collection')
+      .where('collection.id=:id', { id })
+      .leftJoinAndSelect('collection.user', 'user')
+      .getOne();
+    
+    if (!collection || collection.user.id !== user.id) {
+      throw new ForbiddenException();
+    }
+    return this.collectionEntity.createQueryBuilder()
+      .update()
+      .set(body)
+      .where('id = :id', { id })
+      .execute();
   }
 
   /**

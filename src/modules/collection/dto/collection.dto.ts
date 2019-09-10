@@ -25,6 +25,8 @@ export class CreateCollectionDot implements Partial<CollectionEntity> {
   public isPrivate!: boolean;
 }
 
+export class UpdateCollectionDot extends CreateCollectionDot {}
+
 @Exclude()
 export class AddPictureCollectionDot {
   @IsString()

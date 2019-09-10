@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Delete,
+  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Delete, Put,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -9,7 +9,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionService } from './collection.service';
-import { CreateCollectionDot, GetCollectionPictureListDto } from './dto/collection.dto';
+import { CreateCollectionDot, GetCollectionPictureListDto, UpdateCollectionDot } from './dto/collection.dto';
 
 @Controller('api/collection')
 @UseGuards(AuthGuard)
@@ -26,6 +26,16 @@ export class CollectionController {
     @User() user: UserEntity,
   ) {
     return this.collectionService.create(body, user);
+  }
+
+  @Put('/:collectionId')
+  @Roles(Role.USER)
+  public async updateCollection(
+    @Body() body: UpdateCollectionDot,
+    @Param('collectionId') collectionId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.collectionService.updateCollection(body, collectionId, user);
   }
 
   @Post('/:collectionId/:pictureId')
