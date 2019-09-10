@@ -53,7 +53,7 @@ export class CollectionService {
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user')
       .getOne();
-    
+
     if (!collection || collection.user.id !== user.id) {
       throw new ForbiddenException();
     }

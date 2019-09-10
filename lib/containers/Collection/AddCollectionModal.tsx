@@ -45,7 +45,7 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
   };
   return (
     <Modal
-      boxStyle={{ maxWidth: '340px', padding: 0 }}
+      boxStyle={{ maxWidth: rem(340), padding: 0 }}
       visible={visible}
       onClose={onClose}
     >

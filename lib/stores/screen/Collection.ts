@@ -1,9 +1,11 @@
 import { observable, action, computed } from 'mobx';
+import { merge } from 'lodash';
 
-import { CollectionEntity, GetCollectionPictureListDto } from '@lib/common/interfaces/collection';
-import { getCollectionInfo, getCollectionPictureList } from '@lib/services/collection';
+import { CollectionEntity, GetCollectionPictureListDto, UpdateCollectionDot } from '@lib/common/interfaces/collection';
+import { getCollectionInfo, getCollectionPictureList, updateCollection } from '@lib/services/collection';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { server } from '@lib/common/utils';
+import { mergeStore } from '@lib/common/utils/store';
 import { BaseStore } from '../base/BaseStore';
 
 export class CollectionScreenStore extends BaseStore {
@@ -20,6 +22,26 @@ export class CollectionScreenStore extends BaseStore {
   @observable public count = 0;
 
   @observable public listQuery!: GetCollectionPictureListDto;
+
+  @action
+  public update = (store?: Partial<this>) => {
+    if (this.isInit) {
+      return;
+    }
+    this.isInit = true;
+    if (store) {
+      mergeStore(this, store);
+      // 初始化数据写进缓存
+      // if (store.info) this.setInfo(store.info!);
+      // if (store.listQuery && store.list) {
+      //   this.setList(store.id!, {
+      //     ...store.listQuery!,
+      //     data: store.list!,
+      //     count: store.count!,
+      //   });
+      // }
+    }
+  }
 
   @action
   public initQuery = () => {
@@ -67,6 +89,11 @@ export class CollectionScreenStore extends BaseStore {
     this.setList(this.id, data, true);
   }
 
+  public updateCollection = async (value: UpdateCollectionDot) => {
+    await updateCollection(this.id, value);
+    this.setInfo(merge(this.info!, value));
+  }
+
   @action
   public setList = (id: string, data: IPictureListRequest, plus = false) => {
     if (plus) {
@@ -102,7 +129,7 @@ export class CollectionScreenStore extends BaseStore {
   }
 
   public setInfoCache = (id: string, data: CollectionEntity) => {
-    if (!server) this._infoCache[id] = data;
+    this._infoCache[id] = data;
   }
 
   public getInfoCache = (id: string) => {

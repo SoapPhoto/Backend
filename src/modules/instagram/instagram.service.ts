@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import https from 'https';
 import url from 'url';
-
 import SocksProxyAgent from 'socks-proxy-agent';
 
 @Injectable()
@@ -16,6 +15,20 @@ export class InstagramService {
 
   public async test1(id: string) {
     return this.get(`/media/${id}`);
+  }
+
+  public async test2() {
+    // const ig = new IgApiClient();
+    // ig.state.generateDevice('yu7er');
+    // ig.request.defaults.agentClass = shttps;
+    // ig.request.defaults.agentOptions = {
+    //   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    //   // @ts-ignore
+    //   socksHost: '127.0.0.1',
+    //   socksPort: 1080,
+    // };
+    // const loggedInUser = await ig.account.login('xxx', 'xxx');
+    // return myPostsFirstPage;
   }
 
   // 封装请求

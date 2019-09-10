@@ -1,1 +1,8 @@
-{}
+{
+  "delete_collection": "Delete Collection",
+  "collection_name": "Name",
+  "collection_bio": "Bio",
+  "collection_edit": {
+    "title": "Edit Collection"
+  }
+}

@@ -1,22 +1,26 @@
-import React from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import Head from 'next/head';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
+import { pick } from 'lodash';
 
 import { withError } from '@lib/components/withError';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, Histore } from '@lib/common/utils';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { CollectionScreenStore } from '@lib/stores/screen/Collection';
-import { Package, Lock } from '@lib/icon';
+import { Package, Lock, Settings } from '@lib/icon';
 import { Avatar } from '@lib/components';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Popover } from '@lib/components/Popover';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { useScreenStores } from '@lib/stores/hooks';
+import { useScreenStores, useAccountStore } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { WrapperBox } from '@lib/common/utils/themes/common';
+import { useRouter } from '@lib/router';
+import { UpdateCollectionModal } from '@lib/containers/Collection/UpdateCollectionModal';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 
 interface IProps extends IBaseScreenProps {
   collectionStore: CollectionScreenStore;
@@ -70,13 +74,59 @@ const UserName = styled(A)`
   ${activte()}
 `;
 
+const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void] => {
+  const [visible, seVisible] = useState(false);
+  const {
+    params, pushRoute, replaceRoute, back,
+  } = useRouter();
+
+  const set = useCallback((value: boolean, replace?: boolean) => {
+    let func = pushRoute;
+    if (replace) func = replaceRoute;
+    if (value) {
+      func(`/collection/${params.id}/setting`, {}, {
+        shallow: true,
+        state: {
+          data: 'child-setting',
+        },
+      });
+    } else {
+      const child = Histore!.get('data');
+      if (child === 'child-setting') {
+        back();
+      } else {
+        func(`/picture/${params.id}`, {}, {
+          shallow: true,
+        });
+      }
+    }
+  }, [back, params.id, pushRoute, replaceRoute]);
+
+  useEffect(() => {
+    const { type } = params;
+    if (type && type === 'setting') {
+      seVisible(true);
+      if (!isOwner) set(false, true);
+    } else {
+      seVisible(false);
+    }
+  }, [isOwner, params, set]);
+  return [visible, set];
+};
+
 const Collection: ICustomNextPage<IProps, {}> = () => {
   const { collectionStore } = useScreenStores();
+  const { userInfo } = useAccountStore();
   const { t } = useTranslation();
-  const { info, list } = collectionStore;
+  const { info, list, updateCollection } = collectionStore;
   const {
     name, user, pictureCount, isPrivate,
   } = info!;
+  const isOwner = !!(userInfo && userInfo.id === user.id);
+  const [updateVisible, setUpdateVisible] = useUpdateVisible(isOwner);
+  const onUpdateClose = useCallback(() => {
+    setUpdateVisible(false);
+  }, [setUpdateVisible]);
   return (
     <div>
       <Head>
@@ -104,6 +154,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
             )
           }
           {name}
+          <Settings onClick={() => setUpdateVisible(true)} />
         </Title>
         <Info>
           <User>
@@ -122,6 +173,12 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
           </PictureNumber>
         </Info>
       </Header>
+      <UpdateCollectionModal
+        visible={updateVisible}
+        onClose={onUpdateClose}
+        onUpdate={updateCollection}
+        defaultValue={pick(info!, ['name', 'bio', 'isPrivate'])}
+      />
       <PictureList
         data={list}
         like={() => console.log(123)}
@@ -137,7 +194,15 @@ Collection.getInitialProps = async (ctx) => {
   const { appStore, screen } = ctx.mobxStore;
   const { collectionStore } = screen;
   const headers = ctx.req ? ctx.req.headers : undefined;
-  const isPop = appStore.location && appStore.location.action === 'POP';
+  let isPop = false;
+  if (appStore.location) {
+    if (appStore.location.action === 'POP') isPop = true;
+    if (
+      appStore.location.options
+      && appStore.location.options.state
+      && /^child/g.test(appStore.location.options.state.data)
+    ) isPop = true;
+  }
   if ((isPop && !collectionStore.getInfoCache(id!)) || !isPop) {
     await collectionStore.getInfo(id!, headers);
   }
@@ -148,4 +213,4 @@ Collection.getInitialProps = async (ctx) => {
   return {};
 };
 
-export default withError(pageWithTranslation()(Collection));
+export default withError(pageWithTranslation(I18nNamespace.Collection)(Collection));

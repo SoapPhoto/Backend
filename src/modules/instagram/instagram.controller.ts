@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Param, UseFilters,
+  Controller, Get, UseFilters,
 } from '@nestjs/common';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { InstagramService } from './instagram.service';
@@ -16,10 +16,14 @@ export class InstagramController {
     return this.instagramService.test();
   }
 
-  @Get(':id')
-  public async test1(
-    @Param('id') id: string,
-  ) {
-    return this.instagramService.test1(id);
+  // @Get(':id')
+  // public async test1(
+  //   @Param('id') id: string,
+  // ) {
+  //   return this.instagramService.test1(id);
+  // }
+  @Get('test')
+  public async test2() {
+    return this.instagramService.test2();
   }
 }

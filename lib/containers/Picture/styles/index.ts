@@ -94,11 +94,10 @@ export const InfoBox = styled.div`
   pointer-events: none;
   position: absolute;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   bottom: 0;
-  padding: ${rem('8px')};
-  height: ${rem('40px')};
+  padding: ${rem('8px')} ${rem('8px')};
   width: 100%;
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2));
   opacity: 0;

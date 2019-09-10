@@ -30,7 +30,14 @@ const hybridRouter = (route: RouterProps): IRouter => {
     ...data,
     pushRoute: func(BaseRouter.pushRoute, RouterAction.PUSH),
     replaceRoute: func(BaseRouter.replaceRoute, RouterAction.REPLACE),
-    back: BaseRouter.back,
+    back: () => {
+      store.appStore.setRoute({
+        as: route.route,
+        href: data.href,
+        action: RouterAction.POP,
+      });
+      BaseRouter.back();
+    },
   };
 };
 

@@ -1,4 +1,5 @@
 declare module 'oauth2-server';
+
 declare module 'path-to-regexp';
 
 declare module 'styled-media-query'
@@ -14,6 +15,8 @@ declare module 'socks-proxy-agent';
 declare module 'rate-limit-redis';
 
 declare module 'cache-manager-redis-store';
+
+declare module 'socks5-https-client/lib/Agent';
 
 declare module '*.json' {
   const value: any;

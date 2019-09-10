@@ -1,5 +1,7 @@
 import { request } from '@lib/common/utils/request';
-import { CollectionEntity, CreateCollectionDot, GetCollectionPictureListDto } from '@lib/common/interfaces/collection';
+import {
+  CollectionEntity, CreateCollectionDot, GetCollectionPictureListDto, UpdateCollectionDot,
+} from '@lib/common/interfaces/collection';
 import { IListRequest } from '@lib/common/interfaces/global';
 import { IPictureListRequest } from '@lib/common/interfaces/picture';
 
@@ -28,4 +30,8 @@ export const removePictureCollection = async (collectionId: ID, pictureId: ID) =
 
 export const addCollection = async (data: CreateCollectionDot) => (
   request.post<CollectionEntity>('/api/collection', data)
+);
+
+export const updateCollection = async (id: ID, data: UpdateCollectionDot) => (
+  request.put(`/api/collection/${id}`, data)
 );
