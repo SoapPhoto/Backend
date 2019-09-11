@@ -49,14 +49,23 @@ export class OauthController {
   public async oauthRedirect(
     @Param('type') type: OauthType,
     @Query() query: any,
+    @Res() res: Response,
   ) {
-    switch (type) {
-      case OauthType.github:
-        return this.oauthService.github(query);
-      case OauthType.google:
-        return this.oauthService.google(query);
+    let code = '';
+    switch (type.toUpperCase()) {
+      case OauthType.GITHUB:
+        code = await this.oauthService.github(query);
+        break;
+      case OauthType.GOOGLE:
+        code = await this.oauthService.google(query);
+        break;
       default:
-        return null;
+        break;
+    }
+    if (code) {
+      res.redirect(`/oauth/${type || ''}?code=${code}`);
+    } else {
+      throw new UnauthorizedException();
     }
   }
 }

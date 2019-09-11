@@ -3,10 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { getTokenExpiresAt } from '@server/common/utils/token';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
+import { RedisService } from 'nestjs-redis';
 import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
+import { IGithubCode } from '../oauth.interface';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
@@ -23,6 +25,7 @@ export class OauthServerService {
     private readonly clientService: ClientService,
     private readonly userService: UserService,
     private readonly accessTokenService: AccessTokenService,
+    private readonly redisService: RedisService,
   ) {
     this.server = new OAuth2Server({
       model: {
@@ -33,6 +36,8 @@ export class OauthServerService {
         verifyScope: this.verifyScope,
         revokeToken: this.revokeToken,
         getUser: this.getUser,
+        getAuthorizationCode: this.getAuthorizationCode,
+        revokeAuthorizationCode: this.revokeAuthorizationCode,
       },
     });
   }
@@ -69,5 +74,17 @@ export class OauthServerService {
   private getUser = async (email: string, password: string) => {
     const user = await this.userService.verifyUser(email, password);
     return user;
+  }
+
+  private getAuthorizationCode = async (code: string, client: ClientEntity) => {
+    const redisClient = this.redisService.getClient();
+    console.log(123123213, client);
+    const data = await redisClient.get(`oauth_code_${code}`);
+    if (!data) return null;
+    return JSON.parse(data!);
+  }
+
+  private revokeAuthorizationCode = async (code: IGithubCode) => {
+    console.log('revokeAuthorizationCode', code);
   }
 }

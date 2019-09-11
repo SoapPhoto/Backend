@@ -9,6 +9,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
 import { OptionModule } from './modules/option/option.module';
 import { FileModule } from './modules/file/file.module';
+import { CredentialsModule } from './modules/credentials/credentials.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FileModule } from './modules/file/file.module';
     CommentModule,
     OptionModule,
     FileModule,
+    CredentialsModule,
   ],
   exports: [
     ClientModule,

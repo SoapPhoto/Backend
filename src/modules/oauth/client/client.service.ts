@@ -25,4 +25,8 @@ export class ClientService {
       this.clientRepository.merge(client, data),
     );
   }
+
+  public getBaseClient = async () => {
+
+  }
 }
