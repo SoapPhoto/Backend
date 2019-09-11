@@ -40,7 +40,11 @@ const Title = styled.h2`
   text-align: center;
   font-size: ${rem('50px')};
   margin: ${rem(5)} 0 ${rem(25)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
+
 
 const PictureNumber = styled.p`
   display: flex;
@@ -73,6 +77,14 @@ const UserName = styled(A)`
   color: ${theme('colors.text')};
   ${activte()}
 `;
+
+const EditIcon = styled(Settings)`
+  margin-left: ${rem(12)};
+  stroke: ${theme('colors.secondary')};
+  cursor: pointer;
+  ${activte(0.8)}
+`;
+
 
 const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void] => {
   const [visible, seVisible] = useState(false);
@@ -144,17 +156,16 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
                 content={<span>{t('private_xx', t('collection'))}</span>}
               >
                 <Lock
-                  size={32}
                   css={css`
-                    stroke-width: 3;
-                    margin-right: ${rem(8)};
+                    stroke: ${theme('colors.secondary')};
+                    margin-right: ${rem(12)};
                   `}
                 />
               </Popover>
             )
           }
           {name}
-          <Settings onClick={() => setUpdateVisible(true)} />
+          <EditIcon onClick={() => setUpdateVisible(true)} />
         </Title>
         <Info>
           <User>
