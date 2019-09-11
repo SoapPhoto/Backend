@@ -45,6 +45,12 @@ export class UserService {
     return user;
   }
 
+  public async createOauthUser(data: Partial<UserEntity>) {
+    return this.userEntity.save(
+      this.userEntity.create(data),
+    );
+  }
+
   public async getPassword(password: string) {
     const salt = await crypto.randomBytes(32).toString('hex');
     const hash = await crypto.pbkdf2Sync(password, salt, 20, 32, 'sha512').toString('hex');
@@ -154,6 +160,12 @@ export class UserService {
     return plainToClass(UserEntity, data, {
       groups,
     });
+  }
+
+  public async getEmailUser(email: string) {
+    return this.userEntity.createQueryBuilder('user')
+      .where('user.email=:email', { email })
+      .getOne();
   }
 
   public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {

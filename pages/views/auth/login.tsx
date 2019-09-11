@@ -1,7 +1,8 @@
 import { Formik, FormikActions } from 'formik';
 import Head from 'next/head';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Emojione } from 'react-emoji-render';
+import qs from 'querystring';
 
 import { LoginSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -10,7 +11,7 @@ import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
 import { Router } from '@lib/routes';
-import { Title, Wrapper } from '@lib/styles/views/auth';
+import { Title, Wrapper, OauthIcon } from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
 import { css } from 'styled-components';
 import { I18nNamespace } from '@lib/i18n/Namespace';
@@ -20,6 +21,8 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
 import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
+import { GitHub } from '@lib/icon';
+import { oauthOpen } from '@lib/common/utils/oauth';
 
 interface IValues {
   username: string;
@@ -28,7 +31,7 @@ interface IValues {
 
 const Login: React.FC<IBaseScreenProps> = () => {
   const { query } = useRouter();
-  const { login } = useAccountStore();
+  const { login, codeLogin } = useAccountStore();
   const { t } = useTranslation();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
@@ -52,6 +55,29 @@ const Login: React.FC<IBaseScreenProps> = () => {
       setConfirmLoading(false);
     }
   };
+  const githubOauth = useCallback(() => {
+    const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
+    const info = 'from_github';
+    const cb = `${process.env.URL}/oauth/github/redirect`;
+    const github = 'https://github.com/login/oauth/authorize';
+    const url = `${github}?client_id=${clientId}&state=${info}&redirect_uri=${cb}`;
+
+    oauthOpen(url);
+    const getInfo = (data: {code: string}) => {
+      Toast.success('获取信息');
+      codeLogin(data.code);
+    };
+    window.addEventListener('message', (e) => {
+      if (e.origin === window.location.origin) {
+        if (e.data.fromOauthWindow) {
+          setTimeout(() => {
+            // getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
+            window.postMessage({ fromParent: true }, window.location.href);
+          }, 300);
+        }
+      }
+    });
+  }, [codeLogin]);
   return (
     <Wrapper>
       <Head>
@@ -88,10 +114,23 @@ const Login: React.FC<IBaseScreenProps> = () => {
                   margin-top: ${rem(24)};
                 `}
             />
+            <div
+              css={css`
+                margin-top: ${rem(24)};
+                width: 100%;
+              `}
+            >
+              <OauthIcon
+                type="button"
+                onClick={githubOauth}
+              >
+                <GitHub size={18} />
+              </OauthIcon>
+            </div>
             <Button
               loading={confirmLoading}
               css={css`
-                  margin-top: ${rem(46)};
+                  margin-top: ${rem(42)};
                   width: 100%;
                 `}
               type="submit"

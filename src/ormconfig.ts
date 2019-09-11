@@ -18,6 +18,7 @@ import { CollectionEntity } from './modules/collection/collection.entity';
 import { CollectionPictureEntity } from './modules/collection/picture/collection-picture.entity';
 import { CommentEntity } from './modules/comment/comment.entity';
 import { FileEntity } from './modules/file/file.entity';
+import { CredentialsEntity } from './modules/credentials/credentials.entity';
 
 const config: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -44,6 +45,7 @@ const config: TypeOrmModuleOptions = {
     CollectionPictureEntity,
     CommentEntity,
     FileEntity,
+    CredentialsEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
   cli: {

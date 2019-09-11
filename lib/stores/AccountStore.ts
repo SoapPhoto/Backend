@@ -62,6 +62,20 @@ export class AccountStore {
     this.setUserInfo(data.data.user);
   }
 
+  /**
+   * code登录
+   *
+   * @memberof AccountStore
+   */
+  public codeLogin = async (code: string) => {
+    const params = new URLSearchParams();
+    params.append('code', code);
+    params.append('grant_type', 'authorization_code');
+    const data = await oauthToken(params);
+    localStorage.setItem('token', JSON.stringify(data.data));
+    this.setUserInfo(data.data.user);
+  }
+
   public refreshToken = async () => {
     const token = JSON.parse(localStorage.getItem('token') || 'null');
     if (token && token.refreshTokenExpiresAt && dayjs(token.refreshTokenExpiresAt) > dayjs()) {
