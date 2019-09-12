@@ -78,7 +78,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               `}
               src={user.avatar}
             />
-            <UserName>{user.name}</UserName>
+            <UserName>{user.fullName}</UserName>
           </UserLink>
         </UserInfo>
         <UserHeaderInfo width={1}>

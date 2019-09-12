@@ -24,26 +24,18 @@ export class OauthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    try {
-      const request = new OAuth2Server.Request(req);
-      const response = new OAuth2Server.Response(res);
-      const token = await this.oauthServerService.server.token(request, response);
-      res.cookie('Authorization', `Bearer ${token.accessToken}`, {
-        expires: token.accessTokenExpiresAt,
-        httpOnly: true,
-      });
-      res.json(token);
-    } catch (err) {
-      if (
-        err instanceof OAuth2Server.OAuthError
-        || err instanceof OAuth2Server.InvalidArgumentError
-        || err instanceof OAuth2Server.ServerError
-      ) {
-        throw new UnauthorizedException(err.message);
-      }
-      throw new BadRequestException(err.message);
-    }
+    return this.token(req, res);
   }
+
+  @Post(`/:type(${OauthTypeValues.join('|')})/token`)
+  public async oauthToken(
+    @Param('type') type: OauthType,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return this.token(req, res, type);
+  }
+
 
   @Get(`/:type(${OauthTypeValues.join('|')})/redirect`)
   public async oauthRedirect(
@@ -66,6 +58,33 @@ export class OauthController {
       res.redirect(`/oauth/${type || ''}?code=${code}`);
     } else {
       throw new UnauthorizedException();
+    }
+  }
+
+  private token = async (req: Request, res: Response, type?: OauthType) => {
+    try {
+      const request = new OAuth2Server.Request(req);
+      const response = new OAuth2Server.Response(res);
+      let token;
+      if (type) {
+        token = await this.oauthServerService.generateOauthToken(request, response, type);
+      } else {
+        token = await this.oauthServerService.server.token(request, response);
+      }
+      res.cookie('Authorization', `Bearer ${token.accessToken}`, {
+        expires: token.accessTokenExpiresAt,
+        httpOnly: true,
+      });
+      res.json(token);
+    } catch (err) {
+      if (
+        err instanceof OAuth2Server.OAuthError
+        || err instanceof OAuth2Server.InvalidArgumentError
+        || err instanceof OAuth2Server.ServerError
+      ) {
+        throw new UnauthorizedException(err.message);
+      }
+      throw new BadRequestException(err.message);
     }
   }
 }

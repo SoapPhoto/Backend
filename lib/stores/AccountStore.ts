@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
-import { oauthToken } from '@lib/services/oauth';
+import { oauthToken, oauth } from '@lib/services/oauth';
+import { OauthType } from '@common/enum/router';
 
 export class AccountStore {
   @computed get isLogin() {
@@ -57,7 +58,7 @@ export class AccountStore {
     params.append('username', username);
     params.append('password', password);
     params.append('grant_type', 'password');
-    const data = await oauthToken(params);
+    const data = await oauth(params);
     localStorage.setItem('token', JSON.stringify(data.data));
     this.setUserInfo(data.data.user);
   }
@@ -67,11 +68,11 @@ export class AccountStore {
    *
    * @memberof AccountStore
    */
-  public codeLogin = async (code: string) => {
+  public codeLogin = async (code: string, type: OauthType) => {
     const params = new URLSearchParams();
     params.append('code', code);
     params.append('grant_type', 'authorization_code');
-    const data = await oauthToken(params);
+    const data = await oauthToken(type, params);
     localStorage.setItem('token', JSON.stringify(data.data));
     this.setUserInfo(data.data.user);
   }
@@ -82,7 +83,7 @@ export class AccountStore {
       const params = new URLSearchParams();
       params.append('refresh_token', token.refreshToken);
       params.append('grant_type', 'refresh_token');
-      const { data } = await oauthToken(params);
+      const { data } = await oauth(params);
       localStorage.setItem('token', JSON.stringify(data));
     } else {
       throw new Error('invalid token');
