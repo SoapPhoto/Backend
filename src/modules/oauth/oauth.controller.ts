@@ -81,6 +81,7 @@ export class OauthController {
         err instanceof OAuth2Server.OAuthError
         || err instanceof OAuth2Server.InvalidArgumentError
         || err instanceof OAuth2Server.ServerError
+        || err instanceof UnauthorizedException
       ) {
         throw new UnauthorizedException(err.message);
       }

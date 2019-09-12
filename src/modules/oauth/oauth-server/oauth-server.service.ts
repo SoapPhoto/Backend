@@ -49,20 +49,20 @@ export class OauthServerService {
     const credentials = TokenHandler.prototype.getClientCredentials(req);
     const client = await this.getClient(credentials.clientId, credentials.clientSecret);
     if (!client) {
-      throw new UnauthorizedException('No Client');
+      throw new UnauthorizedException('client credentials are invalid');
     }
     const redisClient = this.redisService.getClient();
     const data = await redisClient.get(`oauth_code_${req.body.code}`);
     if (!data) {
-      throw new UnauthorizedException('No Oauth Info');
+      throw new UnauthorizedException('code credentials are invalid');
     }
     const { user, type: infoType } = JSON.parse(data);
     if (infoType !== type) {
-      throw new UnauthorizedException('Oauth type error');
+      throw new UnauthorizedException();
     }
     const userInfo = await this.userService.getBaseUser(user.id);
     if (!userInfo) {
-      throw new UnauthorizedException('Oauth Error');
+      throw new UnauthorizedException('user credentials are invalid');
     }
     return this.saveToken({
       accessToken: await this.generateAccessToken(),

@@ -83,6 +83,7 @@ export default class MyApp extends App<IProps> {
         }
       }
     }
+    console.log(user);
     const basePageProps: IPageProps = {
       initialStore: {
         accountStore: {
