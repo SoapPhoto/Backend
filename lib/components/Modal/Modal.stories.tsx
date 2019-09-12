@@ -15,15 +15,95 @@ stories.addDecorator(withGlobalStyle);
 stories
   .add('with Modal', () => {
     const [visible, setVisible] = useState('clicks', false);
+    const [visible1, setVisible1] = useState('click', false);
     return (
-      <>
+      <div style={{ textAlign: 'right' }}>
+        <p>testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</p>
+        <p>testtesttesttesttesttesttesttesttesttest</p>
+        <p>testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
         <Button onClick={() => setVisible(true)}>打开</Button>
         <Modal
           visible={visible}
           onClose={() => setVisible(false)}
         >
-          <div css={css`color: ${theme('colors.text')};`}>12312</div>
+          <div onClick={() => setVisible1(true)} css={css`color: ${theme('colors.text')};`}>12312</div>
         </Modal>
-      </>
+          <Modal
+            visible={visible1}
+            onClose={() => setVisible1(false)}
+          >
+            <div css={css`color: ${theme('colors.text')};`}>test</div>
+          </Modal>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+        <p>test</p>
+      </div>
     );
   });

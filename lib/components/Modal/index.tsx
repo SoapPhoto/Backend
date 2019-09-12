@@ -4,6 +4,7 @@ import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
+import { enableBodyScroll, disableBodyScroll, BodyScrollOptions } from 'body-scroll-lock';
 
 import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
 import { isFunction } from 'lodash';
@@ -12,8 +13,6 @@ import { NoSSR } from '../SSR';
 import {
   Box, Content, Mask, Wrapper, XIcon,
 } from './styles';
-
-let _modalIndex = 0;
 
 export interface IModalProps {
   visible?: boolean;
@@ -42,6 +41,12 @@ const maskTransitionStyles: {
   exited: { opacity: 1 },
 };
 
+let _modalIndex = 0;
+
+const scrollOptions: BodyScrollOptions = {
+  reserveScrollBarGap: true,
+};
+
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
@@ -68,10 +73,7 @@ export class Modal extends React.PureComponent<IModalProps> {
       if (vis) {
         this.isClose = false;
         if (_modalIndex === 0) {
-          this.initStyle = setBodyCss({
-            overflowY: 'hidden',
-            paddingRight: `${this.scrollWidth}px`,
-          });
+          disableBodyScroll(document.querySelector('body')!, scrollOptions);
         }
         // eslint-disable-next-line no-plusplus
         _modalIndex++;
@@ -83,10 +85,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   public componentDidMount() {
     const { visible } = this.props;
     if (visible) {
-      this.initStyle = setBodyCss({
-        overflowY: 'hidden',
-        paddingRight: `${this.scrollWidth}px`,
-      });
+      disableBodyScroll(document.querySelector('body')!, scrollOptions);
     }
   }
 
@@ -133,8 +132,8 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public onDestroy = (isDestroy = false) => {
-    if (isFunction(this.initStyle)) {
-      this.initStyle();
+    if (_modalIndex === 1) {
+      enableBodyScroll(document.querySelector('body')!);
     }
     if (isFunction(this.props.afterClose)) {
       this.props.afterClose();
@@ -172,9 +171,13 @@ export class Modal extends React.PureComponent<IModalProps> {
                   state => (
                     <div>
                       <Mask
-                        style={{ ...maskTransitionStyles[state], transition: '.2s all ease' }}
+                        style={{
+                          ...maskTransitionStyles[state],
+                          transition: '.2s all ease',
+                          zIndex: 1000 + _modalIndex,
+                        }}
                       />
-                      <Wrapper onClick={this.handleClick} ref={this.wrapperRef}>
+                      <Wrapper style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
 
                         <Content ref={this.contentRef}>
                           <Box
