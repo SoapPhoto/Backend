@@ -23,6 +23,7 @@ import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { GitHub } from '@lib/icon';
 import { oauthOpen } from '@lib/common/utils/oauth';
+import { OauthType } from '@common/enum/router';
 
 interface IValues {
   username: string;
@@ -63,21 +64,34 @@ const Login: React.FC<IBaseScreenProps> = () => {
     const url = `${github}?client_id=${clientId}&state=${info}&redirect_uri=${cb}`;
 
     oauthOpen(url);
-    const getInfo = (data: {code: string}) => {
-      Toast.success('获取信息');
-      codeLogin(data.code);
+    const getInfo = async (data: {code: string}) => {
+      try {
+        await codeLogin(data.code, OauthType.GITHUB);
+        setTimeout(() => {
+          if (query.redirectUrl) {
+            Router.replaceRoute(query.redirectUrl);
+          } else {
+            Router.replaceRoute('/');
+          }
+        }, 400);
+        Toast.success(t('login_successful'));
+      } catch (error) {
+        Toast.error(t(error.message));
+      } finally {
+        setConfirmLoading(false);
+      }
     };
     window.addEventListener('message', (e) => {
       if (e.origin === window.location.origin) {
         if (e.data.fromOauthWindow) {
           setTimeout(() => {
-            // getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
+            getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
             window.postMessage({ fromParent: true }, window.location.href);
           }, 300);
         }
       }
     });
-  }, [codeLogin]);
+  }, [codeLogin, query.redirectUrl, t]);
   return (
     <Wrapper>
       <Head>

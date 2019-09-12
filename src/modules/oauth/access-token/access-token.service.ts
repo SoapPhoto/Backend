@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserService } from '@server/modules/user/user.service';
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
+import { Role } from '@server/modules/user/enum/role.enum';
 import { AccessTokenEntity } from './access-token.entity';
 
 @Injectable()
@@ -18,10 +19,10 @@ export class AccessTokenService {
     const token = await this.accessTokenRepository.save(
       this.accessTokenRepository.create(data),
     );
-    return plainToClass(AccessTokenEntity, {
-      ...token,
-      user: data.user,
-    });
+    return {
+      ...classToPlain(token),
+      user: classToPlain(data.user, { groups: [Role.OWNER] }),
+    };
   }
 
   public getRefreshToken = async (refreshToken: string) => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 
 import SocksProxyAgent from 'socks-proxy-agent';
@@ -44,15 +44,15 @@ export class OauthService {
         },
       });
       const user = await this.verifyUser(OauthType.GITHUB, data.id, data.email, data);
-      console.log(user);
-      // const client = this.redisService.getClient();
-      // await client.set(`oauth_code_${code}`, JSON.stringify({
-      //   type: OauthType.github,
-      //   client: await this.clientService.getBaseClient(),
-      //   data,
-      // }), 'EX', 10000);
+      if (!user) throw new UnauthorizedException('No Credential Info');
+      const client = this.redisService.getClient();
+      await client.set(`oauth_code_${code}`, JSON.stringify({
+        type: OauthType.GITHUB,
+        client: await this.clientService.getBaseClient(),
+        user,
+      }), 'EX', 1000);
     } else {
-      throw new ForbiddenException();
+      throw new UnauthorizedException('No GITHUB Oauth error');
     }
     return code;
   }
@@ -98,7 +98,8 @@ export class OauthService {
         });
         return this.userService.createOauthUser({
           email,
-          username: data.name,
+          username: data.login,
+          name: data.name,
           status: Status.VERIFIED,
           bio: data.bio,
           website: data.blog,
@@ -107,6 +108,6 @@ export class OauthService {
         });
       }
     }
-    throw new ForbiddenException();
+    return null;
   }
 }

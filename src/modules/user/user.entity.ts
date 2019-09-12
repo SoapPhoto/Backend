@@ -116,7 +116,7 @@ export class UserEntity extends BaseEntity {
   public readonly pictures!: PictureEntity[];
 
   /** 用户的评论 */
-  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE' })
   @Expose()
   public readonly comments!: CommentEntity[];
 
@@ -126,7 +126,7 @@ export class UserEntity extends BaseEntity {
   public readonly collections!: CollectionEntity[];
 
   /** 用户的绑定用户  */
-  @OneToMany(() => CredentialsEntity, credentials => credentials.user)
+  @OneToMany(() => CredentialsEntity, credentials => credentials.user, { onDelete: 'CASCADE' })
   @Expose()
   public readonly credentials!: CredentialsEntity[];
 

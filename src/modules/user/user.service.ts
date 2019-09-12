@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import uid from 'uniqid';
 
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
@@ -38,7 +39,7 @@ export class UserService {
         salt,
         hash,
         ...data,
-        username: data.username,
+        username: data.username.toLowerCase(),
         email: data.email,
       }),
     );
@@ -46,8 +47,16 @@ export class UserService {
   }
 
   public async createOauthUser(data: Partial<UserEntity>) {
+    const is = await this.isSignup(data.username!, data.email!, false);
+    let username = data.username!;
+    if (is && is === 'username') {
+      username = uid(username);
+    }
     return this.userEntity.save(
-      this.userEntity.create(data),
+      this.userEntity.create({
+        ...data,
+        username: username.toLowerCase(),
+      }),
     );
   }
 
@@ -165,6 +174,13 @@ export class UserService {
   public async getEmailUser(email: string) {
     return this.userEntity.createQueryBuilder('user')
       .where('user.email=:email', { email })
+      .getOne();
+  }
+
+
+  public async getBaseUser(id: ID) {
+    return this.userEntity.createQueryBuilder('user')
+      .where('user.id=:id', { id })
       .getOne();
   }
 

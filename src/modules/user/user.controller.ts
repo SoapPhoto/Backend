@@ -21,7 +21,7 @@ import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { CollectionService } from '@server/modules/collection/collection.service';
 import { GetUserCollectionListDto } from '@server/modules/collection/dto/collection.dto';
 import { UpdateProfileSettingDto } from './dto/user.dto';
@@ -44,7 +44,7 @@ export class UserController {
   public async getMyInfo(
     @User() user: UserEntity,
   ) {
-    return plainToClass(UserEntity, user);
+    return classToPlain(user, { groups: [Role.OWNER] });
   }
 
   @Get(':idOrName/picture')
@@ -96,7 +96,7 @@ export class UserController {
     @Param('id') id: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.userService.getUser(id, user);
+    return classToPlain(await this.userService.getUser(id, user));
   }
 
   @Get(':name')
@@ -104,7 +104,7 @@ export class UserController {
     @Param('name') username: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.userService.getUser(username, user);
+    return classToPlain(await this.userService.getUser(username, user));
   }
 
   @Get(':idOrName/collection')
