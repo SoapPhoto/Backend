@@ -15,6 +15,7 @@ import Redis from 'ioredis';
 
 import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
+import { TransformInterceptor } from './common/interceptor/transform.interceptor';
 
 const bootstrap = async () => {
   const server = await NestFactory.create(AppModule, {
@@ -37,6 +38,7 @@ const bootstrap = async () => {
   server.use(helmet());
   server.use(compression());
   server.use(cookieParser());
+  server.useGlobalInterceptors(new TransformInterceptor());
   server.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));

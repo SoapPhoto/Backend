@@ -4,8 +4,8 @@ import { merge } from 'lodash';
 import { CollectionEntity, GetCollectionPictureListDto, UpdateCollectionDot } from '@lib/common/interfaces/collection';
 import { getCollectionInfo, getCollectionPictureList, updateCollection } from '@lib/services/collection';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { server } from '@lib/common/utils';
 import { mergeStore } from '@lib/common/utils/store';
+import { HttpStatus } from '@lib/common/enums/http';
 import { BaseStore } from '../base/BaseStore';
 
 export class CollectionScreenStore extends BaseStore {
@@ -66,6 +66,13 @@ export class CollectionScreenStore extends BaseStore {
   public getInfo = async (id: string, headers?: any) => {
     this.id = id;
     const { data } = await getCollectionInfo(id, headers);
+    if (!data) {
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'no collection',
+      };
+    }
     this.setInfo(data);
     return '';
   }

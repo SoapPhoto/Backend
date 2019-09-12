@@ -96,7 +96,7 @@ export class UserController {
     @Param('id') id: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return classToPlain(await this.userService.getUser(id, user));
+    return this.userService.getUser(id, user);
   }
 
   @Get(':name')
@@ -104,7 +104,7 @@ export class UserController {
     @Param('name') username: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return classToPlain(await this.userService.getUser(username, user));
+    return this.userService.getUser(username, user);
   }
 
   @Get(':idOrName/collection')

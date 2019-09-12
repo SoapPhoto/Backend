@@ -92,11 +92,11 @@ const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void]
     params, pushRoute, replaceRoute, back,
   } = useRouter();
 
-  const set = useCallback((value: boolean, replace?: boolean) => {
+  const set = useCallback(async (value: boolean, replace?: boolean) => {
     let func = pushRoute;
     if (replace) func = replaceRoute;
     if (value) {
-      func(`/collection/${params.id}/setting`, {}, {
+      await func(`/collection/${params.id}/setting`, {}, {
         shallow: true,
         state: {
           data: 'child-setting',
@@ -105,9 +105,9 @@ const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void]
     } else {
       const child = Histore!.get('data');
       if (child === 'child-setting') {
-        back();
+        await back();
       } else {
-        func(`/picture/${params.id}`, {}, {
+        await func(`/picture/${params.id}`, {}, {
           shallow: true,
         });
       }
@@ -136,8 +136,8 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   } = info!;
   const isOwner = !!(userInfo && userInfo.id === user.id);
   const [updateVisible, setUpdateVisible] = useUpdateVisible(isOwner);
-  const onUpdateClose = useCallback(() => {
-    setUpdateVisible(false);
+  const onUpdateClose = useCallback(async () => {
+    await setUpdateVisible(false);
   }, [setUpdateVisible]);
   return (
     <div>
