@@ -56,6 +56,33 @@ const Login: React.FC<IBaseScreenProps> = () => {
       setConfirmLoading(false);
     }
   };
+  const getInfo = useCallback(async (data: {code: string}) => {
+    try {
+      await codeLogin(data.code, OauthType.GITHUB);
+      setTimeout(() => {
+        if (query.redirectUrl) {
+          Router.replaceRoute(query.redirectUrl);
+        } else {
+          Router.replaceRoute('/');
+        }
+      }, 400);
+      Toast.success(t('login_successful'));
+    } catch (error) {
+      Toast.error(t(error.message));
+    } finally {
+      setConfirmLoading(false);
+    }
+  }, [codeLogin, query.redirectUrl, t]);
+  const messageCb = useCallback((e: MessageEvent) => {
+    if (e.origin === window.location.origin) {
+      if (e.data.fromOauthWindow) {
+        setTimeout(() => {
+          getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
+          window.postMessage({ fromParent: true }, window.location.href);
+        }, 300);
+      }
+    }
+  }, [getInfo]);
   const githubOauth = useCallback(() => {
     const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
     const info = 'from_github';
@@ -64,34 +91,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
     const url = `${github}?client_id=${clientId}&state=${info}&redirect_uri=${cb}`;
 
     oauthOpen(url);
-    const getInfo = async (data: {code: string}) => {
-      try {
-        await codeLogin(data.code, OauthType.GITHUB);
-        setTimeout(() => {
-          if (query.redirectUrl) {
-            Router.replaceRoute(query.redirectUrl);
-          } else {
-            Router.replaceRoute('/');
-          }
-        }, 400);
-        Toast.success(t('login_successful'));
-      } catch (error) {
-        Toast.error(t(error.message));
-      } finally {
-        setConfirmLoading(false);
-      }
-    };
-    window.addEventListener('message', (e) => {
-      if (e.origin === window.location.origin) {
-        if (e.data.fromOauthWindow) {
-          setTimeout(() => {
-            getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
-            window.postMessage({ fromParent: true }, window.location.href);
-          }, 300);
-        }
-      }
-    });
-  }, [codeLogin, query.redirectUrl, t]);
+    window.addEventListener('message', messageCb);
+    return () => window.removeEventListener('message', messageCb);
+  }, [messageCb]);
   return (
     <Wrapper>
       <Head>

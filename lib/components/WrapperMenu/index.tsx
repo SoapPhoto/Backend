@@ -10,7 +10,6 @@ interface IData {
   value: string;
   name: string;
   path: string;
-  component: React.ComponentType;
 }
 
 export interface IUserProps {
@@ -38,27 +37,22 @@ export const Href = styled(A)<{active: number}>`
 export const Menu: React.FC<IUserProps> = ({
   data,
   value,
-}) => {
-  const currentData = data.find(v => v.value === value);
-  return (
-    <>
-      <Wrapper>
-        {
-          data.map(menu => (
-            <Href key={menu.name} route={menu.path} active={(menu.value === value) ? 1 : 0}>
-              <Item>
-                {menu.name}
-              </Item>
-            </Href>
-          ))
-        }
-      </Wrapper>
-      <Content>
-        {
-          currentData
-          && <currentData.component />
-        }
-      </Content>
-    </>
-  );
-};
+  children,
+}) => (
+  <>
+    <Wrapper>
+      {
+        data.map(menu => (
+          <Href key={menu.name} route={menu.path} active={(menu.value === value) ? 1 : 0}>
+            <Item>
+              {menu.name}
+            </Item>
+          </Href>
+        ))
+      }
+    </Wrapper>
+    <Content>
+      {children}
+    </Content>
+  </>
+);

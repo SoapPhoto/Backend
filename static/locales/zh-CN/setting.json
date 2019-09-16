@@ -1,7 +1,8 @@
 {
   "setting_menu": {
     "profile": "用户设置",
-    "resetPassword": "重置密码"
+    "resetPassword": "重置密码",
+    "account": "账号设置"
   },
   "setting_upload_avatar": "上传头像",
   "setting_update": "更新设置",

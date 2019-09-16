@@ -2,7 +2,8 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import {
   Entity, BaseEntity, PrimaryColumn, Column, ManyToOne,
 } from 'typeorm';
-import { CredentialsType } from './enum/credentials.enum';
+
+import { CredentialsType } from '@common/enum/credentials';
 import { UserEntity } from '../user/user.entity';
 import { Role } from '../user/enum/role.enum';
 
@@ -13,7 +14,7 @@ export class CredentialsEntity extends BaseEntity {
   @Expose()
   public readonly id!: string;
 
-  @Exclude()
+  @Expose()
   @Column({ type: 'enum', enum: CredentialsType })
   public type!: CredentialsType;
 

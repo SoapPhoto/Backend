@@ -7,6 +7,7 @@ import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 import { OauthType, OauthTypeValues } from './enum/oauth-type.enum';
 import { OauthService } from './oauth.service';
+import { OauthQueryDto } from './dto/oauth.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
@@ -40,7 +41,7 @@ export class OauthController {
   @Get(`/:type(${OauthTypeValues.join('|')})/redirect`)
   public async oauthRedirect(
     @Param('type') type: OauthType,
-    @Query() query: any,
+    @Query() query: OauthQueryDto,
     @Res() res: Response,
   ) {
     let code = '';

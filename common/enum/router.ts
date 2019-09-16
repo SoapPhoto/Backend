@@ -3,7 +3,7 @@ import { $enum } from 'ts-enum-util';
 export enum SettingType {
   profile = 'profile',
   resetPassword = 'resetPassword',
-  // basic = 'basic'
+  account = 'account'
 }
 
 export enum UserType {

@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable, UnauthorizedException, BadGatewayException,
+} from '@nestjs/common';
 import axios from 'axios';
 
 import SocksProxyAgent from 'socks-proxy-agent';
 import { RedisService } from 'nestjs-redis';
+import { OauthStateType } from '@common/enum/oauthState';
 import { OauthType } from './enum/oauth-type.enum';
 import { ClientService } from './client/client.service';
 import { IGithubUserInfo } from '../user/user.interface';
@@ -11,6 +14,7 @@ import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
 import { SignupType } from '../user/enum/signup.type.enum';
 import { Status } from '../user/enum/status.enum';
+import { OauthQueryDto } from './dto/oauth.dto';
 
 @Injectable()
 export class OauthService {
@@ -25,7 +29,7 @@ export class OauthService {
     private readonly credentialsService: CredentialsService,
   ) { }
 
-  public async github({ code }: { code: string }) {
+  public async github({ code, state }: OauthQueryDto) {
     const { data: info } = await axios.post(this.github_authorize, {}, {
       params: {
         client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
@@ -43,21 +47,32 @@ export class OauthService {
           Authorization: `token ${info.access_token}`,
         },
       });
-      const user = await this.verifyUser(OauthType.GITHUB, data.id, data.email, data);
-      if (!user) throw new UnauthorizedException('No Credential Info');
       const client = this.redisService.getClient();
-      await client.set(`oauth_code_${code}`, JSON.stringify({
-        type: OauthType.GITHUB,
-        client: await this.clientService.getBaseClient(),
-        user,
-      }), 'EX', 1000);
+      if (state === OauthStateType.login) {
+        const user = await this.verifyUser(OauthType.GITHUB, data.id, data.email, data);
+        if (!user) throw new UnauthorizedException('No Credential Info');
+        await client.set(`oauth_code_${code}`, JSON.stringify({
+          type: OauthType.GITHUB,
+          client: await this.clientService.getBaseClient(),
+          user,
+        }), 'EX', 1000);
+      } else if (state === OauthStateType.authorize) {
+        const cr = await this.credentialsService.getInfo(`${OauthType.GITHUB}_${data.id}`);
+        if (cr) {
+          throw new BadGatewayException('authorized user');
+        }
+        await client.set(`oauth_authorize_${code}`, JSON.stringify({
+          type: OauthType.GITHUB,
+          data,
+        }), 'EX', 1000);
+      }
     } else {
       throw new UnauthorizedException('No GITHUB Oauth error');
     }
     return code;
   }
 
-  public async google({ code }: { code: string }) {
+  public async google({ code }: OauthQueryDto) {
     const proxyOptions = 'socks5://127.0.0.1:1080';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
     const client = axios.create({ httpsAgent });
