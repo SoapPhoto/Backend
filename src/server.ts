@@ -1,7 +1,7 @@
 /// <reference types="../typings/index" />
 /// <reference types="../typings/typing" />
 
-require('dotenv').config();
+import '@common/env';
 
 import next from 'next';
 import express, { Request, Response } from 'express';

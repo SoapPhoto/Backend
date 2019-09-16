@@ -42,6 +42,7 @@ jspm_packages
 .next
 
 .env
+.env.production
 photo/
 
 .DS_Store

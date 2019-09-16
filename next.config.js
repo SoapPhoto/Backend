@@ -1,4 +1,3 @@
-require('dotenv').config();
 
 const composePlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
@@ -7,6 +6,10 @@ const withOffline = require('next-offline');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
+
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production' ? path.resolve(__dirname, './.env.production') : undefined,
+});
 
 
 const nextConfig = {

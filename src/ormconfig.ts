@@ -1,8 +1,7 @@
-/* eslint-disable import/first */
 /// <reference types="../typings/index" />
 /// <reference types="../typings/typing" />
 
-require('dotenv').config();
+import '@common/env';
 
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
