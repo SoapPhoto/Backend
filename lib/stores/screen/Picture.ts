@@ -32,15 +32,14 @@ export class PictureScreenStore extends BaseStore {
   public getPictureInfo = async (id: string, header?: any) => {
     const { data } = await getPicture(id, header);
     if (!data) {
-      return {
-        error: {
-          statusCode: HttpStatus.NOT_FOUND,
-        },
+      // eslint-disable-next-line no-throw-literal
+      throw {
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'no user',
       };
     }
     this.setInfo(data);
     this.setCache(this.id, this.info);
-    return undefined;
   }
 
   @action public getComment = async () => {

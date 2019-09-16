@@ -36,6 +36,9 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
 export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?: Request): Promise<II18nValue> => {
   let locale = LocaleType['zh-CN'];
   if (server && req) {
+    // server 需要重置一下
+    globalValue = {};
+    currentNamespace.clear();
     locale = req.locale;
     if (LocaleTypeValues.includes(req.cookies.locale)) {
       locale = req.cookies.locale;

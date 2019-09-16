@@ -1,13 +1,12 @@
 import { configure } from 'mobx';
 
+import { server } from '@lib/common/utils';
 import { AccountStore } from './AccountStore';
 import { AppStore } from './AppStore';
 import { IScreenStore, initScreenStore } from './screen';
 import { ThemeStore } from './ThemeStore';
 
 configure({ enforceActions: 'observed' });
-
-let __init__ = false;
 
 export interface IMyMobxStore {
   accountStore: AccountStore;
@@ -21,7 +20,8 @@ export interface IInitialStore {
   screen: Partial<IScreenStore>;
 }
 
-export const store: IMyMobxStore = {
+// eslint-disable-next-line import/no-mutable-exports
+export let store: IMyMobxStore = {
   accountStore: new AccountStore(),
   appStore: new AppStore(),
   themeStore: new ThemeStore(),
@@ -29,10 +29,15 @@ export const store: IMyMobxStore = {
 };
 
 export const initStore = (initialState: IInitialStore): IMyMobxStore => {
-  if (__init__) {
-    return store;
+  // server 需要重置一下
+  if (server) {
+    store = {
+      accountStore: new AccountStore(),
+      appStore: new AppStore(),
+      themeStore: new ThemeStore(),
+      screen: initScreenStore(),
+    };
   }
-  __init__ = true;
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
   store.screen.userStore.update(initialState.screen.userStore);
