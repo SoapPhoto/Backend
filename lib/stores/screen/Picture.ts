@@ -35,7 +35,7 @@ export class PictureScreenStore extends BaseStore {
       // eslint-disable-next-line no-throw-literal
       throw {
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'no collection',
+        message: 'no picture',
       };
     }
     this.setInfo(data);

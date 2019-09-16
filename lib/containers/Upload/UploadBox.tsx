@@ -35,7 +35,7 @@ export const UploadBox: React.FC<IProps> = ({
 }) => (
   <Upload
     onFileChange={onFileChange}
-    drag
+    drag={(1 as any) as boolean}
   >
     {
       type => (

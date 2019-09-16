@@ -1,15 +1,17 @@
 import Head from 'next/head';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
-import { Button } from '@lib/components/Button';
+import { Button, IconButton } from '@lib/components/Button';
 import { withAuth } from '@lib/components/router/withAuth';
 import Tag from '@lib/components/Tag';
 import Toast from '@lib/components/Toast';
 import {
   Box,
+  TrashIcon,
+  ContentBox,
   Content,
   FormTag,
   Input,
@@ -18,7 +20,6 @@ import {
   Preview,
   Progress,
 } from '@lib/styles/views/upload';
-import { useObservable, useObserver } from 'mobx-react-lite';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
 import { css } from 'styled-components';
@@ -28,6 +29,7 @@ import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { useRouter } from '@lib/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { Trash2 } from '@lib/icon';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -41,6 +43,13 @@ interface ICreatePictureData {
   tags: string[];
 }
 
+const initUploadData = {
+  isPrivate: false,
+  title: '',
+  bio: '',
+  tags: [],
+};
+
 const Upload: ICustomNextPage<IProps, any> = () => {
   const { pushRoute } = useRouter();
   const imageRef = React.useRef<File>();
@@ -52,12 +61,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const [percentComplete, setPercentComplete] = React.useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_formatSpeed, seFormatSpeed] = React.useState('0Kb/s');
-  const data = useObservable<ICreatePictureData>({
-    isPrivate: false,
-    title: '',
-    bio: '',
-    tags: [],
+  const [data, _setData] = useState<ICreatePictureData>({
+    ...initUploadData,
   });
+
+  // eslint-disable-next-line arrow-parens
+  const setData = <T extends keyof ICreatePictureData>(label: T, value: ICreatePictureData[T]) => {
+    _setData(prev => ({
+      ...prev,
+      [label]: value,
+    }));
+  };
 
   const onUploadProgress = (speed: string, percent: number) => {
     setPercentComplete(percent);
@@ -122,7 +136,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       Toast.warning('图片格式错误');
     }
   };
-  return useObserver(() => (
+  const resetData = useCallback(() => {
+    setImageUrl('');
+    _setData({
+      ...initUploadData,
+    });
+  }, []);
+  return (
     <Wapper>
       <Head>
         <title>{getTitle('上传')}</title>
@@ -132,8 +152,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       <Box>
         {
           imageUrl ? (
-            <Grid columns="40% 1fr" gap="36px">
-              <PreviewBox loading={uploadLoading}>
+            <ContentBox columns="40% 1fr" gap="36px">
+              <PreviewBox loading={uploadLoading ? 1 : 0}>
+                <TrashIcon>
+                  <IconButton onClick={resetData}>
+                    <Trash2 />
+                  </IconButton>
+                </TrashIcon>
                 <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 1 : 0 }} />
                 <Preview src={imageUrl} />
               </PreviewBox>
@@ -144,12 +169,12 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       isTitle
                       placeholder="标题"
                       value={data.title}
-                      onChange={e => data.title = e.target.value}
+                      onChange={e => setData('title', e.target.value)}
                     />
                     <Input
                       placeholder="简介"
                       value={data.bio}
-                      onChange={e => data.bio = e.target.value}
+                      onChange={e => setData('bio', e.target.value)}
                     />
                   </Cell>
                   <Cell>
@@ -157,7 +182,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       label="私人"
                       bio="仅自己可见"
                       checked={data.isPrivate}
-                      onChange={checked => data.isPrivate = checked}
+                      onChange={checked => setData('isPrivate', checked)}
                     />
                   </Cell>
                   {
@@ -171,7 +196,10 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                     )
                   }
                   <FormTag>
-                    <Tag value={data.tags} onChange={tags => data.tags = tags} />
+                    <Tag
+                      value={data.tags}
+                      onChange={tags => setData('tags', tags)}
+                    />
                   </FormTag>
                   <Cell
                     css={css`
@@ -188,14 +216,14 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                   </Cell>
                 </Grid>
               </Content>
-            </Grid>
+            </ContentBox>
           ) : (
             <UploadBox onFileChange={handleChange} />
           )
         }
       </Box>
     </Wapper>
-  ));
+  );
 };
 
 export default withAuth('user')(

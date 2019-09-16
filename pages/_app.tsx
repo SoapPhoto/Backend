@@ -141,18 +141,6 @@ export default class MyApp extends App<IProps> {
 
   public componentDidMount() {
     // const socket = setupSocket();
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then(() => {
-          // eslint-disable-next-line no-console
-          console.log('service worker registration successful');
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.warn('service worker registration failed', err.message);
-        });
-    }
     Router.beforePopState(({ url, as, options }) => {
       store.appStore.setRoute({
         as,
