@@ -1,16 +1,18 @@
 import { rem, rgba } from 'polished';
 import styled from 'styled-components';
-import { Cell } from 'styled-css-grid';
+import { Cell, Grid } from 'styled-css-grid';
 
 import { box } from '@lib/common/utils/themes/common';
 import { Input as BaseInput } from '@lib/components/Input';
 import { theme } from '@lib/common/utils/themes';
+import media from 'styled-media-query';
 
 export const Wapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
   margin-top: ${rem('64px')};
+  margin-bottom: ${rem('64px')};
   padding: 0 ${rem('24px')};
 `;
 
@@ -38,7 +40,7 @@ export const Progress = styled.div`
   transition: .2s width ease;
 `;
 
-export const PreviewBox = styled(Cell)<{loading: boolean}>`
+export const PreviewBox = styled(Cell)<{loading: number}>`
   position: relative;
   &::before {
     content: "";
@@ -72,7 +74,9 @@ export const Preview = styled.img`
 
 export const Content = styled(Cell)`
   padding: ${rem('24px')};
-  padding-left: 0;
+  ${media.greaterThan('medium')`
+    padding-left: 0;
+  `}
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`
@@ -94,4 +98,20 @@ export const Input = styled(BaseInput)<{isTitle?: boolean}>`
 
 export const FormTag = styled(Cell)`
   margin-top: ${() => rem('24px')};
+`;
+
+export const ContentBox = styled(Grid)`
+  ${media.lessThan('medium')`
+    grid-template-rows: ${rem(120)} 1fr;
+    grid-template-columns: auto;
+    grid-gap: ${rem(12)};
+  `}
+`;
+
+export const TrashIcon = styled.div`
+  position: absolute;
+  z-index: 2;
+  right: ${rem(12)};
+  top: ${rem(12)};
+  color: ${theme('colors.danger')}
 `;
