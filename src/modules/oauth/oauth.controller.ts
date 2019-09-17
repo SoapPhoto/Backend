@@ -56,7 +56,7 @@ export class OauthController {
         break;
     }
     if (code) {
-      res.redirect(`/oauth/${type || ''}?code=${code}`);
+      res.redirect(`/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
     } else {
       throw new UnauthorizedException();
     }

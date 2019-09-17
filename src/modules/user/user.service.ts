@@ -34,16 +34,20 @@ export class UserService {
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
     const { salt, hash } = await this.getPassword(data.password);
-    const user = await this.userEntity.save(
-      this.userEntity.create({
-        salt,
-        hash,
-        ...data,
-        username: data.username.toLowerCase(),
-        email: data.email,
-      }),
-    );
-    return user;
+    const newUser = this.userEntity.create({
+      salt,
+      hash,
+      ...data,
+      username: data.username.toLowerCase(),
+      email: data.email,
+    });
+    await this.userEntity.createQueryBuilder('user')
+      .createQueryBuilder()
+      .insert()
+      .into(UserEntity)
+      .values(newUser)
+      .execute();
+    return newUser;
   }
 
   public async createOauthUser(data: Partial<UserEntity>) {
@@ -52,16 +56,17 @@ export class UserService {
     if (is && is === 'username') {
       username = uid(`${username}-`);
     }
+    const newUser = this.userEntity.create({
+      ...data,
+      username: username.toLowerCase(),
+    });
     await this.userEntity.createQueryBuilder('user')
       .createQueryBuilder()
       .insert()
       .into(UserEntity)
-      .values({
-        ...data,
-        username: username.toLowerCase(),
-      })
+      .values(newUser)
       .execute();
-    return this.getUser(username, false);
+    return newUser;
   }
 
   public async getPassword(password: string) {

@@ -21,7 +21,7 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
 import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
-import { GitHub } from '@lib/icon';
+import { GitHub, GoogleFill } from '@lib/icon';
 import { oauthOpen } from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
@@ -57,9 +57,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
       setConfirmLoading(false);
     }
   };
-  const getInfo = useCallback(async (data: {code: string}) => {
+  const getInfo = useCallback(async (data: {code: string; type: OauthType}) => {
     try {
-      await codeLogin(data.code, OauthType.GITHUB);
+      await codeLogin(data.code, data.type);
       setTimeout(() => {
         if (query.redirectUrl) {
           Router.replaceRoute(query.redirectUrl);
@@ -87,6 +87,17 @@ const Login: React.FC<IBaseScreenProps> = () => {
     const cb = `${process.env.URL}/oauth/github/redirect`;
     const github = 'https://github.com/login/oauth/authorize';
     const url = `${github}?client_id=${clientId}&state=${OauthStateType.login}&redirect_uri=${cb}`;
+
+    oauthOpen(url);
+    window.addEventListener('message', messageCb);
+    return () => window.removeEventListener('message', messageCb);
+  }, [messageCb]);
+  const googleOauth = useCallback(() => {
+    const clientId = process.env.OAUTH_GOOGLE_CLIENT_ID;
+    const cb = 'http://localhost:3002/oauth/google/redirect';
+    const google = 'https://accounts.google.com/o/oauth2/v2/auth';
+    // eslint-disable-next-line max-len
+    const url = `${google}?client_id=${clientId}&state=${OauthStateType.login}&response_type=code&scope=profile email&redirect_uri=${cb}`;
 
     oauthOpen(url);
     window.addEventListener('message', messageCb);
@@ -133,6 +144,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
               css={css`
                 margin-top: ${rem(24)};
                 width: 100%;
+                display: grid;
+                grid-gap: 12px;
+                grid-template-columns: repeat(auto-fill, ${rem(32)});
               `}
             >
               <OauthIcon
@@ -140,6 +154,12 @@ const Login: React.FC<IBaseScreenProps> = () => {
                 onClick={githubOauth}
               >
                 <GitHub size={18} />
+              </OauthIcon>
+              <OauthIcon
+                type="button"
+                onClick={googleOauth}
+              >
+                <GoogleFill size={18} />
               </OauthIcon>
             </div>
             <Button

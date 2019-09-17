@@ -78,7 +78,6 @@ export default class MyApp extends App<IProps> {
       try {
         ({ data: user } = await whoami(req.cookies));
       } catch (err) {
-        console.log(123112313, err);
         if (err.status === 401) {
           res!.redirect(302, `/authenticate?redirectUrl=${req.path}`);
         }

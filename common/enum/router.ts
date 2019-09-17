@@ -23,6 +23,7 @@ export enum CollectionType {
 
 export enum OauthType {
   GITHUB = 'GITHUB',
+  GOOGLE = 'GOOGLE',
 }
 
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-dupe-class-members */
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 import {
   Injectable, UnauthorizedException, BadGatewayException,
@@ -9,12 +11,13 @@ import { RedisService } from 'nestjs-redis';
 import { OauthStateType } from '@common/enum/oauthState';
 import { OauthType } from './enum/oauth-type.enum';
 import { ClientService } from './client/client.service';
-import { IGithubUserInfo } from '../user/user.interface';
+import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
 import { SignupType } from '../user/enum/signup.type.enum';
 import { Status } from '../user/enum/status.enum';
 import { OauthQueryDto } from './dto/oauth.dto';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class OauthService {
@@ -47,33 +50,14 @@ export class OauthService {
           Authorization: `token ${info.access_token}`,
         },
       });
-      const client = this.redisService.getClient();
-      if (state === OauthStateType.login) {
-        const user = await this.verifyUser(OauthType.GITHUB, data.id, data.email, data);
-        console.log(user);
-        if (!user) throw new UnauthorizedException('No Credential Info');
-        await client.set(`oauth_code_${code}`, JSON.stringify({
-          type: OauthType.GITHUB,
-          client: await this.clientService.getBaseClient(),
-          user,
-        }), 'EX', 1000);
-      } else if (state === OauthStateType.authorize) {
-        const cr = await this.credentialsService.getInfo(`${OauthType.GITHUB}_${data.id}`);
-        if (cr) {
-          throw new BadGatewayException('authorized user');
-        }
-        await client.set(`oauth_authorize_${code}`, JSON.stringify({
-          type: OauthType.GITHUB,
-          data,
-        }), 'EX', 1000);
-      }
+      this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
     } else {
       throw new UnauthorizedException('No GITHUB Oauth error');
     }
     return code;
   }
 
-  public async google({ code }: OauthQueryDto) {
+  public async google({ code, state }: OauthQueryDto) {
     const proxyOptions = 'socks5://127.0.0.1:1080';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
     const client = axios.create({ httpsAgent });
@@ -95,36 +79,86 @@ export class OauthService {
           Authorization: `Bearer ${info.access_token}`,
         },
       });
-      console.log(data);
+      this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
     }
     return code;
   }
 
-  public verifyUser = async (type: OauthType, id: ID, email: string, data: IGithubUserInfo) => {
+  // public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType.GOOGLE, id: ID, data: IGoogleUserInfo): Promise<void>
+
+  // public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType.GITHUB, id: ID, data: IGithubUserInfo): Promise<void>
+
+  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: ID, data: IGoogleUserInfo | IGithubUserInfo): Promise<void> {
+    const redisClient = this.redisService.getClient();
+    if (state === OauthStateType.login) {
+      const user = await this.verifyUser(type, id, data);
+      if (!user) throw new UnauthorizedException('No Credential Info');
+      await redisClient.set(`oauth_code_${code}`, JSON.stringify({
+        type,
+        client: await this.clientService.getBaseClient(),
+        user,
+      }), 'EX', 1000);
+    } else if (state === OauthStateType.authorize) {
+      const cr = await this.credentialsService.getInfo(`${type}_${id}`);
+      if (cr) {
+        throw new BadGatewayException('authorized user');
+      }
+      await redisClient.set(`oauth_authorize_${code}`, JSON.stringify({
+        type,
+        data,
+      }), 'EX', 1000);
+    }
+  }
+
+  // public async verifyUser(type: OauthType.GITHUB, id: ID, data: IGithubUserInfo): Promise<UserEntity | null>
+
+  // public async verifyUser(type: OauthType.GOOGLE, id: ID, data: IGoogleUserInfo): Promise<UserEntity | null>
+
+  public async verifyUser(type: OauthType, id: ID, data: IGithubUserInfo | IGoogleUserInfo): Promise<UserEntity | null> {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
     if (cr && cr.isActive) {
       return cr.user;
     }
-    if (type === OauthType.GITHUB) {
-      let newCr;
-      if (cr) {
-        newCr = cr;
-      } else {
-        newCr = await this.credentialsService.create({
-          id: `${type}_${id}`,
-          info: data,
-        });
-      }
-      return this.userService.createOauthUser({
-        username: data.login,
-        name: data.name,
-        status: Status.VERIFIED,
-        bio: data.bio,
-        website: data.blog,
-        credentials: [newCr],
-        signupType: (type as any) as SignupType,
+    let newCr;
+    if (cr) {
+      newCr = cr;
+    } else {
+      newCr = await this.credentialsService.create({
+        id: `${type}_${id}`,
+        info: data,
       });
     }
-    return null;
+    let createData: Partial<UserEntity> = {};
+    switch (type) {
+      case OauthType.GOOGLE:
+        // eslint-disable-next-line no-case-declarations
+        const googleData = data as IGoogleUserInfo;
+        createData = {
+          username: `${googleData.family_name}-${googleData.given_name}`,
+          name: data.name,
+          status: Status.VERIFIED,
+        };
+        break;
+      case OauthType.GITHUB:
+        // eslint-disable-next-line no-case-declarations
+        const githubData = data as IGithubUserInfo;
+        createData = {
+          username: githubData.login,
+          name: githubData.name,
+          status: Status.VERIFIED,
+          bio: githubData.bio,
+          website: githubData.blog,
+          credentials: [newCr],
+          signupType: (type as any) as SignupType,
+        };
+        break;
+      default:
+        return null;
+    }
+    return this.userService.createOauthUser({
+      ...createData,
+      credentials: [newCr],
+      signupType: (type as any) as SignupType,
+    });
   }
 }
