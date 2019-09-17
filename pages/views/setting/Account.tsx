@@ -6,7 +6,7 @@ import { rem } from 'polished';
 import qs from 'querystring';
 
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { getUserCredentialList, accountRevoke, accountAuthorize } from '@lib/services/credentials';
+import { accountRevoke, accountAuthorize } from '@lib/services/credentials';
 import { CredentialsType, CredentialsTypeValues } from '@common/enum/credentials';
 import { theme } from '@lib/common/utils/themes';
 import { Button } from '@lib/components/Button';
@@ -16,6 +16,9 @@ import { Confirm } from '@lib/components/Confirm';
 import Toast from '@lib/components/Toast';
 import { oauthOpen } from '@lib/common/utils/oauth';
 import { OauthStateType } from '@common/enum/oauthState';
+import { useAccountStore } from '@lib/stores/hooks';
+import { useComputed } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 
 interface IInfo {
   title: string;
@@ -45,6 +48,11 @@ const InfoTitle = styled.h3`
   font-size: ${theme('fontSizes[2]')};
 `;
 
+const InfoName = styled.h4`
+  font-size: ${theme('fontSizes[1]')};
+  text-align: center;
+`;
+
 const CredentialInfo: Record<CredentialsType, IInfo> = {
   [CredentialsType.GITHUB]: {
     title: 'Github',
@@ -54,22 +62,24 @@ const CredentialInfo: Record<CredentialsType, IInfo> = {
   },
 };
 
-const Account = () => {
+const Account = observer(() => {
   const { t } = useTranslation();
+  const { userCredentials, getCredentials } = useAccountStore();
   const timer = useRef<NodeJS.Timeout | undefined>();
-  const [crData, setCrData] = useState<RecordPartial<CredentialsType, CredentialsEntity>>({});
   const [currentId, setCurrentId] = useState('');
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmDisabled, setConfirmDisabled] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const setList = useCallback(async () => {
-    const { data } = await getUserCredentialList();
-    const newData: RecordPartial<CredentialsType, CredentialsEntity> = {};
-    data.forEach(v => newData[v.type] = v);
-    setCrData(newData);
-  }, []);
+  const crData = useComputed(
+    () => {
+      const newData: RecordPartial<CredentialsType, CredentialsEntity> = {};
+      userCredentials.forEach(v => newData[v.type] = v);
+      return newData;
+    },
+    [userCredentials],
+  );
   useEffect(() => {
-    setList();
+    getCredentials();
     return () => {
       if (timer.current) {
         clearTimeout(timer.current);
@@ -89,8 +99,10 @@ const Account = () => {
       await accountRevoke(currentId);
       Toast.success('解绑成功!');
       setConfirmVisible(false);
+      getCredentials();
     } catch {
       Toast.error('解绑失败');
+      getCredentials();
     } finally {
       setConfirmLoading(false);
       if (timer.current) {
@@ -100,16 +112,18 @@ const Account = () => {
         setConfirmDisabled(false);
       }, 1000);
     }
-  }, [currentId]);
+  }, [currentId, getCredentials]);
   const messageCb = useCallback(async (e: MessageEvent) => {
     if (e.origin === window.location.origin) {
       if (e.data.fromOauthWindow) {
+        window.postMessage({ fromParent: true }, window.location.href);
         const query = qs.parse(e.data.fromOauthWindow.substr(1));
         await accountAuthorize(query as any);
-        window.postMessage({ fromParent: true }, window.location.href);
+        getCredentials();
+        Toast.success('绑定成功！');
       }
     }
-  }, []);
+  }, [getCredentials]);
   const authorize = useCallback(() => {
     const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
     const cb = `${process.env.URL}/oauth/github/redirect`;
@@ -136,9 +150,12 @@ const Account = () => {
                 <div>
                   {
                     currentInfo ? (
-                      <Button text danger onClick={() => revokeConfirm(currentInfo.id)}>
-                        解绑
-                      </Button>
+                      <>
+                        <InfoName>{currentInfo.info.login}</InfoName>
+                        <Button text danger onClick={() => revokeConfirm(currentInfo.id)}>
+                          解绑
+                        </Button>
+                      </>
                     ) : (
                       <Button text onClick={() => authorize()}>
                         <Lock size={14} />
@@ -167,6 +184,6 @@ const Account = () => {
       />
     </div>
   );
-};
+});
 
 export default Account;

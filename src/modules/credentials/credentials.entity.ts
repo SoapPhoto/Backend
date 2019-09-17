@@ -5,7 +5,6 @@ import {
 
 import { CredentialsType } from '@common/enum/credentials';
 import { UserEntity } from '../user/user.entity';
-import { Role } from '../user/enum/role.enum';
 
 @Exclude()
 @Entity('user_credentials')
@@ -26,6 +25,11 @@ export class CredentialsEntity extends BaseEntity {
   @Column('simple-json', {
     nullable: true,
   })
-  @Expose({ groups: [Role.ADMIN] })
+  @Expose()
   public readonly info?: any;
+
+  @Expose()
+  get isActive() {
+    return !!this.user;
+  }
 }

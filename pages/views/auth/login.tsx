@@ -1,6 +1,6 @@
 import { Formik, FormikActions } from 'formik';
 import Head from 'next/head';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Emojione } from 'react-emoji-render';
 import qs from 'querystring';
 
@@ -24,6 +24,7 @@ import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { GitHub } from '@lib/icon';
 import { oauthOpen } from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
+import { OauthStateType } from '@common/enum/oauthState';
 
 interface IValues {
   username: string;
@@ -76,24 +77,22 @@ const Login: React.FC<IBaseScreenProps> = () => {
   const messageCb = useCallback((e: MessageEvent) => {
     if (e.origin === window.location.origin) {
       if (e.data.fromOauthWindow) {
-        setTimeout(() => {
-          getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
-          window.postMessage({ fromParent: true }, window.location.href);
-        }, 300);
+        getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
+        window.postMessage({ fromParent: true }, window.location.href);
       }
     }
   }, [getInfo]);
   const githubOauth = useCallback(() => {
     const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
-    const info = 'from_github';
     const cb = `${process.env.URL}/oauth/github/redirect`;
     const github = 'https://github.com/login/oauth/authorize';
-    const url = `${github}?client_id=${clientId}&state=${info}&redirect_uri=${cb}`;
+    const url = `${github}?client_id=${clientId}&state=${OauthStateType.login}&redirect_uri=${cb}`;
 
     oauthOpen(url);
     window.addEventListener('message', messageCb);
     return () => window.removeEventListener('message', messageCb);
   }, [messageCb]);
+  useEffect(() => () => window.removeEventListener('message', messageCb), [messageCb]);
   return (
     <Wrapper>
       <Head>

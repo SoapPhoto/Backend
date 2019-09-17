@@ -50,6 +50,7 @@ export class OauthService {
       const client = this.redisService.getClient();
       if (state === OauthStateType.login) {
         const user = await this.verifyUser(OauthType.GITHUB, data.id, data.email, data);
+        console.log(user);
         if (!user) throw new UnauthorizedException('No Credential Info');
         await client.set(`oauth_code_${code}`, JSON.stringify({
           type: OauthType.GITHUB,
@@ -101,27 +102,28 @@ export class OauthService {
 
   public verifyUser = async (type: OauthType, id: ID, email: string, data: IGithubUserInfo) => {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
-    if (cr) {
+    if (cr && cr.isActive) {
       return cr.user;
     }
-    const user = await this.userService.getEmailUser(email);
-    if (!user) {
-      if (type === OauthType.GITHUB) {
-        const newCr = await this.credentialsService.create({
+    if (type === OauthType.GITHUB) {
+      let newCr;
+      if (cr) {
+        newCr = cr;
+      } else {
+        newCr = await this.credentialsService.create({
           id: `${type}_${id}`,
           info: data,
         });
-        return this.userService.createOauthUser({
-          email,
-          username: data.login,
-          name: data.name,
-          status: Status.VERIFIED,
-          bio: data.bio,
-          website: data.blog,
-          credentials: [newCr],
-          signupType: (type as any) as SignupType,
-        });
       }
+      return this.userService.createOauthUser({
+        username: data.login,
+        name: data.name,
+        status: Status.VERIFIED,
+        bio: data.bio,
+        website: data.blog,
+        credentials: [newCr],
+        signupType: (type as any) as SignupType,
+      });
     }
     return null;
   }

@@ -1,12 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-const Oauth = () => {
-  useEffect(() => {
-    console.log(123123);
-  }, []);
-  return (
-    <div>登录成功</div>
-  );
-};
+const Oauth = () => (
+  <div>跳转中，请稍等</div>
+);
 
 export default Oauth;

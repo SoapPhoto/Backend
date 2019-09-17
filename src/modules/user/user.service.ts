@@ -50,14 +50,18 @@ export class UserService {
     const is = await this.isSignup(data.username!, data.email!, false);
     let username = data.username!;
     if (is && is === 'username') {
-      username = uid(username);
+      username = uid(`${username}-`);
     }
-    return this.userEntity.save(
-      this.userEntity.create({
+    await this.userEntity.createQueryBuilder('user')
+      .createQueryBuilder()
+      .insert()
+      .into(UserEntity)
+      .values({
         ...data,
         username: username.toLowerCase(),
-      }),
-    );
+      })
+      .execute();
+    return this.getUser(username, false);
   }
 
   public async getPassword(password: string) {

@@ -30,7 +30,7 @@ export class UserEntity extends BaseEntity {
   @PrimaryColumn({
     readonly: true,
     unique: true,
-    length: 15,
+    length: 40,
   })
   public readonly username!: string;
 
@@ -74,6 +74,7 @@ export class UserEntity extends BaseEntity {
   @IsEmail()
   @Column({
     unique: false,
+    default: '',
   })
   @Expose()
   public readonly email!: string;
@@ -155,5 +156,11 @@ export class UserEntity extends BaseEntity {
   @Expose()
   get fullName(): string {
     return this.name || this.username;
+  }
+
+  @Expose()
+  @Expose({ groups: [Role.OWNER] })
+  get isPassword() {
+    return !!(this.salt && this.hash);
   }
 }

@@ -5,6 +5,8 @@ import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/
 import { request } from '@lib/common/utils/request';
 import { oauthToken, oauth } from '@lib/services/oauth';
 import { OauthType } from '@common/enum/router';
+import { CredentialsEntity } from '@lib/common/interfaces/credentials';
+import { getUserCredentialList } from '@lib/services/credentials';
 
 export class AccountStore {
   @computed get isLogin() {
@@ -18,6 +20,8 @@ export class AccountStore {
    * @memberof AccountStore
    */
   @observable public userInfo?: UserEntity;
+
+  @observable public userCredentials: CredentialsEntity[] = [];
 
   // 用来初始化
   public update = (store?: Partial<AccountStore>) => {
@@ -47,6 +51,14 @@ export class AccountStore {
     const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, params);
     this.setUserInfo(data);
   }
+
+  public getCredentials = async () => {
+    const { data } = await getUserCredentialList();
+    this.setCredentials(data);
+  }
+
+  @action
+  public setCredentials = (data: CredentialsEntity[]) => this.userCredentials = data;
 
   /**
    * 登录
