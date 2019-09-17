@@ -56,17 +56,10 @@ export class UserService {
     if (is && is === 'username') {
       username = uid(`${username}-`);
     }
-    const newUser = this.userEntity.create({
+    return this.userEntity.save(this.userEntity.create({
       ...data,
       username: username.toLowerCase(),
-    });
-    await this.userEntity.createQueryBuilder('user')
-      .createQueryBuilder()
-      .insert()
-      .into(UserEntity)
-      .values(newUser)
-      .execute();
-    return newUser;
+    }));
   }
 
   public async getPassword(password: string) {

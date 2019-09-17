@@ -77,8 +77,13 @@ const Login: React.FC<IBaseScreenProps> = () => {
   const messageCb = useCallback((e: MessageEvent) => {
     if (e.origin === window.location.origin) {
       if (e.data.fromOauthWindow) {
-        getInfo(qs.parse(e.data.fromOauthWindow.substr(1)) as any);
-        window.postMessage({ fromParent: true }, window.location.href);
+        const data = qs.parse(e.data.fromOauthWindow.substr(1));
+        if (data.code && !data.message) {
+          getInfo(data as any);
+          window.postMessage({ fromParent: true }, window.location.href);
+        } else {
+          setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
+        }
       }
     }
   }, [getInfo]);
@@ -94,7 +99,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
   }, [messageCb]);
   const googleOauth = useCallback(() => {
     const clientId = process.env.OAUTH_GOOGLE_CLIENT_ID;
-    const cb = 'http://localhost:3002/oauth/google/redirect';
+    const cb = `${process.env.URL}/oauth/google/redirect`;
     const google = 'https://accounts.google.com/o/oauth2/v2/auth';
     // eslint-disable-next-line max-len
     const url = `${google}?client_id=${clientId}&state=${OauthStateType.login}&response_type=code&scope=profile email&redirect_uri=${cb}`;

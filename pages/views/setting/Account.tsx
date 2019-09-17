@@ -116,11 +116,16 @@ const Account = observer(() => {
   const messageCb = useCallback(async (e: MessageEvent) => {
     if (e.origin === window.location.origin) {
       if (e.data.fromOauthWindow) {
-        window.postMessage({ fromParent: true }, window.location.href);
-        const query = qs.parse(e.data.fromOauthWindow.substr(1));
-        await accountAuthorize(query as any);
-        getCredentials();
-        Toast.success('绑定成功！');
+        const data = qs.parse(e.data.fromOauthWindow.substr(1));
+        if (data.code && !data.message) {
+          window.postMessage({ fromParent: true }, window.location.href);
+          const query = qs.parse(e.data.fromOauthWindow.substr(1));
+          await accountAuthorize(query as any);
+          getCredentials();
+          Toast.success('绑定成功！');
+        } else {
+          setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
+        }
       }
     }
   }, [getCredentials]);

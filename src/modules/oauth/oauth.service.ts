@@ -9,6 +9,7 @@ import axios from 'axios';
 import SocksProxyAgent from 'socks-proxy-agent';
 import { RedisService } from 'nestjs-redis';
 import { OauthStateType } from '@common/enum/oauthState';
+import { CredentialsType } from '@common/enum/credentials';
 import { OauthType } from './enum/oauth-type.enum';
 import { ClientService } from './client/client.service';
 import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
@@ -50,7 +51,7 @@ export class OauthService {
           Authorization: `token ${info.access_token}`,
         },
       });
-      this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
+      await this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
     } else {
       throw new UnauthorizedException('No GITHUB Oauth error');
     }
@@ -58,7 +59,7 @@ export class OauthService {
   }
 
   public async google({ code, state }: OauthQueryDto) {
-    const proxyOptions = 'socks5://127.0.0.1:1080';
+    const proxyOptions = 'socks5://127.0.0.1:2081';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
     const client = axios.create({ httpsAgent });
     const { data: info } = await client.post(this.google_authorize, {}, {
@@ -79,7 +80,7 @@ export class OauthService {
           Authorization: `Bearer ${info.access_token}`,
         },
       });
-      this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
+      await this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
     }
     return code;
   }
@@ -97,7 +98,7 @@ export class OauthService {
         type,
         client: await this.clientService.getBaseClient(),
         user,
-      }), 'EX', 1000);
+      }), 'EX', 2000);
     } else if (state === OauthStateType.authorize) {
       const cr = await this.credentialsService.getInfo(`${type}_${id}`);
       if (cr) {
@@ -106,7 +107,7 @@ export class OauthService {
       await redisClient.set(`oauth_authorize_${code}`, JSON.stringify({
         type,
         data,
-      }), 'EX', 1000);
+      }), 'EX', 2000);
     }
   }
 
@@ -125,6 +126,7 @@ export class OauthService {
     } else {
       newCr = await this.credentialsService.create({
         id: `${type}_${id}`,
+        type: (type as any) as CredentialsType,
         info: data,
       });
     }
@@ -148,7 +150,6 @@ export class OauthService {
           status: Status.VERIFIED,
           bio: githubData.bio,
           website: githubData.blog,
-          credentials: [newCr],
           signupType: (type as any) as SignupType,
         };
         break;

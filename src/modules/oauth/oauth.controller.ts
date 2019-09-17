@@ -45,20 +45,20 @@ export class OauthController {
     @Res() res: Response,
   ) {
     let code = '';
-    switch (type.toUpperCase()) {
-      case OauthType.GITHUB:
+    try {
+      if (type.toUpperCase() === OauthType.GITHUB) {
         code = await this.oauthService.github(query);
-        break;
-      case OauthType.GOOGLE:
+      } else if (type.toUpperCase() === OauthType.GOOGLE) {
         code = await this.oauthService.google(query);
-        break;
-      default:
-        break;
-    }
-    if (code) {
-      res.redirect(`/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
-    } else {
-      throw new UnauthorizedException();
+      }
+      if (code) {
+        res.redirect(`/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
+      } else {
+        res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
+      }
+    } catch (err) {
+      console.log(err);
+      res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
     }
   }
 
