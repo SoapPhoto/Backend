@@ -5,11 +5,11 @@ import { getTokenExpiresAt } from '@server/common/utils/token';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { RedisService } from 'nestjs-redis';
+import { OauthType } from '@common/enum/router';
 import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
 import { ClientService } from '../client/client.service';
-import { OauthType } from '../enum/oauth-type.enum';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');

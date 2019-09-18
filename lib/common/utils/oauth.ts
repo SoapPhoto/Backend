@@ -1,5 +1,42 @@
+/* eslint-disable @typescript-eslint/camelcase */
+import qs from 'querystring';
+
+import { OauthType } from '@common/enum/router';
+import { OauthStateType } from '@common/enum/oauthState';
+
+export interface IOauthSuccessData {
+  code?: string;
+  message?: string;
+  type: OauthType;
+}
 
 let openWindow: Window | null = null;
+
+export const getOauthUrl = (type: OauthType, state: OauthStateType) => {
+  let url = '';
+  let query: Record<string, any> = {};
+  const cb = `${process.env.URL}/oauth/${type.toLowerCase()}/redirect`;
+  if (type === OauthType.GITHUB) {
+    const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
+    url = 'https://github.com/login/oauth/authorize';
+    query = {
+      state,
+      client_id: clientId,
+      redirect_uri: cb,
+    };
+  } else if (type === OauthType.GOOGLE) {
+    const clientId = process.env.OAUTH_GOOGLE_CLIENT_ID;
+    url = 'https://accounts.google.com/o/oauth2/v2/auth';
+    query = {
+      state,
+      client_id: clientId,
+      response_type: 'code',
+      scope: 'profile email',
+      redirect_uri: cb,
+    };
+  }
+  return `${url}?${qs.stringify(query)}`;
+};
 
 export const oauthOpen = (url: string) => {
   const windowArea = {
@@ -36,7 +73,21 @@ export const oauthOpen = (url: string) => {
     left=${windowArea.left},top=${windowArea.top}`;
 
   openWindow = window.open(_url, 'OauthNewWindow', windowOpts);
+  // 循环小窗口url，判断是否回调成功，获取回调参数
   const scanTimer = setInterval(() => {
+    try {
+      // 非同域名会报错，所以要先去请求一下，然后关闭窗口
+      // eslint-disable-next-line no-unused-expressions
+      console.log(openWindow && openWindow.location);
+    } catch (err) {
+      // clearInterval(scanTimer);
+      // setTimeout(() => closeWindow(), 1000);
+      return;
+    }
+    if (openWindow && openWindow.closed) {
+      clearInterval(scanTimer);
+      openWindow = null;
+    }
     if (
       openWindow
       && openWindow.location.origin === window.location.origin
@@ -65,4 +116,18 @@ export const oauthOpen = (url: string) => {
       closeWindow();
     }
   });
+};
+
+export const oauthSuccess = (e: MessageEvent, cb: (data: IOauthSuccessData) => void) => {
+  if (e.origin === window.location.origin) {
+    if (e.data && e.data.fromOauthWindow) {
+      const data = (qs.parse(e.data.fromOauthWindow.substr(1)) as any) as IOauthSuccessData;
+      if (data.code && !data.message) {
+        cb(data);
+        window.postMessage({ fromParent: true }, window.location.href);
+      } else {
+        setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
+      }
+    }
+  }
 };

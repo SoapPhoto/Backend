@@ -2,7 +2,6 @@ import { Formik, FormikActions } from 'formik';
 import Head from 'next/head';
 import React, { useCallback, useEffect } from 'react';
 import { Emojione } from 'react-emoji-render';
-import qs from 'querystring';
 
 import { LoginSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -22,7 +21,9 @@ import { useRouter } from '@lib/router';
 import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
 import { GitHub, GoogleFill } from '@lib/icon';
-import { oauthOpen } from '@lib/common/utils/oauth';
+import {
+  oauthOpen, getOauthUrl, oauthSuccess, IOauthSuccessData,
+} from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
 
@@ -57,9 +58,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
       setConfirmLoading(false);
     }
   };
-  const getInfo = useCallback(async (data: {code: string; type: OauthType}) => {
+  const getInfo = useCallback(async (data: IOauthSuccessData) => {
     try {
-      await codeLogin(data.code, data.type);
+      await codeLogin(data.code!, data.type!);
       setTimeout(() => {
         if (query.redirectUrl) {
           Router.replaceRoute(query.redirectUrl);
@@ -75,36 +76,11 @@ const Login: React.FC<IBaseScreenProps> = () => {
     }
   }, [codeLogin, query.redirectUrl, t]);
   const messageCb = useCallback((e: MessageEvent) => {
-    if (e.origin === window.location.origin) {
-      if (e.data.fromOauthWindow) {
-        const data = qs.parse(e.data.fromOauthWindow.substr(1));
-        if (data.code && !data.message) {
-          getInfo(data as any);
-          window.postMessage({ fromParent: true }, window.location.href);
-        } else {
-          setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
-        }
-      }
-    }
+    oauthSuccess(e, getInfo);
+    window.removeEventListener('message', messageCb);
   }, [getInfo]);
-  const githubOauth = useCallback(() => {
-    const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
-    const cb = `${process.env.URL}/oauth/github/redirect`;
-    const github = 'https://github.com/login/oauth/authorize';
-    const url = `${github}?client_id=${clientId}&state=${OauthStateType.login}&redirect_uri=${cb}`;
-
-    oauthOpen(url);
-    window.addEventListener('message', messageCb);
-    return () => window.removeEventListener('message', messageCb);
-  }, [messageCb]);
-  const googleOauth = useCallback(() => {
-    const clientId = process.env.OAUTH_GOOGLE_CLIENT_ID;
-    const cb = `${process.env.URL}/oauth/google/redirect`;
-    const google = 'https://accounts.google.com/o/oauth2/v2/auth';
-    // eslint-disable-next-line max-len
-    const url = `${google}?client_id=${clientId}&state=${OauthStateType.login}&response_type=code&scope=profile email&redirect_uri=${cb}`;
-
-    oauthOpen(url);
+  const oauth = useCallback((type: OauthType) => {
+    oauthOpen(getOauthUrl(type, OauthStateType.login));
     window.addEventListener('message', messageCb);
     return () => window.removeEventListener('message', messageCb);
   }, [messageCb]);
@@ -156,13 +132,13 @@ const Login: React.FC<IBaseScreenProps> = () => {
             >
               <OauthIcon
                 type="button"
-                onClick={githubOauth}
+                onClick={() => oauth(OauthType.GITHUB)}
               >
                 <GitHub size={18} />
               </OauthIcon>
               <OauthIcon
                 type="button"
-                onClick={googleOauth}
+                onClick={() => oauth(OauthType.GOOGLE)}
               >
                 <GoogleFill size={18} />
               </OauthIcon>

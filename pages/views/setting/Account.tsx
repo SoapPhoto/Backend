@@ -3,22 +3,24 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import qs from 'querystring';
 
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { accountRevoke, accountAuthorize } from '@lib/services/credentials';
-import { CredentialsType, CredentialsTypeValues } from '@common/enum/credentials';
 import { theme } from '@lib/common/utils/themes';
 import { Button } from '@lib/components/Button';
 import { Lock, Unlock } from '@lib/icon';
 import { CredentialsEntity } from '@lib/common/interfaces/credentials';
 import { Confirm } from '@lib/components/Confirm';
 import Toast from '@lib/components/Toast';
-import { oauthOpen } from '@lib/common/utils/oauth';
+import {
+  oauthOpen, getOauthUrl, IOauthSuccessData, oauthSuccess,
+} from '@lib/common/utils/oauth';
 import { OauthStateType } from '@common/enum/oauthState';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useComputed } from 'mobx-react-lite';
 import { observer } from 'mobx-react';
+import { OauthType, OauthTypeValues } from '@common/enum/router';
+import { IGoogleUserInfo, IGithubUserInfo } from '@lib/common/interfaces/user';
 
 interface IInfo {
   title: string;
@@ -53,14 +55,24 @@ const InfoName = styled.h4`
   text-align: center;
 `;
 
-const CredentialInfo: Record<CredentialsType, IInfo> = {
-  [CredentialsType.GITHUB]: {
+const CredentialInfo: Record<OauthType, IInfo> = {
+  [OauthType.GITHUB]: {
     title: 'Github',
   },
-  [CredentialsType.GOOGLE]: {
+  [OauthType.GOOGLE]: {
     title: 'Google',
   },
 };
+
+function oauthInfoName(type: OauthType, info: IGithubUserInfo | IGoogleUserInfo) {
+  if (type === OauthType.GITHUB) {
+    return (info as IGithubUserInfo).login;
+  }
+  if (type === OauthType.GOOGLE) {
+    return (info as IGoogleUserInfo).email;
+  }
+  return '';
+}
 
 const Account = observer(() => {
   const { t } = useTranslation();
@@ -72,7 +84,7 @@ const Account = observer(() => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const crData = useComputed(
     () => {
-      const newData: RecordPartial<CredentialsType, CredentialsEntity> = {};
+      const newData: RecordPartial<OauthType, CredentialsEntity> = {};
       userCredentials.forEach(v => newData[v.type] = v);
       return newData;
     },
@@ -113,29 +125,18 @@ const Account = observer(() => {
       }, 1000);
     }
   }, [currentId, getCredentials]);
-  const messageCb = useCallback(async (e: MessageEvent) => {
-    if (e.origin === window.location.origin) {
-      if (e.data.fromOauthWindow) {
-        const data = qs.parse(e.data.fromOauthWindow.substr(1));
-        if (data.code && !data.message) {
-          window.postMessage({ fromParent: true }, window.location.href);
-          const query = qs.parse(e.data.fromOauthWindow.substr(1));
-          await accountAuthorize(query as any);
-          getCredentials();
-          Toast.success('绑定成功！');
-        } else {
-          setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
-        }
-      }
-    }
+  const accountService = useCallback(async (data: IOauthSuccessData) => {
+    await accountAuthorize({
+      code: data.code!,
+    });
+    getCredentials();
+    Toast.success('绑定成功！');
   }, [getCredentials]);
-  const authorize = useCallback(() => {
-    const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
-    const cb = `${process.env.URL}/oauth/github/redirect`;
-    const github = 'https://github.com/login/oauth/authorize';
-    const url = `${github}?client_id=${clientId}&state=${OauthStateType.authorize}&redirect_uri=${cb}`;
-
-    oauthOpen(url);
+  const messageCb = useCallback(async (e: MessageEvent) => {
+    oauthSuccess(e, accountService);
+  }, [accountService]);
+  const authorize = useCallback((type: OauthType) => {
+    oauthOpen(getOauthUrl(type, OauthStateType.authorize));
     window.addEventListener('message', messageCb);
     return () => window.removeEventListener('message', messageCb);
   }, [messageCb]);
@@ -144,7 +145,7 @@ const Account = observer(() => {
       <Title>{t('setting_menu.account')}</Title>
       <List>
         {
-          CredentialsTypeValues.map((type) => {
+          OauthTypeValues.map((type) => {
             const data = CredentialInfo[type];
             const currentInfo = crData[type];
             return (
@@ -156,13 +157,13 @@ const Account = observer(() => {
                   {
                     currentInfo ? (
                       <>
-                        <InfoName>{currentInfo.info.login}</InfoName>
+                        <InfoName>{oauthInfoName(type, currentInfo.info!)}</InfoName>
                         <Button text danger onClick={() => revokeConfirm(currentInfo.id)}>
                           解绑
                         </Button>
                       </>
                     ) : (
-                      <Button text onClick={() => authorize()}>
+                      <Button text onClick={() => authorize((type as any) as OauthType)}>
                         <Lock size={14} />
                         绑定
                       </Button>

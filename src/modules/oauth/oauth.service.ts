@@ -9,8 +9,7 @@ import axios from 'axios';
 import SocksProxyAgent from 'socks-proxy-agent';
 import { RedisService } from 'nestjs-redis';
 import { OauthStateType } from '@common/enum/oauthState';
-import { CredentialsType } from '@common/enum/credentials';
-import { OauthType } from './enum/oauth-type.enum';
+import { OauthType } from '@common/enum/router';
 import { ClientService } from './client/client.service';
 import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
 import { UserService } from '../user/user.service';
@@ -126,7 +125,7 @@ export class OauthService {
     } else {
       newCr = await this.credentialsService.create({
         id: `${type}_${id}`,
-        type: (type as any) as CredentialsType,
+        type,
         info: data,
       });
     }

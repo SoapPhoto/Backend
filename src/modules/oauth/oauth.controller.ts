@@ -4,8 +4,8 @@ import {
 import { Request, Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
+import { OauthTypeValues, OauthType } from '@common/enum/router';
 import { OauthServerService } from './oauth-server/oauth-server.service';
-import { OauthType, OauthTypeValues } from './enum/oauth-type.enum';
 import { OauthService } from './oauth.service';
 import { OauthQueryDto } from './dto/oauth.dto';
 
@@ -57,7 +57,6 @@ export class OauthController {
         res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err) {
-      console.log(err);
       res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
     }
   }

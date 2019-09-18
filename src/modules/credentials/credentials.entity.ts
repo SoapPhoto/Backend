@@ -3,8 +3,9 @@ import {
   Entity, BaseEntity, PrimaryColumn, Column, ManyToOne,
 } from 'typeorm';
 
-import { CredentialsType } from '@common/enum/credentials';
+import { OauthType } from '@common/enum/router';
 import { UserEntity } from '../user/user.entity';
+import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
 
 @Exclude()
 @Entity('user_credentials')
@@ -14,8 +15,8 @@ export class CredentialsEntity extends BaseEntity {
   public readonly id!: string;
 
   @Expose()
-  @Column({ type: 'enum', enum: CredentialsType })
-  public type!: CredentialsType;
+  @Column({ type: 'enum', enum: OauthType })
+  public type!: OauthType;
 
   @Type(() => UserEntity)
   @ManyToOne(() => UserEntity, user => user.pictures, { onDelete: 'CASCADE' })
@@ -26,7 +27,7 @@ export class CredentialsEntity extends BaseEntity {
     nullable: true,
   })
   @Expose()
-  public readonly info?: any;
+  public readonly info?: IGithubUserInfo | IGoogleUserInfo;
 
   @Expose()
   get isActive() {

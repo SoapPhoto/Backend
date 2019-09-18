@@ -1,4 +1,4 @@
-import { OauthType } from './enum/oauth-type.enum';
+import { OauthType } from '@common/enum/router';
 import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
 
 export interface IGithubCode {
