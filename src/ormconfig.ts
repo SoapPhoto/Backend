@@ -1,7 +1,8 @@
 /// <reference types="../typings/index" />
 /// <reference types="../typings/typing" />
 
-import '@common/env';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {} from '@common/env';
 
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
@@ -17,8 +18,9 @@ import { CollectionEntity } from './modules/collection/collection.entity';
 import { CollectionPictureEntity } from './modules/collection/picture/collection-picture.entity';
 import { CommentEntity } from './modules/comment/comment.entity';
 import { FileEntity } from './modules/file/file.entity';
+import { CredentialsEntity } from './modules/credentials/credentials.entity';
 
-const config: TypeOrmModuleOptions = {
+const ormconfig: TypeOrmModuleOptions = {
   type: 'mysql',
   port: Number(process.env.DATABASE_PORT),
   host: process.env.DATABASE_HOST,
@@ -43,6 +45,7 @@ const config: TypeOrmModuleOptions = {
     CollectionPictureEntity,
     CommentEntity,
     FileEntity,
+    CredentialsEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
   cli: {
@@ -50,4 +53,5 @@ const config: TypeOrmModuleOptions = {
   },
 };
 
-export default config;
+// export = ormconfig;
+export default ormconfig;

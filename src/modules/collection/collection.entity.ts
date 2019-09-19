@@ -39,12 +39,12 @@ export class CollectionEntity extends BaseEntity {
 
   /** 收藏夹作者 */
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.collections, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.collections, { onDelete: 'CASCADE', eager: true })
   @Expose()
   public readonly user!: UserEntity;
 
   /* 收藏信息 */
-  @OneToMany(() => CollectionPictureEntity, picture => picture.collection)
+  @OneToMany(() => CollectionPictureEntity, picture => picture.collection, { onDelete: 'CASCADE' })
   public info!: CollectionPictureEntity[];
 
   @Expose()

@@ -38,12 +38,12 @@ stories
         >
           <div onClick={() => setVisible1(true)} css={css`color: ${theme('colors.text')};`}>12312</div>
         </Modal>
-          <Modal
-            visible={visible1}
-            onClose={() => setVisible1(false)}
-          >
-            <div css={css`color: ${theme('colors.text')};`}>test</div>
-          </Modal>
+        <Modal
+          visible={visible1}
+          onClose={() => setVisible1(false)}
+        >
+          <div css={css`color: ${theme('colors.text')};`}>test</div>
+        </Modal>
         <p>test</p>
         <p>test</p>
         <p>test</p>

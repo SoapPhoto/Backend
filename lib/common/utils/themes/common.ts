@@ -20,7 +20,7 @@ export const box = (theme: DefaultTheme, width: string, wrapper = false) => `
   background-color: ${theme.styles.box.background};
   box-shadow: ${theme.colors.shadowColor} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   border: 1px solid ${theme.styles.box.borderColor};
-  ${wrapper ? 'margin: 0 auto' : ''}
+  ${wrapper ? 'margin: 0 auto;' : ''}
   padding: ${rem('32px')};
   overflow: hidden;
 `;

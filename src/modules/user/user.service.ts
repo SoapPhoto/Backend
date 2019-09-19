@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import uid from 'uniqid';
 
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
@@ -33,16 +34,32 @@ export class UserService {
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
     const { salt, hash } = await this.getPassword(data.password);
-    const user = await this.userEntity.save(
-      this.userEntity.create({
-        salt,
-        hash,
-        ...data,
-        username: data.username,
-        email: data.email,
-      }),
-    );
-    return user;
+    const newUser = this.userEntity.create({
+      salt,
+      hash,
+      ...data,
+      username: data.username.toLowerCase(),
+      email: data.email,
+    });
+    await this.userEntity.createQueryBuilder('user')
+      .createQueryBuilder()
+      .insert()
+      .into(UserEntity)
+      .values(newUser)
+      .execute();
+    return newUser;
+  }
+
+  public async createOauthUser(data: Partial<UserEntity>) {
+    const is = await this.isSignup(data.username!, data.email!, false);
+    let username = data.username!;
+    if (is && is === 'username') {
+      username = uid(`${username}-`);
+    }
+    return this.userEntity.save(this.userEntity.create({
+      ...data,
+      username: username.toLowerCase(),
+    }));
   }
 
   public async getPassword(password: string) {
@@ -154,6 +171,19 @@ export class UserService {
     return plainToClass(UserEntity, data, {
       groups,
     });
+  }
+
+  public async getEmailUser(email: string) {
+    return this.userEntity.createQueryBuilder('user')
+      .where('user.email=:email', { email })
+      .getOne();
+  }
+
+
+  public async getBaseUser(id: ID) {
+    return this.userEntity.createQueryBuilder('user')
+      .where('user.id=:id', { id })
+      .getOne();
   }
 
   public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {

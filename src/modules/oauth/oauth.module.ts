@@ -8,11 +8,13 @@ import { ClientModule } from './client/client.module';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 import { OauthController } from './oauth.controller';
 import { OauthService } from './oauth.service';
+import { CredentialsModule } from '../credentials/credentials.module';
 
 @Global()
 @Module({
   imports: [
     forwardRef(() => UserModule),
+    CredentialsModule,
     ClientModule,
     AccessTokenModule,
   ],

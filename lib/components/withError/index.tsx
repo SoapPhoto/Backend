@@ -13,13 +13,17 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
       try {
         props = await (Component as any).getInitialProps(ctx);
       } catch (err) {
-        if (err && err.statusCode) {
+        if (err && err.response && err.response && err.response.data && err.response.data.statusCode) {
+          error = {
+            statusCode: err.response.data.statusCode,
+            message: err.response.data.message,
+          };
+        } else if (err && err.statusCode) {
           error = err;
         } else {
           error = {
             statusCode: 500,
           };
-          console.error(err);
         }
       }
     }

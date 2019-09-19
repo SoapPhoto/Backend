@@ -28,6 +28,15 @@ export class CollectionController {
     return this.collectionService.create(body, user);
   }
 
+  @Delete('/:collectionId')
+  @Roles(Role.USER)
+  public async deleteCollection(
+    @Param('collectionId') collectionId: string,
+    @User() user: UserEntity,
+  ) {
+    return this.collectionService.deleteCollection(collectionId, user);
+  }
+
   @Put('/:collectionId')
   @Roles(Role.USER)
   public async updateCollection(

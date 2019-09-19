@@ -232,7 +232,7 @@ export class CollectionService {
     const q = this.pictureService.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
     const pictureList = await q.getMany();
-    return listRequest(query, classToPlain(pictureList), count.count as number);
+    return listRequest(query, pictureList, count.count as number);
   }
 
   public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
@@ -291,6 +291,18 @@ export class CollectionService {
     return listRequest(query, classToPlain(newData, {
       groups: isOwner ? [Role.OWNER] : undefined,
     }), count);
+  }
+
+  public async deleteCollection(id: ID, user: UserEntity) {
+    const collection = await this.collectionEntity.findOne(id);
+    const isOwner = !!(collection && (user.id === collection.user.id));
+    if (!isOwner) {
+      throw new ForbiddenException();
+    }
+    await this.collectionEntity.createQueryBuilder('collection')
+      .delete()
+      .where('collection.id=:id', { id })
+      .execute();
   }
 
   /**

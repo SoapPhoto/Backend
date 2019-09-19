@@ -17,7 +17,7 @@ const User: React.FC = () => {
   const { t } = useTranslation();
 
   const [data, setData] = useState({
-    name: userInfo!.name || userInfo!.username,
+    name: userInfo!.fullName,
     website: userInfo!.website,
     bio: userInfo!.bio,
   });

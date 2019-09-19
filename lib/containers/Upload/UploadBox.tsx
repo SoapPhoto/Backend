@@ -42,14 +42,10 @@ export const UploadBox: React.FC<IProps> = ({
         <>
           <UploadCloud
             size={34}
-            css={css`
-                pointer-events: none;
-              `}
+            style={{ pointerEvents: 'none' }}
           />
           <span
-            css={css`
-                pointer-events: none;
-              `}
+            style={{ pointerEvents: 'none' }}
           >
             {type === 'drop' ? '松开上传' : '拖拽照片到这里'}
           </span>

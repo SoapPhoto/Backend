@@ -21,6 +21,7 @@ import { WrapperBox } from '@lib/common/utils/themes/common';
 import { useRouter } from '@lib/router';
 import { UpdateCollectionModal } from '@lib/containers/Collection/UpdateCollectionModal';
 import { I18nNamespace } from '@lib/i18n/Namespace';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 
 interface IProps extends IBaseScreenProps {
   collectionStore: CollectionScreenStore;
@@ -92,11 +93,11 @@ const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void]
     params, pushRoute, replaceRoute, back,
   } = useRouter();
 
-  const set = useCallback((value: boolean, replace?: boolean) => {
+  const set = useCallback(async (value: boolean, replace?: boolean) => {
     let func = pushRoute;
     if (replace) func = replaceRoute;
     if (value) {
-      func(`/collection/${params.id}/setting`, {}, {
+      await func(`/collection/${params.id}/setting`, {}, {
         shallow: true,
         state: {
           data: 'child-setting',
@@ -105,9 +106,9 @@ const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void]
     } else {
       const child = Histore!.get('data');
       if (child === 'child-setting') {
-        back();
+        await back();
       } else {
-        func(`/picture/${params.id}`, {}, {
+        await func(`/picture/${params.id}`, {}, {
           shallow: true,
         });
       }
@@ -130,14 +131,15 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   const { collectionStore } = useScreenStores();
   const { userInfo } = useAccountStore();
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const { info, list, updateCollection } = collectionStore;
   const {
     name, user, pictureCount, isPrivate,
   } = info!;
   const isOwner = !!(userInfo && userInfo.id === user.id);
   const [updateVisible, setUpdateVisible] = useUpdateVisible(isOwner);
-  const onUpdateClose = useCallback(() => {
-    setUpdateVisible(false);
+  const onUpdateClose = useCallback(async () => {
+    await setUpdateVisible(false);
   }, [setUpdateVisible]);
   return (
     <div>
@@ -156,10 +158,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
                 content={<span>{t('private_xx', t('collection'))}</span>}
               >
                 <Lock
-                  css={css`
-                    stroke: ${theme('colors.secondary')};
-                    margin-right: ${rem(12)};
-                  `}
+                  style={{ stroke: colors.secondary, marginRight: rem(12) }}
                 />
               </Popover>
             )
@@ -170,7 +169,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
         <Info>
           <User>
             <A route={`/@${user.username}`}>
-              <Avatar css={css`${activte()}`} src={user.avatar} />
+              <Avatar css={css`${activte()}` as any} src={user.avatar} />
             </A>
             <UserName route={`/@${user.username}`}>
               {user.username}

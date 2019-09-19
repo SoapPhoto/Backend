@@ -27,7 +27,6 @@ import {
   Wrapper,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
-import { css } from 'styled-components';
 import { rem } from 'polished';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
@@ -73,19 +72,15 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         <UserInfo width={1}>
           <UserLink route={`/@${user.username}`}>
             <Avatar
-              css={css`
-                margin-right: ${rem(14)};
-              `}
+              style={{ marginRight: rem(14) }}
               src={user.avatar}
             />
-            <UserName>{user.name}</UserName>
+            <UserName>{user.fullName}</UserName>
           </UserLink>
         </UserInfo>
         <UserHeaderInfo width={1}>
           <BaseInfoItem
-            css={css`
-              margin-right: ${rem(14)};
-            `}
+            style={{ marginRight: rem(14) }}
           >
             <Eye size={20} />
             <p>{info.views}</p>
@@ -115,9 +110,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               {
                 tags.map(tag => (
                   <A
-                    css={css`
-                      text-decoration: none;
-                    `}
+                    style={{ textDecoration: 'none' }}
                     route={`/tag/${tag.name}`}
                     key={tag.id}
                   >

@@ -1,5 +1,5 @@
 import {
-  SettingTypeValues, UserTypeValues, PictureTypeValues, CollectionTypeValues,
+  SettingTypeValues, UserTypeValues, PictureTypeValues, CollectionTypeValues, OauthTypeValues,
 } from '@common/enum/router';
 
 export const routeObject: Record<string, string> = {
@@ -14,4 +14,5 @@ export const routeObject: Record<string, string> = {
   '/tag/:name': 'views/tag',
   [`/collection/:id/:type(${CollectionTypeValues.join('|')})?`]: 'views/collection',
   '/authenticate': 'views/auth/authenticate',
+  [`/oauth/:type(${OauthTypeValues.join('|')})?`]: 'views/auth/oauth',
 };

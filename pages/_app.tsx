@@ -1,4 +1,3 @@
-/// <reference types="styled-components/cssprop" />
 import 'reflect-metadata';
 
 import { Provider } from 'mobx-react';

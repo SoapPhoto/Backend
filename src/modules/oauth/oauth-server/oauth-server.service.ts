@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 import { getTokenExpiresAt } from '@server/common/utils/token';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
+import { RedisService } from 'nestjs-redis';
+import { OauthType } from '@common/enum/router';
 import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
 import { ClientEntity } from '../client/client.entity';
@@ -10,6 +13,10 @@ import { ClientService } from '../client/client.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const TokenHandler = require('oauth2-server/lib/handlers/token-handler');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const tokenUtil = require('oauth2-server/lib/utils/token-util');
 
 @Injectable()
 export class OauthServerService {
@@ -23,6 +30,7 @@ export class OauthServerService {
     private readonly clientService: ClientService,
     private readonly userService: UserService,
     private readonly accessTokenService: AccessTokenService,
+    private readonly redisService: RedisService,
   ) {
     this.server = new OAuth2Server({
       model: {
@@ -35,6 +43,31 @@ export class OauthServerService {
         getUser: this.getUser,
       },
     });
+  }
+
+  public generateOauthToken = async (req: Request, res: Response, type: OauthType) => {
+    const credentials = TokenHandler.prototype.getClientCredentials(req);
+    const client = await this.getClient(credentials.clientId, credentials.clientSecret);
+    if (!client) {
+      throw new UnauthorizedException('client credentials are invalid');
+    }
+    const redisClient = this.redisService.getClient();
+    const data = await redisClient.get(`oauth_code_${req.body.code}`);
+    if (!data) {
+      throw new UnauthorizedException('code credentials are invalid');
+    }
+    const { user, type: infoType } = JSON.parse(data);
+    if (infoType !== type) {
+      throw new UnauthorizedException();
+    }
+    const userInfo = await this.userService.getBaseUser(user.id);
+    if (!userInfo) {
+      throw new UnauthorizedException('user credentials are invalid');
+    }
+    return this.saveToken({
+      accessToken: await this.generateAccessToken(),
+      refreshToken: await this.generateRefreshToken(),
+    }, client, userInfo);
   }
 
   private getClient = async (clientId: string, clientSecret: string) => {
@@ -70,4 +103,8 @@ export class OauthServerService {
     const user = await this.userService.verifyUser(email, password);
     return user;
   }
+
+  private generateAccessToken = async () => tokenUtil.generateRandomToken()
+
+  private generateRefreshToken = async () => tokenUtil.generateRandomToken()
 }

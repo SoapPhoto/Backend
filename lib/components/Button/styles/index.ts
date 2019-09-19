@@ -15,25 +15,28 @@ export const StyleButton = styled.button.attrs<
     danger, theme: themes, text,
   }) => ({
     background: (() => {
-      if (danger) {
-        return themes.colors.danger;
-      }
       if (text) {
         return 'transparent';
+      }
+      if (danger) {
+        return themes.colors.danger;
       }
       return themes.colors.primary;
     })(),
     borderColor: (() => {
-      if (danger) {
-        return themes.colors.danger;
-      }
       if (text) {
         return 'transparent';
+      }
+      if (danger) {
+        return themes.colors.danger;
       }
       return themes.colors.primary;
     })(),
     color: (() => {
       if (text) {
+        if (danger) {
+          return themes.colors.danger;
+        }
         return themes.colors.primary;
       }
       return '#fff';
@@ -69,7 +72,7 @@ export const StyleButton = styled.button.attrs<
     pointer-events: none;
   }
   &>svg {
-    vertical-align: -${rem(1)};
+    vertical-align: -${rem(2)};
     margin-right: ${rem(12)};
   }
   &:hover {

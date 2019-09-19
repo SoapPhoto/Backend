@@ -176,7 +176,7 @@ export class PictureService {
     const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
-    return listRequest(query, classToPlain(data), count as number);
+    return listRequest(query, data, count as number);
   }
 
   /**
@@ -189,7 +189,7 @@ export class PictureService {
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .getManyAndCount();
-    return listRequest(query, classToPlain(data), count);
+    return listRequest(query, data, count);
   }
 
   /**

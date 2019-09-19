@@ -13,6 +13,11 @@ import { IconButton, Button } from '@lib/components/Button';
 import { UpdateCollectionDot } from '@lib/common/interfaces/collection';
 import Toast from '@lib/components/Toast';
 import { UpdateCollectionSchema } from '@lib/common/dto/collection';
+import { Confirm } from '@lib/components/Confirm';
+import { useRouter } from '@lib/router';
+import { useAccountStore } from '@lib/stores/hooks';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { Trash2 } from '@lib/icon';
 
 interface IProps<T> {
   visible: boolean;
@@ -36,14 +41,27 @@ const Content = styled.div`
   width: 100%;
 `;
 
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${rem(24)};
+`;
+
 export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
   visible,
   onClose,
   onUpdate,
   defaultValue,
 }) => {
-  const [confirmLoading, setConfirmLoading] = useState(false);
+  const { replaceRoute } = useRouter();
+  const { userInfo } = useAccountStore();
   const { t } = useTranslation();
+  const { colors } = useTheme();
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [deleteConfirmLoading, setDeleteConfirmLoading] = React.useState(false);
+  const [deleteConfirmDisabled, setDeleteConfirmDisabled] = React.useState(false);
   // const { colors } = useTheme();
   const handleOk = useCallback(async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
     setConfirmLoading(true);
@@ -59,6 +77,16 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
       setConfirmLoading(false);
     }
   }, [onClose, onUpdate, t]);
+  const deleteConfirm = useCallback(async () => {
+    if (deleteConfirmLoading) return;
+    setDeleteConfirmLoading(true);
+    // await deletePicture();
+    Toast.success('删除成功！');
+    setDeleteConfirmLoading(false);
+    setDeleteConfirmDisabled(true);
+    await replaceRoute(`/@${userInfo!.username}`);
+    window.scrollTo(0, 0);
+  }, [deleteConfirmLoading, replaceRoute, userInfo]);
   return (
     <Modal
       boxStyle={{ maxWidth: rem(500), padding: 0 }}
@@ -78,33 +106,26 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
                 <FieldInput
                   name="name"
                   label={t('collection_name')}
-                  css={css`margin-bottom: ${rem(24)};`}
+                  style={{ marginBottom: rem(24) }}
                 />
                 <FieldInput
                   name="bio"
                   label={t('collection_bio')}
-                  css={css`margin-bottom: ${rem(32)};`}
+                  style={{ marginBottom: rem(32) }}
                 />
                 <FieldSwitch
                   name="isPrivate"
                   label={t('private')}
                   bio={t('visible_yourself', t('collection'))}
                 />
-                <div
-                  css={css`
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      margin-top: ${rem(24)};
-                    `}
-                >
+                <Footer>
                   <IconButton
                     popover={t('delete_collection')}
-                    // onClick={() => setConfirmVisible(true)}
+                    onClick={() => setConfirmVisible(true)}
                   >
-                    {/* <Trash2
+                    <Trash2
                       color={colors.danger}
-                    /> */}
+                    />
                   </IconButton>
                   <Button
                     loading={confirmLoading}
@@ -114,12 +135,25 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
                   >
                     {t('save')}
                   </Button>
-                </div>
+                </Footer>
               </>
             )}
           </Formik>
         </Content>
       </Wrapper>
+      <Confirm
+        title={t('delete_confirm', t('collection'))}
+        visible={confirmVisible}
+        confirmText={t('delete')}
+        confirmProps={{
+          disabled: deleteConfirmDisabled,
+          danger: true,
+          onClick: deleteConfirm,
+        }}
+        confirmLoading={deleteConfirmLoading}
+        confirmIcon={<Trash2 size={14} />}
+        onClose={() => setConfirmVisible(false)}
+      />
     </Modal>
   );
 };

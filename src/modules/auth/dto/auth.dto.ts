@@ -28,3 +28,11 @@ export class ResetPasswordDto {
   @Expose()
   public newPassword!: string
 }
+
+@Exclude()
+export class NewPasswordDto {
+  @Length(8, 30)
+  @IsString()
+  @Expose()
+  public newPassword!: string
+}

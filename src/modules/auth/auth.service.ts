@@ -4,7 +4,7 @@ import uniqid from 'uniqid';
 import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { MailerService } from '@nest-modules/mailer';
-import { ValidatorEmailDto, ResetPasswordDto } from './dto/auth.dto';
+import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
 import { SignupType } from '../user/enum/signup.type.enum';
 import { Status } from '../user/enum/status.enum';
 import { CreateUserDto } from '../user/dto/user.dto';
@@ -72,6 +72,15 @@ export class AuthService {
     } else {
       throw new ForbiddenException('password error');
     }
+  }
+
+  public async newPassword(user: UserEntity, { newPassword }: NewPasswordDto) {
+    if (user.isPassword) {
+      throw new ForbiddenException('no password');
+    }
+    const newPasswordData = await this.userService.getPassword(newPassword);
+    await this.userService.updateUser(user, newPasswordData);
+    await this.accessTokenService.clearUserTokenAll(user.id);
   }
 
   private async sendValidator(user: UserEntity) {

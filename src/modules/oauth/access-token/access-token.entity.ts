@@ -26,11 +26,11 @@ export class AccessTokenEntity extends BaseEntity {
   @Column()
   public readonly refreshTokenExpiresAt!: Date;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   public user!: UserEntity;
 
-  @ManyToOne(() => ClientEntity)
+  @ManyToOne(() => ClientEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   public readonly client!: ClientEntity;
 }

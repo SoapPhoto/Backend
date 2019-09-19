@@ -111,10 +111,10 @@ const TagContent: React.FC<IProps> = ({
         value.map(e => (
           <Tag
             edit
-            css={css`
-              margin-right: ${rem(12)};
-              margin-bottom: ${rem(12)};
-            `}
+            style={{
+              marginRight: rem(12),
+              marginBottom: rem(12),
+            }}
             key={e}
             close
           >

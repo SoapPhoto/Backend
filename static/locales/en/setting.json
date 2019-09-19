@@ -1,7 +1,8 @@
 {
   "setting_menu": {
     "profile": "Profile",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "account": "Account"
   },
   "setting_upload_avatar": "Upload avatar",
   "setting_update": "Update settings",

@@ -21,7 +21,7 @@ import { File } from '@server/common/interface/file.interface';
 import { photoUpload } from '@server/common/utils/upload';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { CollectionService } from '@server/modules/collection/collection.service';
 import { GetUserCollectionListDto } from '@server/modules/collection/dto/collection.dto';
 import { UpdateProfileSettingDto } from './dto/user.dto';
@@ -44,7 +44,7 @@ export class UserController {
   public async getMyInfo(
     @User() user: UserEntity,
   ) {
-    return plainToClass(UserEntity, user);
+    return classToPlain(user, { groups: [Role.OWNER] });
   }
 
   @Get(':idOrName/picture')

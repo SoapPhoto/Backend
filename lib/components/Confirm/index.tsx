@@ -34,6 +34,10 @@ const Btns = styled.div`
   margin-top: ${rem(32)};
 `;
 
+const HelpIcon = styled(HelpCircle)`
+  margin-right: ${rem(24)};
+`;
+
 export const Confirm: React.FC<IConfirmProps> = ({
   visible,
   onClose,
@@ -49,7 +53,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
   return (
     <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.small }}>
       <Content>
-        <HelpCircle css={css`margin-right: ${rem(24)};`} />
+        <HelpIcon />
         <div>
           <Title>{title}</Title>
         </div>
@@ -57,7 +61,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
       <Btns>
         <Button
           text
-          css={css`margin-right: ${rem(12)};`}
+          style={{ marginRight: rem(12) }}
           {...cancelProps}
           onClick={onClose}
         >

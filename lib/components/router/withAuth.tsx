@@ -23,8 +23,12 @@ export const withAuth = <P extends any>(role?: string) => (
     switch (role) {
       case 'guest':
         if (isLogin) {
-          if (server && ctx.res) {
-            ctx.res.redirect('/');
+          if (server && ctx && ctx.res) {
+            if (ctx.req!.query.redirectUrl) {
+              ctx.res.redirect(ctx.req!.query.redirectUrl);
+            } else {
+              ctx.res.redirect('/');
+            }
           } else {
             Router.replaceRoute('/');
           }

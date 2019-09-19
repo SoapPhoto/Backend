@@ -16,6 +16,7 @@ import { PictureUserActivityEntity } from '@server/modules/picture/user-activity
 import { Role } from './enum/role.enum';
 import { Status } from './enum/status.enum';
 import { SignupType } from './enum/signup.type.enum';
+import { CredentialsEntity } from '../credentials/credentials.entity';
 
 @Exclude()
 @Entity('user')
@@ -29,7 +30,7 @@ export class UserEntity extends BaseEntity {
   @PrimaryColumn({
     readonly: true,
     unique: true,
-    length: 15,
+    length: 40,
   })
   public readonly username!: string;
 
@@ -73,17 +74,18 @@ export class UserEntity extends BaseEntity {
   @IsEmail()
   @Column({
     unique: false,
+    default: '',
   })
   @Expose()
   public readonly email!: string;
 
   /** 密码验证 */
-  @Column()
+  @Column({ nullable: true })
   @Expose({ groups: [Role.ADMIN] })
   public hash!: string;
 
   /** 密码盐 */
-  @Column()
+  @Column({ nullable: true })
   @Expose({ groups: [Role.ADMIN] })
   public readonly salt!: string;
 
@@ -115,7 +117,7 @@ export class UserEntity extends BaseEntity {
   public readonly pictures!: PictureEntity[];
 
   /** 用户的评论 */
-  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE' })
   @Expose()
   public readonly comments!: CommentEntity[];
 
@@ -123,6 +125,11 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => CollectionEntity, collection => collection.user)
   @Expose()
   public readonly collections!: CollectionEntity[];
+
+  /** 用户的绑定用户  */
+  @OneToMany(() => CredentialsEntity, credentials => credentials.user, { onDelete: 'CASCADE' })
+  @Expose()
+  public readonly credentials!: CredentialsEntity[];
 
   /** 用户的picture操作 */
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
@@ -144,5 +151,16 @@ export class UserEntity extends BaseEntity {
 
   public isActive() {
     return this.status === Status.UNVERIFIED || this.status === Status.VERIFIED;
+  }
+
+  @Expose()
+  get fullName(): string {
+    return this.name || this.username;
+  }
+
+  @Expose()
+  @Expose({ groups: [Role.OWNER] })
+  get isPassword() {
+    return !!(this.salt && this.hash);
   }
 }

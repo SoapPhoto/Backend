@@ -67,12 +67,6 @@ class User extends React.Component<IProps> {
     return userStore.type;
   }
 
-  get name() {
-    const { userStore } = this.props;
-    const { user } = userStore;
-    return user.name || user.username;
-  }
-
   public parseWebsite = (url: string) => {
     const data = parse(url);
     return data.hostname;
@@ -90,7 +84,7 @@ class User extends React.Component<IProps> {
           ({ t }) => (
             <Wrapper>
               <Head>
-                <title>{getTitle(`${this.name} (@${user.username})`, t)}</title>
+                <title>{getTitle(`${user.fullName} (@${user.username})`, t)}</title>
               </Head>
               <UserHeader>
                 <HeaderGrid columns="140px auto" gap="32px">
@@ -99,7 +93,7 @@ class User extends React.Component<IProps> {
                   </AvatarBox>
                   <Cell>
                     <UserName>
-                      {this.name}
+                      {user.fullName}
                       {
                         isLogin && userInfo && userInfo.username === user.username
                         && (

@@ -9,7 +9,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { AuthService } from './auth.service';
-import { ValidatorEmailDto, ResetPasswordDto } from './dto/auth.dto';
+import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
 import { Role } from '../user/enum/role.enum';
 import { UserEntity } from '../user/user.entity';
 
@@ -62,5 +62,15 @@ export class AuthController {
     @Body() data: ResetPasswordDto,
   ) {
     return this.authService.resetPassword(user, data);
+  }
+
+  @Put('newPassword')
+  @Roles(Role.USER)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async newPassword(
+    @User() user: UserEntity,
+    @Body() data: NewPasswordDto,
+  ) {
+    return this.authService.newPassword(user, data);
   }
 }
