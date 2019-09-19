@@ -6,7 +6,6 @@ import { ThemeStore } from '@lib/stores/ThemeStore';
 import { A } from '@lib/components/A';
 import { useRouter } from '@lib/router';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { css } from 'styled-components';
 import { Btns } from './Btns';
 import { Icon } from './Icon';
 import { Logo, MenuWapper, Wrapper } from './styles';
@@ -39,7 +38,7 @@ export const Header = memo(() => {
       </Wrapper>
       {
         !isLog && (
-          <div css={css`height: ${rem(70)};`} />
+          <div style={{ height: rem(70) }} />
         )
       }
     </>

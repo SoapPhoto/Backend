@@ -41,6 +41,13 @@ const Content = styled.div`
   width: 100%;
 `;
 
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${rem(24)};
+`;
+
 export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
   visible,
   onClose,
@@ -99,26 +106,19 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
                 <FieldInput
                   name="name"
                   label={t('collection_name')}
-                  css={css`margin-bottom: ${rem(24)};`}
+                  style={{ marginBottom: rem(24) }}
                 />
                 <FieldInput
                   name="bio"
                   label={t('collection_bio')}
-                  css={css`margin-bottom: ${rem(32)};`}
+                  style={{ marginBottom: rem(32) }}
                 />
                 <FieldSwitch
                   name="isPrivate"
                   label={t('private')}
                   bio={t('visible_yourself', t('collection'))}
                 />
-                <div
-                  css={css`
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      margin-top: ${rem(24)};
-                    `}
-                >
+                <Footer>
                   <IconButton
                     popover={t('delete_collection')}
                     onClick={() => setConfirmVisible(true)}
@@ -135,7 +135,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
                   >
                     {t('save')}
                   </Button>
-                </div>
+                </Footer>
               </>
             )}
           </Formik>

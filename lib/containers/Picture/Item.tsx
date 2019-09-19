@@ -14,7 +14,7 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
 import { PictureImage } from './Image';
 import {
-  HandleBox, InfoBox, ItemWapper, UserBox, UserName,
+  HandleBox, InfoBox, ItemWapper, UserBox, UserName, LockIcon, Link,
 } from './styles';
 import { UserPopper } from './components/UserPopper';
 
@@ -40,13 +40,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
   };
   return (
     <ItemWapper>
-      <A
-        route={`/picture/${detail.id}`}
-        css={css`
-          ${cover()}
-          z-index: 2;
-        `}
-      />
+      <Link route={`/picture/${detail.id}`} />
       {
         detail.isPrivate && (
           <Popover
@@ -56,24 +50,9 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
             theme="dark"
             content={<span>{t('private_xx', t('picture'))}</span>}
           >
-            <div
-              css={css`
-                position: absolute;
-                z-index: 2;
-                background: #ccc;
-                right: ${rem(6)};
-                top: ${rem(6)};
-                background: #000;
-                border-radius: 50%;
-                width: 25px;
-                height: 25px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              `}
-            >
-              <Lock css={css`stroke-width: 3;`} size={12} color="#fff" />
-            </div>
+            <LockIcon>
+              <Lock style={{ strokeWidth: 3 }} size={12} color="#fff" />
+            </LockIcon>
           </Popover>
         )
       }

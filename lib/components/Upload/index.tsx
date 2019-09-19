@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash';
 import React from 'react';
-import { css } from 'styled-components';
+import styled from 'styled-components';
 
 type DragType = 'leave' | 'drop' | 'over';
 
@@ -30,6 +30,12 @@ export interface IUploadProps extends React.HTMLAttributes<HTMLSpanElement> {
   accept?: string;
   children: UploadChildren;
 }
+
+const Input = styled.input`
+  visibility: hidden;
+  width: 0px;
+  height: 0px;
+`;
 
 export const Upload: React.FC<IUploadProps> = ({
   children,
@@ -82,16 +88,11 @@ export const Upload: React.FC<IUploadProps> = ({
       {...event}
       {...restProps}
     >
-      <input
+      <Input
         accept={accept}
         type="file"
         ref={inputRef}
         onChange={handleChange}
-        css={css`
-          visibility: hidden;
-          width: 0px;
-          height: 0px;
-        `}
       />
       {isFunction(children) ? children(dragType) : children}
     </span>

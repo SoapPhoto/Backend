@@ -1,6 +1,6 @@
 import React from 'react';
 import SwitchCom from 'react-switch';
-import { css } from 'styled-components';
+import styled from 'styled-components';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 
@@ -15,6 +15,28 @@ export interface ISwitchProps {
   ) => void;
 }
 
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: ${() => rem('12px')};
+`;
+
+const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+const Label = styled.p`
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
+  color: ${theme('colors.text')};
+  margin: 0;
+`;
+const Bio = styled.p`
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  color: ${theme('colors.secondary')};
+  margin-top: ${rem(4)};
+`;
 export const Switch: React.FC<ISwitchProps> = ({ label, bio, ...props }) => {
   const Child = (
     <SwitchCom
@@ -32,46 +54,21 @@ export const Switch: React.FC<ISwitchProps> = ({ label, bio, ...props }) => {
   );
   if (label) {
     return (
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: ${() => rem('12px')};
-        `}
-      >
-        <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          `}
-        >
-          <p
-            css={css`
-              font-size: ${_ => rem(theme('fontSizes[1]')(_))};
-              color: ${theme('colors.text')};
-              margin: 0;
-            `}
-          >
+      <Content>
+        <Box>
+          <Label>
             {label}
-          </p>
+          </Label>
           {
             bio && (
-              <p
-                css={css`
-                  font-size: ${_ => rem(_.theme.fontSizes[0])};
-                  color: ${theme('colors.secondary')};
-                  margin-top: ${rem(4)};
-                `}
-              >
+              <Bio>
                 {bio}
-              </p>
+              </Bio>
             )
           }
-        </div>
+        </Box>
         {Child}
-      </div>
+      </Content>
     );
   }
   return Child;

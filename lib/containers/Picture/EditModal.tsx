@@ -48,6 +48,13 @@ const Title = styled.h2`
   padding: ${rem('24px')};
 `;
 
+const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: ${rem(24)};
+`;
+
 export const EditPictureModal: React.FC<IProps> = ({
   visible,
   onClose,
@@ -116,19 +123,19 @@ export const EditPictureModal: React.FC<IProps> = ({
                 <FieldInput
                   name="title"
                   label={t('picture_title')}
-                  css={css`margin-bottom: ${rem(24)};`}
+                  style={{ marginBottom: rem(24) }}
                 />
                 <FieldInput
                   name="bio"
                   label={t('picture_bio')}
-                  css={css`margin-bottom: ${rem(32)};`}
+                  style={{ marginBottom: rem(24) }}
                 />
                 <Field
                   name="tags"
                   render={({ field }: any) => (
                     <Tag
                       value={field.value}
-                      css={css`margin-bottom: ${rem(12)};`}
+                      style={{ marginBottom: rem(12) }}
                       onChange={(e) => {
                         field.onChange({
                           target: {
@@ -145,14 +152,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                   label={t('private')}
                   bio={t('visible_yourself', t('picture'))}
                 />
-                <div
-                  css={css`
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-top: ${rem(24)};
-                  `}
-                >
+                <Footer>
                   <IconButton
                     popover={t('delete_picture')}
                     onClick={() => setConfirmVisible(true)}
@@ -169,7 +169,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                   >
                     {t('save')}
                   </Button>
-                </div>
+                </Footer>
               </>
             )}
           </Formik>

@@ -103,14 +103,14 @@ const UserCard: React.FC<IProps> = ({
             user.pictures.map((picture, index) => (
               <PrviewBox
                 key={picture.id}
-                css={css`
-                  background-color: ${picture.color};
-                  border-top-left-radius: ${rem(index === 0 ? 4 : 0)};
-                  border-bottom-left-radius: ${rem(index === 0 ? 4 : 0)};
-                  border-top-right-radius: ${rem(index === 2 ? 4 : 0)};
-                  border-bottom-right-radius: ${rem(index === 2 ? 4 : 0)};
-                  overflow: hidden;
-                `}
+                style={{
+                  backgroundColor: picture.color,
+                  borderTopLeftRadius: rem(index === 0 ? 4 : 0),
+                  borderBottomLeftRadius: rem(index === 0 ? 4 : 0),
+                  borderTopRightRadius: rem(index === 2 ? 4 : 0),
+                  borderBottomRightRadius: rem(index === 2 ? 4 : 0),
+                  overflow: 'hidden',
+                }}
               >
                 <A
                   route={`/picture/${picture.id}`}

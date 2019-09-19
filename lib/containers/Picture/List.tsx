@@ -116,9 +116,7 @@ export const PictureList: React.FC<IProps> = ({
       </NoSSR>
       <NoSSR key="client">
         <Col
-          css={css`
-            display: grid;
-          `}
+          style={{ display: 'grid' }}
           like={like}
           col={col}
           list={clientList}

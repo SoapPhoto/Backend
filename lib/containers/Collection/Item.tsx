@@ -7,7 +7,6 @@ import { A } from '@lib/components/A';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { Lock } from '@lib/icon';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { css } from 'styled-components';
 import { rem } from 'polished';
 import { Popover } from '@lib/components/Popover';
 import { useTranslation } from '@lib/i18n/useTranslation';
@@ -67,7 +66,11 @@ export const CollectionItem: React.FC<IProps> = ({
                 content={<span>{t('private_xx', t('collection'))}</span>}
               >
                 <Lock
-                  css={css`stroke-width: 3;margin-right: ${rem(6)};margin-bottom: ${rem(-1)};`}
+                  style={{
+                    strokeWidth: 3,
+                    marginRight: rem(6),
+                    marginBottom: rem(-1),
+                  }}
                   size={16}
                   color={colors.secondary}
                 />

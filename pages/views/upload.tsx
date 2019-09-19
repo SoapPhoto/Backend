@@ -22,7 +22,6 @@ import {
 } from '@lib/styles/views/upload';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
-import { css } from 'styled-components';
 import { getQiniuToken, upload } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
@@ -202,9 +201,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                     />
                   </FormTag>
                   <Cell
-                    css={css`
-                        text-align: right;
-                    `}
+                    style={{ textAlign: 'right' }}
                   >
                     <Button
                       onClick={addPicture}

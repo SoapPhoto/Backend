@@ -50,7 +50,7 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
       onClose={onClose}
     >
       <Title>新增收藏夹</Title>
-      <div css={css`padding: ${rem(24)};`}>
+      <div style={{ padding: rem(24) }}>
         <Formik<Values>
           initialValues={{
             name: '',
@@ -87,10 +87,10 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
                 name="isPrivate"
               />
               <Button
-                css={css`
-                  width: 100%;
-                  margin-top: ${rem(24)};
-                `}
+                style={{
+                  width: '100%',
+                  marginTop: rem(24),
+                }}
                 loading={okLoading}
                 disabled={isSubmitting}
               >

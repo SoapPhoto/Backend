@@ -21,6 +21,7 @@ import { WrapperBox } from '@lib/common/utils/themes/common';
 import { useRouter } from '@lib/router';
 import { UpdateCollectionModal } from '@lib/containers/Collection/UpdateCollectionModal';
 import { I18nNamespace } from '@lib/i18n/Namespace';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 
 interface IProps extends IBaseScreenProps {
   collectionStore: CollectionScreenStore;
@@ -130,6 +131,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   const { collectionStore } = useScreenStores();
   const { userInfo } = useAccountStore();
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const { info, list, updateCollection } = collectionStore;
   const {
     name, user, pictureCount, isPrivate,
@@ -156,10 +158,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
                 content={<span>{t('private_xx', t('collection'))}</span>}
               >
                 <Lock
-                  css={css`
-                    stroke: ${theme('colors.secondary')};
-                    margin-right: ${rem(12)};
-                  `}
+                  style={{ stroke: colors.secondary, marginRight: rem(12) }}
                 />
               </Popover>
             )
@@ -170,7 +169,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
         <Info>
           <User>
             <A route={`/@${user.username}`}>
-              <Avatar css={css`${activte()}`} src={user.avatar} />
+              <Avatar css={css`${activte()}` as any} src={user.avatar} />
             </A>
             <UserName route={`/@${user.username}`}>
               {user.username}

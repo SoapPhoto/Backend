@@ -11,7 +11,6 @@ import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
 import { Router } from '@lib/routes';
 import { Title, Wrapper } from '@lib/styles/views/auth';
-import { css } from 'styled-components';
 import { rem } from 'polished';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -85,24 +84,20 @@ const SignUp = () => {
             <FieldInput
               name="username"
               label={t('username')}
-              css={css`
-                  margin-top: ${rem(24)};
-                `}
+              style={{ marginTop: rem(24) }}
             />
             <FieldInput
               type="password"
               name="password"
               label={t('password')}
-              css={css`
-                  margin-top: ${rem(24)};
-                `}
+              style={{ marginTop: rem(24) }}
             />
             <Button
               loading={confirmLoading}
-              css={css`
-                  margin-top: ${rem(46)};
-                  width: 100%;
-                `}
+              style={{
+                marginTop: rem(46),
+                width: '100%',
+              }}
               type="submit"
               disabled={isSubmitting}
             >

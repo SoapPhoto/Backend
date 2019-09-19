@@ -1,4 +1,4 @@
-import { rem } from 'polished';
+import { rem, cover } from 'polished';
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
@@ -63,6 +63,11 @@ export const ItemWapper = styled.div`
     transform: scale(0.98);
     transition: transform 0.1s;
   } */
+`;
+
+export const Link = styled(A)`
+  ${cover()}
+  z-index: 2;
 `;
 
 export const ImageBox = styled.div<{height: number; background: string}>`
@@ -130,6 +135,21 @@ export const HandleBox = styled.div`
   & svg {
     filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3));
   }
+`;
+
+export const LockIcon = styled.div`
+  position: absolute;
+  z-index: 2;
+  background: #ccc;
+  right: ${rem(6)};
+  top: ${rem(6)};
+  background: #000;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Footer = styled.div`

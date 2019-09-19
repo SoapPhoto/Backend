@@ -1,10 +1,8 @@
+/* eslint-disable @typescript-eslint/interface-name-prefix */
 import 'react';
-// Add support for css prop
+// import('styled-components').CSSProp<import('styled-components').DefaultTheme>
 declare module 'react' {
-  interface Attributes {
-    css?: any;
-  }
-  interface DOMAttributes<T> {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
     css?: any;
   }
 }

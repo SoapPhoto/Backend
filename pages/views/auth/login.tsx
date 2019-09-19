@@ -12,7 +12,7 @@ import Toast from '@lib/components/Toast';
 import { Router } from '@lib/routes';
 import { Title, Wrapper, OauthIcon } from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
-import { css } from 'styled-components';
+import styled from 'styled-components';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { useTranslation } from '@lib/i18n/useTranslation';
@@ -31,6 +31,14 @@ interface IValues {
   username: string;
   password: string;
 }
+
+const Handle = styled.div`
+  margin-top: ${rem(24)};
+  width: 100%;
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(auto-fill, ${rem(32)});
+`;
 
 const Login: React.FC<IBaseScreenProps> = () => {
   const { query } = useRouter();
@@ -117,19 +125,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
               type="password"
               name="password"
               label={t('password')}
-              css={css`
-                  margin-top: ${rem(24)};
-                `}
+              style={{ marginTop: rem(24) }}
             />
-            <div
-              css={css`
-                margin-top: ${rem(24)};
-                width: 100%;
-                display: grid;
-                grid-gap: 12px;
-                grid-template-columns: repeat(auto-fill, ${rem(32)});
-              `}
-            >
+            <Handle>
               <OauthIcon
                 type="button"
                 onClick={() => oauth(OauthType.GITHUB)}
@@ -142,13 +140,10 @@ const Login: React.FC<IBaseScreenProps> = () => {
               >
                 <GoogleFill size={18} />
               </OauthIcon>
-            </div>
+            </Handle>
             <Button
               loading={confirmLoading}
-              css={css`
-                  margin-top: ${rem(42)};
-                  width: 100%;
-                `}
+              style={{ marginTop: rem(42), width: '100%' }}
               type="submit"
               disabled={isSubmitting}
             >
