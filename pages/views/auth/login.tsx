@@ -84,8 +84,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
     }
   }, [codeLogin, query.redirectUrl, t]);
   const messageCb = useCallback((e: MessageEvent) => {
-    oauthSuccess(e, getInfo);
-    window.removeEventListener('message', messageCb);
+    oauthSuccess(e, getInfo, () => window.removeEventListener('message', messageCb));
   }, [getInfo]);
   const oauth = useCallback((type: OauthType) => {
     oauthOpen(getOauthUrl(type, OauthStateType.login));

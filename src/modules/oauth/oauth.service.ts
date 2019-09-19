@@ -66,7 +66,7 @@ export class OauthService {
         grant_type: 'authorization_code',
         client_id: process.env.OAUTH_GOOGLE_CLIENT_ID,
         client_secret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
-        redirect_uri: 'http://localhost:3002/oauth/google/redirect',
+        redirect_uri: `${process.env.URL}/oauth/google/redirect`,
         code,
       },
       headers: {

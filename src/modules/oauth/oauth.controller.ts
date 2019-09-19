@@ -52,12 +52,12 @@ export class OauthController {
         code = await this.oauthService.google(query);
       }
       if (code) {
-        res.redirect(`/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
+        res.redirect(`/redirect/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
       } else {
-        res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
+        res.redirect(`/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err) {
-      res.redirect(`/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
+      res.redirect(`/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
     }
   }
 

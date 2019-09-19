@@ -14,5 +14,5 @@ export const routeObject: Record<string, string> = {
   '/tag/:name': 'views/tag',
   [`/collection/:id/:type(${CollectionTypeValues.join('|')})?`]: 'views/collection',
   '/authenticate': 'views/auth/authenticate',
-  [`/oauth/:type(${OauthTypeValues.join('|')})?`]: 'views/auth/oauth',
+  [`/redirect/oauth/:type(${OauthTypeValues.join('|')})?`]: 'views/auth/oauth',
 };

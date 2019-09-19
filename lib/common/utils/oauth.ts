@@ -3,6 +3,7 @@ import qs from 'querystring';
 
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
+import { isFunction } from 'lodash';
 
 export interface IOauthSuccessData {
   code?: string;
@@ -91,7 +92,7 @@ export const oauthOpen = (url: string) => {
     if (
       openWindow
       && openWindow.location.origin === window.location.origin
-      && /^\/oauth/.test(openWindow.location.pathname)
+      && /^\/redirect\/oauth/.test(openWindow.location.pathname)
     ) {
       clearInterval(scanTimer);
     }
@@ -118,13 +119,14 @@ export const oauthOpen = (url: string) => {
   });
 };
 
-export const oauthSuccess = (e: MessageEvent, cb: (data: IOauthSuccessData) => void) => {
+export const oauthSuccess = (e: MessageEvent, cb: (data: IOauthSuccessData) => void, ok?: () => void) => {
   if (e.origin === window.location.origin) {
     if (e.data && e.data.fromOauthWindow) {
       const data = (qs.parse(e.data.fromOauthWindow.substr(1)) as any) as IOauthSuccessData;
       if (data.code && !data.message) {
         cb(data);
         window.postMessage({ fromParent: true }, window.location.href);
+        if (isFunction(ok)) ok();
       } else {
         setTimeout(() => window.postMessage({ fromParent: true }, window.location.href), 1000);
       }

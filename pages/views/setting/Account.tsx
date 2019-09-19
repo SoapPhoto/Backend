@@ -133,7 +133,7 @@ const Account = observer(() => {
     Toast.success('绑定成功！');
   }, [getCredentials]);
   const messageCb = useCallback(async (e: MessageEvent) => {
-    oauthSuccess(e, accountService);
+    oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
     if (type === OauthType.GOOGLE) return Toast.warning('Google 暂不可用!');
