@@ -136,10 +136,12 @@ const Account = observer(() => {
     oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
-    if (type === OauthType.GOOGLE) return Toast.warning('Google 暂不可用!');
-    oauthOpen(getOauthUrl(type, OauthStateType.authorize));
-    window.addEventListener('message', messageCb);
-    return () => window.removeEventListener('message', messageCb);
+    if (type !== OauthType.GOOGLE) {
+      oauthOpen(getOauthUrl(type, OauthStateType.authorize));
+      window.addEventListener('message', messageCb);
+    } else {
+      Toast.warning('Google 暂不可用!');
+    }
   }, [messageCb]);
   return (
     <div>

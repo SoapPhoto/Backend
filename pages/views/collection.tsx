@@ -132,7 +132,9 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   const { userInfo } = useAccountStore();
   const { t } = useTranslation();
   const { colors } = useTheme();
-  const { info, list, updateCollection } = collectionStore;
+  const {
+    info, list, updateCollection, like,
+  } = collectionStore;
   const {
     name, user, pictureCount, isPrivate,
   } = info!;
@@ -164,7 +166,11 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
             )
           }
           {name}
-          <EditIcon onClick={() => setUpdateVisible(true)} />
+          {
+            isOwner && (
+              <EditIcon onClick={() => setUpdateVisible(true)} />
+            )
+          }
         </Title>
         <Info>
           <User>
@@ -191,7 +197,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
       />
       <PictureList
         data={list}
-        like={() => console.log(123)}
+        like={like}
         noMore
       />
     </div>

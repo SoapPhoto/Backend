@@ -37,18 +37,8 @@ export class AccountStore {
     this.userInfo = userInfo;
   }
 
-  public updateProfile = async (userInfo: UpdateProfileSettingDto, avatar?: File) => {
-    const params = new FormData();
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in userInfo) {
-      if (key) {
-        params.append(key, (userInfo as any)[key]);
-      }
-    }
-    if (avatar) {
-      params.append('avatar', avatar);
-    }
-    const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, params);
+  public updateProfile = async (info: UpdateProfileSettingDto) => {
+    const { data } = await request.post<UserEntity>(`/api/user/${this.userInfo!.username}/setting/profile`, info);
     this.setUserInfo(data);
   }
 

@@ -1,6 +1,6 @@
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { request } from '@lib/common/utils/request';
-import { likePicture } from '@lib/services/picture';
+import { likePicture, unlikePicture } from '@lib/services/picture';
 import { action, observable } from 'mobx';
 import { UserType } from '@common/enum/router';
 import { ListStore } from '../base/ListStore';
@@ -92,7 +92,11 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
   @action
   public like = async (picture: PictureEntity) => {
     try {
-      const { data } = await likePicture(picture.id);
+      let func = unlikePicture;
+      if (!picture.isLike) {
+        func = likePicture;
+      }
+      const { data } = await func(picture.id);
       picture.isLike = data.isLike;
     // tslint:disable-next-line: no-empty
     } catch (err) {

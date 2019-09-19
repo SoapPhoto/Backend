@@ -10,12 +10,14 @@ import { UserController } from './user.controller';
 import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolvers';
 import { UserService } from './user.service';
+import { FileModule } from '../file/file.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => PictureModule),
     forwardRef(() => CollectionModule),
+    forwardRef(() => FileModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

@@ -22,13 +22,14 @@ import {
 } from '@lib/styles/views/upload';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
-import { getQiniuToken, upload } from '@lib/services/file';
+import { getQiniuToken, upload, uploadQiniu } from '@lib/services/file';
 import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { useRouter } from '@lib/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { Trash2 } from '@lib/icon';
+import { UploadType } from '@common/enum/upload';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -72,29 +73,15 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     }));
   };
 
-  const onUploadProgress = (speed: string, percent: number) => {
+  const onUploadProgress = useCallback((speed: string, percent: number) => {
     setPercentComplete(percent);
     seFormatSpeed(speed);
-  };
-
-  const uploadQiniu = useCallback(async (file: File) => {
-    const { data: token } = await getQiniuToken('PICTURE');
-    const formData = new FormData();
-    const key = `${uniqid('PICTURE')}-${uniqidTime()}`;
-    formData.append('file', file);
-    formData.append('key', key);
-    formData.append(
-      'token',
-      token,
-    );
-    await upload(formData, onUploadProgress);
-    return key;
   }, []);
 
   const addPicture = useCallback(async () => {
     setUploadLoading(true);
     if (imageRef.current) {
-      const key = await uploadQiniu(imageRef.current);
+      const key = await uploadQiniu(imageRef.current, UploadType.PICTURE, onUploadProgress);
       const info = imageInfo;
       if (!isLocation && info && info.exif && info.exif.location) {
         delete info.exif.location;
@@ -119,7 +106,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setPercentComplete(0);
       }
     }
-  }, [uploadQiniu, imageInfo, isLocation, data, pushRoute]);
+  }, [onUploadProgress, imageInfo, isLocation, data, pushRoute]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);

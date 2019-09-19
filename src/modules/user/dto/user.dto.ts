@@ -72,4 +72,7 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   @IsUrl()
   @Expose()
   public readonly website!: string;
+
+  @Expose()
+  public readonly key!: string;
 }

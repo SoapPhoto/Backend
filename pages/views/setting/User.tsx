@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
 import { getTitle } from '@lib/common/utils';
@@ -11,6 +11,8 @@ import { Upload } from '@lib/components/Upload';
 import Head from 'next/head';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
+import { uploadQiniu } from '@lib/services/file';
+import { UploadType } from '@common/enum/upload';
 
 const User: React.FC = () => {
   const { userInfo, updateProfile } = useAccountStore();
@@ -28,8 +30,15 @@ const User: React.FC = () => {
 
   const handleOk = async () => {
     setBtnLoading(true);
+    let key = '';
+    if (avatarFile.current) {
+      key = await uploadQiniu(avatarFile.current, UploadType.PICTURE);
+    }
     try {
-      await updateProfile(data, avatarFile.current);
+      await updateProfile({
+        ...data,
+        key,
+      });
       Toast.success('修改成功');
     } finally {
       setBtnLoading(false);

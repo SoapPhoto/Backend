@@ -45,18 +45,20 @@ export class PictureController {
     const { info, tags = [], ...restInfo } = body;
     const file = await this.fileService.getOne(body.key);
     if (file) {
-      await this.pictureService.create({
-        ...info,
-        ...restInfo,
-        tags,
-        user,
-        originalname: file.originalname,
-        mimetype: file.mimetype,
-        size: file.size,
-        key: file.key,
-        hash: file.hash,
-      });
-      this.fileService.actived(body.key);
+      await Promise.all([
+        this.fileService.actived(body.key),
+        this.pictureService.create({
+          ...info,
+          ...restInfo,
+          tags,
+          user,
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          key: file.key,
+          hash: file.hash,
+        }),
+      ]);
       return;
     }
     throw new BadRequestException('no file');

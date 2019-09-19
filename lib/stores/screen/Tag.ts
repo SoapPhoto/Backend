@@ -2,7 +2,7 @@ import { action, observable } from 'mobx';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { GetTagPictureListDto, ITagPictureListRequest, TagEntity } from '@lib/common/interfaces/tag';
-import { likePicture } from '@lib/services/picture';
+import { likePicture, unlikePicture } from '@lib/services/picture';
 import { tagInfo, tagPictureList } from '@lib/services/tag';
 import { ListStore } from '../base/ListStore';
 
@@ -64,13 +64,16 @@ export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDt
   }
 
   @action
-  public like = async (data: PictureEntity) => {
-    const oldData = data.isLike;
-    data.isLike = !data.isLike;
+  public like = async (picture: PictureEntity) => {
     try {
-      await likePicture(data.id);
+      let func = unlikePicture;
+      if (!picture.isLike) {
+        func = likePicture;
+      }
+      const { data } = await func(picture.id);
+      picture.isLike = data.isLike;
+      picture.likes = data.count;
     } catch (err) {
-      data.isLike = oldData;
       console.error(err);
     }
   }

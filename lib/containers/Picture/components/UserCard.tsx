@@ -1,6 +1,6 @@
 import { rem } from 'polished';
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Grid } from 'styled-css-grid';
 
 import { UserEntity } from '@lib/common/interfaces/user';
@@ -10,6 +10,7 @@ import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -73,10 +74,11 @@ const UserCard: React.FC<IProps> = ({
   user,
   ...restProps
 }) => {
+  const { colors } = useTheme();
   if (!user) {
     return (
       <LoadingBox>
-        <Loading size={6} />
+        <Loading color={colors.text} size={6} />
       </LoadingBox>
     );
   }
@@ -93,7 +95,7 @@ const UserCard: React.FC<IProps> = ({
             <A
               route={`/@${user.username}`}
             >
-              <UserName>{user.username}</UserName>
+              <UserName>{user.fullName}</UserName>
             </A>
             <Bio>{user.bio}</Bio>
           </UserBox>

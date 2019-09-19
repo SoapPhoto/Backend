@@ -6,6 +6,7 @@ import { getCollectionInfo, getCollectionPictureList, updateCollection } from '@
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { mergeStore } from '@lib/common/utils/store';
 import { HttpStatus } from '@lib/common/enums/http';
+import { likePicture, unlikePicture } from '@lib/services/picture';
 import { BaseStore } from '../base/BaseStore';
 
 export class CollectionScreenStore extends BaseStore {
@@ -144,5 +145,20 @@ export class CollectionScreenStore extends BaseStore {
     if (!data) return false;
     this.setInfo(data);
     return true;
+  }
+
+  @action
+  public like = async (picture: PictureEntity) => {
+    try {
+      let func = unlikePicture;
+      if (!picture.isLike) {
+        func = likePicture;
+      }
+      const { data } = await func(picture.id);
+      picture.isLike = data.isLike;
+    // tslint:disable-next-line: no-empty
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

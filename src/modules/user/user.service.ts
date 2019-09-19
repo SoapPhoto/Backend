@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
+import { omit } from 'lodash';
 
 import { validator } from '@server/common/utils/validator';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
@@ -20,6 +21,7 @@ import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
 import { PictureEntity } from '../picture/picture.entity';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class UserService {
@@ -30,6 +32,8 @@ export class UserService {
     private readonly emailService: EmailService,
     @InjectRepository(UserEntity)
     private readonly userEntity: Repository<UserEntity>,
+    @Inject(forwardRef(() => FileService))
+    private readonly fileService: FileService,
   ) {}
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
@@ -206,16 +210,19 @@ export class UserService {
     });
   }
 
-  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto, avatar?: string, groups?: string[]) {
-    const data = await this.userEntity.save(
-      this.userEntity.merge(
-        user,
-        body,
-        avatar ? { avatar } : {},
+  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto) {
+    const [, data] = await Promise.all([
+      this.fileService.actived(body.key),
+      this.userEntity.save(
+        this.userEntity.merge(
+          user,
+          omit(body, ['key']),
+          body.key ? { avatar: body.key } : {},
+        ),
       ),
-    );
+    ]);
     return plainToClass(UserEntity, data, {
-      groups,
+      groups: [Role.OWNER],
     });
   }
 }

@@ -1,9 +1,12 @@
-import { request } from '@lib/common/utils/request';
+import { isFunction } from 'lodash';
 
+import { request } from '@lib/common/utils/request';
+import { UploadType } from '@common/enum/upload';
+import { uniqidTime, uniqid } from '@lib/common/utils/uniqid';
 
 type onUploadProgress = (formatSpeed: string, percentComplete: number) => void;
 
-export const getQiniuToken = async (type: string) => (
+export const getQiniuToken = async (type: UploadType) => (
   request.get<string>('/api/file/token', {
     params: {
       type,
@@ -11,7 +14,25 @@ export const getQiniuToken = async (type: string) => (
   })
 );
 
-export const upload = async (formData: FormData, onUploadProgress: onUploadProgress) => {
+export const uploadQiniu = async (
+  file: File,
+  type: UploadType = UploadType.PICTURE,
+  onUploadProgress?: onUploadProgress,
+) => {
+  const { data: token } = await getQiniuToken(type);
+  const formData = new FormData();
+  const key = `${uniqid(type)}-${uniqidTime()}`;
+  formData.append('file', file);
+  formData.append('key', key);
+  formData.append(
+    'token',
+    token,
+  );
+  await upload(formData, onUploadProgress);
+  return key;
+};
+
+export const upload = async (formData: FormData, onUploadProgress?: onUploadProgress) => {
   let taking: number;
   const startDate = new Date().getTime();
   return request.post('//upload.qiniup.com', formData, {
@@ -32,7 +53,9 @@ export const upload = async (formData: FormData, onUploadProgress: onUploadProgr
         const percentComplete = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total,
         );
-        onUploadProgress(formatSpeed, percentComplete);
+        if (isFunction(onUploadProgress)) {
+          onUploadProgress(formatSpeed, percentComplete);
+        }
       }
     },
   });

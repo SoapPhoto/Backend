@@ -1,6 +1,4 @@
 import React from 'react';
-import { cover, rem } from 'polished';
-import { css } from 'styled-components';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { PictureStyle } from '@lib/common/utils/image';
@@ -70,7 +68,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
           <UserName
             route={`/@${detail.user.username}`}
           >
-            {detail.user.username}
+            {detail.user.fullName}
           </UserName>
         </UserBox>
         <HandleBox>

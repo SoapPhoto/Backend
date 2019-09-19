@@ -41,12 +41,10 @@ export class PictureService {
     if (Array.isArray(data.tags)) {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
     }
-    await this.pictureRepository
-      .createQueryBuilder()
-      .insert()
-      .into(PictureEntity)
-      .values(data)
-      .execute();
+    const createData = await this.pictureRepository.save(
+      this.pictureRepository.create(data),
+    );
+    return classToPlain(createData);
   }
 
   public update = async (id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) => {

@@ -67,28 +67,15 @@ export class UserController {
 
   @Post(':name/setting/profile')
   @Roles(Role.USER)
-  @UseInterceptors(photoUpload('avatar'))
   public async updateUserSetting(
     @Param('name') username: string,
     @User() user: UserEntity,
-    @UploadedFile() avatarFile: File,
     @Body() body: UpdateProfileSettingDto,
   ) {
-    let avatar;
-    if (avatarFile) {
-      const data = await this.qiniuService.uploadFile(avatarFile);
-      avatar = `qiniu:${data.hash}|${data.key}`;
+    if (user.username !== username) {
+      throw new ForbiddenException();
     }
-    try {
-      if (user.username !== username) {
-        throw new ForbiddenException();
-      }
-      return this.userService.updateUserProfile(user, body, avatar);
-    } finally {
-      if (avatarFile) {
-        fs.unlink(avatarFile.path, () => null);
-      }
-    }
+    return this.userService.updateUserProfile(user, body);
   }
 
   @Get(':id([0-9]+)')
