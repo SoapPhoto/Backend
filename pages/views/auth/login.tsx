@@ -20,7 +20,7 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
 import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
-import { GitHub, GoogleFill } from '@lib/icon';
+import { GitHub } from '@lib/icon';
 import {
   oauthOpen, getOauthUrl, oauthSuccess, IOauthSuccessData,
 } from '@lib/common/utils/oauth';
@@ -134,12 +134,12 @@ const Login: React.FC<IBaseScreenProps> = () => {
               >
                 <GitHub size={18} />
               </OauthIcon>
-              <OauthIcon
+              {/* <OauthIcon
                 type="button"
                 onClick={() => oauth(OauthType.GOOGLE)}
               >
                 <GoogleFill size={18} />
-              </OauthIcon>
+              </OauthIcon> */}
             </Handle>
             <Button
               loading={confirmLoading}

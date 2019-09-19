@@ -136,6 +136,7 @@ const Account = observer(() => {
     oauthSuccess(e, accountService);
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
+    if (type === OauthType.GOOGLE) return Toast.warning('Google 暂不可用!');
     oauthOpen(getOauthUrl(type, OauthStateType.authorize));
     window.addEventListener('message', messageCb);
     return () => window.removeEventListener('message', messageCb);
@@ -163,7 +164,7 @@ const Account = observer(() => {
                         </Button>
                       </>
                     ) : (
-                      <Button text onClick={() => authorize((type as any) as OauthType)}>
+                      <Button text onClick={() => authorize(type)}>
                         <Lock size={14} />
                         绑定
                       </Button>
