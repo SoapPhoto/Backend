@@ -145,6 +145,7 @@ export class OauthService {
         const githubData = data as IGithubUserInfo;
         createData = {
           username: githubData.login,
+          avatar: githubData.avatar_url,
           name: githubData.name,
           status: Status.VERIFIED,
           bio: githubData.bio,

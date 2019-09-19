@@ -220,5 +220,8 @@ export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
   if (/^blob:/.test(key)) {
     return key;
   }
+  if (/\/\//.test(key)) {
+    return key;
+  }
   return `//cdn.soapphoto.com/${key}${pictureStyle[style]}`;
 }

@@ -115,7 +115,7 @@
     "socks5-https-client": "^1.2.1",
     "storybook-addon-state": "^1.0.3",
     "string-format": "^2.0.0",
-    "styled-components": "^5.0.0-beta.8",
+    "styled-components": "^4.3.2",
     "styled-css-grid": "^1.2.1",
     "styled-media-query": "^2.1.2",
     "swagger-ui-express": "^4.0.7",

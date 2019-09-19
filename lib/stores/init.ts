@@ -1,12 +1,10 @@
-import { configure } from 'mobx';
-
 import { server } from '@lib/common/utils';
 import { AccountStore } from './AccountStore';
 import { AppStore } from './AppStore';
 import { IScreenStore, initScreenStore } from './screen';
 import { ThemeStore } from './ThemeStore';
 
-configure({ enforceActions: 'observed' });
+// configure({ enforceActions: 'observed' });
 
 export interface IMyMobxStore {
   accountStore: AccountStore;
