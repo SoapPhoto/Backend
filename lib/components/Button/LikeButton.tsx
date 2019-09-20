@@ -1,44 +1,29 @@
-import { Heart } from '@lib/icon';
 import React, { useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import { Popover } from '@lib/components/Popover';
+
+import { Heart } from '@lib/icon';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { IconButton } from './IconButton';
 
 interface IProps {
   size?: number;
   color?: string;
   isLike: boolean;
   popover?: boolean;
-  onLike(): void;
+  onLike(): Promise<void>;
 }
 
-const Button = styled.div<{like: boolean; color?: string}>`
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  align-items: center;
-  pointer-events: auto;
-  user-select: none;
-  & svg {
-    fill: ${_ => (_.like ? '#f44336' : 'none')};
-    stroke: ${_ => (_.like ? '#f44336' : _.color || '#fff')};
-    transition: .2s fill ease, .2s stroke ease, .2s transform ease;
-  }
-  transition: transform 0.1s;
-  &:active {
-    & svg {
-      transform: scale(0.7);
-    }
-  }
+const HeartIcon = styled(Heart)<{like: boolean; color?: string}>`
+  fill: ${_ => (_.like ? '#f44336' : 'none')};
+  stroke: ${_ => (_.like ? '#f44336' : _.color || '#fff')};
+  transition: .2s fill ease, .2s stroke ease, .2s transform ease;
 `;
 
 export const LikeButton: React.FC<IProps> = ({
   isLike,
   color,
-  popover = true,
   size = 18,
-  onLike = () => null,
+  onLike = async () => null,
 }) => {
   const { t } = useTranslation();
   const disabled = useRef<boolean>(false);
@@ -50,23 +35,9 @@ export const LikeButton: React.FC<IProps> = ({
     await onLike();
     disabled.current = false;
   }, [onLike]);
-  const content = (
-    <Button onClick={onClick} color={color} like={isLike}>
-      <Heart size={size} />
-    </Button>
+  return (
+    <IconButton onClick={onClick} popover={isLike ? t('un_like') : t('like')}>
+      <HeartIcon like={(isLike ? 1 : 0 as any) as boolean} color={color} size={size} />
+    </IconButton>
   );
-  if (popover) {
-    return (
-      <Popover
-        trigger="hover"
-        placement="top"
-        theme="dark"
-        openDelay={100}
-        content={<span>{isLike ? t('un_like') : t('like')}</span>}
-      >
-        {content}
-      </Popover>
-    );
-  }
-  return content;
 };

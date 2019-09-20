@@ -136,7 +136,8 @@ export const UserName = styled(A)`
 `;
 
 export const HandleBox = styled.div`
-  z-index: 3;
+  display: flex;
+  align-items: center;
   & svg {
     filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0,0,0,.3));
   }

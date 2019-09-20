@@ -166,7 +166,11 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     const event = {
       onClick: (e: any) => {
         if (trigger === 'click') {
-          this.open();
+          if (this.visible) {
+            this.close();
+          } else {
+            this.open();
+          }
         }
         this.selfEvents(child, 'onClick', e);
       },
@@ -202,7 +206,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
-    if (server || (mobile && this.isMini)) {
+    if (server || (!mobile && this.isMini)) {
       return childrenRender;
     }
     return (

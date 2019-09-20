@@ -43,6 +43,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
         <Popover
           ref={PopoverRef}
           trigger="click"
+          mobile
           contentStyle={{ padding: 0 }}
           content={(
             <Menu>

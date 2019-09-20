@@ -1,22 +1,21 @@
 import React from 'react';
-import { Popover } from '@lib/components/Popover';
 import styled from 'styled-components';
-import { activte } from '@lib/common/utils/themes';
+import { motion } from 'framer-motion';
+
+import { Popover } from '@lib/components/Popover';
 
 interface IProps {
   popover?: string;
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.button)`
   font-size: 0;
+  outline: none;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  & svg {
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.1s;
-    ${activte(0.7)}
-  }
+  pointer-events: all;
 `;
 
 export const IconButton: React.FC<IProps> = ({
@@ -26,6 +25,9 @@ export const IconButton: React.FC<IProps> = ({
 }) => {
   const content = (
     <Wrapper
+      style={{ transform: 'translate(0, 0)' }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
       onClick={onClick}
     >
       {children}
