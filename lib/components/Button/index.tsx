@@ -4,7 +4,6 @@ import { LoadingBox, StyleButton } from './styles';
 
 export * from './LikeButton';
 export * from './IconButton';
-
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * 加载中
@@ -15,6 +14,8 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   loading?: boolean;
   danger?: boolean;
   text?: boolean;
+  shape?: 'circle' | 'round';
+  size?: 'small' | 'large';
 }
 
 type Component = React.FC<IButtonProps>;

@@ -6,7 +6,7 @@ import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
 import { enableBodyScroll, disableBodyScroll, BodyScrollOptions } from 'body-scroll-lock';
 
-import { getScrollWidth, server, setBodyCss } from '@lib/common/utils';
+import { getScrollWidth, server } from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { DefaultTheme } from 'styled-components';
 import { NoSSR } from '../SSR';

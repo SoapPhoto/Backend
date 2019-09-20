@@ -102,15 +102,20 @@ export const InfoBox = styled.div`
   align-items: center;
   justify-content: space-between;
   bottom: 0;
-  padding: ${rem('8px')} ${rem('8px')};
+  padding: ${rem('12px')} ${rem('14px')};
+  padding-top: ${rem(16)};
   width: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .2));
+  background: linear-gradient(180deg,transparent 0,rgba(0,0,0,.6) 81%);
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
-  transition: .2s opacity ease, .2s transform ease;
+  /* transform: translate3d(0, 20px, 0); */
+  transition: .2s opacity ease-in-out;
+  ${media.lessThan('medium')`
+    opacity: 1;
+    /* transform: translate3d(0, 0, 0); */
+  `}
   ${ItemWapper}:hover & {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    /* transform: translate3d(0, 0, 0); */
   }
 `;
 

@@ -33,6 +33,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
     setLoading(true);
     try {
       await onConfirm(value);
+      setValue('');
     } finally {
       setLoading(false);
     }

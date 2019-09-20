@@ -7,12 +7,27 @@ const loadingCss = ({ loading }: {loading: number}) => (loading
     pointer-events: none;
   ` : '');
 
-export const StyleButton = styled.button.attrs<
-{loading: number; danger: number; text: number},
-{background: string; danger: number; text: number; borderColor: string}
->(
+interface IBtnIProp {
+  loading: number;
+  danger: number;
+  text: number;
+  size: string;
+  shape: string;
+}
+interface IBtnAttr {
+  background: string;
+  danger: number;
+  text: number;
+  borderColor: string;
+  size: string;
+  shape: string;
+  height: number;
+}
+
+
+export const StyleButton = styled.button.attrs<IBtnIProp, IBtnAttr>(
   ({
-    danger, theme: themes, text,
+    danger, theme: themes, text, size, shape,
   }) => ({
     background: (() => {
       if (text) {
@@ -41,13 +56,23 @@ export const StyleButton = styled.button.attrs<
       }
       return '#fff';
     })(),
+    height: (() => {
+      if (size === 'small') {
+        return 24;
+      } if (size === 'large') {
+        return 40;
+      }
+      return 34;
+    })(),
     danger,
     text,
+    size,
+    shape,
   }),
 )`
   position: relative;
   display: inline-block;
-  line-height: ${rem('34px')};
+  line-height: ${_ => rem(_.height)};
   font-weight: 400;
   border: 1px solid transparent;
   outline: none!important;
@@ -83,13 +108,36 @@ export const StyleButton = styled.button.attrs<
     border-color: ${_ => darken(0.05, _.borderColor)};
     background-color: ${_ => darken(0.05, _.background)};
   }
-  ${_ => _.text && `
+  ${_ => (_.text ? `
     &:hover {
       color: ${lighten(0.05, _.color!)};
     }
     &:active {
       color: ${darken(0.05, _.color!)};
     }
+  ` : '')}
+  ${_ => _.size === 'small' && css`
+    padding: 0 ${rem(12)};
+    font-size: ${rem(theme('fontSizes[0]')(_))};
+  `}
+  ${_ => _.size === 'large' && css`
+    padding: 0 ${rem(15)};
+  `}
+  ${_ => _.shape === 'circle' && css`
+    border-radius: 50%;
+    width: ${rem(_.height)};
+    height: ${rem(_.height)};
+    padding: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    &>svg {
+      margin-right: 0;
+    }
+  `}
+  ${_ => _.shape === 'round' && css`
+    border-radius: 50%;
+    border-radius: ${rem(_.height)};
   `}
 `;
 

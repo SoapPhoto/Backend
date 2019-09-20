@@ -51,12 +51,13 @@ const Login: React.FC<IBaseScreenProps> = () => {
     try {
       await login(value.username, value.password);
       setSubmitting(true);
-      setTimeout(() => {
+      setTimeout(async () => {
         if (query.redirectUrl) {
-          Router.replaceRoute(query.redirectUrl);
+          await Router.replaceRoute(query.redirectUrl);
         } else {
-          Router.replaceRoute('/');
+          await Router.replaceRoute('/');
         }
+        window.scrollTo(0, 0);
       }, 400);
       Toast.success(t('login_successful'));
     } catch (error) {

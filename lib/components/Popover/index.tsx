@@ -5,6 +5,7 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
+import { defaultBreakpoints } from 'styled-media-query';
 
 import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
@@ -52,6 +53,13 @@ interface IPopoverProps {
    */
   placement: Placement;
   openDelay?: number;
+  /**
+   * 是否在移动端的时候显示
+   *
+   * @type {boolean}
+   * @memberof IPopoverProps
+   */
+  mobile?: boolean;
 }
 
 @observer
@@ -64,7 +72,11 @@ export class Popover extends React.PureComponent<IPopoverProps> {
 
   @observable public visible = false;
 
+  @observable public isMini = false;
+
   @observable public placement: Placement = this.props.placement;
+
+  public _media?: MediaQueryList;
 
   public delay?: NodeJS.Timeout;
 
@@ -74,7 +86,22 @@ export class Popover extends React.PureComponent<IPopoverProps> {
 
   public popper?: PopperJS;
 
+
+  public componentWillMount() {
+    if (this._media) this._media.removeListener(this.handleMedia);
+  }
+
+  public componentDidMount() {
+    this._media = window.matchMedia(`(max-width: ${defaultBreakpoints.medium})`);
+    this._media.addListener(this.handleMedia);
+    this.isMini = this._media.matches;
+  }
+
   @action public setVisible = (value: boolean) => this.visible = value;
+
+  public handleMedia = () => {
+    this.isMini = this._media!.matches;
+  }
 
   public arrowRef = (ref: HTMLDivElement) => {
     if (ref) {
@@ -133,6 +160,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       theme,
       placement,
       trigger,
+      mobile,
     } = this.props;
     const child: any = Children.only(children);
     const event = {
@@ -174,7 +202,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
         this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
-    if (server) {
+    if (server || (mobile && this.isMini)) {
       return childrenRender;
     }
     return (

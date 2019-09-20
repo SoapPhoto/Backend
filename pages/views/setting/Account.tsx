@@ -8,7 +8,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { accountRevoke, accountAuthorize } from '@lib/services/credentials';
 import { theme } from '@lib/common/utils/themes';
 import { Button } from '@lib/components/Button';
-import { Lock, Unlock } from '@lib/icon';
+import { Unlock, X } from '@lib/icon';
 import { CredentialsEntity } from '@lib/common/interfaces/credentials';
 import { Confirm } from '@lib/components/Confirm';
 import Toast from '@lib/components/Toast';
@@ -39,6 +39,7 @@ const List = styled.div`
 const Item = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
+  padding: ${rem(6)} 0;
 `;
 
 const ItemInfo = styled.div`
@@ -50,8 +51,13 @@ const InfoTitle = styled.h3`
   font-size: ${theme('fontSizes[2]')};
 `;
 
+const CrInfo = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const InfoName = styled.h4`
-  font-size: ${theme('fontSizes[1]')};
+  color: ${theme('colors.secondary')};
   text-align: center;
 `;
 
@@ -159,15 +165,17 @@ const Account = observer(() => {
                 <div>
                   {
                     currentInfo ? (
-                      <>
-                        <InfoName>{oauthInfoName(type, currentInfo.info!)}</InfoName>
-                        <Button text danger onClick={() => revokeConfirm(currentInfo.id)}>
-                          解绑
+                      <CrInfo>
+                        <InfoName style={{ marginRight: rem(12) }}>
+                          @
+                          {oauthInfoName(type, currentInfo.info!)}
+                        </InfoName>
+                        <Button danger shape="circle" size="small" onClick={() => revokeConfirm(currentInfo.id)}>
+                          <X size={14} />
                         </Button>
-                      </>
+                      </CrInfo>
                     ) : (
-                      <Button text onClick={() => authorize(type)}>
-                        <Lock size={14} />
+                      <Button shape="round" size="small" onClick={() => authorize(type)}>
                         绑定
                       </Button>
                     )

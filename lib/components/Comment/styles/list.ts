@@ -16,6 +16,7 @@ export const ItemBox = styled.div`
 
 export const UserName = styled.p`
   font-weight: 700;
+  color: ${theme('colors.text')};
 `;
 
 export const MainBox = styled.div`

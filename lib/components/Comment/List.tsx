@@ -3,6 +3,8 @@ import React from 'react';
 import { Emojione } from 'react-emoji-render';
 import { observer } from 'mobx-react';
 
+import { A } from '@lib/components/A';
+import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { Avatar } from '../Avatar';
@@ -25,10 +27,20 @@ export const CommentList: React.FC<IProps> = observer(({
         user, id, content, createTime,
       }) => (
         <ItemBox key={id}>
-          <Avatar src={user.avatar} />
+          <UserPopper username={user.username}>
+            <A
+              route={`/@${user.username}`}
+            >
+              <Avatar src={user.avatar} />
+            </A>
+          </UserPopper>
           <MainBox>
             <ContentBox>
-              <UserName>{user.username}</UserName>
+              <A
+                route={`/@${user.username}`}
+              >
+                <UserName>{user.username}</UserName>
+              </A>
               <Emojione
                 svg
                 text={content}
