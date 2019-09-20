@@ -75,6 +75,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
 };
   }
   &::placeholder {
+    color: ${_ => rgba(theme('colors.text')(_), 0.7)};
   }
   &[disabled] {
     background-color: ${theme('styles.input.disabled.background')};

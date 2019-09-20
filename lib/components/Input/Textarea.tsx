@@ -3,6 +3,7 @@ import { rgba } from 'polished';
 import React, { memo, useCallback, useState } from 'react';
 import TextareaAutosize, { TextareaAutosizeProps } from 'react-textarea-autosize';
 import styled from 'styled-components';
+import { theme } from '@lib/common/utils/themes';
 import {
   ErrorBox, inputCss, Label, LabelBox,
 } from './styles';
@@ -42,6 +43,9 @@ const TextareaBox = styled.div<{ error?: boolean; focus?: boolean }>`
     transition: .1s height ease;
     display: block;
     color: ${props => rgba(props.theme.colors.text, 0.7)};
+    &::placeholder {
+      color: ${_ => rgba(theme('colors.text')(_), 0.7)};
+    }
   }
 `;
 
