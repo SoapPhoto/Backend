@@ -42,6 +42,7 @@ export class UserEntity extends BaseEntity {
   /** 显示的名称 */
   @Column({
     nullable: true,
+    collation: 'utf8mb4_unicode_ci',
   })
   @Expose()
   public name!: string;

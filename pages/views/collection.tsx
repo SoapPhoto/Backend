@@ -3,6 +3,7 @@ import Head from 'next/head';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { pick } from 'lodash';
+import { Emojione } from 'react-emoji-render';
 
 import { withError } from '@lib/components/withError';
 import { getTitle, Histore } from '@lib/common/utils';
@@ -165,7 +166,10 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
               </Popover>
             )
           }
-          {name}
+          <Emojione
+            svg
+            text={name}
+          />
           {
             isOwner && (
               <EditIcon onClick={() => setUpdateVisible(true)} />
@@ -178,7 +182,10 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
               <Avatar css={css`${activte()}` as any} src={user.avatar} />
             </A>
             <UserName route={`/@${user.username}`}>
-              {user.username}
+              <Emojione
+                svg
+                text={user.fullName}
+              />
             </UserName>
           </User>
           <PictureNumber>

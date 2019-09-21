@@ -39,7 +39,12 @@ export const CommentList: React.FC<IProps> = observer(({
               <A
                 route={`/@${user.username}`}
               >
-                <UserName>{user.username}</UserName>
+                <UserName>
+                  <Emojione
+                    svg
+                    text={user.fullName}
+                  />
+                </UserName>
               </A>
               <Emojione
                 svg

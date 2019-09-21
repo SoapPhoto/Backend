@@ -2,6 +2,7 @@ import { inject, observer } from 'mobx-react';
 import Head from 'next/head';
 import React from 'react';
 import parse from 'url-parse';
+import { Emojione } from 'react-emoji-render';
 
 import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
@@ -93,7 +94,10 @@ class User extends React.Component<IProps> {
                   </AvatarBox>
                   <Cell>
                     <UserName>
-                      {user.fullName}
+                      <Emojione
+                        svg
+                        text={user.fullName}
+                      />
                       {
                         isLogin && userInfo && userInfo.username === user.username
                         && (

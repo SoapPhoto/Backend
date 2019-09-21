@@ -18,6 +18,8 @@ const Wrapper = styled(motion.button)`
   pointer-events: all;
 `;
 
+const template = ({ scale }: any) => `translate(0, 0) scale(${scale})`;
+
 export const IconButton: React.FC<IProps> = ({
   onClick,
   popover,
@@ -25,7 +27,7 @@ export const IconButton: React.FC<IProps> = ({
 }) => {
   const content = (
     <Wrapper
-      style={{ transform: 'translate(0, 0)' }}
+      transformTemplate={template}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={onClick}

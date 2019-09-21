@@ -11,7 +11,9 @@ export class CommentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: string;
 
-  @Column()
+  @Column({
+    collation: 'utf8mb4_unicode_ci',
+  })
   public content!: string;
 
   @ManyToOne(() => UserEntity, user => user.comments)

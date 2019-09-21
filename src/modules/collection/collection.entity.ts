@@ -19,6 +19,7 @@ export class CollectionEntity extends BaseEntity {
   /** 收藏夹名字 */
   @Column({
     nullable: true,
+    collation: 'utf8mb4_unicode_ci',
   })
   @Expose()
   public readonly name!: string;
@@ -26,6 +27,7 @@ export class CollectionEntity extends BaseEntity {
   /** 收藏介绍 */
   @Column({
     nullable: true,
+    collation: 'utf8mb4_unicode_ci',
   })
   @Expose()
   public readonly bio!: string;

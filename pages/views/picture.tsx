@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React, { useEffect, useCallback } from 'react';
+import { Emojione } from 'react-emoji-render';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -75,7 +76,12 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               style={{ marginRight: rem(14) }}
               src={user.avatar}
             />
-            <UserName>{user.fullName}</UserName>
+            <UserName>
+              <Emojione
+                svg
+                text={user.fullName}
+              />
+            </UserName>
           </UserLink>
         </UserInfo>
         <UserHeaderInfo width={1}>
@@ -95,7 +101,12 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         <PictureImage size="full" detail={info} />
       </PictureBox>
       <Content>
-        <Title>{info.title}</Title>
+        <Title>
+          <Emojione
+            svg
+            text={info.title}
+          />
+        </Title>
         <PictureInfo
           info={info}
           isOwner={isOwner}
@@ -126,7 +137,10 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         {
           info.bio && (
             <Bio>
-              {info.bio}
+              <Emojione
+                svg
+                text={info.bio}
+              />
             </Bio>
           )
         }

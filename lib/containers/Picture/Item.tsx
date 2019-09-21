@@ -10,6 +10,7 @@ import { Popover } from '@lib/components/Popover';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
+import { Emojione } from 'react-emoji-render';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName, LockIcon, Link,
@@ -68,7 +69,10 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
           <UserName
             route={`/@${detail.user.username}`}
           >
-            {detail.user.fullName}
+            <Emojione
+              svg
+              text={detail.user.fullName}
+            />
           </UserName>
         </UserBox>
         <HandleBox>

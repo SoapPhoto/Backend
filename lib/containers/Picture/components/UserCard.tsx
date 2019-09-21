@@ -11,6 +11,7 @@ import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { Emojione } from 'react-emoji-render';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -95,7 +96,12 @@ const UserCard: React.FC<IProps> = ({
             <A
               route={`/@${user.username}`}
             >
-              <UserName>{user.fullName}</UserName>
+              <UserName>
+                <Emojione
+                  svg
+                  text={user.fullName}
+                />
+              </UserName>
             </A>
             <Bio>{user.bio}</Bio>
           </UserBox>

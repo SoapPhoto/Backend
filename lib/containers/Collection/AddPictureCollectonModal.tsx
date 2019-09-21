@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
+import { Emojione } from 'react-emoji-render';
+
 import { Modal } from '@lib/components/Modal';
 import { connect } from '@lib/common/utils/store';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -243,7 +245,10 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
                 <ItemInfoBox isCollected={isCollected} isPreview={!!collection.preview[0]}>
                   <div>
                     <ItemInfoTitle>
-                      {collection.name}
+                      <Emojione
+                        svg
+                        text={collection.name}
+                      />
                     </ItemInfoTitle>
                     <ItemInfoCount>
                       <span>{t('img_count', collection.pictureCount.toString())}</span>

@@ -7,6 +7,7 @@ import { Upload, User } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { Emojione } from 'react-emoji-render';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
   Href, MenuProfile, RightWarpper, UserName,
@@ -55,7 +56,10 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
                       src={userInfo!.avatar}
                     />
                     <UserName>
-                      <span>{userInfo.name || userInfo.username}</span>
+                      <Emojione
+                        svg
+                        text={userInfo.fullName}
+                      />
                     </UserName>
                   </MenuProfile>
                 </MenuItemLink>

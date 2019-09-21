@@ -1,4 +1,5 @@
 import React from 'react';
+import { Emojione } from 'react-emoji-render';
 
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { getPictureUrl } from '@lib/common/utils/image';
@@ -77,7 +78,10 @@ export const CollectionItem: React.FC<IProps> = ({
               </Popover>
             )
           }
-          {name}
+          <Emojione
+            svg
+            text={name}
+          />
         </Title>
         <PictureCount>
           {t('img_count', pictureCount.toString())}

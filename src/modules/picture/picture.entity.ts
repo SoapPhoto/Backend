@@ -37,6 +37,7 @@ export class PictureEntity extends BaseEntity {
   /** 图片标题 */
   @Column({
     nullable: true,
+    collation: 'utf8mb4_unicode_ci',
   })
   @Expose()
   public readonly title!: string;
@@ -44,6 +45,7 @@ export class PictureEntity extends BaseEntity {
   /** 图片介绍 */
   @Column({
     nullable: true,
+    collation: 'utf8mb4_unicode_ci',
   })
   @Expose()
   public readonly bio!: string;
