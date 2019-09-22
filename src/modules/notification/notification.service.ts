@@ -62,8 +62,8 @@ export class NotificationService {
           { read: true },
         ),
       )
+      .orderBy('notification.createTime', 'DESC')
       .getMany();
-    console.log(data);
     return Promise.all(
       data.map(async (notify) => {
         let media;

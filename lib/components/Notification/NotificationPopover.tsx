@@ -1,19 +1,32 @@
 import React, { useEffect } from 'react';
-import { useNotification } from '@lib/stores/hooks';
 import styled from 'styled-components';
 import { rem } from 'polished';
+import { observer } from 'mobx-react';
+// import 'overlayscrollbars/css/OverlayScrollbars.css';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+
+import { useNotification } from '@lib/stores/hooks';
 import { NotificationItem } from './NotificationItem';
 
 const Wrapper = styled.div`
-  display: grid;
+  width: ${rem(330)};
+  /* display: grid;
   grid-auto-rows: max-content;
-  grid-gap: ${rem(12)};
-  width: ${rem(300)};
-  padding: ${rem(24)};
-  height: ${rem(200)};
+  grid-gap: ${rem(12)}; */
 `;
 
-export const NotificationPopover = () => {
+const List = styled(OverlayScrollbarsComponent)`
+  max-height: ${rem(240)};
+`;
+
+const ListBox = styled.div`
+  display: grid;
+  grid-template-rows: max-content;
+  grid-gap: ${rem(12)};
+  padding: ${rem(12)} ${rem(18)};
+`;
+
+export const NotificationPopover = observer(() => {
   const { getList, list } = useNotification();
   useEffect(() => {
     getList();
@@ -21,11 +34,17 @@ export const NotificationPopover = () => {
   }, []);
   return (
     <Wrapper>
-      {
-        list.map(notify => (
-          <NotificationItem key={notify.id} data={notify} />
-        ))
-      }
+      <List
+        options={{ scrollbars: { autoHide: 'leave' } }}
+      >
+        <ListBox>
+          {
+            list.map(notify => (
+              <NotificationItem key={notify.id} data={notify} />
+            ))
+          }
+        </ListBox>
+      </List>
     </Wrapper>
   );
-};
+});

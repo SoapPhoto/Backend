@@ -7,7 +7,6 @@ import { Upload, User, Bell } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { IconButton } from '@lib/components/Button';
 import { NotificationPopover } from '@lib/components/Notification';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {

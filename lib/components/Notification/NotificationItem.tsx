@@ -6,10 +6,12 @@ import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
+import dayjs from 'dayjs';
 import { Avatar } from '..';
 import { EmojiText } from '../EmojiText';
 import { Image } from '../Image';
 import { A } from '../A';
+import { Popover } from '../Popover';
 
 interface IProps {
   data: NotificationEntity;
@@ -29,6 +31,7 @@ const User = styled.div`
 
 const UserName = styled(EmojiText)`
   font-weight: 700;
+  font-size: ${_ => theme('fontSizes[1]')(_)};
   margin-left: ${rem(8)};
   color: ${theme('colors.text')};
 `;
@@ -41,8 +44,8 @@ const Handle = styled.div``;
 
 const Picture = styled(A)`
   display: block;
-  width: ${rem(30)};
-  height: ${rem(30)};
+  width: ${rem(40)};
+  height: ${rem(40)};
   overflow: hidden;
   border-radius: 2px;
   & > img {
@@ -51,6 +54,11 @@ const Picture = styled(A)`
     font-family: "object-fit:cover";
     object-fit: cover;
   }
+`;
+
+const Date = styled.span`
+  color: ${theme('colors.secondary')};
+  margin-left: ${rem(2)};
 `;
 
 export const NotificationItem: React.FC<IProps> = ({ data }) => {
@@ -85,7 +93,15 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
       </User>
       <Content>
         {content()}
-        <span>{}</span>
+        <Popover
+          openDelay={100}
+          trigger="hover"
+          placement="top"
+          theme="dark"
+          content={<span>{dayjs(data.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+        >
+          <Date>{dayjs(data.createTime).fromNow()}</Date>
+        </Popover>
       </Content>
       <Handle>{handle()}</Handle>
     </Item>
