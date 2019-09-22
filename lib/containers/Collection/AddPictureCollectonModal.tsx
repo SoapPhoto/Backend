@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
-import { Emojione } from 'react-emoji-render';
 
 import { Modal } from '@lib/components/Modal';
 import { connect } from '@lib/common/utils/store';
@@ -17,6 +16,7 @@ import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme, activte } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { EmojiText } from '@lib/components';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
@@ -245,8 +245,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
                 <ItemInfoBox isCollected={isCollected} isPreview={!!collection.preview[0]}>
                   <div>
                     <ItemInfoTitle>
-                      <Emojione
-                        svg
+                      <EmojiText
                         text={collection.name}
                       />
                     </ItemInfoTitle>

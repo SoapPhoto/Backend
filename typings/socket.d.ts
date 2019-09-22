@@ -1,7 +1,6 @@
-declare namespace Express {
+declare namespace SocketIO {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-  export interface Request {
-    locale: import('@common/enum/locale').LocaleType;
+  interface Handshake {
     user: import('@server/modules/user/user.entity').UserEntity | null;
   }
 }

@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 import { HelpCircle } from '@lib/icon';
-import { defaultBreakpoints } from 'styled-media-query';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { Modal, IModalProps } from '../Modal';
 import { Button, IButtonProps } from '../Button';
 
@@ -51,7 +51,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: defaultBreakpoints.small }}>
+    <Modal visible={visible} onClose={onClose} boxStyle={{ maxWidth: customBreakpoints.small }}>
       <Content>
         <HelpIcon />
         <div>

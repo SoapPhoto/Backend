@@ -1,5 +1,4 @@
 import React from 'react';
-import { Emojione } from 'react-emoji-render';
 
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { getPictureUrl } from '@lib/common/utils/image';
@@ -11,6 +10,7 @@ import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { rem } from 'polished';
 import { Popover } from '@lib/components/Popover';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { EmojiText } from '@lib/components';
 import {
   ItemBox, Preview, MorePreview, Img, Collection, ItemInfo, Title, PictureCount,
 } from './styles';
@@ -78,8 +78,7 @@ export const CollectionItem: React.FC<IProps> = ({
               </Popover>
             )
           }
-          <Emojione
-            svg
+          <EmojiText
             text={name}
           />
         </Title>

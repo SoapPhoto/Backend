@@ -4,6 +4,7 @@ import { href } from '@lib/common/utils/themes/common';
 import { rem, rgba } from 'polished';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
+import { IconButton } from '@lib/components/Button';
 
 export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
@@ -62,4 +63,8 @@ export const UserName = styled.div`
   margin-left: ${rem('12px')};
   flex-direction: column;
   justify-content: center;
+`;
+
+export const BellButton = styled(IconButton)`
+  margin-right: 24px;
 `;

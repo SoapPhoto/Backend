@@ -1,16 +1,17 @@
 import React from 'react';
 
 import { connect } from '@lib/common/utils/store';
-import { Avatar } from '@lib/components';
+import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
-import { Upload, User } from '@lib/icon';
+import { Upload, User, Bell } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { Emojione } from 'react-emoji-render';
+import { IconButton } from '@lib/components/Button';
+import { NotificationPopover } from '@lib/components/Notification';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
-  Href, MenuProfile, RightWarpper, UserName,
+  Href, MenuProfile, RightWarpper, UserName, BellButton,
 } from './styles';
 
 export interface IProps {
@@ -41,57 +42,72 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
     );
     if (isLogin && userInfo) {
       content = (
-        <Popover
-          ref={PopoverRef}
-          trigger="click"
-          mobile
-          contentStyle={{ padding: 0 }}
-          content={(
-            <Menu>
-              <MenuItem>
-                <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
-                  <MenuProfile>
-                    <Avatar
-                      size={48}
-                      src={userInfo!.avatar}
-                    />
-                    <UserName>
-                      <Emojione
-                        svg
-                        text={userInfo.fullName}
+        <>
+          <Popover
+            ref={PopoverRef}
+            trigger="click"
+            mobile
+            placement="bottom-end"
+            contentStyle={{ padding: 0 }}
+            content={(
+              <NotificationPopover />
+            )}
+          >
+            <BellButton>
+              <Bell />
+            </BellButton>
+          </Popover>
+          <Popover
+            ref={PopoverRef}
+            trigger="click"
+            mobile
+            contentStyle={{ padding: 0 }}
+            content={(
+              <Menu>
+                <MenuItem>
+                  <MenuItemLink onClick={closeMenu} route={`/@${userInfo.username}`}>
+                    <MenuProfile>
+                      <Avatar
+                        size={48}
+                        src={userInfo!.avatar}
                       />
-                    </UserName>
-                  </MenuProfile>
-                </MenuItemLink>
-              </MenuItem>
-              <MenuItem>
-                <MenuItemLink onClick={closeMenu} route="/upload">
-                  {t('menu.upload')}
-                  <Upload size={18} />
-                </MenuItemLink>
-              </MenuItem>
-              <MenuItem>
-                <MenuItemLink onClick={closeMenu} route="/setting/profile">
-                  {t('menu.setting')}
-                </MenuItemLink>
-              </MenuItem>
-              <MenuItem>
-                <MenuItemLink onClick={switchTheme}>
-                  {theme === 'dark' ? t('menu.light') : t('menu.dark')}
-                </MenuItemLink>
-              </MenuItem>
-              <MenuItem>
-                <MenuItemLink onClick={logout}>
-                  {t('menu.signup')}
-                </MenuItemLink>
-              </MenuItem>
-            </Menu>
-          )}
-        >
-          <Avatar
-            src={userInfo!.avatar}
-          />
-        </Popover>
+                      <UserName>
+                        <EmojiText
+                          text={userInfo.fullName}
+                        />
+                      </UserName>
+                    </MenuProfile>
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink onClick={closeMenu} route="/upload">
+                    {t('menu.upload')}
+                    <Upload size={18} />
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink onClick={closeMenu} route="/setting/profile">
+                    {t('menu.setting')}
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink onClick={switchTheme}>
+                    {theme === 'dark' ? t('menu.light') : t('menu.dark')}
+                  </MenuItemLink>
+                </MenuItem>
+                <MenuItem>
+                  <MenuItemLink onClick={logout}>
+                    {t('menu.signup')}
+                  </MenuItemLink>
+                </MenuItem>
+              </Menu>
+            )}
+          >
+            <Avatar
+              src={userInfo!.avatar}
+            />
+          </Popover>
+        </>
       );
     }
     return (

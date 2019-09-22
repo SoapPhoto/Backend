@@ -4,3 +4,4 @@ export * from './Link';
 export * from './Nav';
 export * from './GpsImage';
 export * from './Title';
+export * from './EmojiText';

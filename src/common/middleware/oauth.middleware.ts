@@ -1,8 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
-import { UserEntity } from '@server/modules/user/user.entity';
-import { plainToClass } from 'class-transformer';
 
 import { Request, Response } from 'express';
 import * as OAuth2Server from 'oauth2-server';

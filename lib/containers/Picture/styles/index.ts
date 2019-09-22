@@ -1,34 +1,34 @@
 import { rem, cover } from 'polished';
 import styled from 'styled-components';
-import media from 'styled-media-query';
 
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { theme, activte } from '@lib/common/utils/themes';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 
 const padding = 30;
 
 export const PictureContent = styled.div`
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('mobile')`
+    &>div:nth-child(4) {
+      display: grid;
+    }
+  `}
+
+  ${customMedia.between('mobile', 'medium')`
     &>div:nth-child(3) {
       display: grid;
     }
   `}
 
-  /* ${media.between('small', 'medium')`
-    &>div:nth-child(3) {
-      display: grid;
-    }
-  `} */
-
-  ${media.between('medium', 'large')`
+  ${customMedia.between('medium', 'large')`
     &>div:nth-child(2) {
       display: grid;
     }
   `}
 
-  ${media.greaterThan('large')`
+  ${customMedia.greaterThan('large')`
     &>div:first-child {
       display: grid;
     }
@@ -109,7 +109,7 @@ export const InfoBox = styled.div`
   opacity: 0;
   /* transform: translate3d(0, 20px, 0); */
   transition: .2s opacity ease-in-out;
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     opacity: 1;
     /* transform: translate3d(0, 0, 0); */
   `}

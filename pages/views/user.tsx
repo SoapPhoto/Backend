@@ -2,11 +2,12 @@ import { inject, observer } from 'mobx-react';
 import Head from 'next/head';
 import React from 'react';
 import parse from 'url-parse';
-import { Emojione } from 'react-emoji-render';
 
 import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
-import { Avatar, Nav, NavItem } from '@lib/components';
+import {
+  Avatar, Nav, NavItem, EmojiText,
+} from '@lib/components';
 import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Link as LinkIcon } from '@lib/icon';
@@ -94,8 +95,7 @@ class User extends React.Component<IProps> {
                   </AvatarBox>
                   <Cell>
                     <UserName>
-                      <Emojione
-                        svg
+                      <EmojiText
                         text={user.fullName}
                       />
                       {

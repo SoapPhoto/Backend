@@ -52,7 +52,7 @@ export class OauthServerService {
       throw new UnauthorizedException('client credentials are invalid');
     }
     const redisClient = this.redisService.getClient();
-    const data = await redisClient.get(`oauth_code_${req.body.code}`);
+    const data = await redisClient.get(`oauth.code.${req.body.code}`);
     if (!data) {
       throw new UnauthorizedException('code credentials are invalid');
     }

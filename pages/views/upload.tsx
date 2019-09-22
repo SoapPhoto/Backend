@@ -22,8 +22,7 @@ import {
 } from '@lib/styles/views/upload';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
-import { getQiniuToken, upload, uploadQiniu } from '@lib/services/file';
-import { uniqid, uniqidTime } from '@lib/common/utils/uniqid';
+import { uploadQiniu } from '@lib/services/file';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { useRouter } from '@lib/router';

@@ -7,6 +7,7 @@ import { NotificationService } from '@server/modules/notification/notification.s
 import { UserEntity } from '@server/modules/user/user.entity';
 
 import Maybe from 'graphql/tsutils/Maybe';
+import { NotificationType, NotificationCategory } from '@common/enum/notification';
 import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
@@ -52,8 +53,16 @@ export class PictureUserActivityService {
           })
           .execute();
       }
-      if (!activity || activity.like) {
-        this.notificationService.publishNotification(user, picture.user);
+      if (picture.user.id !== user.id && data) {
+        this.notificationService.publishNotification(
+          user,
+          picture.user,
+          {
+            type: NotificationType.USER,
+            category: NotificationCategory.LIKED,
+            mediaId: picture.id.toString(),
+          },
+        );
       }
       return {
         isLike: data,

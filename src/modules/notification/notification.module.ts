@@ -1,5 +1,5 @@
 import {
-  MiddlewareConsumer, Module, NestModule,
+  MiddlewareConsumer, Module, NestModule, forwardRef,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -10,6 +10,7 @@ import { NotificationEntity } from './notification.entity';
 import { NotificationService } from './notification.service';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { SubscribersUserModule } from './subscribers-user/subscribers-user.module';
+import { PictureModule } from '../picture/picture.module';
 
 @Module({
   providers: [NotificationService],
@@ -18,6 +19,7 @@ import { SubscribersUserModule } from './subscribers-user/subscribers-user.modul
     TypeOrmModule.forFeature([NotificationEntity, NotificationSubscribersUserEntity]),
     SubscribersUserModule,
     EventsModule,
+    forwardRef(() => PictureModule),
   ],
   exports: [NotificationService],
 })

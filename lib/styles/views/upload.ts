@@ -5,7 +5,8 @@ import { Cell, Grid } from 'styled-css-grid';
 import { box } from '@lib/common/utils/themes/common';
 import { Input as BaseInput } from '@lib/components/Input';
 import { theme } from '@lib/common/utils/themes';
-import media from 'styled-media-query';
+import { IconButtonStyled } from '@lib/components/Button';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 
 export const Wapper = styled.div`
   display: flex;
@@ -74,7 +75,7 @@ export const Preview = styled.img`
 
 export const Content = styled(Cell)`
   padding: ${rem('24px')};
-  ${media.greaterThan('medium')`
+  ${customMedia.greaterThan('medium')`
     padding-left: 0;
   `}
 `;
@@ -101,7 +102,7 @@ export const FormTag = styled(Cell)`
 `;
 
 export const ContentBox = styled(Grid)`
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     grid-template-rows: ${rem(120)} 1fr;
     grid-template-columns: auto;
     grid-gap: ${rem(12)};
@@ -113,5 +114,7 @@ export const TrashIcon = styled.div`
   z-index: 2;
   right: ${rem(12)};
   top: ${rem(12)};
-  color: ${theme('colors.danger')}
+  & ${IconButtonStyled} {
+    color: ${theme('colors.danger')}
+  }
 `;

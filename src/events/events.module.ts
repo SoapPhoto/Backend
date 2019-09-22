@@ -1,22 +1,17 @@
 import {
-  MiddlewareConsumer, Module, NestModule,
+  Module,
 } from '@nestjs/common';
 
-import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
 import { EventsGateway } from './events.gateway';
+import { EventsService } from './events.service';
 
 @Module({
   imports: [OauthModule],
   providers: [
     EventsGateway,
+    EventsService,
   ],
   exports: [EventsGateway],
 })
-export class EventsModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(EventsGateway);
-  }
-}
+export class EventsModule {}

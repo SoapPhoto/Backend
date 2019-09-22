@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { rem } from 'polished';
 
 import { Modal } from '@lib/components/Modal';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikActions, Field } from 'formik';
 import { FieldInput, FieldSwitch } from '@lib/components/Formik';
@@ -78,13 +78,14 @@ export const EditPictureModal: React.FC<IProps> = ({
     };
   }, [onClose, visible]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
-    setConfirmLoading(true);
     setSubmitting(false);
+    setConfirmLoading(true);
     try {
       const { data } = await update(value);
       onClose();
       onOk(data);
       Toast.success(t('update_sccuess'));
+      setSubmitting(true);
     } catch (error) {
       setSubmitting(false);
       Toast.error(t(error.message));
@@ -96,12 +97,17 @@ export const EditPictureModal: React.FC<IProps> = ({
   const deleteConfirm = useCallback(async () => {
     if (deleteConfirmLoading) return;
     setDeleteConfirmLoading(true);
-    await deletePicture();
-    Toast.success('删除成功！');
-    setDeleteConfirmLoading(false);
-    setDeleteConfirmDisabled(true);
-    await replaceRoute(`/@${userInfo!.username}`);
-    window.scrollTo(0, 0);
+    try {
+      await deletePicture();
+      setDeleteConfirmDisabled(true);
+      Toast.success('删除成功！');
+      await replaceRoute(`/@${userInfo!.username}`);
+      window.scrollTo(0, 0);
+    } catch (error) {
+      setDeleteConfirmDisabled(false);
+    } finally {
+      setDeleteConfirmLoading(false);
+    }
     // onClose();
   }, [deleteConfirmLoading, deletePicture, replaceRoute, userInfo]);
   return (

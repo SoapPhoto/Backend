@@ -5,10 +5,10 @@ import { TransitionStatus } from 'react-transition-group/Transition';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { defaultBreakpoints } from 'styled-media-query';
 
 import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
+import { customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
 
@@ -86,15 +86,14 @@ export class Popover extends React.PureComponent<IPopoverProps> {
 
   public popper?: PopperJS;
 
-
-  public componentWillMount() {
-    if (this._media) this._media.removeListener(this.handleMedia);
-  }
-
   public componentDidMount() {
-    this._media = window.matchMedia(`(max-width: ${defaultBreakpoints.medium})`);
+    this._media = window.matchMedia(`(max-width: ${customBreakpoints.medium})`);
     this._media.addListener(this.handleMedia);
     this.isMini = this._media.matches;
+  }
+
+  public componentWillUnmount() {
+    if (this._media) this._media.removeListener(this.handleMedia);
   }
 
   @action public setVisible = (value: boolean) => this.visible = value;
