@@ -37,6 +37,8 @@ export class NotificationStore {
         console.log(data);
       }
     });
+    // 连接成功后会返回未读数量
+    socket.on('CONNECT_USER', (data: { unread: number }) => this.setUnRead(data.unread));
   }
 
   public getList = async () => {
@@ -74,4 +76,7 @@ export class NotificationStore {
 
   @action
   public setLoading = (data: boolean) => this.loading = data;
+
+  @action
+  public setUnRead = (num: number) => this.unread = num;
 }

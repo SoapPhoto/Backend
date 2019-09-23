@@ -14,7 +14,6 @@ const setupSocket = () => {
   socket.on('disconnect', () => {
     console.log('Disconnected');
   });
-  socket.on('CONNECT_USER', (data: any) => console.log(data));
   return socket;
 };
 

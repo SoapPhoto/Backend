@@ -82,4 +82,9 @@ export class NotificationService {
     }
     return undefined;
   }
+
+  public getUnReadCount = async (user: UserEntity) => this.notificationRepository.createQueryBuilder('notification')
+    .leftJoin('notification.subscribers', 'subscribers')
+    .where('subscribers.userId=:userId AND subscribers.read=0', { userId: user.id })
+    .getCount()
 }

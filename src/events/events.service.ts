@@ -6,6 +6,7 @@ import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-ser
 import { WsException } from '@nestjs/websockets';
 import { RedisService } from 'nestjs-redis';
 import { UserEntity } from '@server/modules/user/user.entity';
+import { NotificationService } from '@server/modules/notification/notification.service';
 
 @Injectable()
 export class EventsService {
@@ -13,6 +14,8 @@ export class EventsService {
     @Inject(forwardRef(() => OauthServerService))
     private readonly oauthServerService: OauthServerService,
     private readonly redisService: RedisService,
+    @Inject(forwardRef(() => NotificationService))
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async getUserLoginInfo(cookie: string): Promise<UserEntity> {
@@ -63,7 +66,5 @@ export class EventsService {
     return arr.filter(Boolean);
   }
 
-  public getUnReadCount = async (user: UserEntity) => {
-
-  }
+  public getUnReadCount = async (user: UserEntity) => this.notificationService.getUnReadCount(user)
 }
