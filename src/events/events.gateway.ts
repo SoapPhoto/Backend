@@ -47,10 +47,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   public async connectUser(client: Socket, _data: any) {
     const user = await this.eventsService.getUserLoginInfo(client.handshake.headers.cookie);
     await this.eventsService.login(client.id, user);
-    client.broadcast.emit('message', { event: 'test' });
     return {
       event: 'CONNECT_USER',
-      message: 'ok',
+      data: {
+        unread: await this.eventsService.getUnReadCount(user),
+      },
     };
   }
 

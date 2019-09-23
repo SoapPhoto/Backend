@@ -1,4 +1,4 @@
-import { classToPlain } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -119,7 +119,7 @@ export class PictureService {
     if (data && data.isPrivate && !isOwner) {
       throw new NotFoundException();
     }
-    return classToPlain(data, {
+    return plainToClass(PictureEntity, data, {
       groups: isOwner ? [Role.OWNER] : [],
     });
   }

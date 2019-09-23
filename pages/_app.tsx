@@ -146,6 +146,8 @@ export default class MyApp extends App<IProps> {
     reaction(() => this.state.mobxStore.accountStore.isLogin, (isLogin) => {
       if (isLogin) {
         this.state.mobxStore.notificationStore.createSocket();
+      } else {
+        this.state.mobxStore.notificationStore.close();
       }
     });
     Router.beforePopState(({ url, as, options }) => {

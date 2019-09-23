@@ -7,6 +7,7 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 import { useNotification } from '@lib/stores/hooks';
 import { NotificationItem } from './NotificationItem';
+import { Empty } from '../Empty';
 
 const Wrapper = styled.div`
   width: ${rem(330)};
@@ -27,9 +28,11 @@ const ListBox = styled.div`
 `;
 
 export const NotificationPopover = observer(() => {
-  const { getList, list } = useNotification();
+  const {
+    getList, list, loading, listInit,
+  } = useNotification();
   useEffect(() => {
-    getList();
+    if (!listInit) getList();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -42,6 +45,11 @@ export const NotificationPopover = observer(() => {
             list.map(notify => (
               <NotificationItem key={notify.id} data={notify} />
             ))
+          }
+          {
+            list.length === 0 && (
+              <Empty size="small" loading={loading} />
+            )
           }
         </ListBox>
       </List>

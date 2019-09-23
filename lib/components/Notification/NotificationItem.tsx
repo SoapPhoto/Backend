@@ -66,12 +66,14 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
     switch (data.category) {
       case NotificationCategory.LIKED:
         return '喜欢了你的照片';
+      case NotificationCategory.COMMENT:
+        return '评论了你的照片';
       default:
         return '';
     }
   }, [data.category]);
   const handle = useCallback(() => {
-    if (data.category === NotificationCategory.LIKED) {
+    if (data.category === NotificationCategory.LIKED || data.category === NotificationCategory.COMMENT) {
       const { key, id } = data.media as PictureEntity;
       return (
         <Picture route={`/picture/${id}`}>

@@ -1,7 +1,7 @@
 import {
   Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Column,
 } from 'typeorm';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
@@ -40,4 +40,8 @@ export class NotificationEntity extends BaseEntity {
 
   @Expose()
   public media?: PictureEntity | CommentEntity | CollectionEntity;
+
+  @Type(() => Boolean)
+  @Expose()
+  public read = false;
 }

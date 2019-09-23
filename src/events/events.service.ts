@@ -62,4 +62,8 @@ export class EventsService {
     );
     return arr.filter(Boolean);
   }
+
+  public getUnReadCount = async (user: UserEntity) => {
+
+  }
 }

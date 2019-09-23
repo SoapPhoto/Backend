@@ -7,12 +7,14 @@ import { CommentController } from './comment.controller';
 import { CommentEntity } from './comment.entity';
 import { CommentResolver } from './comment.resolvers';
 import { CommentService } from './comment.service';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CommentEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => PictureModule),
+    forwardRef(() => NotificationModule),
   ],
   providers: [CommentService, CommentResolver],
   controllers: [CommentController],

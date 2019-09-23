@@ -5,7 +5,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationCategory } from '@common/enum/notification';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, classToPlain } from 'class-transformer';
 import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureService } from '../picture/picture.service';
@@ -44,9 +44,10 @@ export class NotificationService {
         }),
       );
     }
+    notification.media = await this.setNotificationItemMedia(notification);
     this.wss.emitUserMessage(subscribers, 'message', {
       event: 'message',
-      data: notification,
+      data: classToPlain(notification),
     });
   }
 
@@ -65,19 +66,20 @@ export class NotificationService {
       .orderBy('notification.createTime', 'DESC')
       .getMany();
     return Promise.all(
-      data.map(async (notify) => {
-        let media;
-        switch (notify.category) {
-          case NotificationCategory.LIKED:
-            media = await this.pictureService.getRawOne(notify.mediaId!);
-            break;
-          default:
-        }
-        return plainToClass(NotificationEntity, {
-          ...notify,
-          media,
-        });
-      }),
+      data.map(async notify => plainToClass(NotificationEntity, {
+        ...notify,
+        media: await this.setNotificationItemMedia(notify),
+      })),
     );
+  }
+
+  public setNotificationItemMedia = async (notify: NotificationEntity) => {
+    if (
+      notify.category === NotificationCategory.LIKED
+      || notify.category === NotificationCategory.COMMENT
+    ) {
+      return this.pictureService.getRawOne(notify.mediaId!);
+    }
+    return undefined;
   }
 }
