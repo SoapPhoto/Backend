@@ -93,7 +93,7 @@ export class OauthService {
     if (state === OauthStateType.login) {
       const user = await this.verifyUser(type, id, data);
       if (!user) throw new UnauthorizedException('No Credential Info');
-      await redisClient.set(`oauth_code_${code}`, JSON.stringify({
+      await redisClient.set(`oauth.code.${code}`, JSON.stringify({
         type,
         client: await this.clientService.getBaseClient(),
         user,
@@ -103,7 +103,7 @@ export class OauthService {
       if (cr) {
         throw new BadGatewayException('authorized user');
       }
-      await redisClient.set(`oauth_authorize_${code}`, JSON.stringify({
+      await redisClient.set(`oauth.authorize.${code}`, JSON.stringify({
         type,
         data,
       }), 'EX', 2000);

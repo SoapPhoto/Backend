@@ -9,7 +9,7 @@ interface IProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Wrapper = styled(motion.button)`
+export const IconButtonStyled = styled(motion.button)`
   font-size: 0;
   outline: none;
   background: transparent;
@@ -24,16 +24,18 @@ export const IconButton: React.FC<IProps> = ({
   onClick,
   popover,
   children,
+  ...props
 }) => {
   const content = (
-    <Wrapper
+    <IconButtonStyled
       transformTemplate={template}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
+      {...props}
     >
       {children}
-    </Wrapper>
+    </IconButtonStyled>
   );
   if (popover) {
     return (

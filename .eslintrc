@@ -3,5 +3,8 @@
     "yiiu",
     "yiiu/react",
     "yiiu/typescript"
-  ]
+  ],
+  "rules": {
+    "no-plusplus": "off"
+  }
 }

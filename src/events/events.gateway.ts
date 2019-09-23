@@ -1,6 +1,5 @@
 import { Server, Socket } from 'socket.io';
 
-import { UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -9,17 +8,15 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Roles } from '@server/common/decorator/roles.decorator';
-import { AuthGuard } from '@server/common/guard/auth.guard';
 import { LoggingService } from '@server/shared/logging/logging.service';
+import { UserEntity } from '@server/modules/user/user.entity';
+import { EventsService } from './events.service';
 // import { RedisService } from 'nestjs-redis';
-import { Role } from '@server/modules/user/enum/role.enum';
 
 interface IUserClientData {
   clientId: string;
 }
 
-@UseGuards(AuthGuard)
 @WebSocketGateway()
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
@@ -30,6 +27,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   constructor(
     // private readonly redisService: RedisService,
     private readonly logger: LoggingService,
+    private readonly eventsService: EventsService,
   ) {}
 
   public handleConnection(client: Socket) {
@@ -41,15 +39,19 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   }
 
   public handleDisconnect(client: Socket) {
+    this.eventsService.logout(client.id);
     this.logger.log(`Client disconnected: ${client.id}`, 'NotificationGateway');
   }
 
-  @Roles(Role.USER)
   @SubscribeMessage('CONNECT_USER')
-  public async connectUser(_client: Socket, _data: any) {
+  public async connectUser(client: Socket, _data: any) {
+    const user = await this.eventsService.getUserLoginInfo(client.handshake.headers.cookie);
+    await this.eventsService.login(client.id, user);
     return {
       event: 'CONNECT_USER',
-      message: 'ok',
+      data: {
+        unread: await this.eventsService.getUnReadCount(user),
+      },
     };
   }
 
@@ -66,5 +68,15 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
 
   public emitMessage<T>(event: string, data: T) {
     this.server.emit(event, data);
+  }
+
+  public async emitUserMessage<T>(user: UserEntity, event: string, data: T) {
+    const ids = await this.eventsService.getClientId(user.id);
+    if (ids.length === 0) {
+      return;
+    }
+    await Promise.all(
+      ids.map(async id => this.server.to(id).emit(event, data)),
+    );
   }
 }

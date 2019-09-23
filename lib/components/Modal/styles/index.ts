@@ -1,12 +1,9 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
-// eslint-disable-next-line import/no-duplicates
-import media from 'styled-media-query';
-// eslint-disable-next-line import/no-duplicates
-import { defaultBreakpoints } from 'styled-media-query';
 
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
+import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
 
 export const Wrapper = styled.div`
@@ -32,12 +29,12 @@ export const Box = styled.div`
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
-  max-width: ${rem(defaultBreakpoints.medium)};
+  max-width: ${rem(customBreakpoints.medium)};
   border: none;
   margin: ${rem('24px')} auto;
   transition-timing-function: ${timingFunctions('easeInOutSine')};
   transition: .2s all;
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     max-width: 100% !important;
     width: 100%;
     height: 100%;
@@ -53,7 +50,7 @@ export const Content = styled.div`
   text-align: left;
   vertical-align: middle;
   width: 100%;
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     height: 100%;
   `}
 `;
@@ -78,7 +75,7 @@ export const XIcon = styled(X)`
   right: ${rem(24)};
   top: ${rem(24)};
   cursor: pointer;
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     display: block;
   `}
 `;

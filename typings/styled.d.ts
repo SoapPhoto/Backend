@@ -53,6 +53,11 @@ declare module 'styled-components' {
           color: string;
         };
       };
+      notification: {
+        read: {
+          background: string;
+        };
+      };
     };
     layout: {
       header: {

@@ -26,7 +26,7 @@ const theme: DefaultTheme = {
     heading: 1.25,
   },
   width: {
-    wrapper: 1440,
+    wrapper: 2120,
   },
   styles: {
     nprogress: colors.primary,
@@ -57,6 +57,11 @@ const theme: DefaultTheme = {
       addPicture: {
         background: colors.text,
         color: colors.pure,
+      },
+    },
+    notification: {
+      read: {
+        background: '#fffef1',
       },
     },
   },

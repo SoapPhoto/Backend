@@ -3,6 +3,7 @@ import { AccountStore } from './AccountStore';
 import { AppStore } from './AppStore';
 import { IScreenStore, initScreenStore } from './screen';
 import { ThemeStore } from './ThemeStore';
+import { NotificationStore } from './notification';
 
 // configure({ enforceActions: 'observed' });
 
@@ -11,6 +12,7 @@ export interface IMyMobxStore {
   appStore: AppStore;
   themeStore: ThemeStore;
   screen: IScreenStore;
+  notificationStore: NotificationStore;
 }
 export interface IInitialStore {
   accountStore?: Partial<AccountStore>;
@@ -24,6 +26,7 @@ export let store: IMyMobxStore = {
   appStore: new AppStore(),
   themeStore: new ThemeStore(),
   screen: initScreenStore(),
+  notificationStore: new NotificationStore(),
 };
 
 export const initStore = (initialState: IInitialStore): IMyMobxStore => {
@@ -31,6 +34,7 @@ export const initStore = (initialState: IInitialStore): IMyMobxStore => {
   if (server) {
     store = {
       accountStore: new AccountStore(),
+      notificationStore: new NotificationStore(),
       appStore: new AppStore(),
       themeStore: new ThemeStore(),
       screen: initScreenStore(),

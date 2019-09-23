@@ -9,9 +9,8 @@ import { NoSSR } from '@lib/components/SSR';
 import { debounce } from 'lodash';
 
 import useMedia from '@lib/common/utils/useMedia';
-import { defaultBreakpoints } from 'styled-media-query';
-import { css } from 'styled-components';
 import { Empty } from '@lib/components/Empty';
+import { customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
@@ -33,15 +32,19 @@ interface IProps {
 
 const mediaArr = [
   {
-    media: `(min-width: ${defaultBreakpoints.large})`,
+    media: `(min-width: ${customBreakpoints.large})`,
     col: 4,
   },
   {
-    media: `(max-width: ${defaultBreakpoints.large}) and (min-width: ${defaultBreakpoints.medium})`,
+    media: `(max-width: ${customBreakpoints.large}) and (min-width: ${customBreakpoints.medium})`,
     col: 3,
   },
   {
-    media: `(max-width: ${defaultBreakpoints.medium})`,
+    media: `(max-width: ${customBreakpoints.medium}) and (min-width: ${customBreakpoints.mobile})`,
+    col: 2,
+  },
+  {
+    media: `(max-width: ${customBreakpoints.mobile})`,
     col: 1,
   },
 ];

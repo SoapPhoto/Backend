@@ -17,7 +17,7 @@ export class NotificationSubscribersUserEntity extends BaseEntity {
   @Column({ type: 'bool', default: false })
   public read = false;
 
-  @ManyToOne(() => NotificationEntity)
+  @ManyToOne(() => NotificationEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   public notification!: NotificationEntity;
 

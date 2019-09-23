@@ -4,14 +4,13 @@ import styled from 'styled-components';
 import { Grid } from 'styled-css-grid';
 
 import { UserEntity } from '@lib/common/interfaces/user';
-import { Avatar } from '@lib/components';
+import { Avatar, EmojiText } from '@lib/components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { Emojione } from 'react-emoji-render';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -97,8 +96,7 @@ const UserCard: React.FC<IProps> = ({
               route={`/@${user.username}`}
             >
               <UserName>
-                <Emojione
-                  svg
+                <EmojiText
                   text={user.fullName}
                 />
               </UserName>

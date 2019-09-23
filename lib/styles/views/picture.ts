@@ -1,11 +1,12 @@
-import { Info } from '@lib/icon';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
+
+import { Info } from '@lib/icon';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
-import media from 'styled-media-query';
 import { WrapperBox } from '@lib/common/utils/themes/common';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div`
   ${WrapperBox(1000)}
@@ -45,7 +46,7 @@ export const PictureBox = styled.div`
   border-radius: ${rem('3px')};
   overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     width: calc(100% + ${rem(64)});
     margin-left: -${rem(32)};
     border-radius: 0;

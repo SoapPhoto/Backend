@@ -3,14 +3,13 @@ import Head from 'next/head';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { pick } from 'lodash';
-import { Emojione } from 'react-emoji-render';
 
 import { withError } from '@lib/components/withError';
 import { getTitle, Histore } from '@lib/common/utils';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { CollectionScreenStore } from '@lib/stores/screen/Collection';
 import { Package, Lock, Settings } from '@lib/icon';
-import { Avatar } from '@lib/components';
+import { Avatar, EmojiText } from '@lib/components';
 import { A } from '@lib/components/A';
 import { theme, activte } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -166,8 +165,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
               </Popover>
             )
           }
-          <Emojione
-            svg
+          <EmojiText
             text={name}
           />
           {
@@ -182,8 +180,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
               <Avatar css={css`${activte()}` as any} src={user.avatar} />
             </A>
             <UserName route={`/@${user.username}`}>
-              <Emojione
-                svg
+              <EmojiText
                 text={user.fullName}
               />
             </UserName>

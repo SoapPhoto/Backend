@@ -1,5 +1,7 @@
 /// <reference types="../typings/index" />
 /// <reference types="../typings/typing" />
+/// <reference types="../typings/express" />
+/// <reference types="../typings/socket" />
 
 import '@common/env';
 

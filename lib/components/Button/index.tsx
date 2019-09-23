@@ -35,7 +35,7 @@ export const Button: Component = ({
   >
     <>
       {
-        loading && <LoadingBox><Loading /></LoadingBox>
+        loading && <LoadingBox><Loading color="#fff" /></LoadingBox>
       }
       {children}
     </>

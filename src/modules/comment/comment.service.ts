@@ -6,10 +6,10 @@ import { listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { classToPlain, plainToClass } from 'class-transformer';
-import Maybe from 'graphql/tsutils/Maybe';
+import { NotificationType, NotificationCategory } from '@common/enum/notification';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class CommentService {
@@ -18,6 +18,7 @@ export class CommentService {
     private commentRepository: Repository<CommentEntity>,
     private pictureService: PictureService,
     private userService: UserService,
+    private notificationService: NotificationService,
   ) {}
 
   public async getPictureList(id: string, query: GetPictureCommentListDto, _user: Maybe<UserEntity>) {
@@ -28,25 +29,33 @@ export class CommentService {
       .leftJoinAndSelect('comment.user', 'user');
     this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
-    return listRequest(query, classToPlain(data), count);
+    return listRequest(query, data, count);
   }
 
   public async create(data: CreatePictureCommentDot, id: string, user: UserEntity) {
-    // console.log(user, data);
     const picture = await this.pictureService.getOnePicture(id, user);
-    if (picture) {
-      const comment = await this.commentRepository.save(
-        this.commentRepository.create({
-          ...data,
-          picture,
-          user,
-        }),
-      );
-      return classToPlain(plainToClass(CommentEntity, {
-        ...comment,
-        user,
-      }));
+    if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
+      throw new BadGatewayException('no_picture');
     }
-    throw new BadGatewayException('no_picture');
+    const isOwner = picture.user.id === user.id;
+    const comment = await this.commentRepository.save(
+      this.commentRepository.create({
+        ...data,
+        picture,
+        user,
+      }),
+    );
+    if (!isOwner) {
+      this.notificationService.publishNotification(
+        user,
+        picture.user,
+        {
+          type: NotificationType.USER,
+          category: NotificationCategory.COMMENT,
+          mediaId: picture.id.toString(),
+        },
+      );
+    }
+    return comment;
   }
 }

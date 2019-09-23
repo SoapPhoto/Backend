@@ -9,9 +9,10 @@ import { Loading } from '../Loading';
 
 interface IEmptyProps {
   loading?: boolean;
+  size?: 'small' | 'large';
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{size?: 'small' | 'large'}>`
   text-align: center;
   height: ${rem('120px')};
   display: flex;
@@ -20,18 +21,24 @@ const Wrapper = styled.div`
   font-size: ${_ => rem(_.theme.fontSizes[4])};
   color: ${theme('colors.secondary')};
   font-weight: 400;
+  ${_ => _.size === 'small' && `
+    height: ${rem('80px')};
+    font-size: ${rem(_.theme.fontSizes[3])};
+  `}
 `;
 
 export const Empty: React.FC<IEmptyProps> = ({
   loading = false,
+  size,
 }) => {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const loadingSize = size === 'small' ? 7 : 9;
   return (
-    <Wrapper>
+    <Wrapper size={size}>
       {
         loading ? (
-          <Loading size={9} color={colors.secondary} />
+          <Loading size={loadingSize} color={colors.secondary} />
         ) : (
           <span>{t('no_more')}</span>
         )

@@ -1,46 +1,53 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
-import { connect } from '@lib/common/utils/store';
-import { Avatar } from '@lib/components';
+import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import { Upload, User } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { Emojione } from 'react-emoji-render';
+import { useAccountStore, useStores } from '@lib/stores/hooks';
+import { useRouter } from '@lib/router';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
   Href, MenuProfile, RightWarpper, UserName,
 } from './styles';
+import { Notify } from './Notify';
 
 export interface IProps {
   accountStore?: AccountStore;
   themeStore?: ThemeStore;
 }
 
-export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
-  ({ accountStore, themeStore }) => {
-    const { t } = useTranslation();
-    const PopoverRef = React.useRef<Popover>(null);
-    const { isLogin, userInfo } = accountStore!;
-    const { theme, setTheme } = themeStore!;
-    const closeMenu = () => {
-      PopoverRef.current!.close();
-    };
-    const logout = () => {
-      closeMenu();
-      accountStore!.logout();
-    };
-    const switchTheme = () => {
-      setTheme(theme === 'dark' ? 'base' : 'dark');
-    };
-    let content = (
-      <Href route="/login">
-        <User />
-      </Href>
-    );
-    if (isLogin && userInfo) {
-      content = (
+export const Btns = () => {
+  const { t } = useTranslation();
+  const PopoverRef = React.useRef<Popover>(null);
+  const { isLogin, userInfo, logout } = useAccountStore();
+  const { themeStore } = useStores();
+  const { pathname } = useRouter();
+  const { theme, setTheme } = themeStore;
+  const closeMenu = () => {
+    if (PopoverRef.current) PopoverRef.current!.close();
+  };
+  const handleLogout = useCallback(() => {
+    closeMenu();
+    logout();
+  }, [logout]);
+  const switchTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'base' : 'dark');
+  }, [setTheme, theme]);
+  let content = (
+    <Href route="/login">
+      <User />
+    </Href>
+  );
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
+  if (isLogin && userInfo) {
+    content = (
+      <>
+        <Notify />
         <Popover
           ref={PopoverRef}
           trigger="click"
@@ -56,8 +63,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
                       src={userInfo!.avatar}
                     />
                     <UserName>
-                      <Emojione
-                        svg
+                      <EmojiText
                         text={userInfo.fullName}
                       />
                     </UserName>
@@ -81,7 +87,7 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
                 </MenuItemLink>
               </MenuItem>
               <MenuItem>
-                <MenuItemLink onClick={logout}>
+                <MenuItemLink onClick={handleLogout}>
                   {t('menu.signup')}
                 </MenuItemLink>
               </MenuItem>
@@ -92,12 +98,12 @@ export const Btns = connect<React.FC<IProps>>('accountStore', 'themeStore')(
             src={userInfo!.avatar}
           />
         </Popover>
-      );
-    }
-    return (
-      <RightWarpper>
-        {content}
-      </RightWarpper>
+      </>
     );
-  },
-);
+  }
+  return (
+    <RightWarpper>
+      {content}
+    </RightWarpper>
+  );
+};

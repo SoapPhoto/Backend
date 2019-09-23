@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
 import normalize from './normalize';
 import { nprogress } from './nprogress';
+import { scroll } from './scroll';
 
 export const GlobalStyle = createGlobalStyle<{theme?: any}>`
   body {
@@ -29,4 +30,5 @@ export const GlobalStyle = createGlobalStyle<{theme?: any}>`
 
   ${nprogress}
   ${normalize}
+  ${scroll}
 `;

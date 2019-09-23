@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { StateTreeModal } from '@lib/components/StateTreeModal';
+import Head from 'next/head';
 import { Header } from '../Header';
 import { Wapper } from './styles';
 
@@ -26,6 +27,10 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
   // });
   return (
     <Wapper>
+      <Head>
+        {/* eslint-disable-next-line max-len */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" />
+      </Head>
       {
         header
           ? <Header />

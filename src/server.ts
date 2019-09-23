@@ -78,6 +78,10 @@ app.prepare().then(() => {
       '/graphql',
       proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );
+    server.use(
+      '/socket.io',
+      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
+    );
   }
 
   server.get('*', (req, res) => handle(req, res));

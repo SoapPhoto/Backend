@@ -1,17 +1,18 @@
 import day from 'dayjs';
 import React from 'react';
-import { Emojione } from 'react-emoji-render';
 import { observer } from 'mobx-react';
 
 import { A } from '@lib/components/A';
 import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { AccountStore } from '@lib/stores/AccountStore';
+import { css } from 'styled-components';
 import { Avatar } from '../Avatar';
 import { Popover } from '../Popover';
 import {
   ContentBox, InfoBox, ItemBox, MainBox, UserName, Wrapper,
 } from './styles/list';
+import { EmojiText } from '..';
 
 interface IProps {
   accountStore?: AccountStore;
@@ -38,16 +39,15 @@ export const CommentList: React.FC<IProps> = observer(({
             <ContentBox>
               <A
                 route={`/@${user.username}`}
+                css={css`text-decoration: none;` as any}
               >
                 <UserName>
-                  <Emojione
-                    svg
+                  <EmojiText
                     text={user.fullName}
                   />
                 </UserName>
               </A>
-              <Emojione
-                svg
+              <EmojiText
                 text={content}
               />
             </ContentBox>

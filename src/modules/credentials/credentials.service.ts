@@ -39,7 +39,7 @@ export class CredentialsService {
 
   public async authorize(user: UserEntity, { code }: AuthorizeDto) {
     const redisClient = this.redisService.getClient();
-    const strData = await redisClient.get(`oauth_${OauthStateType.authorize}_${code}`);
+    const strData = await redisClient.get(`oauth.${OauthStateType.authorize}.${code}`);
     if (!strData) {
       throw new UnauthorizedException('code credentials are invalid');
     }

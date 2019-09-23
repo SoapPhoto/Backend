@@ -1,31 +1,31 @@
 import styled from 'styled-components';
 import { Grid } from 'styled-css-grid';
-import media from 'styled-media-query';
 
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { Image } from '@lib/components/Image';
 import { rem } from 'polished';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div`
   ${WrapperBox()}
 `;
 
 export const List = styled(Grid)`
-  ${media.lessThan('medium')`
+  ${customMedia.lessThan('medium')`
     grid-template-columns: repeat(1,1fr);
   `}
 
-  /* ${media.between('small', 'medium')`
+  /* ${customMedia.between('small', 'medium')`
     grid-template-columns: repeat(2,1fr);
   `} */
 
-  ${media.between('medium', 'large')`
+  ${customMedia.between('medium', 'large')`
     grid-template-columns: repeat(3,1fr);
   `}
 
-  ${media.greaterThan('large')`
+  ${customMedia.greaterThan('large')`
     grid-template-columns: repeat(4,1fr);
   `}
   grid-gap: 24px;

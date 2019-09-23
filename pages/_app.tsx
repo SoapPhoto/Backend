@@ -18,6 +18,7 @@ import { ICustomNextAppContext } from '@lib/common/interfaces/global';
 import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
 import { initLocale, initI18n } from '@lib/i18n/utils';
 import { RouterAction } from '@lib/stores/AppStore';
+import { reaction } from 'mobx';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -139,9 +140,18 @@ export default class MyApp extends App<IProps> {
   }
 
   public componentDidMount() {
-    // const socket = setupSocket();
+    if (this.state.mobxStore.accountStore.isLogin) {
+      this.state.mobxStore.notificationStore.createSocket();
+    }
+    reaction(() => this.state.mobxStore.accountStore.isLogin, (isLogin) => {
+      if (isLogin) {
+        this.state.mobxStore.notificationStore.createSocket();
+      } else {
+        this.state.mobxStore.notificationStore.close();
+      }
+    });
     Router.beforePopState(({ url, as, options }) => {
-      store.appStore.setRoute({
+      this.state.mobxStore.appStore.setRoute({
         as,
         options,
         href: url,

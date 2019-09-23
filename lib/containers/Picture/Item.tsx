@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { PictureStyle } from '@lib/common/utils/image';
-import { Avatar } from '@lib/components';
+import { Avatar, EmojiText } from '@lib/components';
 import { LikeButton } from '@lib/components/Button';
 import { A } from '@lib/components/A';
 import { Lock } from '@lib/icon';
@@ -10,7 +10,6 @@ import { Popover } from '@lib/components/Popover';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
-import { Emojione } from 'react-emoji-render';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName, LockIcon, Link,
@@ -69,8 +68,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
           <UserName
             route={`/@${detail.user.username}`}
           >
-            <Emojione
-              svg
+            <EmojiText
               text={detail.user.fullName}
             />
           </UserName>

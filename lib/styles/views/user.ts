@@ -4,8 +4,8 @@ import { Grid, Cell } from 'styled-css-grid';
 
 import { href } from '@lib/common/utils/themes/common';
 import { Settings } from '@lib/icon';
-import media from 'styled-media-query';
 import { theme } from '@lib/common/utils/themes';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div``;
 
@@ -17,7 +17,7 @@ export const UserHeader = styled.div`
 `;
 
 export const HeaderGrid = styled(Grid)`
-  ${media.lessThan('small')`
+  ${customMedia.lessThan('small')`
     grid-template-columns: 1fr;
     grid-gap: 4px;
   `}
@@ -25,7 +25,7 @@ export const HeaderGrid = styled(Grid)`
 
 export const AvatarBox = styled(Cell)`
   display: flex;
-  ${media.lessThan('small')`
+  ${customMedia.lessThan('small')`
     justify-content: center;
   `}
 `;

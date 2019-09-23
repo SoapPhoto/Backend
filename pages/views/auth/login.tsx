@@ -1,7 +1,6 @@
 import { Formik, FormikActions } from 'formik';
 import Head from 'next/head';
 import React, { useCallback, useEffect } from 'react';
-import { Emojione } from 'react-emoji-render';
 
 import { LoginSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -26,6 +25,7 @@ import {
 } from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
+import { EmojiText } from '@lib/components';
 
 interface IValues {
   username: string;
@@ -99,8 +99,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
         <title>{getTitle('login', t)}</title>
       </Head>
       <Title>
-        <Emojione
-          svg
+        <EmojiText
           text={t('login')}
         />
       </Title>

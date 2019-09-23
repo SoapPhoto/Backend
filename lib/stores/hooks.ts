@@ -9,6 +9,11 @@ export const useScreenStores = () => {
   return screen;
 };
 
+export const useNotification = () => {
+  const { notificationStore } = useStores();
+  return notificationStore;
+};
+
 export const useAccountStore = () => {
   const { accountStore } = useStores();
   return accountStore;

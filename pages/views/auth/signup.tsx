@@ -1,7 +1,6 @@
 import { Formik, FormikActions } from 'formik';
 import Head from 'next/head';
 import React from 'react';
-import { Emojione } from 'react-emoji-render';
 
 import { SignUpSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -18,6 +17,7 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useRouter } from '@lib/router';
 import { useAccountStore } from '@lib/stores/hooks';
 import { withError } from '@lib/components/withError';
+import { EmojiText } from '@lib/components';
 
 interface IValues {
   email: string;
@@ -58,8 +58,7 @@ const SignUp = () => {
         <title>{getTitle('signup', t)}</title>
       </Head>
       <Title>
-        <Emojione
-          svg
+        <EmojiText
           text={t('signup')}
         />
       </Title>

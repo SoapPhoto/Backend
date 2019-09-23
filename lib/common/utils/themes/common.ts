@@ -1,5 +1,6 @@
 import { darken, lighten, rem } from 'polished';
-import { DefaultTheme, ThemedStyledProps } from 'styled-components';
+import { DefaultTheme, css } from 'styled-components';
+import { theme as themeData } from './index';
 
 export const href = (color: string, hover?: string, active?: string) => `
   text-decoration:none;
@@ -25,9 +26,9 @@ export const box = (theme: DefaultTheme, width: string, wrapper = false) => `
   overflow: hidden;
 `;
 
-export const WrapperBox = (width = 1440) => <P, T>(_context: ThemedStyledProps<P, T>) => `
+export const WrapperBox = (width?: number) => css`
   width: 100%;
-  max-width: ${rem(width)};
+  max-width: ${_ => rem(width || themeData('width.wrapper')(_))};
   margin: ${rem('32px')} auto;
   padding: 0 ${rem('32px')};
 `;

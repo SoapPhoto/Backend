@@ -1,11 +1,10 @@
 import Head from 'next/head';
 import React, { useEffect, useCallback } from 'react';
-import { Emojione } from 'react-emoji-render';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getTitle } from '@lib/common/utils';
-import { Avatar, GpsImage } from '@lib/components';
+import { Avatar, GpsImage, EmojiText } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
 import { Tag } from '@lib/components/Tag';
@@ -77,8 +76,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               src={user.avatar}
             />
             <UserName>
-              <Emojione
-                svg
+              <EmojiText
                 text={user.fullName}
               />
             </UserName>
@@ -102,8 +100,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       </PictureBox>
       <Content>
         <Title>
-          <Emojione
-            svg
+          <EmojiText
             text={info.title}
           />
         </Title>
@@ -137,8 +134,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         {
           info.bio && (
             <Bio>
-              <Emojione
-                svg
+              <EmojiText
                 text={info.bio}
               />
             </Bio>
