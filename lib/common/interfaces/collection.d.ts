@@ -1,3 +1,4 @@
+import { IPaginationList } from './global';
 
 export type CollectionEntity = import('@server/modules/collection/collection.entity').CollectionEntity;
 
