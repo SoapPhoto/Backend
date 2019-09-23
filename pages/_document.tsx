@@ -37,8 +37,6 @@ export default class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
-          {/* eslint-disable-next-line max-len */}
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" />
           <link rel="manifest" href="manifest.json" />
           <link rel="preload" as="style" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
         </Head>

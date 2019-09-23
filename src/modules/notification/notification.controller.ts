@@ -1,5 +1,5 @@
 import {
-  Controller, UseFilters, Get, UseGuards,
+  Controller, UseFilters, Get, UseGuards, Post,
 } from '@nestjs/common';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -23,5 +23,13 @@ export class NotificationController {
     @User() user: UserEntity,
   ) {
     return this.notificationService.getList(user);
+  }
+
+  @Post('all')
+  @Roles(Role.USER)
+  public async unReadAll(
+    @User() user: UserEntity,
+  ) {
+    return this.notificationService.unReadAll(user);
   }
 }

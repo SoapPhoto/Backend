@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { NotificationEntity } from '@lib/common/interfaces/notification';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { NotificationCategory } from '@common/enum/notification';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getPictureUrl } from '@lib/common/utils/image';
@@ -17,11 +17,18 @@ interface IProps {
   data: NotificationEntity;
 }
 
-const Item = styled.div`
+const Item = styled.div<{read: number}>`
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   grid-gap: ${rem(12)};
+  padding: 14px 18px;
+  border-bottom: 1px solid ${theme('styles.box.borderColor')};
+  ${
+  _ => (!_.read ? css`
+    background: ${theme('styles.notification.read.background')};
+    ` : '')
+}
 `;
 
 const User = styled.div`
@@ -31,13 +38,12 @@ const User = styled.div`
 
 const UserName = styled(EmojiText)`
   font-weight: 700;
-  font-size: ${_ => theme('fontSizes[1]')(_)};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   margin-left: ${rem(8)};
   color: ${theme('colors.text')};
 `;
 
 const Content = styled.p`
-
 `;
 
 const Handle = styled.div``;
@@ -58,16 +64,16 @@ const Picture = styled(A)`
 
 const Date = styled.span`
   color: ${theme('colors.secondary')};
-  margin-left: ${rem(2)};
+  margin-left: ${rem(8)};
 `;
 
 export const NotificationItem: React.FC<IProps> = ({ data }) => {
   const content = useCallback(() => {
     switch (data.category) {
       case NotificationCategory.LIKED:
-        return '喜欢了你的照片';
+        return '喜欢了你的照片 ❤️';
       case NotificationCategory.COMMENT:
-        return '评论了你的照片';
+        return '评论了你的照片 😁';
       default:
         return '';
     }
@@ -84,17 +90,17 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
     return null;
   }, [data.category, data.media]);
   return (
-    <Item>
+    <Item read={data.read ? 1 : 0}>
       <User>
-        <A route={`/@${data.publisher.username}`}>
-          <Avatar size={32} src={data.publisher.avatar} />
+        <A style={{ fontSize: 0 }} route={`/@${data.publisher.username}`}>
+          <Avatar size={36} src={data.publisher.avatar} />
         </A>
-        <A route={`/@${data.publisher.username}`}>
+        <A route={`/@${data.publisher.username}`} style={{ textDecoration: 'none' }}>
           <UserName text={data.publisher.fullName} />
         </A>
       </User>
       <Content>
-        {content()}
+        <EmojiText css={css`img {font-size: ${_ => rem(theme('fontSizes[2]')(_))};}` as any} text={content()} />
         <Popover
           openDelay={100}
           trigger="hover"

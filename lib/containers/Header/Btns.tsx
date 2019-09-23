@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
@@ -7,11 +7,12 @@ import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useStores } from '@lib/stores/hooks';
+import { useRouter } from '@lib/router';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
   Href, MenuProfile, RightWarpper, UserName,
 } from './styles';
-import { BellButton } from './BellButton';
+import { Notify } from './Notify';
 
 export interface IProps {
   accountStore?: AccountStore;
@@ -23,9 +24,10 @@ export const Btns = () => {
   const PopoverRef = React.useRef<Popover>(null);
   const { isLogin, userInfo, logout } = useAccountStore();
   const { themeStore } = useStores();
+  const { pathname } = useRouter();
   const { theme, setTheme } = themeStore;
   const closeMenu = () => {
-    PopoverRef.current!.close();
+    if (PopoverRef.current) PopoverRef.current!.close();
   };
   const handleLogout = useCallback(() => {
     closeMenu();
@@ -39,10 +41,13 @@ export const Btns = () => {
       <User />
     </Href>
   );
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
   if (isLogin && userInfo) {
     content = (
       <>
-        <BellButton />
+        <Notify />
         <Popover
           ref={PopoverRef}
           trigger="click"

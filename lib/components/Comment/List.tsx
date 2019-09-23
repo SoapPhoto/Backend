@@ -6,6 +6,7 @@ import { A } from '@lib/components/A';
 import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { AccountStore } from '@lib/stores/AccountStore';
+import { css } from 'styled-components';
 import { Avatar } from '../Avatar';
 import { Popover } from '../Popover';
 import {
@@ -38,6 +39,7 @@ export const CommentList: React.FC<IProps> = observer(({
             <ContentBox>
               <A
                 route={`/@${user.username}`}
+                css={css`text-decoration: none;` as any}
               >
                 <UserName>
                   <EmojiText

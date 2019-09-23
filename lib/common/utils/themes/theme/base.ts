@@ -59,6 +59,11 @@ const theme: DefaultTheme = {
         color: colors.pure,
       },
     },
+    notification: {
+      read: {
+        background: '#fffef1',
+      },
+    },
   },
   layout: {
     header: {

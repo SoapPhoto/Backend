@@ -10,29 +10,30 @@ import { NotificationItem } from './NotificationItem';
 import { Empty } from '../Empty';
 
 const Wrapper = styled.div`
-  width: ${rem(330)};
+  width: ${rem(380)};
   /* display: grid;
   grid-auto-rows: max-content;
   grid-gap: ${rem(12)}; */
 `;
 
 const List = styled(OverlayScrollbarsComponent)`
-  max-height: ${rem(240)};
+  max-height: ${rem(280)};
 `;
 
 const ListBox = styled.div`
   display: grid;
   grid-template-rows: max-content;
-  grid-gap: ${rem(12)};
-  padding: ${rem(12)} ${rem(18)};
 `;
 
 export const NotificationPopover = observer(() => {
   const {
-    getList, list, loading, listInit,
+    getList, list, loading, listInit, unReadAll,
   } = useNotification();
   useEffect(() => {
     if (!listInit) getList();
+    return () => {
+      unReadAll();
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

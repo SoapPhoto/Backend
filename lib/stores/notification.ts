@@ -1,5 +1,5 @@
 import setupSocket from '@lib/common/sockets';
-import { getNotificationList } from '@lib/services/notification';
+import { getNotificationList, unReadAllNotificationList } from '@lib/services/notification';
 import { observable, action } from 'mobx';
 import { NotificationEntity } from '@lib/common/interfaces/notification';
 
@@ -49,6 +49,17 @@ export class NotificationStore {
     this.pushWaitQueue();
   }
 
+  public unReadAll = async () => {
+    this.unReadList();
+    await unReadAllNotificationList();
+  }
+
+  @action
+  public unReadList = () => {
+    this.unread = 0;
+    this.list.forEach(nofity => nofity.read = true);
+  }
+
   @action
   public setList = (list: NotificationEntity[]) => {
     this.listInit = true;
@@ -57,6 +68,7 @@ export class NotificationStore {
 
   @action
   public pushNotification = (data: NotificationEntity) => {
+    this.unread++;
     if (!this.loading) {
       this.list.unshift(data);
     } else {

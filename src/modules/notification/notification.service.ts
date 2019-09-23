@@ -9,6 +9,7 @@ import { plainToClass, classToPlain } from 'class-transformer';
 import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureService } from '../picture/picture.service';
+import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 
 @Injectable()
 export class NotificationService {
@@ -20,6 +21,8 @@ export class NotificationService {
     private subscribersUserRepository: Repository<NotificationSubscribersUserEntity>,
     @Inject(forwardRef(() => PictureService))
     private readonly pictureService: PictureService,
+    @Inject(forwardRef(() => SubscribersUserService))
+    private readonly subscribersService: SubscribersUserService,
   ) {}
 
   public publishNotification = async (
@@ -87,4 +90,8 @@ export class NotificationService {
     .leftJoin('notification.subscribers', 'subscribers')
     .where('subscribers.userId=:userId AND subscribers.read=0', { userId: user.id })
     .getCount()
+
+  public unReadAll = async (user: UserEntity) => {
+    await this.subscribersService.unReadAll(user);
+  }
 }
