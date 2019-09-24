@@ -50,7 +50,7 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
       onClose={onClose}
     >
       <Title>新增收藏夹</Title>
-      <div style={{ padding: rem(24) }}>
+      <div css={css`padding: ${rem(24)};padding-top: 0;`}>
         <Formik<Values>
           initialValues={{
             name: '',

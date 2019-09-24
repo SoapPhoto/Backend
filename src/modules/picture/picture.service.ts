@@ -12,7 +12,6 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { validator } from '@server/common/utils/validator';
-import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { GetTagPictureListDto } from '@server/modules/tag/dto/tag.dto';
 import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
@@ -22,16 +21,18 @@ import { GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 import { Role } from '../user/enum/role.enum';
+import { CollectionService } from '../collection/collection.service';
 
 @Injectable()
 export class PictureService {
   constructor(
     private readonly activityService: PictureUserActivityService,
-    private readonly qiniuService: QiniuService,
     @Inject(forwardRef(() => TagService))
     private readonly tagService: TagService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => CollectionService))
+    private readonly collectionService: CollectionService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
   ) {}
@@ -106,7 +107,38 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getOnePicture = async (id: string, user: Maybe<UserEntity>, view = false) => {
+  public async getOnePicture (
+    id: string,
+    user: Maybe<UserEntity>,
+  ): Promise<PictureEntity>
+
+  // eslint-disable-next-line no-dupe-class-members
+  public async getOnePicture (
+    id: string,
+    user: Maybe<UserEntity>,
+    view: boolean,
+  ): Promise<PictureEntity>
+
+  /**
+   * 获取单个图片的信息 返回格式化过的object
+   *
+   * @memberof PictureService
+   */
+  // eslint-disable-next-line no-dupe-class-members
+  public async getOnePicture (
+    id: string,
+    user: Maybe<UserEntity>,
+    view: boolean,
+    isClass: boolean,
+  ): Promise<Record<string, any>>
+
+  // eslint-disable-next-line no-dupe-class-members
+  public async getOnePicture(
+    id: string,
+    user: Maybe<UserEntity>,
+    view?: boolean,
+    isClass?: boolean,
+  ): Promise<PictureEntity | Record<string, any>> {
     const q = this.select(user)
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
@@ -116,10 +148,16 @@ export class PictureService {
       data.views += 1;
     }
     const isOwner = data && data.user.id === (user ? user.id : null);
-    if (data && data.isPrivate && !isOwner) {
+    if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
-    return plainToClass(PictureEntity, data, {
+    data.relateCollection = await this.collectionService.pictureRelateCollection(data.id) as any;
+    if (!isClass) {
+      return plainToClass(PictureEntity, data, {
+        groups: isOwner ? [Role.OWNER] : [],
+      });
+    }
+    return classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : [],
     });
   }

@@ -58,3 +58,5 @@ uploads/
 docker-data/
 
 static/test
+
+.idea

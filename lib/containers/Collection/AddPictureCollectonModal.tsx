@@ -60,6 +60,7 @@ const CollectionItemBox = styled.button`
 
 const CollectionBox = styled.div`
   padding: ${rem(24)};
+  padding-top: 0;
   display: grid;
   grid-gap: 14px;
 `;
@@ -165,7 +166,8 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
   }, [visible]);
   useEffect(() => {
     getCollection();
-  }, [getCollection]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     setCurrent(
       new Map(currentCollections.map(collection => [collection.id, collection])),

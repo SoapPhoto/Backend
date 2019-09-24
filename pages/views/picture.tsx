@@ -25,6 +25,9 @@ import {
   UserLink,
   UserName,
   Wrapper,
+  RelateCollectionList,
+  RelateCollection,
+  RelateCollectionTitle,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -33,6 +36,8 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
+import { CollectionItem } from '@lib/containers/Collection/Item';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -148,6 +153,25 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           )
         }
       </Content>
+      {
+        info.relateCollection.count > 0 && (
+          <RelateCollection>
+            <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
+            <OverlayScrollbarsComponent
+              options={{ scrollbars: { autoHide: 'leave' } }}
+              style={{ paddingBottom: rem(12) }}
+            >
+              <RelateCollectionList>
+                {
+                  info.relateCollection.data.map(ct => (
+                    <CollectionItem key={ct.id} info={ct} />
+                  ))
+                }
+              </RelateCollectionList>
+            </OverlayScrollbarsComponent>
+          </RelateCollection>
+        )
+      }
       <Comment onConfirm={onConfirm} comment={comment} />
     </Wrapper>
   );

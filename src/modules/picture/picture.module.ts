@@ -14,6 +14,7 @@ import { PictureResolver } from './picture.resolvers';
 import { PictureService } from './picture.service';
 import { PictureUserActivityModule } from './user-activity/user-activity.module';
 import { FileModule } from '../file/file.module';
+import { CollectionModule } from '../collection/collection.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FileModule } from '../file/file.module';
     forwardRef(() => TagModule),
     forwardRef(() => UserModule),
     forwardRef(() => FileModule),
+    forwardRef(() => CollectionModule),
   ],
   providers: [PictureService, PictureResolver],
   controllers: [PictureController],

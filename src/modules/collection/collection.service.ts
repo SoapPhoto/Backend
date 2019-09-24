@@ -1,5 +1,5 @@
 import {
-  BadRequestException, ForbiddenException, Injectable, NotFoundException,
+  BadRequestException, ForbiddenException, Injectable, NotFoundException, Inject, forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
@@ -8,7 +8,7 @@ import { listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { classToPlain } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { validator } from '@server/common/utils/validator';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionEntity } from './collection.entity';
@@ -24,7 +24,9 @@ export class CollectionService {
     private collectionEntity: Repository<CollectionEntity>,
     @InjectRepository(CollectionPictureEntity)
     private collectionPictureEntity: Repository<CollectionPictureEntity>,
+    @Inject(forwardRef(() => PictureService))
     private pictureService: PictureService,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {}
 
@@ -303,6 +305,27 @@ export class CollectionService {
       .delete()
       .where('collection.id=:id', { id })
       .execute();
+  }
+
+  public async pictureRelateCollection(pictureId: ID) {
+    const q = this.collectionEntity.createQueryBuilder('ct')
+      .leftJoin('ct.info', 'ct_info')
+      .where('ct_info.pictureId=:pictureId', { pictureId })
+      .andWhere('ct.isPrivate=0')
+      .select('ct.id');
+    const [idList, count] = await Promise.all([
+      q.limit(3)
+        .offset(0)
+        .getRawMany(),
+      q.getCount(),
+    ]);
+    const data = await Promise.all(
+      idList.map(async _ => this.getCollectionDetail(_.ct_id, null)),
+    );
+    return {
+      data,
+      count,
+    };
   }
 
   /**

@@ -10,6 +10,7 @@ import { NotificationType, NotificationCategory } from '@common/enum/notificatio
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
+import { PictureEntity } from '../picture/picture.entity';
 
 @Injectable()
 export class CommentService {

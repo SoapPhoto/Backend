@@ -16,6 +16,12 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 import { Role } from '../user/enum/role.enum';
+import { CollectionEntity } from '../collection/collection.entity';
+
+export interface IRelateCollection {
+  count: number;
+  data: CollectionEntity[];
+}
 
 @Exclude()
 @Entity('picture')
@@ -147,7 +153,13 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
-  public info!: CollectionPictureEntity[]
+  @Expose()
+  public relateCollection: IRelateCollection = {
+    count: 0,
+    data: [],
+  };
+
+  public info!: CollectionPictureEntity[];
 
   @Expose()
   get currentCollections() {

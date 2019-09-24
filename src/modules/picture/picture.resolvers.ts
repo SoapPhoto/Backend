@@ -38,7 +38,7 @@ export class PictureResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
   ) {
-    return this.pictureService.getOnePicture(id, user, true);
+    return this.pictureService.getOnePicture(id, user, true, true);
   }
 
   @Mutation()
