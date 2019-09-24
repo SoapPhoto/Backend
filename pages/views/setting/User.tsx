@@ -32,7 +32,7 @@ const User: React.FC = () => {
     setBtnLoading(true);
     let key = '';
     if (avatarFile.current) {
-      key = await uploadQiniu(avatarFile.current, UploadType.PICTURE);
+      key = await uploadQiniu(avatarFile.current, UploadType.AVATAR);
     }
     try {
       await updateProfile({
