@@ -5,6 +5,9 @@ import App from 'next/app';
 import React from 'react';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
+import { WithApolloProps } from 'next-with-apollo';
+import { ApolloProvider } from 'react-apollo';
+
 import 'dayjs/locale/es';
 import 'dayjs/locale/zh-cn';
 
@@ -19,6 +22,7 @@ import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
 import { initLocale, initI18n } from '@lib/i18n/utils';
 import { RouterAction } from '@lib/stores/AppStore';
 import { reaction } from 'mobx';
+import { withApollo } from '@lib/common/apollow';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
@@ -28,7 +32,7 @@ import {
 } from '../lib/stores/init';
 
 
-interface IProps {
+interface IProps extends WithApolloProps<any> {
   i18n: II18nValue;
   initialMobxState: IMyMobxStore;
   pageProps: IPageProps;
@@ -65,11 +69,11 @@ Router.events.on('routeChangeError', () => {
   store.appStore.setLoading(false);
 });
 
-export default class MyApp extends App<IProps> {
+class MyApp extends App<IProps> {
   // 初始化页面数据，初始化store
   public static async getInitialProps(data: any) {
     const { ctx, Component } = data as ICustomNextAppContext;
-    const { req, res } = ctx;
+    const { req, res, apolloClient } = ctx;
     const theme = getCurrentTheme(req ? req.cookies : (document ? document.cookie : '')) as ThemeType;
     const route = parsePath(data.ctx.asPath);
     let statusCode = HttpStatus.OK;
@@ -101,7 +105,7 @@ export default class MyApp extends App<IProps> {
     } else if (ctx.pathname === '/_error') {
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
-    const mobxStore = initStore(basePageProps.initialStore);
+    const mobxStore = initStore(basePageProps.initialStore, apolloClient);
     ctx.route = route;
     ctx.mobxStore = mobxStore;
     let pageProps: any = {};
@@ -135,7 +139,7 @@ export default class MyApp extends App<IProps> {
 
   constructor(props: IProps) {
     super(props as any);
-    this.state.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState);
+    this.state.mobxStore = server ? props.initialMobxState : initStore(props.initialMobxState, props.apollo);
     this.state.i18n = server ? props.i18n : initI18n(props.i18n);
   }
 
@@ -163,29 +167,33 @@ export default class MyApp extends App<IProps> {
 
   public render() {
     const {
-      Component, pageProps, router,
+      Component, pageProps, router, apollo,
     } = this.props;
     const { i18n, mobxStore } = this.state;
     const { picture } = router.query!;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <I18nProvider value={i18n}>
-        <RouterProvider route={router}>
-          <Provider {...mobxStore}>
-            <ThemeWrapper>
-              <BodyLayout header={!isError}>
-                {
-                  picture
+        <ApolloProvider client={apollo}>
+          <RouterProvider route={router}>
+            <Provider {...mobxStore}>
+              <ThemeWrapper>
+                <BodyLayout header={!isError}>
+                  {
+                    picture
                     && <PictureModal pictureId={picture.toString()} />
-                }
-                <Component
-                  {...pageProps}
-                />
-              </BodyLayout>
-            </ThemeWrapper>
-          </Provider>
-        </RouterProvider>
+                  }
+                  <Component
+                    {...pageProps}
+                  />
+                </BodyLayout>
+              </ThemeWrapper>
+            </Provider>
+          </RouterProvider>
+        </ApolloProvider>
       </I18nProvider>
     );
   }
 }
+
+export default withApollo(MyApp);

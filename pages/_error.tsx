@@ -3,7 +3,7 @@ import { rem } from 'polished';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import Head from 'next/head';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { getTitle } from '@lib/common/utils';
 import { href } from '@lib/common/utils/themes/common';

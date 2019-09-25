@@ -1,18 +1,16 @@
-import ApolloClient from 'apollo-boost';
-import withApollo from 'next-with-apollo';
+import ApolloClient, { InMemoryCache } from 'apollo-boost';
+import withData from 'next-with-apollo';
 
-function createClient({ headers }: any) {
+function createClient({ headers, initialState }: any) {
   return new ApolloClient({
     uri: `${process.env.URL}/graphql`,
+    cache: new InMemoryCache().restore(initialState || {}),
     request: (operation) => {
       operation.setContext({
         headers,
-        fetchOptions: {
-          credentials: 'include',
-        },
       });
     },
   });
 }
 
-export default withApollo(createClient);
+export const withApollo = withData(createClient);
