@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 
 import { getTitle } from '@lib/common/utils';

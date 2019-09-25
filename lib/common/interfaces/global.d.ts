@@ -1,5 +1,6 @@
-import { NextComponentType, NextContext } from 'next';
-import { DefaultQuery, RouterProps } from 'next/router';
+import { NextComponentType } from 'next';
+import { NextRouter } from 'next/router';
+import { ApolloAppContext } from 'next-with-apollo';
 
 import { IMyMobxStore } from '@lib/stores/init';
 import { Request, Response } from 'express';
@@ -7,7 +8,14 @@ import { HttpStatus } from '@lib/common/enums/http';
 import { UserEntity } from './user';
 import { IPathInfo } from '../utils';
 
-export interface ICustomNextContext<Q extends DefaultQuery = DefaultQuery> {
+export interface IDefaultQuery {
+  error?: {
+    statusCode?: number;
+    [key: string]: any;
+  };
+}
+
+export interface ICustomNextContext<Q extends IDefaultQuery = IDefaultQuery> extends ApolloAppContext {
   mobxStore: IMyMobxStore;
   pathname: string;
   query: Q;
@@ -15,12 +23,14 @@ export interface ICustomNextContext<Q extends DefaultQuery = DefaultQuery> {
   asPath: string;
   req?: Request & { user?: UserEntity };
   res?: Response;
-  err?: any;
+  err?: Error & {
+    statusCode?: number;
+  } | null;
 }
 
-export interface ICustomNextAppContext<Q extends DefaultQuery = DefaultQuery> {
-  Component: NextComponentType<any, any, NextContext<Q>>;
-  router: RouterProps<Q>;
+export interface ICustomNextAppContext<Q extends IDefaultQuery = IDefaultQuery> {
+  Component: NextComponentType<ICustomNextContext<Q>>;
+  router: NextRouter;
   ctx: ICustomNextContext<Q>;
 }
 

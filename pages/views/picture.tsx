@@ -15,7 +15,7 @@ import {
   BaseInfoItem,
   Bio,
   Content,
-  GpsCotent,
+  GpsContent,
   PictureBox,
   TagBox,
   Title,
@@ -147,9 +147,9 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         }
         {
           isLocation && (
-            <GpsCotent>
+            <GpsContent>
               <GpsImage gps={info!.exif!.location!} />
-            </GpsCotent>
+            </GpsContent>
           )
         }
       </Content>
@@ -177,8 +177,9 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   );
 });
 
-/// TODO: mobx-react@6 @inject 不执行 getIInitialProps 的暂时解决方案
-Picture.getInitialProps = async ({ mobxStore, route, req }: ICustomNextContext) => {
+Picture.getInitialProps = async ({
+  mobxStore, route, req,
+}: ICustomNextContext) => {
   const { params } = route;
   const { appStore } = mobxStore;
   const isPicture = (

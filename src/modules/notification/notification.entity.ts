@@ -6,11 +6,11 @@ import { Expose, Type } from 'class-transformer';
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
-import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureEntity } from '../picture/picture.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { Role } from '../user/enum/role.enum';
+import { CollectionEntity } from '../collection/collection.entity';
 
 @Entity('notification')
 export class NotificationEntity extends BaseEntity {

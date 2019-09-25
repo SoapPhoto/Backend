@@ -1,4 +1,5 @@
 import { IPaginationList } from './global';
+import { PictureEntity } from './picture';
 
 export type TagEntity = import('@server/modules/tag/tag.entity').TagEntity;
 

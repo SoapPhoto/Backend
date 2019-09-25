@@ -9,14 +9,12 @@ import { WrapperBox } from '@lib/common/utils/themes/common';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div`
-  ${WrapperBox(1000)}
-  margin: 0 auto;
-  margin-top: ${rem('32px')};
+  ${WrapperBox(1000)};
+  margin: ${rem('32px')} auto 0;
 `;
 
 export const UserHeader = styled(Grid)`
-  margin: 0 auto;
-  margin-bottom: ${rem('20px')};
+  margin: 0 auto ${rem('20px')};
   max-width: ${rem(customBreakpoints.medium)};
 `;
 
@@ -63,7 +61,7 @@ export const Title = styled.h2`
   margin-bottom: ${rem('18px')};
 `;
 
-export const GpsCotent = styled.div`
+export const GpsContent = styled.div`
   margin: ${rem('24px')} 0;
 `;
 
