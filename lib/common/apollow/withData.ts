@@ -13,4 +13,6 @@ function createClient({ headers, initialState }: any) {
   });
 }
 
-export const withApollo = withData(createClient);
+export const withApollo = withData(createClient, {
+  getDataFromTree: 'never',
+});

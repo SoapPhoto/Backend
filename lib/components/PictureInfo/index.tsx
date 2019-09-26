@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useState, useEffect } from 'react';
-import _ from 'lodash';
+import { pick } from 'lodash';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { EXIFModal } from '@lib/components/EXIFModal';
@@ -20,21 +20,24 @@ import { useRouter } from '@lib/router/useRouter';
 import { Histore } from '@lib/common/utils';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { observer } from 'mobx-react';
 
 interface IProps {
   info: PictureEntity;
   isOwner: boolean;
+  isCollected: boolean;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
   deletePicture: () => Promise<void>;
 }
 
-export const PictureInfo: React.FC<IProps> = ({
+export const PictureInfo: React.FC<IProps> = observer(({
   info,
   onLike,
   isOwner,
   onOk,
   deletePicture,
+  isCollected,
 }) => {
   const {
     pushRoute, params, back, replaceRoute,
@@ -112,7 +115,6 @@ export const PictureInfo: React.FC<IProps> = ({
   }, [push]);
 
   const update = async (data: UpdatePictureDot) => updatePicture(info.id, data);
-
   return (
     <PictureBaseInfo>
       <div>
@@ -153,7 +155,10 @@ export const PictureInfo: React.FC<IProps> = ({
           isLogin && (
             <IconButton popover={t('add_collection')} onClick={openCollection}>
               <Bookmark
-                color={colors.secondary}
+                style={{
+                  stroke: isCollected ? colors.baseGreen : colors.secondary,
+                  fill: isCollected ? colors.baseGreen : 'transparent',
+                }}
               />
             </IconButton>
           )
@@ -172,7 +177,7 @@ export const PictureInfo: React.FC<IProps> = ({
         visible={editVisible}
         onClose={closeEdit}
         defaultValue={{
-          ..._.pick(info, ['title', 'bio', 'isPrivate']),
+          ...pick(info, ['title', 'bio', 'isPrivate']),
           tags: info.tags.map(tag => tag.name),
         }}
         onOk={onOk}
@@ -192,4 +197,4 @@ export const PictureInfo: React.FC<IProps> = ({
       />
     </PictureBaseInfo>
   );
-};
+});

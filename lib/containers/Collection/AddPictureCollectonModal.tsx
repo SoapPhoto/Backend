@@ -2,13 +2,10 @@
 import React, { useEffect, useState } from 'react';
 
 import { Modal } from '@lib/components/Modal';
-import { connect } from '@lib/common/utils/store';
-import { ThemeStore } from '@lib/stores/ThemeStore';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { rgba, rem } from 'polished';
 import { getPictureUrl } from '@lib/common/utils/image';
 import styled from 'styled-components';
-import { AppStore } from '@lib/stores/AppStore';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { Check, Minus, PlusCircle } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
@@ -17,12 +14,13 @@ import { Image } from '@lib/components/Image';
 import { theme, activte } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { EmojiText } from '@lib/components';
+import { useStores } from '@lib/stores/hooks';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { observer } from 'mobx-react';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
   visible: boolean;
-  themeStore?: ThemeStore;
-  appStore?: AppStore;
   picture: PictureEntity;
   onClose: () => void;
   currentCollections: CollectionEntity[];
@@ -141,33 +139,31 @@ const ItemHandleIcon = styled.div`
 `;
 
 
-export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 'appStore')(({
+export const AddPictureCollectonModal: React.FC<IProps> = observer(({
   visible,
-  themeStore,
-  appStore,
   picture,
   onClose,
   currentCollections,
 }) => {
   const { t } = useTranslation();
   const { key, id } = picture;
-  const { getCollection, userCollection, addCollection } = appStore!;
-  const { themeData } = themeStore!;
+  const { appStore } = useStores();
+  const { getCollection, userCollection, addCollection } = appStore;
+  const { colors } = useTheme();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
-  const background = `linear-gradient(${rgba(themeData.colors.gray, 0.8)}, ${themeData.colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
+  const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);
   useEffect(() => {
     if (!visible) {
       setAddCollectionVisible(false);
+    } else {
+      getCollection();
     }
-  }, [visible]);
-  useEffect(() => {
-    getCollection();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visible]);
   useEffect(() => {
     setCurrent(
       new Map(currentCollections.map(collection => [collection.id, collection])),
@@ -178,9 +174,6 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
     userCollection.forEach(collection => obj[collection.id] = false);
     setLoading(obj);
   }, [userCollection]);
-  useEffect(() => {
-    getCollection();
-  }, [getCollection, visible]);
   const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
     if (loading[collection.id]) {
       return;
@@ -234,17 +227,18 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
           userCollection.map((collection) => {
             const isCollected = current.has(collection.id);
             const isLoading = loading[collection.id];
+            const preview = collection.preview.slice();
             return (
               <CollectionItemBox
                 key={collection.id}
                 onClick={() => !isLoading && onCollected(collection, isCollected)}
               >
                 {
-                  collection.preview[0] && (
-                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'small')} />
+                  preview[0] && (
+                    <CollectionItemCover src={getPictureUrl(preview[0].key, 'small')} />
                   )
                 }
-                <ItemInfoBox isCollected={isCollected} isPreview={!!collection.preview[0]}>
+                <ItemInfoBox isCollected={isCollected} isPreview={!!preview[0]}>
                   <div>
                     <ItemInfoTitle>
                       <EmojiText

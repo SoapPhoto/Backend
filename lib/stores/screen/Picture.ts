@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx';
+import { action, observable, computed } from 'mobx';
 import { merge, pick } from 'lodash';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
@@ -9,7 +9,6 @@ import {
 } from '@lib/services/picture';
 
 import { HttpStatus } from '@lib/common/enums/http';
-import { GET_PICTURE } from '@lib/schemas/query/picture';
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
@@ -30,15 +29,13 @@ export class PictureScreenStore extends BaseStore {
     this.comment = data;
   }
 
+  @computed
+  get isCollected() {
+    return !!(this.info && this.info.currentCollections.length > 0);
+  }
+
   public getPictureInfo = async (id: string, header?: any) => {
     const { data } = await getPicture(id, header);
-    await this.client.watchQuery({
-      query: GET_PICTURE,
-      variables: {
-        id,
-      },
-      fetchPolicy: 'cache-and-network',
-    });
     if (!data) {
       // eslint-disable-next-line no-throw-literal
       throw {

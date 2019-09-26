@@ -26,9 +26,9 @@ export const CollectionItem: React.FC<IProps> = ({
   const { styles, colors } = useTheme();
   const { t } = useTranslation();
   const { preview, name, pictureCount } = info;
-  const one = preview[0];
-  const two = preview[1];
-  const three = preview[2];
+  const one = preview.slice()[0];
+  const two = preview.slice()[1];
+  const three = preview.slice()[2];
   const color = (currentColor?: PictureEntity) => (currentColor ? currentColor.color : styles.collection.background);
   return (
     <Collection>

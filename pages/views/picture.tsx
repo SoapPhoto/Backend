@@ -35,9 +35,9 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
-import { observer } from 'mobx-react';
 import { CollectionItem } from '@lib/containers/Collection/Item';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { observer } from 'mobx-react';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -48,7 +48,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
   const {
-    info, like, getComment, comment, addComment, updateInfo, deletePicture,
+    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
   const { user, tags } = info;
   const isOwner = (userInfo && userInfo.id === user.id) || false;
@@ -115,6 +115,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           onLike={like}
           onOk={onOk}
           deletePicture={deletePicture}
+          isCollected={isCollected}
         />
         {
           tags.length > 0

@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-import gql from 'graphql-tag';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -9,14 +8,6 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { getTitle } from '@lib/common/utils';
 import { useScreenStores } from '@lib/stores/hooks';
-
-export const ALL_POSTS_QUERY = gql`
-  query {
-    whoami {
-      id
-    }
-  }
-`;
 
 const Index: ICustomNextPage<IBaseScreenProps, {}> = () => {
   const { t } = useTranslation();

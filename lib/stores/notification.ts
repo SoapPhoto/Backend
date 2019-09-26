@@ -33,8 +33,6 @@ export class NotificationStore {
     socket.on('message', (data: any) => {
       if (data.event === 'message') {
         this.pushNotification(data.data);
-      } else {
-        console.log(data);
       }
     });
     // 连接成功后会返回未读数量

@@ -90,7 +90,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public componentWillUnmount() {
-    this.onDestroy(true);
+    this.onClose();
   }
 
   get scrollWidth() {
@@ -131,17 +131,14 @@ export class Modal extends React.PureComponent<IModalProps> {
     }
   }
 
-  public onDestroy = (isDestroy = false) => {
+  public onDestroy = () => {
     if (_modalIndex === 1) {
       enableBodyScroll(document.querySelector('body')!);
     }
     if (isFunction(this.props.afterClose)) {
       this.props.afterClose();
     }
-    if (!isDestroy) {
-      // eslint-disable-next-line no-plusplus
-      _modalIndex--;
-    }
+    _modalIndex--;
 
     this.setDestroy(true);
   }

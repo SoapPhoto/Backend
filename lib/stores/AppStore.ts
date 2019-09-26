@@ -1,4 +1,6 @@
-import { action, observable, reaction } from 'mobx';
+import {
+  action, observable, reaction, runInAction,
+} from 'mobx';
 
 import NProgress from 'nprogress';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
@@ -23,7 +25,7 @@ interface ILocation {
 }
 
 export class AppStore {
-  @observable public userCollection: CollectionEntity[] = []
+  @observable.shallow public userCollection = observable.array<CollectionEntity>([])
 
   @observable public loading = false;
 
@@ -57,12 +59,8 @@ export class AppStore {
     const { accountStore } = store;
     if (accountStore.userInfo) {
       const { data } = await getUserCollection(accountStore.userInfo.username);
-      this.setCollection(data.data);
+      runInAction(() => this.userCollection.replace(data.data));
     }
-  }
-
-  @action public setCollection = (data: CollectionEntity[]) => {
-    this.userCollection = data;
   }
 
   @action public addCollection = (data: CollectionEntity) => this.userCollection.unshift(data)
