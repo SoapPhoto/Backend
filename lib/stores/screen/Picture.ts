@@ -9,6 +9,8 @@ import {
 } from '@lib/services/picture';
 
 import { HttpStatus } from '@lib/common/enums/http';
+import { GET_PICTURE } from '@lib/schemas/query/picture';
+import { watchQuery } from '@lib/common/apollow';
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
@@ -36,6 +38,11 @@ export class PictureScreenStore extends BaseStore {
 
   public getPictureInfo = async (id: string, header?: any) => {
     const { data } = await getPicture(id, header);
+    const info = await watchQuery(this.client, {
+      query: GET_PICTURE,
+      variables: { id },
+    });
+    console.log(info);
     if (!data) {
       // eslint-disable-next-line no-throw-literal
       throw {

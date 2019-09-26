@@ -1,3 +1,1 @@
-export const picture = `
-  id
-`;
+export * from './picture';

@@ -90,7 +90,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public componentWillUnmount() {
-    this.onClose();
+    this.onDestroy();
   }
 
   get scrollWidth() {
