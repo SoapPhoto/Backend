@@ -65,6 +65,8 @@ type User implements BaseNode {
   "显示的名称"
   name: String
 
+  fullName: String
+
   "邮箱"
   email: String
 

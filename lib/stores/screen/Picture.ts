@@ -1,19 +1,22 @@
-import { action, observable, computed } from 'mobx';
+import {
+  action, observable, computed,
+} from 'mobx';
 import { merge, pick } from 'lodash';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
 import {
-  getPicture, likePicture, unlikePicture, deletePicture,
+  likePicture, unlikePicture, deletePicture,
 } from '@lib/services/picture';
 
-import { HttpStatus } from '@lib/common/enums/http';
 import { GET_PICTURE } from '@lib/schemas/query/picture';
-import { watchQuery } from '@lib/common/apollow';
+import { queryToMobxObservable } from '@lib/common/apollo';
 import { BaseStore } from '../base/BaseStore';
 
 export class PictureScreenStore extends BaseStore {
+  // @observable public gqlData: Apollo
+
   @observable public info!: PictureEntity;
 
   @observable public comment: CommentEntity[] = [];
@@ -37,21 +40,13 @@ export class PictureScreenStore extends BaseStore {
   }
 
   public getPictureInfo = async (id: string, header?: any) => {
-    const { data } = await getPicture(id, header);
-    const info = await watchQuery(this.client, {
+    await queryToMobxObservable(this.client.watchQuery<{picture: PictureEntity}>({
       query: GET_PICTURE,
       variables: { id },
+    }), (data) => {
+      console.log(data);
+      this.setInfo(data.picture);
     });
-    console.log(info);
-    if (!data) {
-      // eslint-disable-next-line no-throw-literal
-      throw {
-        statusCode: HttpStatus.NOT_FOUND,
-        message: 'no picture',
-      };
-    }
-    this.setInfo(data);
-    this.setCache(this.id, this.info);
   }
 
   @action public getComment = async () => {
@@ -83,6 +78,28 @@ export class PictureScreenStore extends BaseStore {
       const { data } = await func(this.info.id);
       this.info.isLike = data.isLike;
       this.info.likes = data.count;
+      const cacheData = this.client.readQuery({
+        query: GET_PICTURE,
+        variables: { id: this.info.id },
+      });
+      this.client.writeQuery({
+        query: GET_PICTURE,
+        variables: { id: this.info.id },
+        data: {
+          picture: {
+            ...cacheData.picture,
+            isLike: data.isLike,
+            likes: data.count,
+          },
+        },
+      });
+      setTimeout(() => {
+        const test = this.client.readQuery({
+          query: GET_PICTURE,
+          variables: { id: this.info.id },
+        });
+        console.log(data, test);
+      }, 100);
     // tslint:disable-next-line: no-empty
     } catch (err) {
       console.error(err);

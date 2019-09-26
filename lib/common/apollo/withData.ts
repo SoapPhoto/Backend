@@ -7,12 +7,25 @@ function createClient({ headers, initialState }: any) {
     cache: new InMemoryCache().restore(initialState || {}),
     request: (operation) => {
       operation.setContext({
-        headers,
+        headers: {
+          accept: 'application/json',
+          ...headers,
+        },
       });
     },
+    ...{
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+        errorPolicy: 'ignore',
+      },
+      query: {
+        fetchPolicy: 'network-only',
+        errorPolicy: 'all',
+      },
+    } as any,
   });
 }
 
 export const withApollo = withData(createClient, {
-  // getDataFromTree: 'ssr',
+  getDataFromTree: 'ssr',
 });

@@ -5,6 +5,7 @@
     "yiiu/typescript"
   ],
   "rules": {
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "max-len": ["error", 160]
   }
 }

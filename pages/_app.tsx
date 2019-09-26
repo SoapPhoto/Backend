@@ -22,7 +22,7 @@ import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
 import { initLocale, initI18n } from '@lib/i18n/utils';
 import { RouterAction } from '@lib/stores/AppStore';
 import { reaction } from 'mobx';
-import { withApollo } from '@lib/common/apollow';
+import { withApollo } from '@lib/common/apollo';
 import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
 import { BodyLayout } from '../lib/containers/BodyLayout';
 import { ThemeWrapper } from '../lib/containers/Theme';
