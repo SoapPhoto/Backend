@@ -307,7 +307,7 @@ export class CollectionService {
       .execute();
   }
 
-  public async pictureRelateCollection(pictureId: ID) {
+  public async pictureRelatedCollection(pictureId: ID) {
     const q = this.collectionEntity.createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId', { pictureId })

@@ -153,12 +153,6 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
-  @Expose()
-  public relateCollection: IRelateCollection = {
-    count: 0,
-    data: [],
-  };
-
   public info!: CollectionPictureEntity[];
 
   @Expose()

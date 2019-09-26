@@ -6,10 +6,17 @@ interface BaseNode {
   updateTime: DateTime
 }
 
-
 interface BaseList {
   count: Float
   page: Float
   pageSize: Float
   timestamp: Float
+}
+
+interface BaseCountData {
+  count: Float
+}
+
+type Status {
+  done: Boolean
 }

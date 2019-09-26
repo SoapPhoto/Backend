@@ -3,6 +3,7 @@ type Query {
   collection(
     id: ID!
   ): Collection
+
   "获取收藏夹图片列表"
   collectionPictures(
     "收藏夹id"

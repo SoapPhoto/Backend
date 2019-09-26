@@ -151,7 +151,7 @@ export class PictureService {
     if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
-    data.relateCollection = await this.collectionService.pictureRelateCollection(data.id) as any;
+    // data.relateCollection = await this.collectionService.pictureRelatedCollection(data.id) as any;
     if (!isClass) {
       return plainToClass(PictureEntity, data, {
         groups: isOwner ? [Role.OWNER] : [],
@@ -233,7 +233,7 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public delete = async (id: number, user: UserEntity) => {
+  public delete = async (id: ID, user: UserEntity) => {
     const data = await this.getOne(id);
     if (!data) {
       throw new BadRequestException();
@@ -245,7 +245,7 @@ export class PictureService {
         .where('id=:id', { id })
         .execute();
       return {
-        message: 'ok',
+        done: true,
       };
     }
     throw new ForbiddenException();

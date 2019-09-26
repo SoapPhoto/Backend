@@ -154,7 +154,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           )
         }
       </Content>
-      {
+      {/* {
         info.relateCollection.count > 0 && (
           <RelateCollection>
             <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
@@ -172,7 +172,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </OverlayScrollbarsComponent>
           </RelateCollection>
         )
-      }
+      } */}
       <Comment onConfirm={onConfirm} comment={comment} />
     </Wrapper>
   );
