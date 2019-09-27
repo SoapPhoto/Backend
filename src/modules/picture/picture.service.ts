@@ -151,7 +151,6 @@ export class PictureService {
     if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
-    console.log(user, data.currentCollections);
     // data.relateCollection = await this.collectionService.pictureRelatedCollection(data.id) as any;
     if (!isClass) {
       return plainToClass(PictureEntity, data, {

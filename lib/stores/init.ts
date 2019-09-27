@@ -43,11 +43,11 @@ export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any
   }
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
-  store.screen.userStore.update(initialState.screen.userStore);
-  store.screen.userPictureStore.update(initialState.screen.userPictureStore);
-  store.screen.userCollectionStore.update(initialState.screen.userCollectionStore);
-  store.screen.homeStore.update(initialState.screen.homeStore);
-  store.screen.tagStore.update(initialState.screen.tagStore);
+  store.screen.userStore.update(initialState.screen.userStore, apollo);
+  store.screen.userPictureStore.update(initialState.screen.userPictureStore, apollo);
+  store.screen.userCollectionStore.update(initialState.screen.userCollectionStore, apollo);
+  store.screen.homeStore.update(initialState.screen.homeStore, apollo);
+  store.screen.tagStore.update(initialState.screen.tagStore, apollo);
   store.screen.pictureStore.update(initialState.screen.pictureStore, apollo);
   store.screen.collectionStore.update(initialState.screen.collectionStore);
   return store;

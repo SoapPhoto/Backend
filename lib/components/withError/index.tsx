@@ -38,6 +38,7 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
           error = {
             statusCode: 500,
           };
+          console.error(err);
         }
       }
     }

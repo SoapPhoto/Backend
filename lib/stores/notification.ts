@@ -21,11 +21,11 @@ export class NotificationStore {
   public close = () => this.io && this.io.close()
 
   public createSocket = () => {
-    if (!this.init) {
-      this.init = true;
-      this.io = setupSocket();
-      this.message();
-    }
+    // if (!this.init) {
+    //   this.init = true;
+    //   this.io = setupSocket();
+    //   this.message();
+    // }
   }
 
   public message = () => {

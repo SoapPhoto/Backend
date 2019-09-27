@@ -22,7 +22,14 @@ declare module '*.json' {
   export default value;
 }
 
-declare module '*.gql' {
-  const value: any;
-  export default value;
+declare module '*.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  const value: DocumentNode;
+  export const Picture = DocumentNode;
+  export const Pictures = DocumentNode;
+  export const UserInfo = DocumentNode;
+  export const UserPictures = DocumentNode;
+  export const UserCollectionsByName = DocumentNode;
+  // export = value;
 }

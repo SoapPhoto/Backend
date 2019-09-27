@@ -83,6 +83,7 @@
     "next": "^9.0.6",
     "next-compose-plugins": "^2.2.0",
     "next-offline": "^4.0.5",
+    "next-plugin-graphql": "0.0.2",
     "next-routes": "^1.4.2",
     "next-with-apollo": "^4.3.0",
     "node-instagram": "^4.3.0",

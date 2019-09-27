@@ -1,5 +1,5 @@
 import {
-  Args, Context, Mutation, Query, Resolver,
+  Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent,
 } from '@nestjs/graphql';
 
 import { UseGuards, Inject, forwardRef } from '@nestjs/common';
@@ -10,8 +10,9 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { GetPictureListDto, GetUserPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { CollectionService } from '../collection/collection.service';
+import { PictureEntity } from './picture.entity';
 
-@Resolver()
+@Resolver('Picture')
 @UseGuards(AuthGuard)
 export class PictureResolver {
   constructor(
@@ -86,5 +87,13 @@ export class PictureResolver {
     @Args('id') id: ID,
   ) {
     return this.pictureService.delete(id, user);
+  }
+
+  @ResolveProperty('relatedCollections')
+  public async getAvatarSize(
+    @Parent() parent: PictureEntity,
+    @Args('limit') limit: number,
+  ) {
+    return this.collectionService.pictureRelatedCollection(parent.id, limit);
   }
 }

@@ -25,9 +25,6 @@ import {
   UserLink,
   UserName,
   Wrapper,
-  RelateCollectionList,
-  RelateCollection,
-  RelateCollectionTitle,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -35,8 +32,6 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
-import { CollectionItem } from '@lib/containers/Collection/Item';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { observer } from 'mobx-react';
 
 interface IInitialProps extends IBaseScreenProps {
@@ -51,7 +46,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
     info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
   const { user, tags } = info;
-  const isOwner = (userInfo && userInfo.id === user.id) || false;
+  const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
 
   useEffect(() => {
     getComment();
@@ -155,7 +150,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         }
       </Content>
       {/* {
-        info.relateCollection.count > 0 && (
+        info.relatedCollections.count > 0 && (
           <RelateCollection>
             <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
             <OverlayScrollbarsComponent
@@ -164,7 +159,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             >
               <RelateCollectionList>
                 {
-                  info.relateCollection.data.map(ct => (
+                  info.relatedCollections.data.map(ct => (
                     <CollectionItem key={ct.id} info={ct} />
                   ))
                 }
@@ -179,14 +174,14 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
 });
 
 Picture.getInitialProps = async ({
-  mobxStore, route, req,
+  mobxStore, route,
 }: ICustomNextContext) => {
   const { params } = route;
   const { appStore } = mobxStore;
-  const isPicture = (
-    mobxStore.screen.pictureStore.id
-    && mobxStore.screen.pictureStore.id === Number(params.id || 0)
-  );
+  // const isPicture = (
+  //   mobxStore.screen.pictureStore.id
+  //   && mobxStore.screen.pictureStore.id === Number(params.id || 0)
+  // );
   let isPop = false;
   if (appStore.location) {
     if (appStore.location.action === 'POP') isPop = true;
@@ -196,18 +191,11 @@ Picture.getInitialProps = async ({
       && /^child/g.test(appStore.location.options.state.data)
     ) isPop = true;
   }
-  if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
-    mobxStore.screen.pictureStore.getCache();
-    // mobxStore.screen.pictureStore.getPictureInfo(
-    //   params.id!,
-    //   req ? req.headers : undefined,
-    // );
+  if (isPop) {
+    await mobxStore.screen.pictureStore.getCache(params.id!);
     return {};
   }
-  await mobxStore.screen.pictureStore.getPictureInfo(
-    params.id!,
-    req ? req.headers : undefined,
-  );
+  await mobxStore.screen.pictureStore.getPictureInfo(params.id!);
   return {};
 };
 

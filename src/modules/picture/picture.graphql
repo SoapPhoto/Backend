@@ -151,6 +151,12 @@ type Picture implements BaseNode {
 
   tags: [Tag]
 
+  "是否是私人的"
+  isPrivate: Boolean
+
   "当前用户收藏了此图片的收藏夹列表"
   currentCollections: [Collection]
+
+  "当前用户收藏了此图片的收藏夹列表"
+  relatedCollections(limit: Float): PictureRelatedCollectionReq
 }

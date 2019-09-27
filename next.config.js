@@ -2,6 +2,7 @@
 const composePlugins = require('next-compose-plugins');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const withOffline = require('next-offline');
+const withGraphql = require('next-plugin-graphql');
 
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
@@ -69,6 +70,7 @@ module.exports = composePlugins(
   [
     [withOffline],
     withBundleAnalyzer,
+    withGraphql,
   ],
   nextConfig,
 );

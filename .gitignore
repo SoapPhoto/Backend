@@ -60,3 +60,5 @@ docker-data/
 static/test
 
 .idea
+
+package-lock.json

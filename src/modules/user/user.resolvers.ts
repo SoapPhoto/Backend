@@ -10,8 +10,9 @@ import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
+import { UserPictureType } from './enum/picture.type.enum';
 
-@Resolver()
+@Resolver('User')
 @UseGuards(AuthGuard)
 export class UserResolver {
   constructor(
@@ -40,18 +41,26 @@ export class UserResolver {
   public async userPicturesByName(
     @Context('user') user: Maybe<UserEntity>,
     @Args('username') username: string,
+    @Args('type') type: UserPictureType,
     @Args() query: GetPictureListDto,
   ) {
-    return this.userService.getUserPicture(username, query, user);
+    if (type === UserPictureType.MY) {
+      return this.userService.getUserPicture(username, query, user);
+    }
+    return this.userService.getUserLikePicture(username, query, user);
   }
 
   @Query()
   public async userPicturesById(
     @Context('user') user: Maybe<UserEntity>,
-    @Args('id') username: string,
+    @Args('id') id: string,
+    @Args('type') type: UserPictureType,
     @Args() query: GetPictureListDto,
   ) {
-    return this.userService.getUserPicture(username, query, user);
+    if (type === UserPictureType.MY) {
+      return this.userService.getUserPicture(id, query, user);
+    }
+    return this.userService.getUserLikePicture(id, query, user);
   }
 
   @Query()
@@ -71,4 +80,12 @@ export class UserResolver {
   ) {
     return this.collectionService.getUserCollectionList(id, query, user);
   }
+
+  // @ResolveProperty('avatar')
+  // public async getAvatarSize(
+  //   @Parent() parent: any,
+  //   @Args() data: string,
+  // ) {
+  //   console.log(12312, parent, data);
+  // }
 }

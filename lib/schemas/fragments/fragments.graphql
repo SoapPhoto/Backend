@@ -1,0 +1,121 @@
+# -------------------- Picture
+fragment PictureFragment on Picture {
+  id
+  key
+  hash
+  title
+  bio
+  views
+  originalname
+  mimetype
+  size
+  isLike
+  likes
+  color
+  isDark
+  height
+  width
+  make
+  model
+  createTime
+  updateTime
+  isPrivate
+}
+
+fragment RelatedCollectionFragment on PictureRelatedCollectionReq {
+    count
+    data {
+      ...CollectionFragment
+    }
+}
+
+fragment UserFragment on User {
+  id
+  username
+  fullName
+  name
+  email
+  avatar
+  bio
+  website
+  likes
+  pictureCount
+  createTime
+  updateTime
+}
+
+fragment TagFragment on Tag {
+  id
+  name
+  createTime
+  updateTime
+}
+
+fragment CollectionFragment on Collection {
+  id
+  name
+  bio
+  isPrivate
+  pictureCount
+  createTime
+  updateTime
+}
+
+fragment EXIFFragment on EXIF {
+  aperture
+  exposureTime
+  focalLength
+  iso
+}
+
+fragment PictureDetailFragment on Picture {
+    ...PictureFragment
+    currentCollections {
+      ...CollectionFragment
+    }
+    relatedCollections(limit: 3) {
+      ...RelatedCollectionFragment
+    }
+    user {
+      ...UserFragment
+    }
+    tags {
+      ...TagFragment
+    }
+    exif {
+      ...EXIFFragment
+    }
+}
+
+fragment PictureListFragment on Pictures {
+    count
+    page
+    pageSize
+    data {
+      ...PictureFragment
+      currentCollections {
+        ...CollectionFragment
+      }
+      user {
+        ...UserFragment
+      }
+      exif {
+        ...EXIFFragment
+      }
+    }
+}
+
+fragment CollectionListFragment on Collections {
+  count
+  page
+  pageSize
+  data {
+    ...CollectionFragment
+    user {
+      ...UserFragment
+    }
+    preview {
+      ...PictureFragment
+    }
+  }
+}

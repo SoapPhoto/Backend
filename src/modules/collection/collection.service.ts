@@ -307,14 +307,14 @@ export class CollectionService {
       .execute();
   }
 
-  public async pictureRelatedCollection(pictureId: ID) {
+  public async pictureRelatedCollection(pictureId: ID, limit = 3) {
     const q = this.collectionEntity.createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId', { pictureId })
       .andWhere('ct.isPrivate=0')
       .select('ct.id');
     const [idList, count] = await Promise.all([
-      q.limit(3)
+      q.limit(limit)
         .offset(0)
         .getRawMany(),
       q.getCount(),

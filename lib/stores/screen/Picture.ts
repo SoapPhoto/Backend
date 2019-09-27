@@ -10,9 +10,13 @@ import {
   likePicture, unlikePicture, deletePicture,
 } from '@lib/services/picture';
 
-import { GET_PICTURE } from '@lib/schemas/query/picture';
+import { Picture } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { BaseStore } from '../base/BaseStore';
+
+interface IPictureGqlReq {
+  picture: PictureEntity;
+}
 
 export class PictureScreenStore extends BaseStore {
   // @observable public gqlData: Apollo
@@ -23,10 +27,8 @@ export class PictureScreenStore extends BaseStore {
 
   @observable public id!: number;
 
-  public cacheData: Record<string, PictureEntity> = {};
-
   @action public setInfo = (data: PictureEntity) => {
-    this.id = data.id;
+    this.id = Number(data.id);
     this.info = data;
   }
 
@@ -39,12 +41,12 @@ export class PictureScreenStore extends BaseStore {
     return !!(this.info && this.info.currentCollections.length > 0);
   }
 
-  public getPictureInfo = async (id: string, header?: any) => {
+  public getPictureInfo = async (id: ID) => {
     await queryToMobxObservable(this.client.watchQuery<{picture: PictureEntity}>({
-      query: GET_PICTURE,
+      query: Picture,
       variables: { id },
+      fetchPolicy: 'cache-and-network',
     }), (data) => {
-      console.log(data);
       this.setInfo(data.picture);
     });
   }
@@ -61,7 +63,6 @@ export class PictureScreenStore extends BaseStore {
 
   public deletePicture = async () => {
     await deletePicture(this.id);
-    delete this.cacheData[this.id];
   }
 
   @action public pushComment = (comment: CommentEntity) => {
@@ -78,48 +79,55 @@ export class PictureScreenStore extends BaseStore {
       const { data } = await func(this.info.id);
       this.info.isLike = data.isLike;
       this.info.likes = data.count;
-      const cacheData = this.client.readQuery({
-        query: GET_PICTURE,
+      const cacheData = this.client.readQuery<IPictureGqlReq>({
+        query: Picture,
         variables: { id: this.info.id },
       });
       this.client.writeQuery({
-        query: GET_PICTURE,
+        query: Picture,
         variables: { id: this.info.id },
         data: {
           picture: {
-            ...cacheData.picture,
+            ...cacheData!.picture,
             isLike: data.isLike,
             likes: data.count,
           },
         },
       });
-      setTimeout(() => {
-        const test = this.client.readQuery({
-          query: GET_PICTURE,
-          variables: { id: this.info.id },
-        });
-        console.log(data, test);
-      }, 100);
     // tslint:disable-next-line: no-empty
     } catch (err) {
       console.error(err);
     }
   }
 
-  public setCache = (id: ID, data: PictureEntity) => {
-    this.cacheData[id] = data;
-  }
-
-  public getCache = (type = '') => {
-    if (this.cacheData[type]) {
-      this.setInfo(this.cacheData[type]);
+  public getCache = async (id: ID) => {
+    const data = this.client.readQuery<IPictureGqlReq>({
+      query: Picture,
+      variables: { id },
+    });
+    if (!data) {
+      await this.getPictureInfo(id);
+    } else {
+      this.setInfo(data.picture);
     }
   }
 
-  public isCache = (type = '') => this.cacheData[type] !== undefined;
-
   public updateInfo = (picture: PictureEntity) => {
-    const data = merge(this.info, pick(picture, ['title', 'bio', 'tags', 'isPrivate']));
-    this.setInfo(data);
+    const cacheData = this.client.readQuery<IPictureGqlReq>({
+      query: Picture,
+      variables: { id: this.info.id },
+    });
+    const newData = pick(picture, ['title', 'bio', 'tags', 'isPrivate']);
+    this.client.writeQuery({
+      query: Picture,
+      variables: { id: this.info.id },
+      data: {
+        picture: {
+          ...cacheData!.picture,
+          ...newData,
+        },
+      },
+    });
+    this.setInfo(merge(this.info, newData));
   }
 }

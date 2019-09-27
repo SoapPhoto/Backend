@@ -25,6 +25,9 @@ type Tag implements BaseNode {
   "标签名称"
   name: String
 
+  "图片数量"
+  pictureCount: Float
+
   createTime: DateTime
   updateTime: DateTime
 }

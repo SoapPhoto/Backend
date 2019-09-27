@@ -1,8 +1,14 @@
 import { action, observable } from 'mobx';
 
-import { request } from '@lib/common/utils/request';
 import { CollectionEntity, ICollectionListRequest } from '@lib/common/interfaces/collection';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { omit } from 'lodash';
+import { UserCollectionsByName } from '@lib/schemas/query';
 import { ListStore } from '../base/ListStore';
+
+interface IUserCollectionsGqlReq {
+  userCollectionsByName: ICollectionListRequest;
+}
 
 export class UserScreenCollectionList extends ListStore<CollectionEntity> {
   public cacheList: Record<string, ICollectionListRequest> = {};
@@ -23,17 +29,18 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity> {
     };
   }
 
-  public getList = async (username: string, headers: any) => {
+  public getList = async (username: string) => {
     this.username = username;
-    this.initQuery();
-    const { data } = await request.get<ICollectionListRequest>(
-      `/api/user/${username}/collection`,
-      { headers: headers || {}, params: this.listQuery },
-    );
-    this.setData(data);
-    this.setCache(username, {
-      ...data,
-      data: this.list,
+    // this.initQuery();
+    await queryToMobxObservable(this.client.watchQuery<IUserCollectionsGqlReq>({
+      query: UserCollectionsByName,
+      variables: {
+        username,
+        ...omit(this.listQuery, ['timestamp']),
+      },
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setData(data.userCollectionsByName);
     });
   }
 
@@ -47,18 +54,5 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity> {
     this.listQuery.page = data.page;
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
-  }
-
-  public setCache = (username: string, data: ICollectionListRequest) => {
-    this.cacheList[username] = data;
-  }
-
-  public isCache = (username: string) => !!this.cacheList[username];
-
-  public getCache = (username = '') => {
-    const data = this.cacheList[username];
-    if (data) {
-      this.setData(data);
-    }
   }
 }

@@ -1,13 +1,19 @@
+import { action, observable } from 'mobx';
+
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { request } from '@lib/common/utils/request';
 import { likePicture, unlikePicture } from '@lib/services/picture';
-import { action, observable } from 'mobx';
 import { UserType } from '@common/enum/router';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { UserPictures } from '@lib/schemas/query';
+import { omit } from 'lodash';
 import { ListStore } from '../base/ListStore';
 
-export class UserScreenPictureList extends ListStore<PictureEntity> {
-  public cacheList: Record<string, IPictureListRequest> = {};
+interface IUserPicturesGqlReq {
+  userPicturesByName: IPictureListRequest;
+}
 
+export class UserScreenPictureList extends ListStore<PictureEntity> {
   @observable public username = '';
 
   @observable public type?: UserType;
@@ -26,18 +32,20 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     };
   }
 
-  public getList = async (username: string, type?: UserType, headers?: any) => {
+  public getList = async (username: string, type?: UserType) => {
     this.type = type;
     this.username = username;
-    this.initQuery();
-    const { data } = await request.get<IPictureListRequest>(
-      `/api/user/${username}/picture/${this.type || ''}`,
-      { headers: headers || {}, params: this.listQuery },
-    );
-    this.setData(data);
-    this.setCache(username, type, {
-      ...data,
-      data: this.list,
+    // this.initQuery();
+    await queryToMobxObservable(this.client.watchQuery<IUserPicturesGqlReq>({
+      query: UserPictures,
+      variables: {
+        username,
+        ...omit(this.listQuery, ['timestamp']),
+        type: type === UserType.like ? 'LIKED' : 'MY',
+      },
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setData(data.userPicturesByName);
     });
   }
 
@@ -56,10 +64,6 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
       },
     );
     this.setData(data, true);
-    this.setCache(this.username, this.type, {
-      ...data,
-      data: this.list,
-    });
   }
 
   @action public setData = (data: IPictureListRequest, plus = false) => {
@@ -73,21 +77,6 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
   }
-
-  public setCache = (username: string, type: UserType | undefined, data: IPictureListRequest) => {
-    this.cacheList[`${username}-${type || ''}`] = data;
-  }
-
-  public getCache = (username: string, type: UserType | undefined) => {
-    if (this.cacheList[`${username}-${type || ''}`]) {
-      this.setData(this.cacheList[`${username}-${type || ''}`]);
-    }
-  }
-
-  public isCache = (
-    username: string,
-    type: UserType | undefined,
-  ) => this.cacheList[`${username}-${type || ''}`] !== undefined;
 
   @action
   public like = async (picture: PictureEntity) => {

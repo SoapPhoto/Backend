@@ -1,3 +1,8 @@
+enum UserPictureType {
+  MY
+  LIKED
+}
+
 type Query {
   "获取登录用户信息"
   whoami: User
@@ -31,6 +36,8 @@ type Query {
   ): Collections
 
   userPicturesByName(
+    "类型"
+    type: UserPictureType = MY
     "用户名"
     username: String!
     "分页"
@@ -41,6 +48,8 @@ type Query {
     timestamp: Float
   ): Pictures
   userPicturesById(
+    "类型"
+    type: UserPictureType = MY
     "id"
     id: ID!
     "分页"
@@ -71,7 +80,7 @@ type User implements BaseNode {
   email: String
 
   "用户头像"
-  avatar: String
+  avatar(size: Float): String
 
   "个人介绍"
   bio: String

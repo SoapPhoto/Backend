@@ -10,7 +10,7 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { CommentService } from './comment.service';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 
-@Resolver()
+@Resolver('Comment')
 @UseGuards(AuthGuard)
 export class CommentResolver {
   constructor(
@@ -18,7 +18,7 @@ export class CommentResolver {
   ) {}
 
   @Query()
-  public async pictureComments(
+  public async comments(
     @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args() query: GetPictureCommentListDto,

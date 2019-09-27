@@ -33,7 +33,7 @@ Index.getInitialProps = async (_: ICustomNextContext) => {
   ) {
     return {};
   }
-  await _.mobxStore.screen.homeStore.getList(undefined, _.req ? _.req.headers : undefined);
+  await _.mobxStore.screen.homeStore.getList();
   // eslint-disable-next-line no-throw-literal
   return {};
 };
