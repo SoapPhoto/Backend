@@ -31,5 +31,6 @@ declare module '*.graphql' {
   export const UserInfo = DocumentNode;
   export const UserPictures = DocumentNode;
   export const UserCollectionsByName = DocumentNode;
+  export const UpdatePicture = DocumentNode;
   // export = value;
 }

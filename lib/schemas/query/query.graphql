@@ -6,7 +6,7 @@ query Picture($id: ID!) {
   }
 }
 
-query Pictures($page: Float = 1, $pageSize: Float = 30, $timestamp: Float) {
+query Pictures($page: Float, $pageSize: Float, $timestamp: Float) {
   pictures(page: $page, pageSize: $pageSize, timestamp: $timestamp) {
     ...PictureListFragment
   }
@@ -18,13 +18,13 @@ query UserInfo($username: String) {
   }
 }
 
-query UserPictures($type: UserPictureType = MY, $username: String!, $page: Float = 1, $pageSize: Float = 30, $timestamp: Float) {
+query UserPictures($type: UserPictureType = MY, $username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
   userPicturesByName(type: $type, username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
     ...PictureListFragment
   }
 }
 
-query UserCollectionsByName($username: String!, $page: Float = 1, $pageSize: Float = 30, $timestamp: Float) {
+query UserCollectionsByName($username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
   userCollectionsByName(username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
     ...CollectionListFragment
   }

@@ -8,8 +8,9 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { getTitle } from '@lib/common/utils';
 import { useScreenStores } from '@lib/stores/hooks';
+import { observer } from 'mobx-react';
 
-const Index: ICustomNextPage<IBaseScreenProps, {}> = () => {
+const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   const { t } = useTranslation();
   const { homeStore } = useScreenStores();
   const {
@@ -23,7 +24,7 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = () => {
       <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
     </div>
   );
-};
+});
 
 Index.getInitialProps = async (_: ICustomNextContext) => {
   if (

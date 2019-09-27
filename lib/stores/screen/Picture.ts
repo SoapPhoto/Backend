@@ -101,14 +101,18 @@ export class PictureScreenStore extends BaseStore {
   }
 
   public getCache = async (id: ID) => {
-    const data = this.client.readQuery<IPictureGqlReq>({
-      query: Picture,
-      variables: { id },
-    });
-    if (!data) {
+    try {
+      const data = this.client.readQuery<IPictureGqlReq>({
+        query: Picture,
+        variables: { id },
+      });
+      if (data) {
+        this.setInfo(data.picture);
+      } else {
+        throw new Error();
+      }
+    } catch {
       await this.getPictureInfo(id);
-    } else {
-      this.setInfo(data.picture);
     }
   }
 

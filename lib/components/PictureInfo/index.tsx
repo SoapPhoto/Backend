@@ -15,12 +15,13 @@ import {
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { updatePicture } from '@lib/services/picture';
 import { useRouter } from '@lib/router/useRouter';
 import { Histore } from '@lib/common/utils';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { observer } from 'mobx-react';
+import { useMutation } from '@apollo/react-hooks';
+import { UpdatePicture } from '@lib/schemas/mutations';
 
 interface IProps {
   info: PictureEntity;
@@ -48,6 +49,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
   const [editVisible, setEditVisible] = useState(false);
   const { isLogin } = useAccountStore();
   const { colors } = useTheme();
+  const [update] = useMutation<{updatePicture: PictureEntity}>(UpdatePicture);
   const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
     let func = pushRoute;
     if (replace) func = replaceRoute;
@@ -114,7 +116,15 @@ export const PictureInfo: React.FC<IProps> = observer(({
     push('setting', true);
   }, [push]);
 
-  const update = async (data: UpdatePictureDot) => updatePicture(info.id, data);
+  const updatePicture = async (data: UpdatePictureDot) => {
+    const req = await update({
+      variables: {
+        id: info.id,
+        data,
+      },
+    });
+    return req.data!.updatePicture;
+  };
   return (
     <PictureBaseInfo>
       <div>
@@ -181,7 +191,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
           tags: info.tags.map(tag => tag.name),
         }}
         onOk={onOk}
-        update={update}
+        update={updatePicture}
         deletePicture={deletePicture}
       />
       <EXIFModal

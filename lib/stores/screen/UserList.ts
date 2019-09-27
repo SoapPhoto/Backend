@@ -49,6 +49,22 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     });
   }
 
+  @action public getCache = async (username: string, type?: UserType) => {
+    const data = this.client.readQuery<IUserPicturesGqlReq>({
+      query: UserPictures,
+      variables: {
+        username,
+        ...omit(this.listQuery, ['timestamp']),
+        type: type === UserType.like ? 'LIKED' : 'MY',
+      },
+    });
+    if (!data) {
+      await this.getList(username, type);
+    } else {
+      this.setData(data.userPicturesByName);
+    }
+  }
+
   public getPageList = async () => {
     const page = this.listQuery.page + 1;
     if (page > this.maxPage) {

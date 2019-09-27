@@ -15,7 +15,7 @@ export class UserScreenStore extends BaseStore {
 
   @observable public user!: UserEntity;
 
-  @observable public username = '';
+  @observable public username?: string;
 
   @observable public actived = false;
 
@@ -36,5 +36,17 @@ export class UserScreenStore extends BaseStore {
     }), (data) => {
       runInAction(() => this.user = data.user);
     });
+  }
+
+  @action public getCache = async (username: string) => {
+    const data = this.client.readQuery<IUserGqlReq>({
+      query: UserInfo,
+      variables: { username },
+    });
+    if (!data) {
+      await this.getUserInfo(username);
+    } else {
+      runInAction(() => this.user = data.user);
+    }
   }
 }

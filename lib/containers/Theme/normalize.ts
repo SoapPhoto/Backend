@@ -10,6 +10,7 @@ const normalize = () => css`
     line-height: 1.15; /* 1 */
     -ms-text-size-adjust: 100%; /* 2 */
     -webkit-text-size-adjust: 100%; /* 2 */
+    font-size: 14px;
   }
   body {
     font-size: ${prop => prop.theme.fontSizes[1]}px !important;

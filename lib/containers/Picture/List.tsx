@@ -11,6 +11,7 @@ import { debounce } from 'lodash';
 import useMedia from '@lib/common/utils/useMedia';
 import { Empty } from '@lib/components/Empty';
 import { customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { observer } from 'mobx-react';
 import { PictureContent, Wrapper } from './styles';
 import Col from './Col';
 
@@ -53,7 +54,7 @@ const colArr = mediaArr.map(media => media.col);
 
 const OFFSET = 700;
 
-export const PictureList: React.FC<IProps> = ({
+export const PictureList: React.FC<IProps> = observer(({
   data,
   like,
   onPage,
@@ -128,4 +129,4 @@ export const PictureList: React.FC<IProps> = ({
       <Empty loading={!noMore} />
     </Wrapper>
   );
-};
+});

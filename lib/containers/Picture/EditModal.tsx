@@ -81,7 +81,7 @@ export const EditPictureModal: React.FC<IProps> = ({
     setSubmitting(false);
     setConfirmLoading(true);
     try {
-      const { data } = await update(value);
+      const data = await update(value);
       onClose();
       onOk(data);
       Toast.success(t('update_sccuess'));

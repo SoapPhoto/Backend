@@ -13,16 +13,6 @@ function createClient({ headers, initialState }: any) {
         },
       });
     },
-    ...{
-      watchQuery: {
-        fetchPolicy: 'cache-and-network',
-        errorPolicy: 'ignore',
-      },
-      query: {
-        fetchPolicy: 'network-only',
-        errorPolicy: 'all',
-      },
-    } as any,
   });
 }
 

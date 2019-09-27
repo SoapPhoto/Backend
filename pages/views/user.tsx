@@ -161,26 +161,35 @@ class User extends React.Component<IProps> {
 }
 
 User.getInitialProps = async ({
-  mobxStore, req, route,
+  mobxStore, route,
 }: ICustomNextContext) => {
   const { params } = route;
   const { username, type } = params as { username: string; type: UserType };
+  const { appStore, screen } = mobxStore;
+  const { userCollectionStore, userPictureStore, userStore } = screen;
+  const { location } = appStore;
   let error: {
     message: string;
     statusCode: number;
   } | undefined;
   const all = [];
   const arg: [string, UserType] = [username!, type!];
-  const isPop = mobxStore.appStore.location && mobxStore.appStore.location.action === 'POP' && !server;
-  await mobxStore.screen.userStore.getInit(...arg);
+  const isPop = location && location.action === 'POP' && !server;
+  if (!(userStore.username && userStore.username === username)) {
+    if (isPop) {
+      all.push(userStore.getCache(username));
+    } else {
+      all.push(userStore.getInit(...arg));
+    }
+  }
   switch (type!) {
     case UserType.collections:
       all.push(
-        mobxStore.screen.userCollectionStore.getList(username!),
+        userCollectionStore.getList(username!),
       );
       break;
     default:
-      all.push(mobxStore.screen.userPictureStore.getList(...arg));
+      all.push(isPop ? userPictureStore.getCache(...arg) : userPictureStore.getList(...arg));
   }
   await Promise.all(all);
   return {

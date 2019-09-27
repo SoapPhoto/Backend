@@ -13,11 +13,12 @@ interface IPictureGqlReq {
 }
 
 export class HomeScreenStore extends ListStore<PictureEntity> {
+  public init = false
+
   @observable private reqUrl = '/api/picture';
 
   constructor() {
     super();
-    this.initQuery();
   }
 
   @action public setUrl = (url: string) => {
@@ -28,17 +29,20 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     this.listQuery = {
       page: 1,
       pageSize: Number(process.env.LIST_PAGE_SIZE),
-      timestamp: Number(Date.parse(new Date().toISOString())),
+      timestamp: this.init ? this.listQuery.timestamp : Number(Date.parse(new Date().toISOString())),
     };
   }
 
   @action
   public getList = async (query?: Partial<IBaseQuery>, plus = false) => {
+    if (!plus) {
+      this.initQuery();
+    }
     this.init = true;
     await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
       query: Pictures,
       variables: {
-        ...omit(this.listQuery, plus ? [] : ['timestamp']),
+        ...this.listQuery,
         ...query,
       },
       fetchPolicy: 'cache-and-network',
@@ -60,7 +64,33 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
   @action
   public setData = (data: IPictureListRequest, plus: boolean) => {
     if (plus) {
-      this.list = this.list.concat(data.data);
+      try {
+        runInAction(() => {
+          this.list = this.list.concat(data.data);
+        });
+        const cacheData = this.client.readQuery<IPictureGqlReq>({
+          query: Pictures,
+          variables: {
+            ...this.listQuery,
+            page: 1,
+          },
+        });
+        if (cacheData) {
+          cacheData.pictures.data = cacheData.pictures.data.concat(data.data);
+          cacheData.pictures.page = data.page;
+          cacheData.pictures.pageSize = data.pageSize;
+          this.client.writeQuery<IPictureGqlReq>({
+            query: Pictures,
+            variables: {
+              ...this.listQuery,
+              page: 1,
+            },
+            data: cacheData,
+          });
+        }
+      } catch (err) {
+        return err;
+      }
     } else {
       this.list = data.data;
     }

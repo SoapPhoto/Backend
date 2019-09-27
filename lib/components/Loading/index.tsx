@@ -20,20 +20,22 @@ const animate = keyframes`
 `;
 
 export const Box = styled.div<{size: number; color?: string}>`
-  display: flex;
-  align-items: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
   justify-content: center;
+  align-items: center;
   & span {
     animation-name: ${animate};
     animation-duration: 1.4s;
     animation-iteration-count: infinite;
     animation-fill-mode: both;
-    width: ${_ => rem(_.size)};
-    height: ${_ => rem(_.size)};
+    width: ${_ => _.size}px;
+    height: ${_ => _.size}px;
     background-color: ${_ => _.color || _.theme.colors.text};
     display: inline-block;
-    border-radius: 50%;
-    margin: 0px ${_ => rem(_.size / 2)};
+    border-radius: 100%;
+    margin: 0px ${_ => _.size / 2}px;
     &:nth-child(2) {
       animation-delay: 0.2s;
     }
@@ -44,7 +46,7 @@ export const Box = styled.div<{size: number; color?: string}>`
 `;
 
 export const Loading: React.FC<ILoadingProps> = ({
-  size = 4,
+  size = 6,
   color,
 }) => (
   <Box size={size} color={color}>
