@@ -42,7 +42,7 @@ const ValidatorEmail: ICustomNextPage<IProps, IProps> = ({ info }) => {
   );
 };
 
-ValidatorEmail.getInitialProps = async (ctx) => {
+ValidatorEmail.getInitialProps = async (ctx: any) => {
   try {
     await validatorEmail(ctx.query);
     return {};

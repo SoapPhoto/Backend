@@ -49,7 +49,6 @@ fragment UpdatePictureFragment on Picture {
   }
 }
 
-
 fragment PictureListFragment on Pictures {
     count
     page

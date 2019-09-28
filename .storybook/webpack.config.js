@@ -5,11 +5,17 @@ const path = require('path');
 module.exports = ({ config }) => {
   config.module.rules.push({
     test: /\.(ts|tsx)$/,
-    loader: require.resolve("babel-loader"),
+    loader: require.resolve('babel-loader'),
     options: {
-      presets: [require.resolve("babel-preset-react-app")],
+      babelrc: true,
     },
   });
+  config.module.rules.push(
+    {
+      test: /\.(graphql|gql)$/,
+      exclude: /node_modules/,
+      loader: require.resolve('graphql-tag/loader'),
+    });
 
   config.resolve.extensions.push(".ts", ".tsx");
 
