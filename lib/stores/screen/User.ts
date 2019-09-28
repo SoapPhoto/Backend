@@ -39,14 +39,18 @@ export class UserScreenStore extends BaseStore {
   }
 
   @action public getCache = async (username: string) => {
-    const data = this.client.readQuery<IUserGqlReq>({
-      query: UserInfo,
-      variables: { username },
-    });
-    if (!data) {
+    try {
+      const data = this.client.readQuery<IUserGqlReq>({
+        query: UserInfo,
+        variables: { username },
+      });
+      if (!data) {
+        await this.getUserInfo(username);
+      } else {
+        runInAction(() => this.user = data.user);
+      }
+    } catch {
       await this.getUserInfo(username);
-    } else {
-      runInAction(() => this.user = data.user);
     }
   }
 }

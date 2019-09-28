@@ -5,7 +5,6 @@ import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/pictu
 import { Pictures } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { likePicture, unlikePicture } from '@lib/services/picture';
-import { omit } from 'lodash';
 import { ListStore } from '../base/ListStore';
 
 interface IPictureGqlReq {
@@ -13,7 +12,7 @@ interface IPictureGqlReq {
 }
 
 export class HomeScreenStore extends ListStore<PictureEntity> {
-  public init = false
+  public listInit = false
 
   @observable private reqUrl = '/api/picture';
 
@@ -38,17 +37,19 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     if (!plus) {
       this.initQuery();
     }
-    this.init = true;
-    await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
-      query: Pictures,
-      variables: {
-        ...this.listQuery,
-        ...query,
-      },
-      fetchPolicy: 'cache-and-network',
-    }), (data) => {
-      this.setData(data.pictures, plus);
-    });
+    if (!this.listInit) {
+      await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
+        query: Pictures,
+        variables: {
+          ...this.listQuery,
+          ...query,
+        },
+        fetchPolicy: 'cache-and-network',
+      }), (data) => {
+        this.listInit = true;
+        this.setData(data.pictures, plus);
+      });
+    }
   }
 
   public getPageList = async () => {
@@ -89,7 +90,7 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
           });
         }
       } catch (err) {
-        return err;
+        return;
       }
     } else {
       this.list = data.data;
