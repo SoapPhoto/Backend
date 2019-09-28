@@ -1,8 +1,8 @@
 {
-  "name": "project-name",
-  "version": "0.0.1",
+  "name": "soap",
+  "version": "0.0.4",
   "description": "",
-  "author": "",
+  "author": "Yiiu <yu.gintoki@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "npm-run-all --parallel build:*",
@@ -23,7 +23,9 @@
     "storybook": "start-storybook",
     "lint": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx --ignore-pattern .eslintignore",
     "lint:fix": "eslint src/** lib/** pages/** common/** --ext .ts,.tsx --fix",
-    "commitlint": "commitlint -E HUSKY_GIT_PARAMS"
+    "commitlint": "commitlint -E HUSKY_GIT_PARAMS",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -w -r 0",
+    "release": "standard-version"
   },
   "dependencies": {
     "@nest-modules/mailer": "^1.1.3",
