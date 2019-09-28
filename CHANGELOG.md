@@ -1,3 +1,19 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.0.4-alpha.0](https://github.com/Yiiu/soapBE/compare/v0.0.3...v0.0.4-alpha.0) (2019-09-28)
+
+
+### Bug Fixes
+
+* user setting avatar bug ([7fff605](https://github.com/Yiiu/soapBE/commit/7fff605))
+
+
+### Features
+
+* Add Relate Collection ([c9f7683](https://github.com/Yiiu/soapBE/commit/c9f7683))
+
 ## [0.0.3](https://github.com/Yiiu/soapBE/compare/v0.0.2...v0.0.3) (2019-09-23)
 
 
@@ -53,6 +69,3 @@
 * github oauth ([9240020](https://github.com/Yiiu/soapBE/commit/9240020))
 * github oauth ([f3b625e](https://github.com/Yiiu/soapBE/commit/f3b625e))
 * next init ([6d78f47](https://github.com/Yiiu/soapBE/commit/6d78f47))
-
-
-
