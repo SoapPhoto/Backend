@@ -24,14 +24,13 @@ import { initLocale, initI18n } from '@lib/i18n/utils';
 import { RouterAction } from '@lib/stores/AppStore';
 import { reaction } from 'mobx';
 import { withApollo } from '@lib/common/apollo';
-import { getCurrentTheme, ThemeType } from '../lib/common/utils/themes';
-import { BodyLayout } from '../lib/containers/BodyLayout';
-import { ThemeWrapper } from '../lib/containers/Theme';
-import { Router } from '../lib/routes';
+import { getCurrentTheme, ThemeType } from '@lib/common/utils/themes';
+import { BodyLayout } from '@lib/containers/BodyLayout';
+import { ThemeWrapper } from '@lib/containers/Theme';
+import { Router } from '@lib/routes';
 import {
   IInitialStore, IMyMobxStore, initStore, store,
-} from '../lib/stores/init';
-
+} from '@lib/stores/init';
 
 interface IProps extends WithApolloProps<any> {
   i18n: II18nValue;

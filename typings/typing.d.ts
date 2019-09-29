@@ -1,3 +1,6 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/newline-after-import */
+
 declare module 'oauth2-server';
 declare module 'oauth2-server/lib/handlers/token-handler';
 
@@ -22,10 +25,9 @@ declare module '*.json' {
   export default value;
 }
 
-declare module '*.graphql' {
+declare module '*/query.graphql' {
   import { DocumentNode } from 'graphql';
 
-  const value: DocumentNode;
   export const Picture = DocumentNode;
   export const Pictures = DocumentNode;
   export const UserInfo = DocumentNode;
@@ -34,4 +36,16 @@ declare module '*.graphql' {
   export const UpdatePicture = DocumentNode;
   export const Whoami = DocumentNode;
   // export = value;
+}
+declare module '*/mutations.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  const value: import('graphql').DocumentNode;
+  export const UpdatePicture = DocumentNode;
+}
+
+declare module '*/fragments.graphql' {
+
+  const value: import('graphql').DocumentNode;
+  export default value;
 }

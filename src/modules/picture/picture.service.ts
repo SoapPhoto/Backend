@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass } from 'class-transformer';
+import { classToPlain, classToClass } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -45,7 +45,7 @@ export class PictureService {
     const createData = await this.pictureRepository.save(
       this.pictureRepository.create(data),
     );
-    return classToPlain(createData);
+    return classToClass(createData, { groups: [Role.OWNER] });
   }
 
   public update = async (id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) => {
@@ -65,12 +65,14 @@ export class PictureService {
     } else {
       updateData.tags = [];
     }
-    return this.pictureRepository.save(
+    return classToClass(await this.pictureRepository.save(
       this.pictureRepository.merge(
         picture,
         updateData,
       ),
-    );
+    ), {
+      groups: [Role.OWNER],
+    });
   }
 
   /**
@@ -82,7 +84,7 @@ export class PictureService {
     const [data, count] = await this.selectList(user, query)
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
-    return listRequest(query, classToPlain(data), count);
+    return listRequest(query, data, count);
   }
 
   /**
@@ -153,7 +155,7 @@ export class PictureService {
     }
     // data.relateCollection = await this.collectionService.pictureRelatedCollection(data.id) as any;
     if (!isClass) {
-      return plainToClass(PictureEntity, data, {
+      return classToClass(data, {
         groups: isOwner ? [Role.OWNER] : [],
       });
     }
@@ -194,7 +196,7 @@ export class PictureService {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, classToPlain(data, {
+    return listRequest(query, classToClass(data, {
       groups: isOwner ? [Role.OWNER] : undefined,
     }), count);
   }

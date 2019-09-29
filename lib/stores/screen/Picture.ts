@@ -12,6 +12,7 @@ import {
 
 import { Picture } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import Fragments from '@lib/schemas/fragments';
 import { BaseStore } from '../base/BaseStore';
 
 interface IPictureGqlReq {
@@ -117,21 +118,25 @@ export class PictureScreenStore extends BaseStore {
   }
 
   public updateInfo = (picture: PictureEntity) => {
-    const cacheData = this.client.readQuery<IPictureGqlReq>({
-      query: Picture,
-      variables: { id: this.info.id },
+    const cacheData = this.client.readFragment<PictureEntity>({
+      fragment: Fragments,
+      fragmentName: 'PictureDetailFragment',
+      id: `Picture:${this.info.id.toString()}`,
     });
     const newData = pick(picture, ['title', 'bio', 'tags', 'isPrivate']);
-    this.client.writeQuery({
-      query: Picture,
-      variables: { id: this.info.id },
-      data: {
-        picture: {
-          ...cacheData!.picture,
-          ...newData,
+    if (cacheData) {
+      this.client.writeFragment({
+        fragment: Fragments,
+        fragmentName: 'PictureDetailFragment',
+        id: `Picture:${this.info.id.toString()}`,
+        data: {
+          picture: {
+            ...cacheData,
+            ...newData,
+          },
         },
-      },
-    });
+      });
+    }
     this.setInfo(merge(this.info, newData));
   }
 }
