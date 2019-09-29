@@ -42,6 +42,8 @@ declare module '*/mutations.graphql' {
 
   const value: import('graphql').DocumentNode;
   export const UpdatePicture = DocumentNode;
+  export const LikePicture = DocumentNode;
+  export const UnLikePicture = DocumentNode;
 }
 
 declare module '*/fragments.graphql' {

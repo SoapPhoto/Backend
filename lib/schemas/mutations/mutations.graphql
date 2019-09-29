@@ -5,3 +5,15 @@ mutation UpdatePicture($data: UpdatePictureInput!, $id: ID!) {
     ...UpdatePictureFragment
   }
 }
+
+mutation LikePicture($id: ID!) {
+  likePicture(id: $id) {
+    ...PictureLikeFragment
+  }
+}
+
+mutation UnLikePicture($id: ID!) {
+  unlikePicture(id: $id) {
+    ...PictureLikeFragment
+  }
+}

@@ -90,19 +90,4 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
   }
-
-  @action
-  public like = async (picture: PictureEntity) => {
-    try {
-      let func = unlikePicture;
-      if (!picture.isLike) {
-        func = likePicture;
-      }
-      const { data } = await func(picture.id);
-      picture.isLike = data.isLike;
-    // tslint:disable-next-line: no-empty
-    } catch (err) {
-      console.error(err);
-    }
-  }
 }

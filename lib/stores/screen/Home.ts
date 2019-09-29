@@ -34,10 +34,10 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
 
   @action
   public getList = async (query?: Partial<IBaseQuery>, plus = false) => {
-    if (!plus) {
+    if (!plus && !this.listInit) {
       this.initQuery();
     }
-    if (!this.listInit) {
+    if (!this.listInit || plus) {
       await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
         query: Pictures,
         variables: {
@@ -49,6 +49,15 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
         this.listInit = true;
         this.setData(data.pictures, plus);
       });
+    } else {
+      const cacheData = this.client.readQuery<IPictureGqlReq>({
+        query: Pictures,
+        variables: {
+          ...this.listQuery,
+          page: 1,
+        },
+      });
+      if (cacheData) this.list = cacheData.pictures.data;
     }
   }
 
@@ -99,42 +108,5 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
     this.count = data.count;
-  }
-
-  public like = async (picture: PictureEntity) => {
-    try {
-      let func = unlikePicture;
-      if (!picture.isLike) {
-        func = likePicture;
-      }
-      const { data } = await func(picture.id);
-      const info = this.client.readQuery<IPictureGqlReq>({
-        query: Pictures,
-        variables: {
-          ...this.listQuery,
-        },
-      });
-      if (info) {
-        const dataIndex = info.pictures.data.findIndex(v => v.id.toString() === picture.id.toString());
-        if (dataIndex >= 0) {
-          info.pictures.data[dataIndex].likes = data.count;
-          info.pictures.data[dataIndex].isLike = data.isLike;
-          this.client.writeQuery<IPictureGqlReq>({
-            query: Pictures,
-            variables: {
-              ...this.listQuery,
-            },
-            data: info,
-          });
-        }
-      }
-      runInAction(() => {
-        picture.likes = data.count;
-        picture.isLike = data.isLike;
-      });
-    // tslint:disable-next-line: no-empty
-    } catch (err) {
-      console.error(err);
-    }
   }
 }

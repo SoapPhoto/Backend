@@ -1,4 +1,6 @@
-import { classToPlain, classToClass } from 'class-transformer';
+import {
+  classToPlain, classToClass, TransformClassToPlain,
+} from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -37,7 +39,8 @@ export class PictureService {
     private pictureRepository: Repository<PictureEntity>,
   ) {}
 
-  public create = async (data: Partial<PictureEntity>) => {
+  @TransformClassToPlain({ groups: [Role.OWNER] })
+  public async create(data: Partial<PictureEntity>) {
     const newData = { ...data };
     if (Array.isArray(data.tags)) {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
@@ -48,7 +51,8 @@ export class PictureService {
     return classToClass(createData, { groups: [Role.OWNER] });
   }
 
-  public update = async (id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) => {
+  @TransformClassToPlain({ groups: [Role.OWNER] })
+  public async update(id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
     const picture = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.id=:id', { id })
       .leftJoinAndSelect('picture.user', 'user')
@@ -65,14 +69,12 @@ export class PictureService {
     } else {
       updateData.tags = [];
     }
-    return classToClass(await this.pictureRepository.save(
+    return this.pictureRepository.save(
       this.pictureRepository.merge(
         picture,
         updateData,
       ),
-    ), {
-      groups: [Role.OWNER],
-    });
+    );
   }
 
   /**

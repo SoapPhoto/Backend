@@ -5,3 +5,5 @@ export * from './Nav';
 export * from './GpsImage';
 export * from './Title';
 export * from './EmojiText';
+export * from './Modal';
+export * from './Empty';

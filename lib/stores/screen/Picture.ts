@@ -4,15 +4,16 @@ import {
 import { merge, pick } from 'lodash';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
-import { PictureEntity } from '@lib/common/interfaces/picture';
+import { PictureEntity, IPictureLikeRequest } from '@lib/common/interfaces/picture';
 import { addComment, getPictureComment } from '@lib/services/comment';
 import {
-  likePicture, unlikePicture, deletePicture,
+  deletePicture,
 } from '@lib/services/picture';
 
 import { Picture } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import Fragments from '@lib/schemas/fragments';
+import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
 import { BaseStore } from '../base/BaseStore';
 
 interface IPictureGqlReq {
@@ -73,28 +74,43 @@ export class PictureScreenStore extends BaseStore {
   @action
   public like = async () => {
     try {
-      let func = unlikePicture;
+      let req;
       if (!this.info.isLike) {
-        func = likePicture;
-      }
-      const { data } = await func(this.info.id);
-      this.info.isLike = data.isLike;
-      this.info.likes = data.count;
-      const cacheData = this.client.readQuery<IPictureGqlReq>({
-        query: Picture,
-        variables: { id: this.info.id },
-      });
-      this.client.writeQuery({
-        query: Picture,
-        variables: { id: this.info.id },
-        data: {
-          picture: {
-            ...cacheData!.picture,
-            isLike: data.isLike,
-            likes: data.count,
+        const { data } = await this.client.mutate<{likePicture: IPictureLikeRequest}>({
+          mutation: LikePicture,
+          variables: {
+            id: this.info.id,
           },
-        },
+        });
+        req = data!.likePicture;
+      } else {
+        const { data } = await this.client.mutate<{unlikePicture: IPictureLikeRequest}>({
+          mutation: UnLikePicture,
+          variables: {
+            id: this.info.id,
+          },
+        });
+        req = data!.unlikePicture;
+      }
+      this.info.isLike = req.isLike;
+      this.info.likes = req.count;
+      const cacheData = this.client.readFragment<PictureEntity>({
+        fragment: Fragments,
+        fragmentName: 'PictureFragment',
+        id: `Picture:${this.info.id}`,
       });
+      if (cacheData) {
+        this.client.writeFragment<PictureEntity>({
+          fragment: Fragments,
+          fragmentName: 'PictureFragment',
+          id: `Picture:${this.info.id}`,
+          data: {
+            ...cacheData,
+            isLike: req.isLike,
+            likes: req.count,
+          } as PictureEntity,
+        });
+      }
     // tslint:disable-next-line: no-empty
     } catch (err) {
       console.error(err);
@@ -107,6 +123,7 @@ export class PictureScreenStore extends BaseStore {
         query: Picture,
         variables: { id },
       });
+      console.log(data);
       if (data) {
         this.setInfo(data.picture);
       } else {
@@ -125,16 +142,14 @@ export class PictureScreenStore extends BaseStore {
     });
     const newData = pick(picture, ['title', 'bio', 'tags', 'isPrivate']);
     if (cacheData) {
-      this.client.writeFragment({
+      this.client.writeFragment<PictureEntity>({
         fragment: Fragments,
         fragmentName: 'PictureDetailFragment',
         id: `Picture:${this.info.id.toString()}`,
         data: {
-          picture: {
-            ...cacheData,
-            ...newData,
-          },
-        },
+          ...cacheData,
+          ...newData,
+        } as PictureEntity,
       });
     }
     this.setInfo(merge(this.info, newData));

@@ -183,14 +183,16 @@ Picture.getInitialProps = async ({
   //   && mobxStore.screen.pictureStore.id === Number(params.id || 0)
   // );
   let isPop = false;
+  let isChild = false;
   if (appStore.location) {
     if (appStore.location.action === 'POP') isPop = true;
     if (
       appStore.location.options
       && appStore.location.options.state
       && /^child/g.test(appStore.location.options.state.data)
-    ) isPop = true;
+    ) isChild = true;
   }
+  if (isChild) return {};
   if (isPop) {
     await mobxStore.screen.pictureStore.getCache(params.id!);
     return {};

@@ -183,27 +183,38 @@ export const PictureInfo: React.FC<IProps> = observer(({
           )
         }
       </BaseInfoHandleBox>
-      <EditPictureModal
-        visible={editVisible}
-        onClose={closeEdit}
-        defaultValue={{
-          ...pick(info, ['title', 'bio', 'isPrivate']),
-          tags: info.tags.map(tag => tag.name),
-        }}
-        onOk={onOk}
-        update={updatePicture}
-        deletePicture={deletePicture}
-      />
+      {
+        isLogin && (
+          <>
+            <AddPictureCollectonModal
+              picture={info}
+              visible={collectionVisible}
+              onClose={closeCollection}
+              currentCollections={info.currentCollections || []}
+            />
+            {
+              isOwner && (
+
+                <EditPictureModal
+                  visible={editVisible}
+                  onClose={closeEdit}
+                  defaultValue={{
+                    ...pick(info, ['title', 'bio', 'isPrivate']),
+                    tags: info.tags.map(tag => tag.name),
+                  }}
+                  onOk={onOk}
+                  update={updatePicture}
+                  deletePicture={deletePicture}
+                />
+              )
+            }
+          </>
+        )
+      }
       <EXIFModal
         visible={EXIFVisible}
         onClose={closeEXIF}
         picture={info}
-      />
-      <AddPictureCollectonModal
-        picture={info}
-        visible={collectionVisible}
-        onClose={closeCollection}
-        currentCollections={info.currentCollections || []}
       />
     </PictureBaseInfo>
   );

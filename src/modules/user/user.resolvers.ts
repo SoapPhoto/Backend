@@ -80,7 +80,6 @@ export class UserResolver {
   ) {
     return this.collectionService.getUserCollectionList(id, query, user);
   }
-
   // @ResolveProperty('avatar')
   // public async getAvatarSize(
   //   @Parent() parent: any,
