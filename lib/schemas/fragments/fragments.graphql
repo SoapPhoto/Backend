@@ -117,6 +117,13 @@ fragment UserFragment on User {
   updateTime
 }
 
+fragment UserInfoFragment on User {
+  ...UserFragment
+  pictures {
+    ...PictureFragment
+  }
+}
+
 # -------------------- Tag
 fragment TagFragment on Tag {
   id

@@ -95,5 +95,7 @@ type User implements BaseNode {
   pictureCount: Float
   createTime: DateTime
   updateTime: DateTime
+
+  pictures: [Picture]
 }
 

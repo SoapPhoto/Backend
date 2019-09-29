@@ -14,7 +14,13 @@ query Pictures($page: Float, $pageSize: Float, $timestamp: Float) {
 
 query UserInfo($username: String) {
   user(username: $username) {
-    ...UserFragment
+    ...UserInfoFragment
+  }
+}
+
+query Whoami {
+  whoami {
+    ...UserInfoFragment
   }
 }
 

@@ -25,7 +25,7 @@ export class UserResolver {
   public whoami(
     @Context('user') user: UserEntity,
   ) {
-    return user;
+    return this.userService.getUser(user.id, user);
   }
 
   @Query()

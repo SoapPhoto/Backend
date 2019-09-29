@@ -7,6 +7,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import { WithApolloProps } from 'next-with-apollo';
 import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 
 import 'dayjs/locale/es';
 import 'dayjs/locale/zh-cn';
@@ -15,7 +16,7 @@ import { Router as RouterProvider } from '@lib/router';
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
 import { parsePath, server } from '@lib/common/utils';
-import { whoami } from '@lib/services/user';
+import { Whoami } from '@lib/schemas/query';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
 import { I18nProvider, II18nValue } from '@lib/i18n/I18nProvider';
@@ -78,9 +79,12 @@ class MyApp extends App<IProps> {
     const route = parsePath(data.ctx.asPath);
     let statusCode = HttpStatus.OK;
     let user: UserEntity | undefined;
-    if (req && req.cookies.Authorization && req.path !== '/authenticate') {
+    if (req && apolloClient && req.cookies.Authorization && req.path !== '/authenticate') {
       try {
-        ({ data: user } = await whoami(req.cookies));
+        const { data: info } = await apolloClient.query<{whoami: UserEntity}>({
+          query: Whoami,
+        });
+        user = info.whoami;
       } catch (err) {
         if (err.status === 401) {
           res!.redirect(302, `/authenticate?redirectUrl=${req.path}`);
@@ -175,21 +179,23 @@ class MyApp extends App<IProps> {
     return (
       <I18nProvider value={i18n}>
         <ApolloProvider client={apollo}>
-          <RouterProvider route={router}>
-            <Provider {...mobxStore}>
-              <ThemeWrapper>
-                <BodyLayout header={!isError}>
-                  {
-                    picture
+          <ApolloHooksProvider client={apollo}>
+            <RouterProvider route={router}>
+              <Provider {...mobxStore}>
+                <ThemeWrapper>
+                  <BodyLayout header={!isError}>
+                    {
+                      picture
                     && <PictureModal pictureId={picture.toString()} />
-                  }
-                  <Component
-                    {...pageProps}
-                  />
-                </BodyLayout>
-              </ThemeWrapper>
-            </Provider>
-          </RouterProvider>
+                    }
+                    <Component
+                      {...pageProps}
+                    />
+                  </BodyLayout>
+                </ThemeWrapper>
+              </Provider>
+            </RouterProvider>
+          </ApolloHooksProvider>
         </ApolloProvider>
       </I18nProvider>
     );

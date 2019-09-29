@@ -1,42 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 import { Popover } from '@lib/components/Popover';
 import { UserEntity } from '@lib/common/interfaces/user';
-import { getUserInfo } from '@lib/services/user';
-import { connect } from '@lib/common/utils/store';
-import { AppStore } from '@lib/stores/AppStore';
+import { UserInfo } from '@lib/schemas/query';
 import UserCard from './UserCard';
 
 interface IProps {
   username: string;
-  appStore?: AppStore;
 }
 
-export const UserPopper = connect<React.FC<IProps>>('appStore')(({
+export const UserPopper: React.FC<IProps> = ({
   children,
   username,
-  appStore,
 }) => {
-  const { userList } = appStore!;
-  const [info, setInfo] = useState<UserEntity | undefined>(userList.get(username));
   const popperRef = useRef<Popover>(null);
-  const fetch = async () => {
-    const { data } = await getUserInfo(username);
-    userList.set(username, data);
-    setInfo(data);
-    if (popperRef.current && popperRef.current.popper) {
-      popperRef.current.popper.update();
-    } else {
-      setTimeout(() => {
-        if (popperRef.current && popperRef.current.popper) {
-          popperRef.current!.popper!.update();
-        }
-      }, 10);
-    }
-  };
+  const [loadUser, { loading, data }] = useLazyQuery<{user: UserEntity}>(UserInfo);
   const onOpen = () => {
-    if (userList.get(username)) setInfo(userList.get(username));
-    fetch();
+    loadUser({
+      variables: {
+        username,
+      },
+    });
   };
   return (
     <Popover
@@ -46,10 +31,10 @@ export const UserPopper = connect<React.FC<IProps>>('appStore')(({
       placement="top"
       ref={popperRef}
       content={
-        <UserCard user={info} />
+        <UserCard user={(loading || !data) ? undefined : data.user} />
       }
     >
       {children}
     </Popover>
   );
-});
+};
