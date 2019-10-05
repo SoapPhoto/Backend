@@ -1,10 +1,10 @@
 type Query {
-  "获取单个picture"
+  "获取单个图片"
   picture(
     id: ID!
   ): Picture
 
-  "获取picture列表"
+  "获取图片列表"
   pictures(
     "分页"
     page: Float
@@ -14,7 +14,12 @@ type Query {
     timestamp: Float
   ): Pictures
 
-  "获取用户的picture"
+  "获取图片相关收藏夹"
+  pictureRelatedCollection(
+    id: ID!
+  ): PictureRelatedCollectionReq
+
+  "获取用户的图片"
   userPictures(
     "用户id"
     id: ID!
@@ -30,13 +35,38 @@ type Query {
 }
 
 type Mutation {
+  "喜欢图片"
   likePicture(
     id: ID!
   ): LikePictureReq
+  "取消喜欢图片"
+  unlikePicture(
+    id: ID!
+  ): LikePictureReq
+  updatePicture(
+    id: ID!
+    data: UpdatePictureInput!
+  ): Picture
+  deletePicture(
+    id: ID!
+  ): Status
+}
+
+input UpdatePictureInput {
+  title: String
+  bio: String
+  isPrivate: Boolean
+  tags: [String]
+}
+
+type PictureRelatedCollectionReq implements BaseCountData {
+  count: Float
+  data: [Collection!]!
 }
 
 type LikePictureReq {
   count: Float
+  isLike: Boolean
 }
 
 type Pictures implements BaseList {
@@ -54,6 +84,9 @@ type EXIF {
   iso: Float
 }
 
+"""
+图片
+"""
 type Picture implements BaseNode {
   "id"
   id: ID!
@@ -117,5 +150,14 @@ type Picture implements BaseNode {
   "修改时间"
   updateTime: DateTime
 
+  tags: [Tag]
+
+  "是否是私人的"
+  isPrivate: Boolean
+
+  "当前用户收藏了此图片的收藏夹列表"
   currentCollections: [Collection]
+
+  "当前用户收藏了此图片的收藏夹列表"
+  relatedCollections(limit: Float): PictureRelatedCollectionReq
 }

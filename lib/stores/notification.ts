@@ -21,11 +21,11 @@ export class NotificationStore {
   public close = () => this.io && this.io.close()
 
   public createSocket = () => {
-    if (!this.init) {
-      this.init = true;
-      this.io = setupSocket();
-      this.message();
-    }
+    // if (!this.init) {
+    //   this.init = true;
+    //   this.io = setupSocket();
+    //   this.message();
+    // }
   }
 
   public message = () => {
@@ -33,8 +33,6 @@ export class NotificationStore {
     socket.on('message', (data: any) => {
       if (data.event === 'message') {
         this.pushNotification(data.data);
-      } else {
-        console.log(data);
       }
     });
     // 连接成功后会返回未读数量

@@ -1,0 +1,19 @@
+#import "../fragments/fragments.graphql"
+
+mutation UpdatePicture($data: UpdatePictureInput!, $id: ID!) {
+  updatePicture(data: $data, id: $id) {
+    ...UpdatePictureFragment
+  }
+}
+
+mutation LikePicture($id: ID!) {
+  likePicture(id: $id) {
+    ...PictureLikeFragment
+  }
+}
+
+mutation UnLikePicture($id: ID!) {
+  unlikePicture(id: $id) {
+    ...PictureLikeFragment
+  }
+}

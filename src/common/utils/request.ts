@@ -16,5 +16,5 @@ export const listRequest = <Q extends Omit<PaginationDto, 'time'>, T>(query: Q, 
   data,
   page: query.page,
   pageSize: query.pageSize,
-  timestamp: new Date().getTime(),
+  timestamp: query.timestamp || new Date().getTime(),
 });

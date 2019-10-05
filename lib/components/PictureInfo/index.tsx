@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, { useCallback, useState, useEffect } from 'react';
-import _ from 'lodash';
+import { pick } from 'lodash';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { EXIFModal } from '@lib/components/EXIFModal';
@@ -15,26 +15,30 @@ import {
 import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { updatePicture } from '@lib/services/picture';
 import { useRouter } from '@lib/router/useRouter';
 import { Histore } from '@lib/common/utils';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { observer } from 'mobx-react';
+import { useMutation } from '@apollo/react-hooks';
+import { UpdatePicture } from '@lib/schemas/mutations';
 
 interface IProps {
   info: PictureEntity;
   isOwner: boolean;
+  isCollected: boolean;
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
   deletePicture: () => Promise<void>;
 }
 
-export const PictureInfo: React.FC<IProps> = ({
+export const PictureInfo: React.FC<IProps> = observer(({
   info,
   onLike,
   isOwner,
   onOk,
   deletePicture,
+  isCollected,
 }) => {
   const {
     pushRoute, params, back, replaceRoute,
@@ -45,6 +49,7 @@ export const PictureInfo: React.FC<IProps> = ({
   const [editVisible, setEditVisible] = useState(false);
   const { isLogin } = useAccountStore();
   const { colors } = useTheme();
+  const [update] = useMutation<{updatePicture: PictureEntity}>(UpdatePicture);
   const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
     let func = pushRoute;
     if (replace) func = replaceRoute;
@@ -59,6 +64,9 @@ export const PictureInfo: React.FC<IProps> = ({
       const child = Histore!.get('data');
       if (child === `child-${label}`) {
         back();
+        Histore.set({
+          data: `child-${label}-back`,
+        });
       } else {
         func(`/picture/${params.id}`, {}, {
           shallow: true,
@@ -111,8 +119,15 @@ export const PictureInfo: React.FC<IProps> = ({
     push('setting', true);
   }, [push]);
 
-  const update = async (data: UpdatePictureDot) => updatePicture(info.id, data);
-
+  const updatePicture = async (data: UpdatePictureDot) => {
+    const req = await update({
+      variables: {
+        id: info.id,
+        data,
+      },
+    });
+    return req.data!.updatePicture;
+  };
   return (
     <PictureBaseInfo>
       <div>
@@ -153,7 +168,10 @@ export const PictureInfo: React.FC<IProps> = ({
           isLogin && (
             <IconButton popover={t('add_collection')} onClick={openCollection}>
               <Bookmark
-                color={colors.secondary}
+                style={{
+                  stroke: isCollected ? colors.baseGreen : colors.secondary,
+                  fill: isCollected ? colors.baseGreen : 'transparent',
+                }}
               />
             </IconButton>
           )
@@ -168,28 +186,39 @@ export const PictureInfo: React.FC<IProps> = ({
           )
         }
       </BaseInfoHandleBox>
-      <EditPictureModal
-        visible={editVisible}
-        onClose={closeEdit}
-        defaultValue={{
-          ..._.pick(info, ['title', 'bio', 'isPrivate']),
-          tags: info.tags.map(tag => tag.name),
-        }}
-        onOk={onOk}
-        update={update}
-        deletePicture={deletePicture}
-      />
+      {
+        isLogin && (
+          <>
+            <AddPictureCollectonModal
+              picture={info}
+              visible={collectionVisible}
+              onClose={closeCollection}
+              currentCollections={info.currentCollections || []}
+            />
+            {
+              isOwner && (
+
+                <EditPictureModal
+                  visible={editVisible}
+                  onClose={closeEdit}
+                  defaultValue={{
+                    ...pick(info, ['title', 'bio', 'isPrivate']),
+                    tags: info.tags.map(tag => tag.name),
+                  }}
+                  onOk={onOk}
+                  update={updatePicture}
+                  deletePicture={deletePicture}
+                />
+              )
+            }
+          </>
+        )
+      }
       <EXIFModal
         visible={EXIFVisible}
         onClose={closeEXIF}
         picture={info}
       />
-      <AddPictureCollectonModal
-        picture={info}
-        visible={collectionVisible}
-        onClose={closeCollection}
-        currentCollections={info.currentCollections || []}
-      />
     </PictureBaseInfo>
   );
-};
+});

@@ -18,7 +18,7 @@ import { PictureUserActivityEntity } from './user-activity/user-activity.entity'
 import { Role } from '../user/enum/role.enum';
 import { CollectionEntity } from '../collection/collection.entity';
 
-export interface IRelateCollection {
+export interface IRelatedCollections {
   count: number;
   data: CollectionEntity[];
 }
@@ -153,13 +153,9 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
-  @Expose()
-  public relateCollection: IRelateCollection = {
-    count: 0,
-    data: [],
-  };
-
   public info!: CollectionPictureEntity[];
+
+  public relatedCollections!: IRelatedCollections;
 
   @Expose()
   get currentCollections() {

@@ -1,28 +1,28 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
 
-import { Modal } from '@lib/components/Modal';
-import { connect } from '@lib/common/utils/store';
-import { ThemeStore } from '@lib/stores/ThemeStore';
+import { Modal, EmojiText, Empty } from '@lib/components';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { rgba, rem } from 'polished';
 import { getPictureUrl } from '@lib/common/utils/image';
 import styled from 'styled-components';
-import { AppStore } from '@lib/stores/AppStore';
-import { CollectionEntity } from '@lib/common/interfaces/collection';
+import { CollectionEntity, ICollectionListRequest } from '@lib/common/interfaces/collection';
 import { Check, Minus, PlusCircle } from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme, activte } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { EmojiText } from '@lib/components';
+
+import { useStores, useAccountStore } from '@lib/stores/hooks';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { observer } from 'mobx-react';
+import { UserCollectionsByName } from '@lib/schemas/query';
+import { useQuery } from '@apollo/react-hooks';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
   visible: boolean;
-  themeStore?: ThemeStore;
-  appStore?: AppStore;
   picture: PictureEntity;
   onClose: () => void;
   currentCollections: CollectionEntity[];
@@ -140,49 +140,54 @@ const ItemHandleIcon = styled.div`
   }
 `;
 
-
-export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 'appStore')(({
+export const AddPictureCollectonModal: React.FC<IProps> = observer(({
   visible,
-  themeStore,
-  appStore,
   picture,
   onClose,
   currentCollections,
 }) => {
   const { t } = useTranslation();
+  const { userInfo } = useAccountStore();
   const { key, id } = picture;
-  const { getCollection, userCollection, addCollection } = appStore!;
-  const { themeData } = themeStore!;
+  const { appStore } = useStores();
+  const { addCollection } = appStore;
+  const { colors } = useTheme();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
-  const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
+  const { data: req } = useQuery<{userCollectionsByName: ICollectionListRequest}>(UserCollectionsByName, {
+    variables: {
+      username: userInfo!.username,
+    },
+  });
   // eslint-disable-next-line max-len
-  const background = `linear-gradient(${rgba(themeData.colors.gray, 0.8)}, ${themeData.colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
+  const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);
   useEffect(() => {
     if (!visible) {
       setAddCollectionVisible(false);
+    } else {
+      // setTimeout(() => {
+      //   getCollection();
+      // }, 300);
     }
-  }, [visible]);
-  useEffect(() => {
-    getCollection();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visible]);
   useEffect(() => {
     setCurrent(
       new Map(currentCollections.map(collection => [collection.id, collection])),
     );
   }, [currentCollections]);
   useEffect(() => {
-    const obj: Record<string, boolean> = {};
-    userCollection.forEach(collection => obj[collection.id] = false);
-    setLoading(obj);
-  }, [userCollection]);
-  useEffect(() => {
-    getCollection();
-  }, [getCollection, visible]);
+    if (req && req.userCollectionsByName.data) {
+      const obj: Record<string, boolean> = {};
+      req.userCollectionsByName.data.forEach(collection => obj[collection.id] = false);
+      setLoading(obj);
+    }
+  }, [req]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
-    if (loading[collection.id]) {
+    if (loadingObj[collection.id]) {
       return;
     }
     setLoading(ld => ({
@@ -199,7 +204,6 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
         setCurrent(current.set(collection.id, collection));
       }
     } finally {
-      getCollection();
       setLoading(ld => ({
         ...ld,
         [collection.id]: false,
@@ -210,6 +214,50 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
     addCollection(data);
     setAddCollectionVisible(false);
   };
+  let content = [<Empty key="loading" loading={!req} />];
+  if (req) {
+    content = req.userCollectionsByName.data.map((collection) => {
+      const isCollected = current.has(collection.id);
+      const isLoading = loadingObj[collection.id];
+      const preview = collection.preview.slice();
+      return (
+        <CollectionItemBox
+          key={collection.id}
+          onClick={() => !isLoading && onCollected(collection, isCollected)}
+        >
+          {
+            preview[0] && (
+              <CollectionItemCover src={getPictureUrl(preview[0].key, 'small')} />
+            )
+          }
+          <ItemInfoBox isCollected={isCollected} isPreview={!!preview[0]}>
+            <div>
+              <ItemInfoTitle>
+                <EmojiText
+                  text={collection.name}
+                />
+              </ItemInfoTitle>
+              <ItemInfoCount>
+                <span>{t('img_count', collection.pictureCount.toString())}</span>
+              </ItemInfoCount>
+            </div>
+            <ItemHandleIcon>
+              {
+                isLoading
+                  ? <Loading size={6} color="#fff" />
+                  : (
+                    <>
+                      <CheckIcon />
+                      <MinusIcon />
+                    </>
+                  )
+              }
+            </ItemHandleIcon>
+          </ItemInfoBox>
+        </CollectionItemBox>
+      );
+    });
+  }
   return (
     <Modal
       visible={visible}
@@ -230,48 +278,7 @@ export const AddPictureCollectonModal = connect<React.FC<IProps>>('themeStore', 
             </div>
           </ItemInfoBox>
         </CollectionItemBox>
-        {
-          userCollection.map((collection) => {
-            const isCollected = current.has(collection.id);
-            const isLoading = loading[collection.id];
-            return (
-              <CollectionItemBox
-                key={collection.id}
-                onClick={() => !isLoading && onCollected(collection, isCollected)}
-              >
-                {
-                  collection.preview[0] && (
-                    <CollectionItemCover src={getPictureUrl(collection.preview[0].key, 'small')} />
-                  )
-                }
-                <ItemInfoBox isCollected={isCollected} isPreview={!!collection.preview[0]}>
-                  <div>
-                    <ItemInfoTitle>
-                      <EmojiText
-                        text={collection.name}
-                      />
-                    </ItemInfoTitle>
-                    <ItemInfoCount>
-                      <span>{t('img_count', collection.pictureCount.toString())}</span>
-                    </ItemInfoCount>
-                  </div>
-                  <ItemHandleIcon>
-                    {
-                      isLoading
-                        ? <Loading size={6} color="#fff" />
-                        : (
-                          <>
-                            <CheckIcon />
-                            <MinusIcon />
-                          </>
-                        )
-                    }
-                  </ItemHandleIcon>
-                </ItemInfoBox>
-              </CollectionItemBox>
-            );
-          })
-        }
+        {content}
       </CollectionBox>
       <AddCollectionModal
         onClose={() => setAddCollectionVisible(false)}

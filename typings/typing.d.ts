@@ -1,3 +1,6 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable import/newline-after-import */
+
 declare module 'oauth2-server';
 declare module 'oauth2-server/lib/handlers/token-handler';
 
@@ -19,5 +22,31 @@ declare module 'socks5-https-client/lib/Agent';
 
 declare module '*.json' {
   const value: any;
+  export default value;
+}
+
+declare module '*/query.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  export const Picture: DocumentNode;
+  export const Pictures: DocumentNode;
+  export const UserInfo: DocumentNode;
+  export const UserPictures: DocumentNode;
+  export const UserCollectionsByName: DocumentNode;
+  export const UpdatePicture: DocumentNode;
+  export const Whoami: DocumentNode;
+}
+declare module '*/mutations.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  export const UpdatePicture: DocumentNode;
+  export const LikePicture: DocumentNode;
+  export const UnLikePicture: DocumentNode;
+}
+
+declare module '*/fragments.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  const value: DocumentNode;
   export default value;
 }

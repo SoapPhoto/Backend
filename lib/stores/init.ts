@@ -1,4 +1,5 @@
 import { server } from '@lib/common/utils';
+import ApolloClient from 'apollo-client';
 import { AccountStore } from './AccountStore';
 import { AppStore } from './AppStore';
 import { IScreenStore, initScreenStore } from './screen';
@@ -29,7 +30,7 @@ export let store: IMyMobxStore = {
   notificationStore: new NotificationStore(),
 };
 
-export const initStore = (initialState: IInitialStore): IMyMobxStore => {
+export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any>): IMyMobxStore => {
   // server 需要重置一下
   if (server) {
     store = {
@@ -42,12 +43,12 @@ export const initStore = (initialState: IInitialStore): IMyMobxStore => {
   }
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
-  store.screen.userStore.update(initialState.screen.userStore);
-  store.screen.userPictureStore.update(initialState.screen.userPictureStore);
-  store.screen.userCollectionStore.update(initialState.screen.userCollectionStore);
-  store.screen.homeStore.update(initialState.screen.homeStore);
-  store.screen.tagStore.update(initialState.screen.tagStore);
-  store.screen.pictureStore.update(initialState.screen.pictureStore);
+  store.screen.userStore.update(initialState.screen.userStore, apollo);
+  store.screen.userPictureStore.update(initialState.screen.userPictureStore, apollo);
+  store.screen.userCollectionStore.update(initialState.screen.userCollectionStore, apollo);
+  store.screen.homeStore.update(initialState.screen.homeStore, apollo);
+  store.screen.tagStore.update(initialState.screen.tagStore, apollo);
+  store.screen.pictureStore.update(initialState.screen.pictureStore, apollo);
   store.screen.collectionStore.update(initialState.screen.collectionStore);
   return store;
 };

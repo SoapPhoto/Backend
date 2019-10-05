@@ -80,11 +80,16 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
   }, [data.category]);
   const handle = useCallback(() => {
     if (data.category === NotificationCategory.LIKED || data.category === NotificationCategory.COMMENT) {
-      const { key, id } = data.media as PictureEntity;
+      if (data.media) {
+        const { key, id } = data.media as PictureEntity;
+        return (
+          <Picture route={`/picture/${id}`}>
+            <Image src={getPictureUrl(key)} />
+          </Picture>
+        );
+      }
       return (
-        <Picture route={`/picture/${id}`}>
-          <Image src={getPictureUrl(key)} />
-        </Picture>
+        <div>此图片已删除</div>
       );
     }
     return null;

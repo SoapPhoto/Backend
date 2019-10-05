@@ -1,12 +1,18 @@
-import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { request } from '@lib/common/utils/request';
-import { likePicture, unlikePicture } from '@lib/services/picture';
 import { action, observable } from 'mobx';
+
+import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { UserType } from '@common/enum/router';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { UserPictures } from '@lib/schemas/query';
+import { IBaseQuery } from '@lib/common/interfaces/global';
 import { ListStore } from '../base/ListStore';
 
+interface IUserPicturesGqlReq {
+  userPicturesByName: IPictureListRequest;
+}
+
 export class UserScreenPictureList extends ListStore<PictureEntity> {
-  public cacheList: Record<string, IPictureListRequest> = {};
+  public listInit = false
 
   @observable public username = '';
 
@@ -26,19 +32,27 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     };
   }
 
-  public getList = async (username: string, type?: UserType, headers?: any) => {
+  public getList = async (username: string, type?: UserType, query?: Partial<IBaseQuery>, plus?: boolean) => {
     this.type = type;
     this.username = username;
-    this.initQuery();
-    const { data } = await request.get<IPictureListRequest>(
-      `/api/user/${username}/picture/${this.type || ''}`,
-      { headers: headers || {}, params: this.listQuery },
-    );
-    this.setData(data);
-    this.setCache(username, type, {
-      ...data,
-      data: this.list,
-    });
+    if (!plus && !this.listInit) {
+      this.initQuery();
+    }
+    if (!this.listInit || plus) {
+      await queryToMobxObservable(this.client.watchQuery<IUserPicturesGqlReq>({
+        query: UserPictures,
+        variables: {
+          username,
+          ...this.listQuery,
+          ...query,
+          type: type === UserType.like ? 'LIKED' : 'MY',
+        },
+        fetchPolicy: 'cache-and-network',
+      }), (data) => {
+        this.listInit = true;
+        this.setData(data.userPicturesByName, plus);
+      });
+    }
   }
 
   public getPageList = async () => {
@@ -46,20 +60,28 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     if (page > this.maxPage) {
       return;
     }
-    const { data } = await request.get<IPictureListRequest>(
-      `/api/user/${this.username}/picture/${this.type || ''}`,
-      {
-        params: {
+    await this.getList(this.username, this.type, { page }, true);
+  }
+
+  @action public getCache = async (username: string, type?: UserType) => {
+    console.log(123123);
+    try {
+      const data = this.client.readQuery<IUserPicturesGqlReq>({
+        query: UserPictures,
+        variables: {
+          username,
           ...this.listQuery,
-          page,
+          type: type === UserType.like ? 'LIKED' : 'MY',
         },
-      },
-    );
-    this.setData(data, true);
-    this.setCache(this.username, this.type, {
-      ...data,
-      data: this.list,
-    });
+      });
+      if (!data) {
+        await this.getList(username, type);
+      } else {
+        this.setData(data.userPicturesByName);
+      }
+    } catch (err) {
+      await this.getList(username, type);
+    }
   }
 
   @action public setData = (data: IPictureListRequest, plus = false) => {
@@ -72,35 +94,5 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     this.listQuery.page = data.page;
     this.listQuery.pageSize = data.pageSize;
     this.listQuery.timestamp = data.timestamp;
-  }
-
-  public setCache = (username: string, type: UserType | undefined, data: IPictureListRequest) => {
-    this.cacheList[`${username}-${type || ''}`] = data;
-  }
-
-  public getCache = (username: string, type: UserType | undefined) => {
-    if (this.cacheList[`${username}-${type || ''}`]) {
-      this.setData(this.cacheList[`${username}-${type || ''}`]);
-    }
-  }
-
-  public isCache = (
-    username: string,
-    type: UserType | undefined,
-  ) => this.cacheList[`${username}-${type || ''}`] !== undefined;
-
-  @action
-  public like = async (picture: PictureEntity) => {
-    try {
-      let func = unlikePicture;
-      if (!picture.isLike) {
-        func = likePicture;
-      }
-      const { data } = await func(picture.id);
-      picture.isLike = data.isLike;
-    // tslint:disable-next-line: no-empty
-    } catch (err) {
-      console.error(err);
-    }
   }
 }

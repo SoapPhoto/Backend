@@ -44,7 +44,7 @@ export class UserController {
   public async getMyInfo(
     @User() user: UserEntity,
   ) {
-    return classToPlain(user, { groups: [Role.OWNER] });
+    return this.userService.getUser(user.id, user);
   }
 
   @Get(':idOrName/picture')

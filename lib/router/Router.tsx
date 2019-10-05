@@ -17,6 +17,8 @@ const hybridRouter = (route: RouterProps): IRouter => {
   const func: (fu: RouterPush, action: RouterAction) => RouterPush = (fu, action) => async (routes, params, options) => {
     if (options && options.state && Histore) {
       Histore!.set(options.state);
+    } else {
+      Histore!.set({ data: undefined });
     }
     store.appStore.setRoute({
       as: route.route,

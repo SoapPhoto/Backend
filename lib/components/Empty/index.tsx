@@ -33,7 +33,7 @@ export const Empty: React.FC<IEmptyProps> = ({
 }) => {
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const loadingSize = size === 'small' ? 7 : 9;
+  const loadingSize = size === 'small' ? 6 : 8;
   return (
     <Wrapper size={size}>
       {

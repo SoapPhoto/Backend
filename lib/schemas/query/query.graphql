@@ -1,0 +1,37 @@
+#import "../fragments/fragments.graphql"
+
+query Picture($id: ID!) {
+  picture(id: $id) {
+    ...PictureDetailFragment
+  }
+}
+
+query Pictures($page: Float, $pageSize: Float, $timestamp: Float) {
+  pictures(page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+    ...PictureListFragment
+  }
+}
+
+query UserInfo($username: String) {
+  user(username: $username) {
+    ...UserInfoFragment
+  }
+}
+
+query Whoami {
+  whoami {
+    ...UserInfoFragment
+  }
+}
+
+query UserPictures($type: UserPictureType = MY, $username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
+  userPicturesByName(type: $type, username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+    ...PictureListFragment
+  }
+}
+
+query UserCollectionsByName($username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
+  userCollectionsByName(username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+    ...CollectionListFragment
+  }
+}

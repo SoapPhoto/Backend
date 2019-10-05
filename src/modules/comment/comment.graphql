@@ -1,5 +1,5 @@
 type Query {
-  pictureComments(
+  comments(
     "图片id"
     id: ID!
     "分页"

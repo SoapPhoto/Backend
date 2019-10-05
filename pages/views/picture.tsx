@@ -3,7 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, Histore } from '@lib/common/utils';
 import { Avatar, GpsImage, EmojiText } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
@@ -25,9 +25,6 @@ import {
   UserLink,
   UserName,
   Wrapper,
-  RelateCollectionList,
-  RelateCollection,
-  RelateCollectionTitle,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -36,8 +33,6 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
-import { CollectionItem } from '@lib/containers/Collection/Item';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -48,10 +43,10 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
   const {
-    info, like, getComment, comment, addComment, updateInfo, deletePicture,
+    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
   const { user, tags } = info;
-  const isOwner = (userInfo && userInfo.id === user.id) || false;
+  const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
 
   useEffect(() => {
     getComment();
@@ -115,6 +110,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           onLike={like}
           onOk={onOk}
           deletePicture={deletePicture}
+          isCollected={isCollected}
         />
         {
           tags.length > 0
@@ -153,8 +149,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           )
         }
       </Content>
-      {
-        info.relateCollection.count > 0 && (
+      {/* {
+        info.relatedCollections.count > 0 && (
           <RelateCollection>
             <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
             <OverlayScrollbarsComponent
@@ -163,7 +159,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             >
               <RelateCollectionList>
                 {
-                  info.relateCollection.data.map(ct => (
+                  info.relatedCollections.data.map(ct => (
                     <CollectionItem key={ct.id} info={ct} />
                   ))
                 }
@@ -171,42 +167,37 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </OverlayScrollbarsComponent>
           </RelateCollection>
         )
-      }
+      } */}
       <Comment onConfirm={onConfirm} comment={comment} />
     </Wrapper>
   );
 });
 
 Picture.getInitialProps = async ({
-  mobxStore, route, req,
+  mobxStore, route,
 }: ICustomNextContext) => {
   const { params } = route;
   const { appStore } = mobxStore;
-  const isPicture = (
-    mobxStore.screen.pictureStore.id
-    && mobxStore.screen.pictureStore.id === Number(params.id || 0)
-  );
+  // const isPicture = (
+  //   mobxStore.screen.pictureStore.id
+  //   && mobxStore.screen.pictureStore.id === Number(params.id || 0)
+  // );
   let isPop = false;
+  let isChild = false;
   if (appStore.location) {
     if (appStore.location.action === 'POP') isPop = true;
+    const data = Histore!.get('data');
     if (
-      appStore.location.options
-      && appStore.location.options.state
-      && /^child/g.test(appStore.location.options.state.data)
-    ) isPop = true;
+      /^child/g.test(data)
+    ) isChild = true;
   }
-  if (isPicture && isPop && mobxStore.screen.pictureStore.isCache(params.id)) {
-    mobxStore.screen.pictureStore.getCache();
-    // mobxStore.screen.pictureStore.getPictureInfo(
-    //   params.id!,
-    //   req ? req.headers : undefined,
-    // );
+  console.log(isChild);
+  if (isChild) return {};
+  if (isPop) {
+    await mobxStore.screen.pictureStore.getCache(params.id!);
     return {};
   }
-  await mobxStore.screen.pictureStore.getPictureInfo(
-    params.id!,
-    req ? req.headers : undefined,
-  );
+  await mobxStore.screen.pictureStore.getPictureInfo(params.id!);
   return {};
 };
 

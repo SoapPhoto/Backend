@@ -20,10 +20,25 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
           };
         } else if (err && err.statusCode) {
           error = err;
+        } else if (err && err.graphQLErrors) {
+          if (err.graphQLErrors instanceof Array) {
+            if (err.graphQLErrors[0]) {
+              error = err.graphQLErrors[0].message;
+            } else {
+              error = {
+                statusCode: 500,
+              };
+            }
+          } else {
+            error = {
+              statusCode: 500,
+            };
+          }
         } else {
           error = {
             statusCode: 500,
           };
+          console.error(err);
         }
       }
     }

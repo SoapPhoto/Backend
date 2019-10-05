@@ -4,7 +4,6 @@ import { merge } from 'lodash';
 import { CollectionEntity, GetCollectionPictureListDto, UpdateCollectionDot } from '@lib/common/interfaces/collection';
 import { getCollectionInfo, getCollectionPictureList, updateCollection } from '@lib/services/collection';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { mergeStore } from '@lib/common/utils/store';
 import { HttpStatus } from '@lib/common/enums/http';
 import { likePicture, unlikePicture } from '@lib/services/picture';
 import { BaseStore } from '../base/BaseStore';
@@ -23,26 +22,6 @@ export class CollectionScreenStore extends BaseStore {
   @observable public count = 0;
 
   @observable public listQuery!: GetCollectionPictureListDto;
-
-  @action
-  public update = (store?: Partial<this>) => {
-    if (this.isInit) {
-      return;
-    }
-    this.isInit = true;
-    if (store) {
-      mergeStore(this, store);
-      // 初始化数据写进缓存
-      // if (store.info) this.setInfo(store.info!);
-      // if (store.listQuery && store.list) {
-      //   this.setList(store.id!, {
-      //     ...store.listQuery!,
-      //     data: store.list!,
-      //     count: store.count!,
-      //   });
-      // }
-    }
-  }
 
   @action
   public initQuery = () => {
