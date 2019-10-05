@@ -15,7 +15,7 @@ import 'dayjs/locale/zh-cn';
 import { Router as RouterProvider } from '@lib/router';
 import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
-import { parsePath, server } from '@lib/common/utils';
+import { parsePath, server, Histore } from '@lib/common/utils';
 import { Whoami } from '@lib/schemas/query';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
@@ -158,6 +158,9 @@ class MyApp extends App<IProps> {
       }
     });
     Router.beforePopState(({ url, as, options }) => {
+      Histore.set({
+        data: Histore.get('data'),
+      });
       this.state.mobxStore.appStore.setRoute({
         as,
         options,

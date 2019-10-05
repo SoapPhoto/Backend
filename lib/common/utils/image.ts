@@ -57,6 +57,9 @@ export function getImageUrl(image: File) {
 }
 
 export function convertEXIFValue(label: ExifProperties, value: any, exifData: any) {
+  if (validator.isEmpty(value)) {
+    return null;
+  }
   switch (label) {
     case ExifProperties.FocalLength:
       return round(value, 2);
@@ -91,32 +94,31 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
 
 export function formatEXIFValue(label: ExifProperties, value: any, originalValue: any) {
   return new Promise<any>((resolve) => {
-    if (typeof value === 'undefined') {
+    if (validator.isEmpty(value)) {
       resolve(null);
-      return;
-    }
-
-    switch (label) {
-      case ExifProperties.ExposureTime:
-        resolve(`${originalValue >= 1 ? value : `1/${value}`}`);
-        break;
-      case ExifProperties.ExposureBias:
-        resolve(`${value >= 0 ? '+' : ''}${value}`);
-        break;
-      case ExifProperties.DateTimeOriginal:
-        resolve(
-          (([date, hour]) => [
-            // eslint-disable-next-line no-useless-escape
-            date.replace(/\:/g, '/'),
-            hour
-              .split(':')
-              .splice(0, 2)
-              .join(':'),
-          ])(value.split(' ')).join(' '),
-        );
-        break;
-      default:
-        resolve(value);
+    } else {
+      switch (label) {
+        case ExifProperties.ExposureTime:
+          resolve(`${originalValue >= 1 ? value : `1/${value}`}`);
+          break;
+        case ExifProperties.ExposureBias:
+          resolve(`${value >= 0 ? '+' : ''}${value}`);
+          break;
+        case ExifProperties.DateTimeOriginal:
+          resolve(
+            (([date, hour]) => [
+              // eslint-disable-next-line no-useless-escape
+              date.replace(/\:/g, '/'),
+              hour
+                .split(':')
+                .splice(0, 2)
+                .join(':'),
+            ])(value.split(' ')).join(' '),
+          );
+          break;
+        default:
+          resolve(value);
+      }
     }
   });
 }

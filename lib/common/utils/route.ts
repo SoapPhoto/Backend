@@ -51,10 +51,10 @@ export const histore = () => {
   if (typeof window === 'undefined') return undefined;
   type func = (data: any, title: string, url?: string | null) => void;
   const get = (key: string) => window.history.state && window.history.state[key];
-  const set = (state: Record<string, string>) => {
+  const set = (state: Record<string, string | undefined>) => {
     window.history.replaceState(state, '');
   };
-  const wrap = (m: func) => (state: Record<string, string>, title: string, url?: string) => (
+  const wrap = (m: func) => (state: Record<string, string | undefined>, title: string, url?: string) => (
     m.call(window.history, { ...window.history.state, ...state || {} }, title, url)
   );
   window.history.pushState = wrap(window.history.pushState);
@@ -62,4 +62,4 @@ export const histore = () => {
   return { set, get };
 };
 
-export const Histore = histore();
+export const Histore = histore()!;

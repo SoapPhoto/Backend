@@ -18,10 +18,10 @@ export const ItemLink = styled(A)<{ active: number }>`
   transition: .2s font-size ease, .2s color ease;
   &:before {
     background: ${theme('colors.primary')};
-    bottom: -6px;
+    bottom: -10px;
     content: "";
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     left: 0;
     margin: auto;
     opacity: ${_ => (_.active ? 1 : 0)};

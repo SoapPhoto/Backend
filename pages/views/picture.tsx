@@ -3,7 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, Histore } from '@lib/common/utils';
 import { Avatar, GpsImage, EmojiText } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
@@ -186,12 +186,12 @@ Picture.getInitialProps = async ({
   let isChild = false;
   if (appStore.location) {
     if (appStore.location.action === 'POP') isPop = true;
+    const data = Histore!.get('data');
     if (
-      appStore.location.options
-      && appStore.location.options.state
-      && /^child/g.test(appStore.location.options.state.data)
+      /^child/g.test(data)
     ) isChild = true;
   }
+  console.log(isChild);
   if (isChild) return {};
   if (isPop) {
     await mobxStore.screen.pictureStore.getCache(params.id!);

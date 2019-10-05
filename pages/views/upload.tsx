@@ -115,6 +115,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     if (isImage(file.name)) {
       imageRef.current = file;
       const [info, url] = await getImageInfo(file);
+      console.log(info);
       setImageUrl(url);
       setImageInfo(info);
     } else {

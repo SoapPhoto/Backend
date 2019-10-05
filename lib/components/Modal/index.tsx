@@ -47,6 +47,16 @@ const scrollOptions: BodyScrollOptions = {
   reserveScrollBarGap: true,
 };
 
+const enableScroll = () => {
+  enableBodyScroll(document.querySelector('body')!);
+  enableBodyScroll(document.querySelector('html')!);
+};
+
+const disableScroll = () => {
+  disableBodyScroll(document.querySelector('body')!, scrollOptions);
+  disableBodyScroll(document.querySelector('html')!, scrollOptions);
+};
+
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
@@ -72,21 +82,9 @@ export class Modal extends React.PureComponent<IModalProps> {
     reaction(() => this.props.visible, (vis) => {
       if (vis) {
         this.isClose = false;
-        if (_modalIndex === 0) {
-          disableBodyScroll(document.querySelector('body')!, scrollOptions);
-        }
-        // eslint-disable-next-line no-plusplus
-        _modalIndex++;
         this.setDestroy(false);
       }
     });
-  }
-
-  public componentDidMount() {
-    const { visible } = this.props;
-    if (visible) {
-      disableBodyScroll(document.querySelector('body')!, scrollOptions);
-    }
   }
 
   public componentWillUnmount() {
@@ -112,7 +110,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public handleContentOnMouseUp = () => {
-    this.shouldClose = false;
+    this.shouldClose = null;
   };
 
   public handleContentOnClick = () => {
@@ -132,15 +130,21 @@ export class Modal extends React.PureComponent<IModalProps> {
   }
 
   public onDestroy = () => {
-    if (_modalIndex === 1) {
-      enableBodyScroll(document.querySelector('body')!);
-    }
+    if (this.isDestroy) return;
     if (isFunction(this.props.afterClose)) {
       this.props.afterClose();
     }
     _modalIndex--;
+    if (_modalIndex === 0) {
+      enableScroll();
+    }
 
     this.setDestroy(true);
+  }
+
+  public onEnter = () => {
+    _modalIndex++;
+    disableScroll();
   }
 
   public render() {
@@ -157,7 +161,8 @@ export class Modal extends React.PureComponent<IModalProps> {
             (
               <Transition
                 in={visible}
-                onExited={() => this.onDestroy()}
+                onExited={this.onDestroy}
+                onEntered={this.onEnter}
                 appear
                 timeout={{
                   enter: 0,

@@ -5,6 +5,7 @@ import { UrlObject } from 'url';
 
 import { store } from '@lib/stores/init';
 import { RouterAction } from '@lib/stores/AppStore';
+import { Histore } from '@lib/common/utils';
 
 type Url = string | UrlObject;
 
@@ -32,6 +33,7 @@ export const Link: React.FC<ILinkProps> = (props) => {
       {React.cloneElement(child, {
         ...restProps,
         onClick: (e: any) => {
+          Histore!.set({ data: undefined });
           store.appStore.setRoute({
             as: as as string,
             href: href as string,

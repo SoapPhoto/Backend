@@ -175,13 +175,12 @@ User.getInitialProps = async ({
   const all = [];
   const arg: [string, UserType] = [username!, type!];
   const isPop = location && location.action === 'POP' && !server;
-  if (!(userStore.username && userStore.username === username)) {
-    if (isPop) {
-      all.push(userStore.getCache(username));
-    } else {
-      all.push(userStore.getInit(...arg));
-    }
+  if (isPop) {
+    all.push(userStore.getCache(username));
+  } else {
+    all.push(userStore.getInit(...arg));
   }
+  console.log(isPop, type);
   switch (type!) {
     case UserType.collections:
       all.push(

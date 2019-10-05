@@ -1,7 +1,6 @@
 import { action, observable } from 'mobx';
 
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { likePicture, unlikePicture } from '@lib/services/picture';
 import { UserType } from '@common/enum/router';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserPictures } from '@lib/schemas/query';
@@ -13,6 +12,8 @@ interface IUserPicturesGqlReq {
 }
 
 export class UserScreenPictureList extends ListStore<PictureEntity> {
+  public listInit = false
+
   @observable public username = '';
 
   @observable public type?: UserType;
@@ -34,21 +35,24 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
   public getList = async (username: string, type?: UserType, query?: Partial<IBaseQuery>, plus?: boolean) => {
     this.type = type;
     this.username = username;
-    if (!plus) {
+    if (!plus && !this.listInit) {
       this.initQuery();
     }
-    await queryToMobxObservable(this.client.watchQuery<IUserPicturesGqlReq>({
-      query: UserPictures,
-      variables: {
-        username,
-        ...this.listQuery,
-        ...query,
-        type: type === UserType.like ? 'LIKED' : 'MY',
-      },
-      fetchPolicy: 'cache-and-network',
-    }), (data) => {
-      this.setData(data.userPicturesByName, plus);
-    });
+    if (!this.listInit || plus) {
+      await queryToMobxObservable(this.client.watchQuery<IUserPicturesGqlReq>({
+        query: UserPictures,
+        variables: {
+          username,
+          ...this.listQuery,
+          ...query,
+          type: type === UserType.like ? 'LIKED' : 'MY',
+        },
+        fetchPolicy: 'cache-and-network',
+      }), (data) => {
+        this.listInit = true;
+        this.setData(data.userPicturesByName, plus);
+      });
+    }
   }
 
   public getPageList = async () => {
@@ -60,6 +64,7 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
   }
 
   @action public getCache = async (username: string, type?: UserType) => {
+    console.log(123123);
     try {
       const data = this.client.readQuery<IUserPicturesGqlReq>({
         query: UserPictures,

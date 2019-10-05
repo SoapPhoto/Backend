@@ -49,7 +49,7 @@ export class UserScreenStore extends BaseStore {
       } else {
         runInAction(() => this.user = data.user);
       }
-    } catch {
+    } catch (err) {
       await this.getUserInfo(username);
     }
   }

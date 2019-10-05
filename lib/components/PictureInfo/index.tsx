@@ -64,6 +64,9 @@ export const PictureInfo: React.FC<IProps> = observer(({
       const child = Histore!.get('data');
       if (child === `child-${label}`) {
         back();
+        Histore.set({
+          data: `child-${label}-back`,
+        });
       } else {
         func(`/picture/${params.id}`, {}, {
           shallow: true,
