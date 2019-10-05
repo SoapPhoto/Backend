@@ -28,26 +28,25 @@ declare module '*.json' {
 declare module '*/query.graphql' {
   import { DocumentNode } from 'graphql';
 
-  export const Picture = DocumentNode;
-  export const Pictures = DocumentNode;
-  export const UserInfo = DocumentNode;
-  export const UserPictures = DocumentNode;
-  export const UserCollectionsByName = DocumentNode;
-  export const UpdatePicture = DocumentNode;
-  export const Whoami = DocumentNode;
-  // export = value;
+  export const Picture: DocumentNode;
+  export const Pictures: DocumentNode;
+  export const UserInfo: DocumentNode;
+  export const UserPictures: DocumentNode;
+  export const UserCollectionsByName: DocumentNode;
+  export const UpdatePicture: DocumentNode;
+  export const Whoami: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';
 
-  const value: import('graphql').DocumentNode;
-  export const UpdatePicture = DocumentNode;
-  export const LikePicture = DocumentNode;
-  export const UnLikePicture = DocumentNode;
+  export const UpdatePicture: DocumentNode;
+  export const LikePicture: DocumentNode;
+  export const UnLikePicture: DocumentNode;
 }
 
 declare module '*/fragments.graphql' {
+  import { DocumentNode } from 'graphql';
 
-  const value: import('graphql').DocumentNode;
+  const value: DocumentNode;
   export default value;
 }
