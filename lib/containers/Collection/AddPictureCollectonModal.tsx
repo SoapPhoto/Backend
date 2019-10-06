@@ -179,7 +179,7 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
     );
   }, [currentCollections]);
   useEffect(() => {
-    if (req && req.userCollectionsByName.data) {
+    if (req && req.userCollectionsByName && req.userCollectionsByName.data) {
       const obj: Record<string, boolean> = {};
       req.userCollectionsByName.data.forEach(collection => obj[collection.id] = false);
       setLoading(obj);
@@ -215,7 +215,7 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
     setAddCollectionVisible(false);
   };
   let content = [<Empty key="loading" loading={!req} />];
-  if (req) {
+  if (req && req.userCollectionsByName) {
     content = req.userCollectionsByName.data.map((collection) => {
       const isCollected = current.has(collection.id);
       const isLoading = loadingObj[collection.id];

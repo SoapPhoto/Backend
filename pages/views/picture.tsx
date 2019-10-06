@@ -191,7 +191,6 @@ Picture.getInitialProps = async ({
       /^child/g.test(data)
     ) isChild = true;
   }
-  console.log(isChild);
   if (isChild) return {};
   if (isPop) {
     await mobxStore.screen.pictureStore.getCache(params.id!);
