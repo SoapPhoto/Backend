@@ -13,6 +13,7 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
       try {
         props = await (Component as any).getInitialProps(ctx);
       } catch (err) {
+        console.error(err);
         if (err && err.response && err.response && err.response.data && err.response.data.statusCode) {
           error = {
             statusCode: err.response.data.statusCode,
@@ -38,7 +39,6 @@ export const withError = <P extends IBaseScreenProps>(Component: React.Component
           error = {
             statusCode: 500,
           };
-          console.error(err);
         }
       }
     }

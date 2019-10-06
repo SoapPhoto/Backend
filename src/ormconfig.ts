@@ -29,7 +29,7 @@ const ormconfig: TypeOrmModuleOptions = {
   database: process.env.DATABASE_NAME,
   synchronize: process.env.NODE_ENV !== 'production', // TODO: Remove in production!
   // migrationsRun: true,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
   logger: 'file',
   keepConnectionAlive: true,
   entities: [
