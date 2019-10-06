@@ -38,6 +38,7 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />
           <link rel="manifest" href="/manifest.json" />
+          <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
           <link rel="preload" as="style" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
         </Head>
         <body id="body">
