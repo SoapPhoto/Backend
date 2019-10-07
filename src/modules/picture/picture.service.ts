@@ -83,9 +83,14 @@ export class PictureService {
    * @memberof PictureService
    */
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const [data, count] = await this.selectList(user, query)
-      .andWhere('picture.isPrivate=:private', { private: false })
-      .getManyAndCount();
+    const [data, count] = await Promise.all([
+      this.selectList(user, query)
+        .andWhere('picture.isPrivate=:private', { private: false })
+        .getMany(),
+      this.selectList(user, query)
+        .andWhere('picture.isPrivate=:private', { private: false })
+        .getCount(),
+    ]);
     return listRequest(query, data, count);
   }
 
@@ -261,11 +266,11 @@ export class PictureService {
    * @memberof PictureService
    */
   public select = (user: Maybe<UserEntity>) => {
-    const q = this.pictureRepository.createQueryBuilder('picture')
-      .loadRelationCountAndMap(
-        'picture.likes', 'picture.activitys', 'activity',
-        qb => qb.andWhere('activity.like=:like', { like: true }),
-      );
+    const q = this.pictureRepository.createQueryBuilder('picture');
+    // .loadRelationCountAndMap(
+    //   'picture.likes', 'picture.activitys', 'activity',
+    //   qb => qb.andWhere('activity.like=:like', { like: true }),
+    // );
     this.selectInfo(q, user);
     q.orderBy('picture.createTime', 'DESC');
     return q;
