@@ -1,15 +1,28 @@
 import {
-  Exclude, Expose,
+  Exclude, Expose, Type,
 } from 'class-transformer';
 import {
   IsArray, IsBoolean, IsNotEmpty, IsString,
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
+import dayjs from 'dayjs';
 import { PictureEntity } from '../picture.entity';
 
 export class GetPictureListDto extends PaginationDto {
 
+}
+
+export class GetNewPictureListDto extends PaginationDto {
+  @Type(() => Number)
+  public readonly lastTimestamp?: number;
+
+  get lastTime() {
+    if (this.lastTimestamp) {
+      return dayjs(this.lastTimestamp).format();
+    }
+    return undefined;
+  }
 }
 
 export class GetUserPictureListDto extends GetPictureListDto {

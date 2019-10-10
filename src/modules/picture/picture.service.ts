@@ -19,7 +19,7 @@ import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
-import { GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
+import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 import { Role } from '../user/enum/role.enum';
@@ -93,6 +93,19 @@ export class PictureService {
     ]);
     return listRequest(query, data, count);
   }
+
+  public getNewList = async (user: Maybe<UserEntity>, query: GetNewPictureListDto) => {
+    const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto)
+      .andWhere('picture.isPrivate=:private', { private: false })
+      .andWhere('picture.createTime > :after', { after: query.lastTime })
+      .andWhere('picture.createTime <= :before', { before: query.time });
+    const [data, count] = await Promise.all([
+      q.getMany(),
+      q.getCount(),
+    ]);
+    return listRequest(query, data, count);
+  }
+
 
   /**
    * 增加阅读数量

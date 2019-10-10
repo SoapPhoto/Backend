@@ -7,7 +7,9 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { GetPictureListDto, GetUserPictureListDto, UpdatePictureDot } from './dto/picture.dto';
+import {
+  GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
+} from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { CollectionService } from '../collection/collection.service';
 import { PictureEntity } from './picture.entity';
@@ -27,6 +29,14 @@ export class PictureResolver {
     @Args() query: GetPictureListDto,
   ) {
     return this.pictureService.getList(user, query);
+  }
+
+  @Query()
+  public async newPictures(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args() query: GetNewPictureListDto,
+  ) {
+    return this.pictureService.getNewList(user, query);
   }
 
   @Query()

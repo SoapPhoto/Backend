@@ -10,6 +10,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
 import Toast from '@lib/components/Toast';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { PictureImage } from './Image';
 import {
   HandleBox, InfoBox, ItemWapper, UserBox, UserName, LockIcon, Link, LikeContent, HeartIcon,
@@ -31,6 +32,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
 }) => {
   const { isLogin } = useAccountStore();
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const onLike = useCallback(async () => {
     if (!isLogin) {
       Toast.warning('登录之后才可以喜欢哦！');
@@ -66,6 +68,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
       >
         <HeartIcon
           size={16}
+          color={colors.danger}
           isLike={detail.isLike ? 1 : 0}
         />
         <p>{detail.likes}</p>

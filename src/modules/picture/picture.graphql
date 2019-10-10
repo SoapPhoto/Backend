@@ -14,6 +14,18 @@ type Query {
     timestamp: Float
   ): Pictures
 
+  "获取更新图片列表"
+  newPictures(
+    "分页"
+    page: Float
+    "分页"
+    pageSize: Float
+    "时间戳"
+    timestamp: Float
+    "起始时间戳"
+    lastTimestamp: Float
+  ): Pictures
+
   "获取图片相关收藏夹"
   pictureRelatedCollection(
     id: ID!
