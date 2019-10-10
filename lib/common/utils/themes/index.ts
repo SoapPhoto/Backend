@@ -1,5 +1,5 @@
 import { parse } from 'cookie';
-import { DefaultTheme, ThemedStyledProps } from 'styled-components';
+import { DefaultTheme, ThemedStyledProps, css } from 'styled-components';
 import _ from 'lodash';
 
 import * as themeData from './theme';
@@ -25,6 +25,12 @@ export const activte = (scale = 0.96) => `
   &:active {
     transform: scale(${scale});
   }
+`;
+
+export const initButton = css`
+  cursor: pointer;
+  outline: none;
+  border: none;
 `;
 
 export default themeData;

@@ -1,11 +1,13 @@
-import { rem, cover } from 'polished';
-import styled from 'styled-components';
+import { rem, cover, rgba } from 'polished';
+import styled, { css } from 'styled-components';
 
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
-import { theme, activte } from '@lib/common/utils/themes';
+import { theme, activte, initButton } from '@lib/common/utils/themes';
 import { customMedia } from '@lib/common/utils/mediaQuery';
+import { Heart } from '@lib/icon';
+import { motion } from 'framer-motion';
 
 const padding = 30;
 
@@ -65,6 +67,17 @@ export const ItemWapper = styled.div`
   } */
 `;
 
+const handleHover = css`
+  opacity: 0;
+  transition: .2s opacity ease-in-out;
+  ${customMedia.lessThan('medium')`
+    opacity: 1;
+  `}
+  ${ItemWapper}:hover & {
+    opacity: 1;
+  }
+`;
+
 export const Link = styled(A)`
   ${cover()}
   z-index: 2;
@@ -106,17 +119,7 @@ export const InfoBox = styled.div`
   padding-top: ${rem(16)};
   width: 100%;
   background: linear-gradient(180deg,transparent 0,rgba(0,0,0,.6) 81%);
-  opacity: 0;
-  /* transform: translate3d(0, 20px, 0); */
-  transition: .2s opacity ease-in-out;
-  ${customMedia.lessThan('medium')`
-    opacity: 1;
-    /* transform: translate3d(0, 0, 0); */
-  `}
-  ${ItemWapper}:hover & {
-    opacity: 1;
-    /* transform: translate3d(0, 0, 0); */
-  }
+  ${handleHover}
 `;
 
 export const UserBox = styled.div`
@@ -167,4 +170,33 @@ export const Footer = styled.div`
   font-size: ${_ => rem(_.theme.fontSizes[4])};
   color: ${theme('colors.secondary')};
   font-weight: 100;
+`;
+
+export const LikeContent = styled(motion.button)`
+  ${initButton}
+  z-index: 3;
+  position: absolute;
+  top: ${rem(12)};
+  right: ${rem(12)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${_ => rgba(_.theme.colors.pure, 0.8)};
+  padding: ${rem(4)} ${rem(14)};
+  font-family: Rubik;
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  border: none;
+  border-radius: 20px;
+  line-height: 20px;
+  font-weight: 700;
+  color: ${theme('colors.text')};
+  ${handleHover}
+`;
+
+export const HeartIcon = styled(Heart)<{isLike: number}>`
+  stroke-width: 3px;
+  stroke: ${theme('colors.danger')};
+  fill: ${_ => (_.isLike ? _.theme.colors.danger : 'none')};
+  stroke: ${_ => (_.isLike ? _.theme.colors.danger : _.color || '#fff')};
+  margin-right: ${rem(4)};
 `;

@@ -14,8 +14,8 @@ interface IProps {
 }
 
 const HeartIcon = styled(Heart)<{like: boolean; color?: string}>`
-  fill: ${_ => (_.like ? '#f44336' : 'none')};
-  stroke: ${_ => (_.like ? '#f44336' : _.color || '#fff')};
+  fill: ${_ => (_.like ? _.theme.colors.danger : 'none')};
+  stroke: ${_ => (_.like ? _.theme.colors.danger : _.color || '#fff')};
   transition: .2s fill ease, .2s stroke ease, .2s transform ease;
 `;
 
