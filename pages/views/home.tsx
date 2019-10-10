@@ -1,5 +1,5 @@
-import Head from 'next/head';
 import React from 'react';
+import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -18,9 +18,10 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   } = homeStore;
   return (
     <div>
-      <Head>
-        <title>{getTitle('home', t)}</title>
-      </Head>
+      <NextSeo
+        title={getTitle('home', t)}
+        description="photo, life, happy"
+      />
       <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />
     </div>
   );

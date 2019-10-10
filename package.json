@@ -87,6 +87,7 @@
     "next-offline": "^4.0.6",
     "next-plugin-graphql": "0.0.2",
     "next-routes": "^1.4.2",
+    "next-seo": "^2.1.2",
     "next-with-apollo": "^4.3.0",
     "node-instagram": "^4.3.0",
     "nodemailer": "^6.3.0",

@@ -1,6 +1,6 @@
 import { Formik, FormikActions } from 'formik';
-import Head from 'next/head';
 import React, { useCallback, useEffect } from 'react';
+import { NextSeo } from 'next-seo';
 
 import { LoginSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -95,9 +95,10 @@ const Login: React.FC<IBaseScreenProps> = () => {
   useEffect(() => () => window.removeEventListener('message', messageCb), [messageCb]);
   return (
     <Wrapper>
-      <Head>
-        <title>{getTitle('login', t)}</title>
-      </Head>
+      <NextSeo
+        title={getTitle('login', t)}
+        description="Login to Soap"
+      />
       <Title>
         <EmojiText
           text={t('login')}

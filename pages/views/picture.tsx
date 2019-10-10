@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React, { useEffect, useCallback } from 'react';
+import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -45,7 +46,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const {
     info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
-  const { user, tags } = info;
+  const { user, tags, bio } = info;
   const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
 
   useEffect(() => {
@@ -59,15 +60,19 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const onOk = useCallback((picture: PictureEntity) => {
     updateInfo(picture);
   }, [updateInfo]);
+  const title = getTitle(`${info.title} (@${user.username})`, t);
   return (
     <Wrapper>
       <Head>
-        <title>{getTitle(`${info.title} (@${user.username})`, t)}</title>
         <script
           type="text/javascript"
           src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
         />
       </Head>
+      <NextSeo
+        title={title}
+        description={bio}
+      />
       <UserHeader columns={2}>
         <UserInfo width={1}>
           <UserLink route={`/@${user.username}`}>

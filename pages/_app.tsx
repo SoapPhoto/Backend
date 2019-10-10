@@ -31,6 +31,7 @@ import { Router } from '@lib/routes';
 import {
   IInitialStore, IMyMobxStore, initStore, store,
 } from '@lib/stores/init';
+import { DefaultSeo } from 'next-seo';
 
 interface IProps extends WithApolloProps<any> {
   i18n: II18nValue;
@@ -186,6 +187,9 @@ class MyApp extends App<IProps> {
               <Provider {...mobxStore}>
                 <ThemeWrapper>
                   <BodyLayout header={!isError}>
+                    <DefaultSeo
+                      description="photo, life, happy"
+                    />
                     {
                       picture
                     && <PictureModal pictureId={picture.toString()} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Head from 'next/head';
 import { rem } from 'polished';
+import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
@@ -43,11 +43,12 @@ const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = () => {
   const { tagStore } = useScreenStores();
   const { t } = useTranslation();
   const { info } = tagStore;
+  const title = getTitle(`# ${info.name}`, t);
   return (
     <Wrapper>
-      <Head>
-        <title>{getTitle(`# ${info.name}`, t)}</title>
-      </Head>
+      <NextSeo
+        title={title}
+      />
       <Header>
         <Title>
           {info.name}

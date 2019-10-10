@@ -1,6 +1,6 @@
 import { Formik, FormikActions } from 'formik';
-import Head from 'next/head';
 import React from 'react';
+import { NextSeo } from 'next-seo';
 
 import { SignUpSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -54,9 +54,10 @@ const SignUp = () => {
   };
   return (
     <Wrapper>
-      <Head>
-        <title>{getTitle('signup', t)}</title>
-      </Head>
+      <NextSeo
+        title={getTitle('signup', t)}
+        description="Sign Up to Soap"
+      />
       <Title>
         <EmojiText
           text={t('signup')}

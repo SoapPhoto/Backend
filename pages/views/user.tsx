@@ -1,7 +1,7 @@
 import { inject, observer } from 'mobx-react';
-import Head from 'next/head';
 import React from 'react';
 import parse from 'url-parse';
+import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
@@ -58,6 +58,7 @@ const server = !!(typeof window === 'undefined');
 }))
 @observer
 class User extends React.Component<IProps> {
+  // eslint-disable-next-line react/sort-comp
   public static getInitialProps: (_: ICustomNextContext) => any;
 
   constructor(props: IProps) {
@@ -85,9 +86,10 @@ class User extends React.Component<IProps> {
         {
           ({ t }) => (
             <Wrapper>
-              <Head>
-                <title>{getTitle(`${user.fullName} (@${user.username})`, t)}</title>
-              </Head>
+              <NextSeo
+                title={getTitle(`${user.fullName} (@${user.username})`, t)}
+                description={user.bio}
+              />
               <UserHeader>
                 <HeaderGrid columns="140px auto" gap="32px">
                   <AvatarBox>
@@ -180,7 +182,6 @@ User.getInitialProps = async ({
   } else {
     all.push(userStore.getInit(...arg));
   }
-  console.log(isPop, type);
   switch (type!) {
     case UserType.collections:
       all.push(

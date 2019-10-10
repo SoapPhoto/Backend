@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import Head from 'next/head';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { pick } from 'lodash';
+import { NextSeo } from 'next-seo';
 
 import { withError } from '@lib/components/withError';
 import { getTitle, Histore } from '@lib/common/utils';
@@ -136,7 +136,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
     info, list, updateCollection, like,
   } = collectionStore;
   const {
-    name, user, pictureCount, isPrivate,
+    name, user, pictureCount, isPrivate, bio,
   } = info!;
   const isOwner = !!(userInfo && userInfo.id === user.id);
   const [updateVisible, setUpdateVisible] = useUpdateVisible(isOwner);
@@ -145,9 +145,10 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   }, [setUpdateVisible]);
   return (
     <div>
-      <Head>
-        <title>{getTitle(`${name} (@${user.username})`, t)}</title>
-      </Head>
+      <NextSeo
+        title={getTitle(`${name} (@${user.username})`, t)}
+        description={bio}
+      />
       <Header>
         <Title>
           {
