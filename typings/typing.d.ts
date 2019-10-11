@@ -30,6 +30,7 @@ declare module '*/query.graphql' {
 
   export const Picture: DocumentNode;
   export const Pictures: DocumentNode;
+  export const NewPictures: DocumentNode;
   export const UserInfo: DocumentNode;
   export const UserPictures: DocumentNode;
   export const UserCollectionsByName: DocumentNode;

@@ -69,7 +69,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
         <HeartIcon
           size={16}
           color={colors.danger}
-          isLike={detail.isLike ? 1 : 0}
+          islike={detail.isLike ? 1 : 0}
         />
         <p>{detail.likes}</p>
       </LikeContent>

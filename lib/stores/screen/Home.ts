@@ -1,14 +1,17 @@
 import { action, observable, runInAction } from 'mobx';
+import dayjs from 'dayjs';
 
 import { IBaseQuery } from '@lib/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { Pictures } from '@lib/schemas/query';
+import { Pictures, NewPictures } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
-import { likePicture, unlikePicture } from '@lib/services/picture';
 import { ListStore } from '../base/ListStore';
 
 interface IPictureGqlReq {
   pictures: IPictureListRequest;
+}
+interface INewPictureGqlReq {
+  newPictures: IPictureListRequest;
 }
 
 export class HomeScreenStore extends ListStore<PictureEntity> {
@@ -28,7 +31,7 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     this.listQuery = {
       page: 1,
       pageSize: Number(process.env.LIST_PAGE_SIZE),
-      timestamp: this.init ? this.listQuery.timestamp : Number(Date.parse(new Date().toISOString())),
+      timestamp: this.init ? this.listQuery.timestamp : this.getNowDate(),
     };
   }
 
@@ -57,7 +60,21 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
           page: 1,
         },
       });
-      if (cacheData) this.list = cacheData.pictures.data;
+      this.list = cacheData!.pictures.data;
+      if (this.list.length > 0) {
+        queryToMobxObservable(this.client.watchQuery<INewPictureGqlReq>({
+          query: NewPictures,
+          variables: {
+            ...this.listQuery,
+            timestamp: this.getNowDate(),
+            lastTimestamp: dayjs(this.list[0].createTime).valueOf(),
+            ...query,
+          },
+          fetchPolicy: 'network-only',
+        }), (data) => {
+          this.getNewPictures(data, cacheData!);
+        });
+      }
     }
   }
 
@@ -69,6 +86,26 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     await this.getList({
       page: this.listQuery.page + 1,
     }, true);
+  }
+
+  @action
+  public getNewPictures = (req: INewPictureGqlReq, cache: IPictureGqlReq) => {
+    const { count, timestamp, data } = req.newPictures;
+    if (count > 1) {
+      data.pop();
+      this.listQuery.timestamp = timestamp;
+      this.list = data.concat(this.list);
+      cache.pictures.data = this.list;
+      cache.pictures.timestamp = timestamp;
+      this.client.writeQuery<IPictureGqlReq>({
+        query: Pictures,
+        variables: {
+          ...this.listQuery,
+          page: 1,
+        },
+        data: cache,
+      });
+    }
   }
 
   @action
@@ -109,4 +146,6 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     this.listQuery.timestamp = data.timestamp;
     this.count = data.count;
   }
+
+  public getNowDate = () => Number(Date.parse(new Date().toISOString()))
 }

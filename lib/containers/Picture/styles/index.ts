@@ -193,10 +193,10 @@ export const LikeContent = styled(motion.button)`
   ${handleHover}
 `;
 
-export const HeartIcon = styled(Heart)<{isLike: number}>`
+export const HeartIcon = styled(Heart)<{islike: number}>`
   stroke-width: 3px;
   stroke: ${theme('colors.danger')};
-  fill: ${_ => (_.isLike ? _.theme.colors.danger : 'none')};
-  stroke: ${_ => (_.isLike ? _.theme.colors.danger : _.color || '#fff')};
+  fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
+  stroke: ${_ => (_.islike ? _.theme.colors.danger : _.color || '#fff')};
   margin-right: ${rem(4)};
 `;

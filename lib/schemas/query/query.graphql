@@ -12,6 +12,17 @@ query Pictures($page: Float, $pageSize: Float, $timestamp: Float) {
   }
 }
 
+query NewPictures($page: Float, $pageSize: Float, $timestamp: Float, $lastTimestamp: Float) {
+  newPictures(
+    page: $page,
+    pageSize: $pageSize,
+    timestamp: $timestamp,
+    lastTimestamp: $lastTimestamp
+  ) {
+    ...PictureListFragment
+  }
+}
+
 query UserInfo($username: String) {
   user(username: $username) {
     ...UserInfoFragment
