@@ -26,6 +26,9 @@ import {
   UserLink,
   UserName,
   Wrapper,
+  RelateCollection,
+  RelateCollectionTitle,
+  RelateCollectionList,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -34,6 +37,8 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { CollectionItem } from '@lib/containers/Collection/Item';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -101,7 +106,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         </UserHeaderInfo>
       </UserHeader>
       <PictureBox>
-        <PictureImage size="full" detail={info} />
+        <PictureImage lazyload={false} size="full" detail={info} />
       </PictureBox>
       <Content>
         <Title>
@@ -154,7 +159,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           )
         }
       </Content>
-      {/* {
+      {
         info.relatedCollections.count > 0 && (
           <RelateCollection>
             <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
@@ -172,7 +177,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </OverlayScrollbarsComponent>
           </RelateCollection>
         )
-      } */}
+      }
       <Comment onConfirm={onConfirm} comment={comment} />
     </Wrapper>
   );
