@@ -5,6 +5,7 @@ import { IBaseQuery } from '@lib/common/interfaces/global';
 import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
 import { Pictures, NewPictures } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import { uniqBy } from 'lodash';
 import { ListStore } from '../base/ListStore';
 
 interface IPictureGqlReq {
@@ -40,7 +41,7 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     if (!plus && !this.listInit) {
       this.initQuery();
     }
-    if (!this.listInit || plus) {
+    const get = async () => {
       await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
         query: Pictures,
         variables: {
@@ -52,28 +53,27 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
         this.listInit = true;
         this.setData(data.pictures, plus);
       });
+    };
+    if (!this.listInit || plus) {
+      await get();
     } else {
-      const cacheData = this.client.readQuery<IPictureGqlReq>({
-        query: Pictures,
-        variables: {
-          ...this.listQuery,
-          page: 1,
-        },
-      });
-      this.list = cacheData!.pictures.data;
-      if (this.list.length > 0) {
-        queryToMobxObservable(this.client.watchQuery<INewPictureGqlReq>({
-          query: NewPictures,
+      // 不是初始化列表或者下拉加载的话，就直接获取缓存
+      try {
+        const cacheData = this.client.readQuery<IPictureGqlReq>({
+          query: Pictures,
           variables: {
             ...this.listQuery,
-            timestamp: this.getNowDate(),
-            lastTimestamp: dayjs(this.list[0].createTime).valueOf(),
-            ...query,
+            page: 1,
           },
-          fetchPolicy: 'network-only',
-        }), (data) => {
-          this.getNewPictures(data, cacheData!);
         });
+        this.list = cacheData!.pictures.data;
+        if (this.list.length > 0) {
+          this.getNewPictures(cacheData!, query);
+        }
+      } catch {
+        // 假如获取缓存出现问题就强制重新获取列表
+        this.listInit = false;
+        await this.getList();
       }
     }
   }
@@ -88,24 +88,33 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
     }, true);
   }
 
-  @action
-  public getNewPictures = (req: INewPictureGqlReq, cache: IPictureGqlReq) => {
-    const { count, timestamp, data } = req.newPictures;
-    if (count > 1) {
-      data.pop();
-      this.listQuery.timestamp = timestamp;
-      this.list = data.concat(this.list);
-      cache.pictures.data = this.list;
-      cache.pictures.timestamp = timestamp;
-      this.client.writeQuery<IPictureGqlReq>({
-        query: Pictures,
-        variables: {
-          ...this.listQuery,
-          page: 1,
-        },
-        data: cache,
-      });
-    }
+  public getNewPictures = (cache: IPictureGqlReq, query?: Partial<IBaseQuery>) => {
+    queryToMobxObservable(this.client.watchQuery<INewPictureGqlReq>({
+      query: NewPictures,
+      variables: {
+        ...this.listQuery,
+        timestamp: this.getNowDate(),
+        lastTimestamp: dayjs(this.list[0].createTime).valueOf(),
+        ...query,
+      },
+      fetchPolicy: 'network-only',
+    }), req => runInAction(() => {
+      const { count, timestamp, data } = req.newPictures;
+      if (count > 1) {
+        this.listQuery.timestamp = timestamp;
+        this.list = uniqBy(data.concat(this.list), 'id');
+        cache.pictures.data = this.list;
+        cache.pictures.timestamp = timestamp;
+        this.client.writeQuery<IPictureGqlReq>({
+          query: Pictures,
+          variables: {
+            ...this.listQuery,
+            page: 1,
+          },
+          data: cache,
+        });
+      }
+    }));
   }
 
   @action
