@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/Yiiu/soapBE/compare/v0.0.5...v0.0.6) (2019-10-12)
+
+
+### Bug Fixes
+
+* **fontend:** picture collection state bug ([00de0ef](https://github.com/Yiiu/soapBE/commit/00de0ef))
+* **picture:** Repeat query ([a02a3ce](https://github.com/Yiiu/soapBE/commit/a02a3ce))
+* **pictures:** New Pictures Bug ([33cb5ee](https://github.com/Yiiu/soapBE/commit/33cb5ee))
+* **server:** manifest bug ([5065000](https://github.com/Yiiu/soapBE/commit/5065000))
+
+
+### Features
+
+* **icon:** add favicon ([ce50517](https://github.com/Yiiu/soapBE/commit/ce50517))
+* Add SEO ([d496424](https://github.com/Yiiu/soapBE/commit/d496424))
+* **picture:** Add Home screen list update ([f8bd3fa](https://github.com/Yiiu/soapBE/commit/f8bd3fa))
+* **server:** Add new picture list ([0b1c286](https://github.com/Yiiu/soapBE/commit/0b1c286))
+
 ### [0.0.5](https://github.com/Yiiu/soapBE/compare/v0.0.4...v0.0.5) (2019-10-05)
 
 
