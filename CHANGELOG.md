@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/Yiiu/soapBE/compare/v0.0.6...v0.1.0) (2019-10-12)
+
+
+### Bug Fixes
+
+* **tag:** Fix private picture bug ([8cf3a78](https://github.com/Yiiu/soapBE/commit/8cf3a78))
+
+
+### Features
+
+* Optimize image loading animation ([ba4db79](https://github.com/Yiiu/soapBE/commit/ba4db79))
+
 ### [0.0.6](https://github.com/Yiiu/soapBE/compare/v0.0.5...v0.0.6) (2019-10-12)
 
 
