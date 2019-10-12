@@ -49,7 +49,6 @@ export class PictureScreenStore extends BaseStore {
       variables: { id },
       fetchPolicy: 'cache-and-network',
     }), (data) => {
-      console.log(data.picture);
       this.setInfo(data.picture);
     });
   }
