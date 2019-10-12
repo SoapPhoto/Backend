@@ -246,6 +246,7 @@ export class PictureService {
     const q = this.selectList(user);
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
+      .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
     return listRequest(query, data, count);
   }
