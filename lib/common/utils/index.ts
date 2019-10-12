@@ -1,4 +1,5 @@
 import { TFunction } from '@lib/i18n/interface';
+import { enableBodyScroll, disableBodyScroll, BodyScrollOptions } from 'body-scroll-lock';
 
 export * from './route';
 export * from './math';
@@ -89,3 +90,20 @@ export const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Version') !==
 export const getTitle = (title: string, t?: TFunction) => (
   `${t ? t(title) : title} - ${t ? t('title') : process.env.TITLE}`
 );
+
+
+export const defaultScrollOptions: BodyScrollOptions = {
+  reserveScrollBarGap: true,
+};
+
+export const enableScroll = () => {
+  if (server) return;
+  enableBodyScroll(document.querySelector('body')!);
+  enableBodyScroll(document.querySelector('html')!);
+};
+
+export const disableScroll = () => {
+  if (server) return;
+  disableBodyScroll(document.querySelector('body')!, defaultScrollOptions);
+  disableBodyScroll(document.querySelector('html')!, defaultScrollOptions);
+};

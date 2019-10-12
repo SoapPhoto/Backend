@@ -49,6 +49,7 @@ export class PictureScreenStore extends BaseStore {
       variables: { id },
       fetchPolicy: 'cache-and-network',
     }), (data) => {
+      console.log(data.picture);
       this.setInfo(data.picture);
     });
   }
@@ -123,7 +124,6 @@ export class PictureScreenStore extends BaseStore {
         query: Picture,
         variables: { id },
       });
-      console.log(data);
       if (data) {
         this.setInfo(data.picture);
       } else {

@@ -1,11 +1,13 @@
 import Head from 'next/head';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getTitle, Histore } from '@lib/common/utils';
-import { Avatar, GpsImage, EmojiText } from '@lib/components';
+import {
+  Avatar, GpsImage, EmojiText, LightBox,
+} from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
 import { Tag } from '@lib/components/Tag';
@@ -39,6 +41,7 @@ import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { CollectionItem } from '@lib/containers/Collection/Item';
+import { getPictureUrl } from '@lib/common/utils/image';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -48,6 +51,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { userInfo } = useAccountStore();
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
+  const [boxVisible, setBoxVisible] = useState(false);
   const {
     info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
@@ -65,6 +69,12 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const onOk = useCallback((picture: PictureEntity) => {
     updateInfo(picture);
   }, [updateInfo]);
+  const openLightBox = useCallback(() => {
+    setBoxVisible(true);
+  }, []);
+  const closeLightBox = useCallback(() => {
+    setBoxVisible(false);
+  }, []);
   const title = getTitle(`${info.title} (@${user.username})`, t);
   return (
     <Wrapper>
@@ -105,7 +115,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           </BaseInfoItem>
         </UserHeaderInfo>
       </UserHeader>
-      <PictureBox>
+      <PictureBox onClick={openLightBox}>
         <PictureImage lazyload={false} size="full" detail={info} />
       </PictureBox>
       <Content>
@@ -179,6 +189,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         )
       }
       <Comment onConfirm={onConfirm} comment={comment} />
+      <LightBox visible={boxVisible} src={getPictureUrl(info.key, 'full')} onClose={closeLightBox} />
     </Wrapper>
   );
 });

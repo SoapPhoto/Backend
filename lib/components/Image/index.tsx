@@ -21,7 +21,7 @@ export const Image: React.FC<IImageProps> = memo(({
         setLoad(true);
       };
     }
-    return () => { if (image) image.onload = null; };
+    return () => { image.onload = null; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   if (complete || server) {
@@ -36,8 +36,8 @@ export const Image: React.FC<IImageProps> = memo(({
     );
   }
   return (
-    <AnimatePresence exitBeforeEnter initial={false}>
-      {(isLoad) && (
+    <AnimatePresence>
+      {isLoad && (
         <motion.img
           transition={{
             type: 'spring',
@@ -46,6 +46,7 @@ export const Image: React.FC<IImageProps> = memo(({
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           src={src}
           alt={alt}
           className={className}

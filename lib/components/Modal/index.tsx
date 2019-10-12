@@ -4,9 +4,10 @@ import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
 import { Transition } from 'react-transition-group';
 import { TransitionStatus } from 'react-transition-group/Transition';
-import { enableBodyScroll, disableBodyScroll, BodyScrollOptions } from 'body-scroll-lock';
 
-import { getScrollWidth, server } from '@lib/common/utils';
+import {
+  getScrollWidth, server, enableScroll, disableScroll,
+} from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { DefaultTheme } from 'styled-components';
 import { NoSSR } from '../SSR';
@@ -42,21 +43,6 @@ const maskTransitionStyles: {
 };
 
 let _modalIndex = 0;
-
-const scrollOptions: BodyScrollOptions = {
-  reserveScrollBarGap: true,
-};
-
-const enableScroll = () => {
-  enableBodyScroll(document.querySelector('body')!);
-  enableBodyScroll(document.querySelector('html')!);
-};
-
-const disableScroll = () => {
-  disableBodyScroll(document.querySelector('body')!, scrollOptions);
-  disableBodyScroll(document.querySelector('html')!, scrollOptions);
-};
-
 @observer
 export class Modal extends React.PureComponent<IModalProps> {
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
