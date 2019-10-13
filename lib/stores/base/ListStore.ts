@@ -1,12 +1,15 @@
-import { computed, observable, runInAction } from 'mobx';
+import {
+  computed, observable, runInAction, toJS,
+} from 'mobx';
+import { DocumentNode } from 'graphql';
 
 import { IBaseQuery } from '@lib/common/interfaces/global';
-import { IPictureLikeRequest, PictureEntity } from '@lib/common/interfaces/picture';
+import { IPictureLikeRequest, PictureEntity, IPictureListRequest } from '@lib/common/interfaces/picture';
 import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
 import Fragments from '@lib/schemas/fragments';
 import { BaseStore } from './BaseStore';
 
-export class ListStore<L, Q = {}> extends BaseStore {
+export class ListStore<L, V = any, Q = {}> extends BaseStore {
   @observable public init = false;
 
   @observable public list: L[] = [];
@@ -25,9 +28,7 @@ export class ListStore<L, Q = {}> extends BaseStore {
   }
 
   @computed get isNoMore() {
-    const { pageSize, page } = this.listQuery;
-    const maxPage = Math.ceil(this.count / pageSize);
-    return maxPage <= page;
+    return this.count <= this.list.length;
   }
 
   public like = async (picture: PictureEntity) => {
@@ -74,6 +75,35 @@ export class ListStore<L, Q = {}> extends BaseStore {
     // tslint:disable-next-line: no-empty
     } catch (err) {
       console.dir(err);
+    }
+  }
+
+  public setPlusListCache = (query: DocumentNode, label: string, data: IPictureListRequest, type: Record<string, any> = {}) => {
+    try {
+      const cacheData = this.client.readQuery({
+        query,
+        variables: {
+          ...this.listQuery,
+          ...type,
+          page: 1,
+        },
+      });
+      if (cacheData) {
+        cacheData[label].data = cacheData[label].data.concat(data.data);
+        cacheData[label].page = data.page;
+        cacheData[label].pageSize = data.pageSize;
+        this.client.writeQuery({
+          query,
+          variables: {
+            ...this.listQuery,
+            ...type,
+            page: 1,
+          },
+          data: cacheData,
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 }

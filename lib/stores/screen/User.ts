@@ -2,7 +2,6 @@ import { action, observable, runInAction } from 'mobx';
 
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserEntity } from '@lib/common/interfaces/user';
-import { UserType } from '@common/enum/router';
 import { UserInfo } from '@lib/schemas/query';
 import { BaseStore } from '../base/BaseStore';
 
@@ -11,7 +10,7 @@ interface IUserGqlReq {
 }
 
 export class UserScreenStore extends BaseStore {
-  @observable public type?: UserType;
+  @observable public type?: string;
 
   @observable public user!: UserEntity;
 
@@ -20,7 +19,7 @@ export class UserScreenStore extends BaseStore {
   @observable public actived = false;
 
   @action
-  public getInit = async (username: string, type?: UserType) => {
+  public getInit = async (username: string, type?: string) => {
     runInAction(() => {
       this.username = username;
       this.type = type;

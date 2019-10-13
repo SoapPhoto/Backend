@@ -15,7 +15,7 @@ interface INewPictureGqlReq {
   newPictures: IPictureListRequest;
 }
 
-export class HomeScreenStore extends ListStore<PictureEntity> {
+export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
   public listInit = false
 
   @observable private reqUrl = '/api/picture';
@@ -70,7 +70,7 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
         if (this.list.length > 0) {
           this.getNewPictures(cacheData!, query);
         }
-      } catch {
+      } catch (err) {
         // 假如获取缓存出现问题就强制重新获取列表
         this.listInit = false;
         await this.getList();
@@ -100,19 +100,22 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
       fetchPolicy: 'network-only',
     }), req => runInAction(() => {
       const { count, timestamp, data } = req.newPictures;
-      if (count > 1) {
-        this.listQuery.timestamp = timestamp;
-        this.list = uniqBy(data.concat(this.list), 'id');
-        cache.pictures.data = this.list;
-        cache.pictures.timestamp = timestamp;
-        this.client.writeQuery<IPictureGqlReq>({
-          query: Pictures,
-          variables: {
-            ...this.listQuery,
-            page: 1,
-          },
-          data: cache,
-        });
+      if (count >= 1) {
+        const newData = data.filter(v => this.list.findIndex(x => x.id === v.id) < 0);
+        if (newData.length > 0) {
+          this.listQuery.timestamp = timestamp;
+          this.list = uniqBy(data.concat(this.list), 'id');
+          cache.pictures.data = this.list;
+          cache.pictures.timestamp = timestamp;
+          this.client.writeQuery<IPictureGqlReq>({
+            query: Pictures,
+            variables: {
+              ...this.listQuery,
+              page: 1,
+            },
+            data: cache,
+          });
+        }
       }
     }));
   }
@@ -120,33 +123,8 @@ export class HomeScreenStore extends ListStore<PictureEntity> {
   @action
   public setData = (data: IPictureListRequest, plus: boolean) => {
     if (plus) {
-      try {
-        runInAction(() => {
-          this.list = this.list.concat(data.data);
-        });
-        const cacheData = this.client.readQuery<IPictureGqlReq>({
-          query: Pictures,
-          variables: {
-            ...this.listQuery,
-            page: 1,
-          },
-        });
-        if (cacheData) {
-          cacheData.pictures.data = cacheData.pictures.data.concat(data.data);
-          cacheData.pictures.page = data.page;
-          cacheData.pictures.pageSize = data.pageSize;
-          this.client.writeQuery<IPictureGqlReq>({
-            query: Pictures,
-            variables: {
-              ...this.listQuery,
-              page: 1,
-            },
-            data: cacheData,
-          });
-        }
-      } catch (err) {
-        return;
-      }
+      this.list = this.list.concat(data.data);
+      this.setPlusListCache(Pictures, 'pictures', data);
     } else {
       this.list = data.data;
     }

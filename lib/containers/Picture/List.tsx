@@ -98,6 +98,15 @@ export const PictureList: React.FC<IProps> = observer(({
     return () => null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (!noMore) {
+      window.removeEventListener('scroll', scrollEvent);
+      window.addEventListener('scroll', scrollEvent);
+      return () => window.removeEventListener('scroll', scrollEvent);
+    }
+    return () => null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noMore]);
   // 处理客户端列表数据
   useEffect(() => {
     pictureList();

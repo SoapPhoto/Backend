@@ -1,9 +1,9 @@
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import React from 'react';
 import parse from 'url-parse';
 import { NextSeo } from 'next-seo';
 
-import { ICustomNextContext, IBaseScreenProps } from '@lib/common/interfaces/global';
+import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import {
   Avatar, Nav, NavItem, EmojiText,
@@ -12,7 +12,6 @@ import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Link as LinkIcon } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
-import { IMyMobxStore } from '@lib/stores/init';
 import { UserScreenStore } from '@lib/stores/screen/User';
 import { UserScreenPictureList } from '@lib/stores/screen/UserList';
 import {
@@ -27,7 +26,6 @@ import {
   HeaderGrid,
   AvatarBox,
 } from '@lib/styles/views/user';
-import { computed } from 'mobx';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { Cell } from 'styled-css-grid';
@@ -37,7 +35,8 @@ import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
-import { I18nContext } from '@lib/i18n/I18nContext';
+import { useAccountStore, useStores } from '@lib/stores/hooks';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -50,117 +49,85 @@ interface IProps extends IBaseScreenProps, WithRouterProps {
 
 const server = !!(typeof window === 'undefined');
 
-@inject((stores: IMyMobxStore) => ({
-  userStore: stores.screen.userStore,
-  picturesStore: stores.screen.userPictureStore,
-  collectionsStore: stores.screen.userCollectionStore,
-  accountStore: stores.accountStore,
-}))
-@observer
-class User extends React.Component<IProps> {
-  // eslint-disable-next-line react/sort-comp
-  public static getInitialProps: (_: ICustomNextContext) => any;
-
-  constructor(props: IProps) {
-    super(props);
-  }
-
-  @computed get type() {
-    const { userStore } = this.props;
-    return userStore.type;
-  }
-
-  public parseWebsite = (url: string) => {
-    const data = parse(url);
-    return data.hostname;
-  }
-
-  public render() {
-    const {
-      accountStore, userStore, picturesStore, collectionsStore, type,
-    } = this.props;
-    const { isLogin, userInfo } = accountStore;
-    const { user } = userStore;
-    return (
-      <I18nContext.Consumer>
-        {
-          ({ t }) => (
-            <Wrapper>
-              <NextSeo
-                title={getTitle(`${user.fullName} (@${user.username})`, t)}
-                description={user.bio}
+const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
+  const { screen } = useStores();
+  const { isLogin, userInfo } = useAccountStore();
+  const { t } = useTranslation();
+  const { userStore, userCollectionStore, userPictureStore } = screen;
+  const { user } = userStore;
+  return (
+    <Wrapper>
+      <NextSeo
+        title={getTitle(`${user.fullName} (@${user.username})`, t)}
+        description={user.bio}
+      />
+      <UserHeader>
+        <HeaderGrid columns="140px auto" gap="32px">
+          <AvatarBox>
+            <Avatar src={user.avatar} size={140} />
+          </AvatarBox>
+          <Cell>
+            <UserName>
+              <EmojiText
+                text={user.fullName}
               />
-              <UserHeader>
-                <HeaderGrid columns="140px auto" gap="32px">
-                  <AvatarBox>
-                    <Avatar src={user.avatar} size={140} />
-                  </AvatarBox>
-                  <Cell>
-                    <UserName>
-                      <EmojiText
-                        text={user.fullName}
-                      />
-                      {
-                        isLogin && userInfo && userInfo.username === user.username
-                        && (
-                          <A route="/setting/profile">
-                            <EditIcon size={18} />
-                          </A>
-                        )
-                      }
-                    </UserName>
-                    <Profile>
-                      {
-                        user.website
-                        && (
-                          <ProfileItem>
-                            <ProfileItemLink href={user.website} target="__blank">
-                              <LinkIcon size={14} />
-                              {this.parseWebsite(user.website)}
-                            </ProfileItemLink>
-                          </ProfileItem>
-                        )
-                      }
-                    </Profile>
-                    <Bio>
-                      {user.bio}
-                    </Bio>
-                  </Cell>
-                </HeaderGrid>
-              </UserHeader>
-              <Nav>
-                <NavItem route={`/@${user.username}`}>
-                  {t('user_menu.picture')}
-                </NavItem>
-                <NavItem route={`/@${user.username}/like`}>
-                  {t('user_menu.like')}
-                </NavItem>
-                <NavItem route={`/@${user.username}/collections`}>
-                  {t('user_menu.collection')}
-                </NavItem>
-              </Nav>
               {
-                type === 'collections' ? (
-                  <CollectionList
-                    list={collectionsStore.list}
-                    noMore={collectionsStore.isNoMore}
-                  />
-                ) : (
-                  <PictureList
-                    noMore={picturesStore.isNoMore}
-                    data={picturesStore.list}
-                    like={picturesStore.like}
-                    onPage={picturesStore.getPageList}
-                  />
+                isLogin && userInfo && userInfo.username === user.username
+                && (
+                  <A route="/setting/profile">
+                    <EditIcon size={18} />
+                  </A>
                 )
               }
-            </Wrapper>
-          )
-        }
-      </I18nContext.Consumer>
-    );
-  }
-}
+            </UserName>
+            <Profile>
+              {
+                user.website
+                && (
+                  <ProfileItem>
+                    <ProfileItemLink href={user.website} target="__blank">
+                      <LinkIcon size={14} />
+                      {parse(user.website).hostname}
+                    </ProfileItemLink>
+                  </ProfileItem>
+                )
+              }
+            </Profile>
+            <Bio>
+              {user.bio}
+            </Bio>
+          </Cell>
+        </HeaderGrid>
+      </UserHeader>
+      <Nav>
+        <NavItem route={`/@${user.username}`}>
+          {t('user_menu.picture')}
+        </NavItem>
+        <NavItem route={`/@${user.username}/like`}>
+          {t('user_menu.like')}
+        </NavItem>
+        <NavItem route={`/@${user.username}/collections`}>
+          {t('user_menu.collection')}
+        </NavItem>
+      </Nav>
+      {
+        type === 'collections' ? (
+          <CollectionList
+            list={userCollectionStore.list}
+            noMore={userCollectionStore.isNoMore}
+          />
+        ) : (
+          <PictureList
+            noMore={userPictureStore.isNoMore}
+            data={userPictureStore.list}
+            like={userPictureStore.like}
+            onPage={userPictureStore.getPageList}
+          />
+        )
+      }
+    </Wrapper>
+  );
+});
 
 User.getInitialProps = async ({
   mobxStore, route,
@@ -175,7 +142,7 @@ User.getInitialProps = async ({
     statusCode: number;
   } | undefined;
   const all = [];
-  const arg: [string, UserType] = [username!, type!];
+  const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
   if (isPop) {
     all.push(userStore.getCache(username));

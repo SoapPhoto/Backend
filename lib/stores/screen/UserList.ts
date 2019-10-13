@@ -11,17 +11,20 @@ interface IUserPicturesGqlReq {
   userPicturesByName: IPictureListRequest;
 }
 
-export class UserScreenPictureList extends ListStore<PictureEntity> {
+export class UserScreenPictureList extends ListStore<PictureEntity, IUserPicturesGqlReq> {
   public listInit = false
 
   @observable public username = '';
 
-  @observable public type?: UserType;
+  @observable public type!: UserType;
+
+  private listQueryCache: Record<string, IBaseQuery> = {}
 
   constructor() {
     super();
-    this.initQuery();
   }
+
+  public getType = (type: UserType) => (type === 'like' ? 'LIKED' : 'MY');
 
   @action
   public initQuery = () => {
@@ -30,29 +33,43 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
       pageSize: Number(process.env.LIST_PAGE_SIZE),
       timestamp: Number(Date.parse(new Date().toISOString())),
     };
+    if (this.username) {
+      this.listQueryCache[`${this.username}:${this.type}`] = this.listQuery;
+    }
   }
 
-  public getList = async (username: string, type?: UserType, query?: Partial<IBaseQuery>, plus?: boolean) => {
+  public getList = async (username: string, type: UserType, query?: Partial<IBaseQuery>, plus?: boolean) => {
     this.type = type;
     this.username = username;
-    if (!plus && !this.listInit) {
-      this.initQuery();
-    }
-    if (!this.listInit || plus) {
+    const isCache = this.setListQuery();
+    if (!isCache || plus) {
       await queryToMobxObservable(this.client.watchQuery<IUserPicturesGqlReq>({
         query: UserPictures,
         variables: {
           username,
           ...this.listQuery,
           ...query,
-          type: type === UserType.like ? 'LIKED' : 'MY',
+          type: this.getType(type),
         },
         fetchPolicy: 'cache-and-network',
       }), (data) => {
         this.listInit = true;
         this.setData(data.userPicturesByName, plus);
       });
+    } else {
+      this.getCache(username, type);
     }
+  }
+
+  public setListQuery = () => {
+    const label = `${this.username}:${this.type}`;
+    const data = this.listQueryCache[label];
+    if (data) {
+      this.listQuery = data;
+      return true;
+    }
+    this.initQuery();
+    return false;
   }
 
   public getPageList = async () => {
@@ -63,15 +80,18 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
     await this.getList(this.username, this.type, { page }, true);
   }
 
-  @action public getCache = async (username: string, type?: UserType) => {
-    console.log(123123);
+  @action public getCache = async (username: string, type: UserType) => {
+    this.username = username;
+    this.type = type;
+    this.setListQuery();
     try {
       const data = this.client.readQuery<IUserPicturesGqlReq>({
         query: UserPictures,
         variables: {
           username,
           ...this.listQuery,
-          type: type === UserType.like ? 'LIKED' : 'MY',
+          page: 1,
+          type: this.getType(type),
         },
       });
       if (!data) {
@@ -86,7 +106,12 @@ export class UserScreenPictureList extends ListStore<PictureEntity> {
 
   @action public setData = (data: IPictureListRequest, plus = false) => {
     if (plus) {
+      console.log(421414124);
       this.list = this.list.concat(data.data);
+      this.setPlusListCache(UserPictures, 'userPicturesByName', data, {
+        type: this.getType(this.type),
+        username: this.username,
+      });
     } else {
       this.list = data.data;
     }
