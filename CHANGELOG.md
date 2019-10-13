@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/Yiiu/soapBE/compare/v0.1.0...v0.1.1) (2019-10-13)
+
+
+### Features
+
+* Add dev StateTreeModal ([be2bc01](https://github.com/Yiiu/soapBE/commit/be2bc01d845f991063ccfce7d2035ad86cebfac7))
+* Add Picture Light Box ([4f4ab96](https://github.com/Yiiu/soapBE/commit/4f4ab963c602feb66d796689ce011280e57aa90d))
+
+
+### Bug Fixes
+
+* Fix Picture detail query bug ([0ccb21d](https://github.com/Yiiu/soapBE/commit/0ccb21de3e08fa19c9172e73d4a931b502d09c14))
+* Fix user list cache bug ([b25cce1](https://github.com/Yiiu/soapBE/commit/b25cce137566bd2a8ecc6031065696d9984ad57a))
+
 ## [0.1.0](https://github.com/Yiiu/soapBE/compare/v0.0.6...v0.1.0) (2019-10-12)
 
 
