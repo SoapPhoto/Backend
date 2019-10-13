@@ -37,7 +37,7 @@ export const Btns = () => {
     setTheme(theme === 'dark' ? 'base' : 'dark');
   }, [setTheme, theme]);
   let content = (
-    <Href route="/login">
+    <Href route={`/login?redirectUrl=${pathname}`}>
       <User />
     </Href>
   );

@@ -130,6 +130,7 @@ export const UserBox = styled.div`
 `;
 
 export const UserName = styled(A)`
+  text-decoration: none;
   margin-left: ${rem('12px')};
   font-weight: 700;
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};

@@ -138,7 +138,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   const {
     name, user, pictureCount, isPrivate, bio,
   } = info!;
-  const isOwner = !!(userInfo && userInfo.id === user.id);
+  const isOwner = !!(userInfo && userInfo.id.toString() === user.id.toString());
   const [updateVisible, setUpdateVisible] = useUpdateVisible(isOwner);
   const onUpdateClose = useCallback(async () => {
     await setUpdateVisible(false);

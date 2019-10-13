@@ -53,9 +53,9 @@ const Login: React.FC<IBaseScreenProps> = () => {
       setSubmitting(true);
       setTimeout(async () => {
         if (query.redirectUrl) {
-          await Router.replaceRoute(query.redirectUrl);
+          window.location = query.redirectUrl as any;
         } else {
-          await Router.replaceRoute('/');
+          window.location = '/' as any;
         }
         window.scrollTo(0, 0);
       }, 400);

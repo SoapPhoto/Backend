@@ -3,9 +3,11 @@ import {
 } from 'mobx';
 
 import NProgress from 'nprogress';
-import { CollectionEntity } from '@lib/common/interfaces/collection';
-import { getUserCollection } from '@lib/services/collection';
+import { CollectionEntity, ICollectionListRequest } from '@lib/common/interfaces/collection';
 import { UserEntity } from '@lib/common/interfaces/user';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { ApolloClient } from 'apollo-boost';
+import { UserCollectionsByName } from '@lib/schemas/query';
 import { store } from './init';
 
 export enum RouterAction {
@@ -25,7 +27,11 @@ interface ILocation {
 }
 
 export class AppStore {
-  @observable.shallow public userCollection = observable.array<CollectionEntity>([])
+  public client!: ApolloClient<any>;
+
+  @observable public userCollection = observable.array<CollectionEntity>([])
+
+  @observable public collectionLoading = true
 
   @observable public loading = false;
 
@@ -46,6 +52,8 @@ export class AppStore {
     );
   }
 
+  public setClient = (client: ApolloClient<any>) => this.client = client;
+
   @action
   public setLoading = (value: boolean) => this.loading = value
 
@@ -58,8 +66,20 @@ export class AppStore {
   public getCollection = async () => {
     const { accountStore } = store;
     if (accountStore.userInfo) {
-      const { data } = await getUserCollection(accountStore.userInfo.username);
-      runInAction(() => this.userCollection.replace(data.data));
+      await queryToMobxObservable(this.client.watchQuery<{userCollectionsByName: ICollectionListRequest}>({
+        query: UserCollectionsByName,
+        variables: {
+          username: accountStore.userInfo.username,
+        },
+        fetchPolicy: 'cache-and-network',
+      }), (data) => {
+        runInAction(() => {
+          this.userCollection.replace(data.userCollectionsByName.data);
+          this.collectionLoading = false;
+        });
+      });
+      // const { data } = await getUserCollection(accountStore.userInfo.username);
+      // runInAction(() => this.userCollection.replace(data.data));
     }
   }
 

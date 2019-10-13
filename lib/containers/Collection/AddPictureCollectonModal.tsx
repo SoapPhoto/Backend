@@ -6,19 +6,20 @@ import { PictureEntity } from '@lib/common/interfaces/picture';
 import { rgba, rem } from 'polished';
 import { getPictureUrl } from '@lib/common/utils/image';
 import styled from 'styled-components';
-import { CollectionEntity, ICollectionListRequest } from '@lib/common/interfaces/collection';
-import { Check, Minus, PlusCircle } from '@lib/icon';
+import { CollectionEntity } from '@lib/common/interfaces/collection';
+import {
+  Check, Minus, PlusCircle, Lock,
+} from '@lib/icon';
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme, activte } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
 
-import { useStores, useAccountStore } from '@lib/stores/hooks';
+import { useStores } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { observer } from 'mobx-react';
-import { UserCollectionsByName } from '@lib/schemas/query';
-import { useQuery } from '@apollo/react-hooks';
+import { Popover } from '@lib/components/Popover';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
@@ -82,7 +83,7 @@ const ItemInfoBox = styled.div<{isCollected: boolean; isPreview: boolean}>`
   height: 100%;
   top: 0;
   left: 0;
-  background: ${_ => rgba(theme('styles.collection.addPicture.background')(_), _.isPreview ? 0.2 : 0.8)};
+  background: ${_ => rgba(theme('styles.collection.addPicture.background')(_), _.isPreview ? 0.6 : 0.8)};
   transition: all .15s ease-in-out;
   padding: 17px 20px;
   color: ${theme('styles.collection.addPicture.color')};
@@ -147,19 +148,20 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
   currentCollections,
 }) => {
   const { t } = useTranslation();
-  const { userInfo } = useAccountStore();
   const { key, id } = picture;
   const { appStore } = useStores();
-  const { addCollection } = appStore;
+  const {
+    addCollection, getCollection, userCollection, collectionLoading,
+  } = appStore;
   const { colors } = useTheme();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
-  const { data: req } = useQuery<{userCollectionsByName: ICollectionListRequest}>(UserCollectionsByName, {
-    variables: {
-      username: userInfo!.username,
-    },
-  });
+  // const { data: req } = useQuery<{userCollectionsByName: ICollectionListRequest}>(UserCollectionsByName, {
+  //   variables: {
+  //     username: userInfo!.username,
+  //   },
+  // });
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);
@@ -167,9 +169,7 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
     if (!visible) {
       setAddCollectionVisible(false);
     } else {
-      // setTimeout(() => {
-      //   getCollection();
-      // }, 300);
+      getCollection();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
@@ -179,12 +179,10 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
     );
   }, [currentCollections]);
   useEffect(() => {
-    if (req && req.userCollectionsByName && req.userCollectionsByName.data) {
-      const obj: Record<string, boolean> = {};
-      req.userCollectionsByName.data.forEach(collection => obj[collection.id] = false);
-      setLoading(obj);
-    }
-  }, [req]);
+    const obj: Record<string, boolean> = {};
+    userCollection.forEach(collection => obj[collection.id] = false);
+    setLoading(obj);
+  }, [userCollection]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
     if (loadingObj[collection.id]) {
@@ -203,6 +201,7 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
         await addPictureCollection(collection.id, id);
         setCurrent(current.set(collection.id, collection));
       }
+      getCollection();
     } finally {
       setLoading(ld => ({
         ...ld,
@@ -214,9 +213,9 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
     addCollection(data);
     setAddCollectionVisible(false);
   };
-  let content = [<Empty key="loading" loading={!req} />];
-  if (req && req.userCollectionsByName) {
-    content = req.userCollectionsByName.data.map((collection) => {
+  let content = [<Empty key="loading" loading />];
+  if (!collectionLoading) {
+    content = userCollection.map((collection) => {
       const isCollected = current.has(collection.id);
       const isLoading = loadingObj[collection.id];
       const preview = collection.preview.slice();
@@ -233,6 +232,19 @@ export const AddPictureCollectonModal: React.FC<IProps> = observer(({
           <ItemInfoBox isCollected={isCollected} isPreview={!!preview[0]}>
             <div>
               <ItemInfoTitle>
+                {
+                  collection.isPrivate && (
+                    <Popover
+                      trigger="hover"
+                      placement="top"
+                      theme="dark"
+                      openDelay={100}
+                      content={<span>{t('private_xx', t('collection'))}</span>}
+                    >
+                      <Lock style={{ marginRight: '6px', strokeWidth: '3px' }} size={16} />
+                    </Popover>
+                  )
+                }
                 <EmojiText
                   text={collection.name}
                 />
