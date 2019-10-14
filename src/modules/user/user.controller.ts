@@ -5,23 +5,16 @@ import {
   Param,
   Post,
   Query,
-  UploadedFile,
   UseFilters,
   UseGuards,
-  UseInterceptors,
   ForbiddenException,
 } from '@nestjs/common';
-import fs from 'fs';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
-import { File } from '@server/common/interface/file.interface';
-import { photoUpload } from '@server/common/utils/upload';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
-import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { classToPlain } from 'class-transformer';
 import { CollectionService } from '@server/modules/collection/collection.service';
 import { GetUserCollectionListDto } from '@server/modules/collection/dto/collection.dto';
 import { UpdateProfileSettingDto } from './dto/user.dto';
@@ -35,7 +28,6 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly qiniuService: QiniuService,
     private readonly collectionService: CollectionService,
   ) {}
 

@@ -7,6 +7,7 @@ import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import { plainToClass } from 'class-transformer';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
@@ -34,7 +35,10 @@ export class CommentService {
   }
 
   public async create(data: CreatePictureCommentDot, id: string, user: UserEntity) {
-    const picture = await this.pictureService.getOnePicture(id, user);
+    const picture = plainToClass(
+      PictureEntity,
+      await this.pictureService.getOnePicture(id, user),
+    );
     if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
       throw new BadGatewayException('no_picture');
     }

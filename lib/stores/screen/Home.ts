@@ -37,7 +37,7 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
   }
 
   @action
-  public getList = async (query?: Partial<IBaseQuery>, plus = false) => {
+  public getList = async (query: Partial<IBaseQuery> = {}, plus = false) => {
     if (!plus && !this.listInit) {
       this.initQuery();
     }

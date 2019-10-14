@@ -177,7 +177,6 @@ class MyApp extends App<IProps> {
       Component, pageProps, router, apollo,
     } = this.props;
     const { i18n, mobxStore } = this.state;
-    const { picture } = router.query!;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     return (
       <I18nProvider value={i18n}>
@@ -190,10 +189,6 @@ class MyApp extends App<IProps> {
                     <DefaultSeo
                       description="photo, life, happy"
                     />
-                    {
-                      picture
-                    && <PictureModal pictureId={picture.toString()} />
-                    }
                     <Component
                       {...pageProps}
                     />

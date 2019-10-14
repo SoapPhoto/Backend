@@ -43,6 +43,7 @@ jspm_packages
 
 .env
 .env.production
+.env.development
 photo/
 
 .DS_Store

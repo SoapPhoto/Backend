@@ -1,5 +1,5 @@
 import {
-  classToPlain, classToClass, TransformClassToPlain,
+  classToPlain,
 } from 'class-transformer';
 import {
   BadRequestException,
@@ -39,19 +39,16 @@ export class PictureService {
     private pictureRepository: Repository<PictureEntity>,
   ) {}
 
-  @TransformClassToPlain({ groups: [Role.OWNER] })
   public async create(data: Partial<PictureEntity>) {
     const newData = { ...data };
     if (Array.isArray(data.tags)) {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
     }
-    const createData = await this.pictureRepository.save(
+    return classToPlain(await this.pictureRepository.save(
       this.pictureRepository.create(data),
-    );
-    return classToClass(createData, { groups: [Role.OWNER] });
+    ), { groups: [Role.OWNER] });
   }
 
-  @TransformClassToPlain({ groups: [Role.OWNER] })
   public async update(id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
     const picture = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.id=:id', { id })
@@ -69,11 +66,14 @@ export class PictureService {
     } else {
       updateData.tags = [];
     }
-    return this.pictureRepository.save(
-      this.pictureRepository.merge(
-        picture,
-        updateData,
+    return classToPlain(
+      await this.pictureRepository.save(
+        this.pictureRepository.merge(
+          picture,
+          updateData,
+        ),
       ),
+      { groups: [Role.OWNER] },
     );
   }
 
@@ -87,7 +87,7 @@ export class PictureService {
       this.selectList(user, query)
         .andWhere('picture.isPrivate=:private', { private: false })
         .getMany(),
-      this.selectList(user, query)
+      this.pictureRepository.createQueryBuilder('picture')
         .andWhere('picture.isPrivate=:private', { private: false })
         .getCount(),
     ]);
@@ -129,38 +129,11 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public async getOnePicture (
-    id: string,
-    user: Maybe<UserEntity>,
-  ): Promise<PictureEntity>
-
-  // eslint-disable-next-line no-dupe-class-members
-  public async getOnePicture (
-    id: string,
-    user: Maybe<UserEntity>,
-    view: boolean,
-  ): Promise<PictureEntity>
-
-  /**
-   * 获取单个图片的信息 返回格式化过的object
-   *
-   * @memberof PictureService
-   */
-  // eslint-disable-next-line no-dupe-class-members
-  public async getOnePicture (
-    id: string,
-    user: Maybe<UserEntity>,
-    view: boolean,
-    isClass: boolean,
-  ): Promise<Record<string, any>>
-
-  // eslint-disable-next-line no-dupe-class-members
   public async getOnePicture(
     id: string,
     user: Maybe<UserEntity>,
     view?: boolean,
-    isClass?: boolean,
-  ): Promise<PictureEntity | Record<string, any>> {
+  ) {
     const q = this.select(user)
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
@@ -174,11 +147,6 @@ export class PictureService {
       throw new NotFoundException();
     }
     // data.relateCollection = await this.collectionService.pictureRelatedCollection(data.id) as any;
-    if (!isClass) {
-      return classToClass(data, {
-        groups: isOwner ? [Role.OWNER] : [],
-      });
-    }
     return classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : [],
     });
@@ -216,7 +184,7 @@ export class PictureService {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, classToClass(data, {
+    return listRequest(query, classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : undefined,
     }), count);
   }
@@ -234,7 +202,7 @@ export class PictureService {
     const q = this.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
-    return listRequest(query, data, count as number);
+    return listRequest(query, classToPlain(data), count as number);
   }
 
   /**
@@ -248,7 +216,7 @@ export class PictureService {
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
-    return listRequest(query, data, count);
+    return listRequest(query, classToPlain(data), count);
   }
 
   /**

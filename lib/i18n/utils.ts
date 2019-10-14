@@ -20,7 +20,7 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
   const name = Array.isArray(namespace) ? namespace : [namespace];
   try {
     const dataArr = await Promise.all(
-      name.map(n => request.get(`/static/locales/${locale}/${n}.json`)),
+      name.map(n => request.get(`${process.env.URL}/static/locales/${locale}/${n}.json`)),
     );
     const test: Record<I18nNamespace, any> = {} as any;
     dataArr.forEach(({ data }, i) => {
