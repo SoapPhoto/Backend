@@ -2,9 +2,11 @@ import { HomeScreenStore } from './Home';
 import { PictureScreenStore } from './Picture';
 import { TagScreenStore } from './Tag';
 import { UserScreenStore } from './User';
-import { UserScreenPictureList } from './UserList';
+import { UserScreenPictureList } from './UserPictures';
 import { UserScreenCollectionList } from './UserCollections';
 import { CollectionScreenStore } from './Collection';
+import { CollectionScreenPictureList } from './CollectionPictures';
+import { TagScreenPictureList } from './TagPictures';
 
 export interface IScreenStore {
   homeStore: HomeScreenStore;
@@ -14,6 +16,8 @@ export interface IScreenStore {
   tagStore: TagScreenStore;
   pictureStore: PictureScreenStore;
   collectionStore: CollectionScreenStore;
+  collectionPictureStore: CollectionScreenPictureList;
+  tagPictureList: TagScreenPictureList;
 }
 
 export const initScreenStore = (): IScreenStore => ({
@@ -24,4 +28,6 @@ export const initScreenStore = (): IScreenStore => ({
   tagStore: new TagScreenStore(),
   pictureStore: new PictureScreenStore(),
   collectionStore: new CollectionScreenStore(),
+  collectionPictureStore: new CollectionScreenPictureList(),
+  tagPictureList: new TagScreenPictureList(),
 });

@@ -36,6 +36,10 @@ declare module '*/query.graphql' {
   export const UserCollectionsByName: DocumentNode;
   export const UpdatePicture: DocumentNode;
   export const Whoami: DocumentNode;
+  export const Collection: DocumentNode;
+  export const CollectionPictures: DocumentNode;
+  export const Tag: DocumentNode;
+  export const TagPictures: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';

@@ -1,80 +1,53 @@
 import { action, observable } from 'mobx';
 
-import { PictureEntity } from '@lib/common/interfaces/picture';
-import { GetTagPictureListDto, ITagPictureListRequest, TagEntity } from '@lib/common/interfaces/tag';
-import { likePicture, unlikePicture } from '@lib/services/picture';
-import { tagInfo, tagPictureList } from '@lib/services/tag';
-import { ListStore } from '../base/ListStore';
+import { TagEntity } from '@lib/common/interfaces/tag';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { Tag } from '@lib/schemas/query';
+import { BaseStore } from '../base/BaseStore';
 
-export class TagScreenStore extends ListStore<PictureEntity, GetTagPictureListDto> {
+interface ITagGqlReq {
+  tag: TagEntity;
+}
+
+export class TagScreenStore extends BaseStore {
   @observable public name!: string;
 
   @observable public info!: TagEntity;
 
   constructor() {
     super();
-    this.initQuery();
   }
 
-  public getInit = async (name: string, headers?: any) => {
+  public getInfo = async (name: string) => {
     this.name = name;
-    await Promise.all([this.getInfo(headers), this.getList(headers)]);
+    await queryToMobxObservable(this.client.watchQuery<ITagGqlReq>({
+      query: Tag,
+      variables: {
+        name: decodeURI(name),
+      },
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setInfo(data.tag);
+    });
   }
 
-  @action public getInfo = async (headers?: any) => {
-    const { data } = await tagInfo(this.name, headers);
+  @action public setInfo = (data: TagEntity) => {
     this.info = data;
   }
 
-  @action public getList = async (headers?: any, plus = false) => {
-    const { data } = await tagPictureList(this.name, this.listQuery, headers);
-    this.init = true;
-    this.setData(data, plus);
-  }
-
-  @action
-  public getPageList = async () => {
-    const page = this.listQuery.page + 1;
-    if (page > this.maxPage) {
-      return;
-    }
-    // tslint:disable-next-line: no-increment-decrement
-    this.listQuery.page += 1;
-    await this.getList(undefined, true);
-  }
-
-  @action public setData = (data: ITagPictureListRequest, plus: boolean) => {
-    if (plus) {
-      this.list = this.list.concat(data.data);
-    } else {
-      this.list = data.data;
-    }
-    this.listQuery.page = data.page;
-    this.listQuery.pageSize = data.pageSize;
-    this.listQuery.timestamp = data.timestamp;
-    this.count = data.count;
-  }
-
-  @action public initQuery = () => {
-    this.listQuery = {
-      page: 1,
-      pageSize: Number(process.env.LIST_PAGE_SIZE),
-      timestamp: Number(Date.parse(new Date().toISOString())),
-    };
-  }
-
-  @action
-  public like = async (picture: PictureEntity) => {
+  @action public getCache = async (name: string) => {
     try {
-      let func = unlikePicture;
-      if (!picture.isLike) {
-        func = likePicture;
+      const data = this.client.readQuery<ITagGqlReq>({
+        query: Tag,
+        variables: { name: decodeURI(name) },
+      });
+      if (data) {
+        this.setInfo(data.tag);
+      } else {
+        throw new Error('No Cache');
       }
-      const { data } = await func(picture.id);
-      picture.isLike = data.isLike;
-      picture.likes = data.count;
     } catch (err) {
-      console.error(err);
+      await this.getInfo(name);
     }
   }
 }

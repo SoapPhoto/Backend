@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from 'mobx';
+import { action, runInAction } from 'mobx';
 import dayjs from 'dayjs';
 
 import { IBaseQuery } from '@lib/common/interfaces/global';
@@ -18,14 +18,8 @@ interface INewPictureGqlReq {
 export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
   public listInit = false
 
-  @observable private reqUrl = '/api/picture';
-
   constructor() {
     super();
-  }
-
-  @action public setUrl = (url: string) => {
-    this.reqUrl = url;
   }
 
   @action public initQuery = () => {
