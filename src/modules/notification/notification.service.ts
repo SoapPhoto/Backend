@@ -69,10 +69,10 @@ export class NotificationService {
       .orderBy('notification.createTime', 'DESC')
       .getMany();
     return Promise.all(
-      data.map(async notify => plainToClass(NotificationEntity, {
+      data.map(async notify => classToPlain(plainToClass(NotificationEntity, {
         ...notify,
         media: await this.setNotificationItemMedia(notify),
-      })),
+      }))),
     );
   }
 

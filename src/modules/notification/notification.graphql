@@ -1,0 +1,38 @@
+enum NotificationCategory {
+  LIKED
+  COMMENT
+  FOLLOW
+}
+
+enum NotificationType {
+  USER
+  SYSTEM
+}
+
+union NotificationMedia = Picture | Comment | Collection
+
+type Query {
+  userNotification: [Notification]
+}
+
+type Notification implements BaseNode {
+  id: ID!
+
+  "创建时间"
+  createTime: DateTime
+
+  "修改时间"
+  updateTime: DateTime
+
+  "消息发布者"
+  publisher: User
+
+  "种类"
+  category: NotificationCategory
+
+  "是否已读"
+  read: Boolean
+
+  "是否已读"
+  media: NotificationMedia
+}
