@@ -29,7 +29,6 @@ export class NotificationResolver {
     filter: (payload, _var, context) => {
       const { req } = context;
       const { user } = req;
-      console.log(user.id, payload.subscribers.id);
       return user.id.toString() === payload.subscribers.id.toString();
     },
   })
