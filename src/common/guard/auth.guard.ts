@@ -58,7 +58,8 @@ export class AuthGuard implements CanActivate {
     } else {
       // graphql
       const ctx = GqlExecutionContext.create(context).getContext();
-      ({ user } = ctx);
+      ({ user } = ctx.req);
+      ctx.user = user;
     }
     if (user) return true;
     throw new UnauthorizedException();

@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { PubSub } from 'graphql-subscriptions';
 
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
@@ -11,8 +12,12 @@ import { NotificationSubscribersUserEntity } from './subscribers-user/subscriber
 import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 
+export const pubSub = new PubSub();
+
 @Injectable()
 export class NotificationService {
+  public pubSub = new PubSub();
+
   constructor(
     private wss: EventsGateway,
     @InjectRepository(NotificationEntity)
@@ -48,6 +53,7 @@ export class NotificationService {
       );
     }
     notification.media = await this.setNotificationItemMedia(notification);
+    await this.pubSub.publish('newNotification', { newNotification: notification, subscribers });
     this.wss.emitUserMessage(subscribers, 'message', {
       event: 'message',
       data: classToPlain(notification),
