@@ -9,7 +9,7 @@ let requests: any[] = [];
 
 const instance = axios.create({
   withCredentials: true,
-  baseURL: `${server ? 'http://127.0.0.1:3001' : process.env.URL}`,
+  baseURL: `${server ? 'http://127.0.0.1:3001' : process.env.WS_URL}`,
   validateStatus(status: number) {
     return status < 500 && status !== 404;
   },

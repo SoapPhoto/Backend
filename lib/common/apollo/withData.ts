@@ -12,7 +12,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { server } from '../utils';
 
 function createClient({ headers, initialState }: any) {
-  const URL = `${(server && process.env.NODE_ENV === 'production') ? 'http://127.0.0.1:3001' : process.env.URL}/graphql`;
+  const URL = `${(server && process.env.NODE_ENV === 'production') ? 'http://127.0.0.1:3001' : process.env.API_URL}/graphql`;
   const ssrMode = !(process as any).browser;
 
   const httpLink = new HttpLink({
@@ -38,7 +38,7 @@ function createClient({ headers, initialState }: any) {
   );
 
   const wsLink = !ssrMode ? new WebSocketLink({
-    uri: 'ws://localhost.com:30001/graphql',
+    uri: `${process.env.WS_URL}/graphql'`,
     options: {
       reconnect: true,
       connectionParams: {
