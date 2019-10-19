@@ -17,3 +17,10 @@ mutation UnLikePicture($id: ID!) {
     ...PictureLikeFragment
   }
 }
+
+
+mutation MarkNotificationReadAll {
+  markNotificationReadAll {
+    done
+  }
+}

@@ -27,9 +27,9 @@ export class NotificationController {
 
   @Post('all')
   @Roles(Role.USER)
-  public async unReadAll(
+  public async markNotificationReadAll(
     @User() user: UserEntity,
   ) {
-    return this.notificationService.unReadAll(user);
+    return this.notificationService.markNotificationReadAll(user);
   }
 }

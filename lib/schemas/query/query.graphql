@@ -71,3 +71,9 @@ query TagPictures($name: String!, $page: Float, $pageSize: Float, $timestamp: Fl
     ...PictureListFragment
   }
 }
+
+query UserNotification {
+  userNotification {
+    ...NotificationFragment
+  }
+}

@@ -1,5 +1,5 @@
 import {
-  Context, Query, Resolver, ResolveProperty, Subscription,
+  Context, Query, Resolver, ResolveProperty, Subscription, Mutation,
 } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
@@ -32,9 +32,18 @@ export class NotificationResolver {
       return user.id.toString() === payload.subscribers.id.toString();
     },
   })
+
   @Roles(Role.USER)
   public async newNotification() {
     return this.notificationService.pubSub.asyncIterator('newNotification');
+  }
+
+  @Mutation()
+  @Roles(Role.USER)
+  public async markNotificationReadAll(
+    @Context('user') user: UserEntity,
+  ) {
+    return this.notificationService.markNotificationReadAll(user);
   }
 }
 

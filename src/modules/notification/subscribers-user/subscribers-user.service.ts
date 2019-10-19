@@ -11,7 +11,7 @@ export class SubscribersUserService {
     private subscribersRepository: Repository<NotificationSubscribersUserEntity>,
   ) {}
 
-  public unReadAll = async (user: UserEntity) => {
+  public markNotificationReadAll = async (user: UserEntity) => {
     await this.subscribersRepository.createQueryBuilder()
       .update()
       .set({ read: true })

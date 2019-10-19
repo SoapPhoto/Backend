@@ -97,7 +97,7 @@ export class NotificationService {
     .where('subscribers.userId=:userId AND subscribers.read=0', { userId: user.id })
     .getCount()
 
-  public unReadAll = async (user: UserEntity) => {
-    await this.subscribersService.unReadAll(user);
+  public markNotificationReadAll = async (user: UserEntity) => {
+    await this.subscribersService.markNotificationReadAll(user);
   }
 }

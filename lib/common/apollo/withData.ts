@@ -1,12 +1,14 @@
 import { InMemoryCache } from 'apollo-boost';
 import ApolloClient from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
-// import { WebSocketLink } from 'apollo-link-ws';
+import { WebSocketLink } from 'apollo-link-ws';
 import { setContext } from 'apollo-link-context';
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink, split } from 'apollo-link';
 import withData from 'next-with-apollo';
 import { onError } from 'apollo-link-error';
+import cookie from 'js-cookie';
 
+import { getMainDefinition } from 'apollo-utilities';
 import { server } from '../utils';
 
 function createClient({ headers, initialState }: any) {
@@ -16,16 +18,6 @@ function createClient({ headers, initialState }: any) {
   const httpLink = new HttpLink({
     uri: URL,
   });
-
-  // const wsLink = !ssrMode && new WebSocketLink({
-  //   uri: URL,
-  //   options: {
-  //     reconnect: true,
-  //     connectionParams: {
-  //       ...headers,
-  //     },
-  //   },
-  // });
 
   const contextLink = setContext(
     async () => ({
@@ -45,21 +37,35 @@ function createClient({ headers, initialState }: any) {
     },
   );
 
+  const wsLink = !ssrMode ? new WebSocketLink({
+    uri: 'ws://localhost.com:30001/graphql',
+    options: {
+      reconnect: true,
+      connectionParams: {
+        Authorization: cookie.get().Authorization,
+        ...headers,
+      },
+    },
+  }) : () => {
+    console.log('SSR');
+  };
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition'
+            && definition.operation === 'subscription'
+      );
+    },
+    wsLink as any,
+    httpLink,
+  );
+
   const link = ApolloLink.from([
     errorLink,
     contextLink,
-    httpLink,
-    // wsLink as any,
-    // new RetryLink().split(
-    //   ({ query }) => {
-    //     const definition = getMainDefinition(query);
-    //     return (
-    //       definition.kind === 'OperationDefinition'
-    //       && definition.operation === 'subscription'
-    //     );
-    //   },
-    //   wsLink as any,
-    // ),
+    splitLink,
   ]);
   return new ApolloClient({
     link,

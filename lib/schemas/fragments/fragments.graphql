@@ -185,3 +185,20 @@ fragment EXIFFragment on EXIF {
   focalLength
   iso
 }
+
+
+fragment NotificationFragment on Notification {
+  id
+  createTime
+  updateTime
+  publisher {
+    ...UserFragment
+  }
+  category
+  read
+  media {
+    ...on Picture {
+      ...PictureFragment
+    }
+  }
+}

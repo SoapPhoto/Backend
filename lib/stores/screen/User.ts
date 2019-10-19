@@ -49,6 +49,7 @@ export class UserScreenStore extends BaseStore {
         runInAction(() => this.user = data.user);
       }
     } catch (err) {
+      console.log(err);
       await this.getUserInfo(username);
     }
   }

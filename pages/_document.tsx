@@ -12,14 +12,10 @@ export default class MyDocument extends Document {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
     try {
-      console.time('renderPage');
       ctx.renderPage = () => originalRenderPage({
         enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
       });
-      console.timeEnd('renderPage');
-      console.time('Document');
       const initialProps = await Document.getInitialProps(ctx);
-      console.timeEnd('Document');
       return {
         ...initialProps,
         styles: [(
@@ -30,9 +26,7 @@ export default class MyDocument extends Document {
         )],
       };
     } finally {
-      console.time('sheet');
       sheet.seal();
-      console.timeEnd('sheet');
     }
   }
 

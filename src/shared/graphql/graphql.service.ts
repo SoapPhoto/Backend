@@ -29,6 +29,7 @@ export class GraphqlService implements GqlOptionsFactory {
           req,
           res,
           pubSub,
+          user: req.user,
           headers: req.headers,
           cookies: req.cookies,
         };

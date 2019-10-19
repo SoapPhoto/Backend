@@ -50,6 +50,7 @@ export class PictureResolver {
   @Query()
   public async picture(
     @Context('user') user: Maybe<UserEntity>,
+    @Context() context: any,
     @Args('id') id: string,
   ) {
     return this.pictureService.getOnePicture(id, user, true);

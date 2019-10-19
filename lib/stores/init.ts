@@ -41,6 +41,7 @@ export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any
       screen: initScreenStore(),
     };
   }
+  store.notificationStore.setClient(apollo!);
   store.appStore.setClient(apollo!);
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);

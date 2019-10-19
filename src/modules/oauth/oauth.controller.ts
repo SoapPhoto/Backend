@@ -73,7 +73,7 @@ export class OauthController {
       }
       res.cookie('Authorization', `Bearer ${token.accessToken}`, {
         expires: token.accessTokenExpiresAt,
-        httpOnly: true,
+        httpOnly: false,
       });
       res.json(token);
     } catch (err) {
