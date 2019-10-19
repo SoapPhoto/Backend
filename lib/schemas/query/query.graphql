@@ -25,13 +25,13 @@ query NewPictures($page: Float, $pageSize: Float, $timestamp: Float, $lastTimest
 
 query UserInfo($username: String) {
   user(username: $username) {
-    ...UserInfoFragment
+    ...UserDetailFragment
   }
 }
 
 query Whoami {
   whoami {
-    ...UserInfoFragment
+    ...UserDetailFragment
   }
 }
 
@@ -44,5 +44,36 @@ query UserPictures($type: UserPictureType = MY, $username: String!, $page: Float
 query UserCollectionsByName($username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
   userCollectionsByName(username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
     ...CollectionListFragment
+  }
+}
+
+query Collection($id: ID!) {
+  collection(id: $id) {
+    ...CollectionDetailFragment
+  }
+}
+
+
+query CollectionPictures($id: ID!, $page: Float, $pageSize: Float, $timestamp: Float) {
+  collectionPictures(id: $id, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+    ...PictureListFragment
+  }
+}
+
+query Tag($name: String!) {
+  tag(name: $name) {
+    ...TagFragment
+  }
+}
+
+query TagPictures($name: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
+  tagPictures(name: $name, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+    ...PictureListFragment
+  }
+}
+
+query UserNotification {
+  userNotification {
+    ...NotificationFragment
   }
 }

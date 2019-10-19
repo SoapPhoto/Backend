@@ -11,9 +11,6 @@ import {
 import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Link as LinkIcon } from '@lib/icon';
-import { AccountStore } from '@lib/stores/AccountStore';
-import { UserScreenStore } from '@lib/stores/screen/User';
-import { UserScreenPictureList } from '@lib/stores/screen/UserList';
 import {
   Bio,
   EditIcon,
@@ -30,7 +27,6 @@ import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { Cell } from 'styled-css-grid';
 import { A } from '@lib/components/A';
-import { UserScreenCollectionList } from '@lib/stores/screen/UserCollections';
 import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -40,10 +36,6 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
-  userStore: UserScreenStore;
-  picturesStore: UserScreenPictureList;
-  collectionsStore: UserScreenCollectionList;
-  accountStore: AccountStore;
   type: UserType;
 }
 

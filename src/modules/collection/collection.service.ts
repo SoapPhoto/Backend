@@ -8,7 +8,7 @@ import { listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { classToPlain, plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { validator } from '@server/common/utils/validator';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionEntity } from './collection.entity';
@@ -234,7 +234,8 @@ export class CollectionService {
     const q = this.pictureService.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids: list.map(d => d.pictureId) });
     const pictureList = await q.getMany();
-    return listRequest(query, pictureList, count.count as number);
+    console.log(classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }));
+    return listRequest(query, classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }), count.count as number);
   }
 
   public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
@@ -323,7 +324,7 @@ export class CollectionService {
       idList.map(async _ => this.getCollectionDetail(_.ct_id, null)),
     );
     return {
-      data,
+      data: classToPlain(data),
       count,
     };
   }

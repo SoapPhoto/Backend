@@ -41,6 +41,7 @@ export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any
       screen: initScreenStore(),
     };
   }
+  store.notificationStore.setClient(apollo!);
   store.appStore.setClient(apollo!);
   store.accountStore.update(initialState.accountStore);
   store.themeStore.update(initialState.themeStore);
@@ -50,6 +51,8 @@ export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any
   store.screen.homeStore.update(initialState.screen.homeStore, apollo);
   store.screen.tagStore.update(initialState.screen.tagStore, apollo);
   store.screen.pictureStore.update(initialState.screen.pictureStore, apollo);
-  store.screen.collectionStore.update(initialState.screen.collectionStore);
+  store.screen.collectionStore.update(initialState.screen.collectionStore, apollo);
+  store.screen.collectionPictureStore.update(initialState.screen.collectionPictureStore, apollo);
+  store.screen.tagPictureList.update(initialState.screen.tagPictureList, apollo);
   return store;
 };

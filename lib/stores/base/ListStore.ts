@@ -1,5 +1,5 @@
 import {
-  computed, observable, runInAction, toJS,
+  computed, observable, runInAction, action,
 } from 'mobx';
 import { DocumentNode } from 'graphql';
 
@@ -7,9 +7,11 @@ import { IBaseQuery } from '@lib/common/interfaces/global';
 import { IPictureLikeRequest, PictureEntity, IPictureListRequest } from '@lib/common/interfaces/picture';
 import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
 import Fragments from '@lib/schemas/fragments';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { server } from '@lib/common/utils';
 import { BaseStore } from './BaseStore';
 
-export class ListStore<L, V = any, Q = {}> extends BaseStore {
+export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> extends BaseStore {
   @observable public init = false;
 
   @observable public list: L[] = [];
@@ -18,8 +20,28 @@ export class ListStore<L, V = any, Q = {}> extends BaseStore {
 
   @observable public count = 0;
 
-  constructor() {
-    super();
+  // 主要是识别列表的type，做查询的cache
+  @observable public type!: TYPE;
+
+  @observable public listQueryCache: Record<string, Q & IBaseQuery> = {}
+
+  // 一些可变查询
+  public restQuery: Q = {} as Q;
+
+  public query!: DocumentNode;
+
+  public listInit = false
+
+  @action public initQuery = (id: string) => {
+    this.listQuery = {
+      page: 1,
+      pageSize: Number(process.env.LIST_PAGE_SIZE),
+      timestamp: Number(Date.parse(new Date().toISOString())),
+      ...this.restQuery,
+    };
+    if (id) {
+      this.listQueryCache[`${id}:${this.type}`] = observable(this.listQuery);
+    }
   }
 
   @computed get maxPage() {
@@ -104,6 +126,73 @@ export class ListStore<L, V = any, Q = {}> extends BaseStore {
       }
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  public setListQuery = (id: string) => {
+    const label = `${id}:${this.type}`;
+    const data = this.listQueryCache[label];
+    if (data) {
+      this.listQuery = observable(data);
+      return true;
+    }
+    this.initQuery(id);
+    return false;
+  }
+
+  public baseGetList = async (
+    id: string,
+    variables: Record<string, any>,
+    options: {
+      success: (data: V) => void;
+      cache: () => Promise<void>;
+    },
+    noCache = false,
+    plus?: boolean,
+  ) => {
+    this.setListQuery(id);
+    if (!this.listInit || plus || server || noCache) {
+      await queryToMobxObservable(this.client.watchQuery<V>({
+        variables: {
+          ...this.listQuery,
+          ...variables,
+        },
+        query: this.query,
+        fetchPolicy: 'cache-and-network',
+      }), (data: any) => {
+        this.listInit = true;
+        options.success(data);
+      });
+    } else {
+      await options.cache();
+    }
+  }
+
+  public baseGetCache = async (
+    id: string,
+    variables: Record<string, any>,
+    options: {
+      getList: () => Promise<void>;
+      setData: (data: V) => void;
+    },
+  ) => {
+    this.setListQuery(id);
+    try {
+      const data = this.client.readQuery<V>({
+        query: this.query,
+        variables: {
+          ...this.listQuery,
+          ...variables,
+          page: 1,
+        },
+      });
+      if (!data) {
+        await options.getList();
+      } else {
+        options.setData(data);
+      }
+    } catch (err) {
+      await options.getList();
     }
   }
 }

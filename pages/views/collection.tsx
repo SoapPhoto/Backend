@@ -5,7 +5,7 @@ import { pick } from 'lodash';
 import { NextSeo } from 'next-seo';
 
 import { withError } from '@lib/components/withError';
-import { getTitle, Histore } from '@lib/common/utils';
+import { getTitle, Histore, server } from '@lib/common/utils';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { CollectionScreenStore } from '@lib/stores/screen/Collection';
 import { Package, Lock, Settings } from '@lib/icon';
@@ -128,13 +128,16 @@ const useUpdateVisible = (isOwner: boolean): [boolean, (value: boolean) => void]
 };
 
 const Collection: ICustomNextPage<IProps, {}> = () => {
-  const { collectionStore } = useScreenStores();
+  const { collectionStore, collectionPictureStore } = useScreenStores();
   const { userInfo } = useAccountStore();
   const { t } = useTranslation();
   const { colors } = useTheme();
   const {
-    info, list, updateCollection, like,
+    info, updateCollection,
   } = collectionStore;
+  const {
+    list, like,
+  } = collectionPictureStore;
   const {
     name, user, pictureCount, isPrivate, bio,
   } = info!;
@@ -213,24 +216,20 @@ Collection.getInitialProps = async (ctx) => {
   const { route } = ctx;
   const { id } = route.params;
   const { appStore, screen } = ctx.mobxStore;
-  const { collectionStore } = screen;
-  const headers = ctx.req ? ctx.req.headers : undefined;
-  let isPop = false;
-  if (appStore.location) {
-    if (appStore.location.action === 'POP') isPop = true;
-    if (
-      appStore.location.options
-      && appStore.location.options.state
-      && /^child/g.test(appStore.location.options.state.data)
-    ) isPop = true;
+  const { collectionStore, collectionPictureStore } = screen;
+  const { location } = appStore;
+  const isPop = location && location.action === 'POP' && !server;
+  if (isPop) {
+    await Promise.all([
+      collectionStore.getCache(id!),
+      collectionPictureStore.getCache(id!),
+    ]);
+  } else {
+    await Promise.all([
+      collectionStore.getInfo(id!),
+      collectionPictureStore.getList(id!),
+    ]);
   }
-  if ((isPop && !collectionStore.getInfoCache(id!)) || !isPop) {
-    await collectionStore.getInfo(id!, headers);
-  }
-  if ((isPop && !collectionStore.getPictureCache(id!)) || !isPop) {
-    await collectionStore.getList(id!, headers);
-  }
-
   return {};
 };
 

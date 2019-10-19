@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { PubSub } from 'graphql-subscriptions';
 
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
@@ -11,8 +12,12 @@ import { NotificationSubscribersUserEntity } from './subscribers-user/subscriber
 import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 
+export const pubSub = new PubSub();
+
 @Injectable()
 export class NotificationService {
+  public pubSub = new PubSub();
+
   constructor(
     private wss: EventsGateway,
     @InjectRepository(NotificationEntity)
@@ -48,6 +53,7 @@ export class NotificationService {
       );
     }
     notification.media = await this.setNotificationItemMedia(notification);
+    await this.pubSub.publish('newNotification', { newNotification: notification, subscribers });
     this.wss.emitUserMessage(subscribers, 'message', {
       event: 'message',
       data: classToPlain(notification),
@@ -69,10 +75,10 @@ export class NotificationService {
       .orderBy('notification.createTime', 'DESC')
       .getMany();
     return Promise.all(
-      data.map(async notify => plainToClass(NotificationEntity, {
+      data.map(async notify => classToPlain(plainToClass(NotificationEntity, {
         ...notify,
         media: await this.setNotificationItemMedia(notify),
-      })),
+      }))),
     );
   }
 
@@ -91,7 +97,7 @@ export class NotificationService {
     .where('subscribers.userId=:userId AND subscribers.read=0', { userId: user.id })
     .getCount()
 
-  public unReadAll = async (user: UserEntity) => {
-    await this.subscribersService.unReadAll(user);
+  public markNotificationReadAll = async (user: UserEntity) => {
+    await this.subscribersService.markNotificationReadAll(user);
   }
 }

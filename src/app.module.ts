@@ -5,8 +5,6 @@ import {
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Request } from 'express';
-import { GraphQLError } from 'graphql';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nest-modules/mailer';
 import redisStore from 'cache-manager-redis-store';
@@ -21,9 +19,9 @@ import { QiniuModule } from './shared/qiniu/qiniu.module';
 import { EventsModule } from './events/events.module';
 
 import { OauthMiddleware } from './common/middleware/oauth.middleware';
-import { Logger } from './shared/logging/logging.service';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 import ormconfig from './ormconfig';
+import { GraphqlService } from './shared/graphql/graphql.service';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -48,27 +46,8 @@ import ormconfig from './ormconfig';
       keyPrefix: process.env.REDIS_PRIFIX,
     }),
     TypeOrmModule.forRoot(ormconfig),
-    GraphQLModule.forRoot({
-      resolverValidationOptions: {
-        requireResolversForResolveType: false,
-      },
-      typePaths: ['./comment/graphql/*.graphql', './**/*.graphql'],
-      context: ({ req }: { req: Request }) => ({
-        headers: req.headers,
-        cookies: req.cookies,
-        user: req.user,
-      }),
-      formatError: (error: GraphQLError) => {
-        Logger.error(
-          JSON.stringify({
-            message: error.message,
-            location: error.locations,
-            stack: error.stack ? error.stack.split('\n') : [],
-            path: error.path,
-          }),
-        );
-        return error;
-      },
+    GraphQLModule.forRootAsync({
+      useClass: GraphqlService,
     }),
     MailerModule.forRootAsync({
       useFactory: () => ({

@@ -36,6 +36,11 @@ declare module '*/query.graphql' {
   export const UserCollectionsByName: DocumentNode;
   export const UpdatePicture: DocumentNode;
   export const Whoami: DocumentNode;
+  export const Collection: DocumentNode;
+  export const CollectionPictures: DocumentNode;
+  export const Tag: DocumentNode;
+  export const TagPictures: DocumentNode;
+  export const UserNotification: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';
@@ -43,6 +48,12 @@ declare module '*/mutations.graphql' {
   export const UpdatePicture: DocumentNode;
   export const LikePicture: DocumentNode;
   export const UnLikePicture: DocumentNode;
+  export const MarkNotificationReadAll: DocumentNode;
+}
+declare module '*/subscription.graphql' {
+  import { DocumentNode } from 'graphql';
+
+  export const NewNotification: DocumentNode;
 }
 
 declare module '*/fragments.graphql' {

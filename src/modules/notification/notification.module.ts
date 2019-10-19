@@ -11,9 +11,10 @@ import { NotificationService } from './notification.service';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { SubscribersUserModule } from './subscribers-user/subscribers-user.module';
 import { PictureModule } from '../picture/picture.module';
+import { NotificationResolver, NotificationMediaResolver } from './notification.resolvers';
 
 @Module({
-  providers: [NotificationService],
+  providers: [NotificationService, NotificationResolver, NotificationMediaResolver],
   controllers: [NotificationController],
   imports: [
     TypeOrmModule.forFeature([NotificationEntity, NotificationSubscribersUserEntity]),

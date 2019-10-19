@@ -1,10 +1,16 @@
-import setupSocket from '@lib/common/sockets';
-import { getNotificationList, unReadAllNotificationList } from '@lib/services/notification';
 import { observable, action } from 'mobx';
+import { ApolloClient } from 'apollo-boost';
+
 import { NotificationEntity } from '@lib/common/interfaces/notification';
+import { queryToMobxObservable } from '@lib/common/apollo';
+import { UserNotification } from '@lib/schemas/query';
+import { NewNotification } from '@lib/schemas/subscription';
+import { MarkNotificationReadAll } from '@lib/schemas/mutations';
 
 export class NotificationStore {
   public io?: SocketIOClient.Socket;
+
+  public client!: ApolloClient<any>;
 
   @observable public list: NotificationEntity[] = [];
 
@@ -20,12 +26,24 @@ export class NotificationStore {
 
   public close = () => this.io && this.io.close()
 
+  public setClient = (client: ApolloClient<any>) => this.client = client;
+
   public createSocket = () => {
-    // if (!this.init) {
-    //   this.init = true;
-    //   this.io = setupSocket();
-    //   this.message();
-    // }
+    if (!this.init) {
+      this.client.subscribe<{newNotification: NotificationEntity}>({
+        query: NewNotification,
+      }).subscribe({
+        next: (data) => {
+          if (data.data) {
+            this.pushNotification(data.data.newNotification);
+          }
+        },
+        error: error => console.log(error),
+      });
+      // this.init = true;
+      // this.io = setupSocket();
+      // this.message();
+    }
   }
 
   public message = () => {
@@ -41,15 +59,22 @@ export class NotificationStore {
 
   public getList = async () => {
     this.setLoading(true);
-    const { data } = await getNotificationList();
-    this.setLoading(false);
-    this.setList(data);
-    this.pushWaitQueue();
+    await queryToMobxObservable<{userNotification: NotificationEntity[]}>(
+      this.client.watchQuery({
+        query: UserNotification,
+      }), (data) => {
+        this.setLoading(false);
+        this.setList(data.userNotification);
+        this.pushWaitQueue();
+      },
+    );
   }
 
-  public unReadAll = async () => {
+  public unReadAll = () => {
     this.unReadList();
-    await unReadAllNotificationList();
+    this.client.mutate({
+      mutation: MarkNotificationReadAll,
+    });
   }
 
   @action

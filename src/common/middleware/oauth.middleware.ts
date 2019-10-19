@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import * as OAuth2Server from 'oauth2-server';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class OauthMiddleware implements NestMiddleware {
     private readonly oauthServerService: OauthServerService,
   ) {}
 
-  public async use(req: Request, res: Response, next: () => void) {
+  public async use(req: any, res: Response, next: () => void) {
     const isReq = /text\/html|application\/json/g.test(req.headers.accept || '');
     if (!isReq) {
       next();

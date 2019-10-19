@@ -116,6 +116,22 @@ fragment CollectionFragment on Collection {
   updateTime
 }
 
+fragment CollectionDetailFragment on Collection {
+  id
+  name
+  bio
+  isPrivate
+  pictureCount
+  createTime
+  updateTime
+  user {
+    ...UserFragment
+  }
+  preview {
+    ...PicturePreviewFragment
+  }
+}
+
 fragment CollectionListFragment on Collections {
   count
   page
@@ -147,7 +163,7 @@ fragment UserFragment on User {
   updateTime
 }
 
-fragment UserInfoFragment on User {
+fragment UserDetailFragment on User {
   ...UserFragment
   pictures {
     ...PictureFragment
@@ -160,10 +176,29 @@ fragment TagFragment on Tag {
   name
   createTime
   updateTime
+  pictureCount
 }
+
 fragment EXIFFragment on EXIF {
   aperture
   exposureTime
   focalLength
   iso
+}
+
+
+fragment NotificationFragment on Notification {
+  id
+  createTime
+  updateTime
+  publisher {
+    ...UserFragment
+  }
+  category
+  read
+  media {
+    ...on Picture {
+      ...PictureFragment
+    }
+  }
 }

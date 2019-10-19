@@ -7,7 +7,7 @@ import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, classToPlain } from 'class-transformer';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
@@ -31,7 +31,7 @@ export class CommentService {
       .leftJoinAndSelect('comment.user', 'user');
     this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
-    return listRequest(query, data, count);
+    return listRequest(query, classToPlain(data), count);
   }
 
   public async create(data: CreatePictureCommentDot, id: string, user: UserEntity) {
@@ -61,6 +61,6 @@ export class CommentService {
         },
       );
     }
-    return comment;
+    return classToPlain(comment);
   }
 }
