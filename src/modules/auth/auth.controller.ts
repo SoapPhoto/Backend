@@ -33,7 +33,9 @@ export class AuthController {
   public async logout(
     @Res() res: Response,
   ) {
-    res.clearCookie('Authorization');
+    res.clearCookie('Authorization', {
+      domain: process.env.COOKIE_DOMAIN,
+    });
     res.json();
   }
 

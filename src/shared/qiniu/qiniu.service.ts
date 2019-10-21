@@ -9,7 +9,7 @@ export class QiniuService {
   private config: qiniu.rs.PutPolicyOptions = {
     scope: process.env.QN_BUCKET,
     // callbackUrl: 'https://eniluiqxyujmi.x.pipedream.net/api/file/upload/callback',
-    callbackUrl: `${process.env.URL}/api/file/upload/callback`,
+    callbackUrl: `${process.env.API_URL}/api/file/upload/callback`,
     callbackBodyType: 'application/json',
   }
 

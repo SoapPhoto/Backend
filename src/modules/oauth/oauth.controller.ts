@@ -52,12 +52,12 @@ export class OauthController {
         code = await this.oauthService.google(query);
       }
       if (code) {
-        res.redirect(`/redirect/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
+        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
       } else {
-        res.redirect(`/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
+        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err) {
-      res.redirect(`/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
+      res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
     }
   }
 
@@ -73,7 +73,8 @@ export class OauthController {
       }
       res.cookie('Authorization', `Bearer ${token.accessToken}`, {
         expires: token.accessTokenExpiresAt,
-        httpOnly: false,
+        domain: process.env.COOKIE_DOMAIN,
+        path: '/',
       });
       res.json(token);
     } catch (err) {

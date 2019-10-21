@@ -17,6 +17,7 @@ function createClient({ headers, initialState }: any) {
 
   const httpLink = new HttpLink({
     uri: URL,
+    credentials: 'include',
   });
 
   const contextLink = setContext(
@@ -38,7 +39,7 @@ function createClient({ headers, initialState }: any) {
   );
 
   const wsLink = !ssrMode ? new WebSocketLink({
-    uri: `${process.env.WS_URL}/graphql'`,
+    uri: `${process.env.WS_URL}/graphql`,
     options: {
       reconnect: true,
       connectionParams: {

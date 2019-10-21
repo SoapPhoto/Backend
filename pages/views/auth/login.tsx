@@ -8,7 +8,6 @@ import { Button } from '@lib/components/Button';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
-import { Router } from '@lib/routes';
 import { Title, Wrapper, OauthIcon } from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
 import styled from 'styled-components';
@@ -45,6 +44,13 @@ const Login: React.FC<IBaseScreenProps> = () => {
   const { login, codeLogin } = useAccountStore();
   const { t } = useTranslation();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const push = useCallback(() => {
+    if (query.redirectUrl) {
+      window.location = query.redirectUrl as any;
+    } else {
+      window.location = '/' as any;
+    }
+  }, [query.redirectUrl]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(false);
@@ -52,12 +58,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
       await login(value.username, value.password);
       setSubmitting(true);
       setTimeout(async () => {
-        if (query.redirectUrl) {
-          window.location = query.redirectUrl as any;
-        } else {
-          window.location = '/' as any;
-        }
-        window.scrollTo(0, 0);
+        push();
       }, 400);
       Toast.success(t('login_successful'));
     } catch (error) {
@@ -71,11 +72,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
     try {
       await codeLogin(data.code!, data.type!);
       setTimeout(() => {
-        if (query.redirectUrl) {
-          Router.replaceRoute(query.redirectUrl);
-        } else {
-          Router.replaceRoute('/');
-        }
+        push();
       }, 400);
       Toast.success(t('login_successful'));
     } catch (error) {
@@ -83,7 +80,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
     } finally {
       setConfirmLoading(false);
     }
-  }, [codeLogin, query.redirectUrl, t]);
+  }, [codeLogin, push, t]);
   const messageCb = useCallback((e: MessageEvent) => {
     oauthSuccess(e, getInfo, () => window.removeEventListener('message', messageCb));
   }, [getInfo]);

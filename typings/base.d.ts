@@ -16,6 +16,8 @@ declare namespace NodeJS {
      */
     URL: string;
 
+    COOKIE_DOMAIN: string;
+
     DATABASE_PORT: string;
     DATABASE_HOST: string;
     DATABASE_USERNAME: string;

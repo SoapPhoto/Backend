@@ -43,7 +43,9 @@ const bootstrap = async () => {
     transform: true,
   }));
   server.enableCors({
-    origin: 'http://localhost.com',
+    origin: process.env.URL,
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
   });
 
   await server.listen(process.env.PORT!);

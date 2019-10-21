@@ -16,7 +16,7 @@ let openWindow: Window | null = null;
 export const getOauthUrl = (type: OauthType, state: OauthStateType) => {
   let url = '';
   let query: Record<string, any> = {};
-  const cb = `${process.env.URL}/oauth/${type.toLowerCase()}/redirect`;
+  const cb = `${process.env.API_URL}/oauth/${type.toLowerCase()}/redirect`;
   if (type === OauthType.GITHUB) {
     const clientId = process.env.OAUTH_GITHUB_CLIENT_ID;
     url = 'https://github.com/login/oauth/authorize';

@@ -17,6 +17,11 @@ export class GraphqlService implements GqlOptionsFactory {
 
   public async createGqlOptions(): Promise<GqlModuleOptions> {
     return {
+      cors: {
+        origin: process.env.URL,
+        credentials: true,
+        methods: ['GET', 'PUT', 'POST', 'DELETE'],
+      },
       context: async ({ req, res, connection }) => {
         if (connection) {
           return {
