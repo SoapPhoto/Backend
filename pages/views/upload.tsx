@@ -145,7 +145,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                     <Trash2 />
                   </IconButton>
                 </TrashIcon>
-                <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 1 : 0 }} />
+                <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 0.6 : 0 }} />
                 <Preview src={imageUrl} />
               </PreviewBox>
               <Content>

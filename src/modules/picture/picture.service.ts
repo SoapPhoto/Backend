@@ -275,6 +275,23 @@ export class PictureService {
   }
 
   /**
+   * 获取用户的预览图片
+   *
+   * @param {string} username
+   * @param {number} limit
+   * @returns
+   * @memberof PictureService
+   */
+  public async getUserPreviewPictures(username: string, limit: number) {
+    return this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.userUsername=:username', { username })
+      .andWhere('picture.isPrivate=0')
+      .orderBy('picture.createTime', 'DESC')
+      .limit(limit)
+      .getMany();
+  }
+
+  /**
    * 没有任何关联的查询图片信息
    *
    * @memberof PictureService
@@ -313,6 +330,10 @@ export class PictureService {
         .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
   }
+
+  // public async getCurrentCollections(id: string, user: UserEntity) {
+
+  // }
 
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断

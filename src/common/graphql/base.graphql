@@ -20,3 +20,21 @@ interface BaseCountData {
 type Status {
   done: Boolean
 }
+
+input PicturesQueryInput {
+  "分页"
+  page: Float
+  "分页"
+  pageSize: Float
+  "时间戳"
+  timestamp: Float
+}
+
+input CollectionsQueryInput {
+  "分页"
+  page: Float
+  "分页"
+  pageSize: Float
+  "时间戳"
+  timestamp: Float
+}

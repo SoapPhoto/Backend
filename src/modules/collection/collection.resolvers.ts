@@ -27,7 +27,7 @@ export class CollectionResolver {
   @Query()
   public async collectionPictures(
     @Context('user') user: Maybe<UserEntity>,
-    @Args() query: GetCollectionPictureListDto,
+    @Args('query') query: GetCollectionPictureListDto,
     @Args('id') id: string,
   ) {
     return this.collectionService.getCollectionPictureList(id, query, user);

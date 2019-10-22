@@ -16,23 +16,13 @@ type Query {
   "获取用户的收藏夹列表"
   userCollectionsByName(
     username: String!
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: CollectionsQueryInput!
   ): Collections
 
   "获取用户的收藏夹列表"
   userCollectionsById(
     id: ID!
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: CollectionsQueryInput!
   ): Collections
 
   userPicturesByName(
@@ -40,24 +30,14 @@ type Query {
     type: UserPictureType = MY
     "用户名"
     username: String!
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: PicturesQueryInput!
   ): Pictures
   userPicturesById(
     "类型"
     type: UserPictureType = MY
     "id"
     id: ID!
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: PicturesQueryInput
   ): Pictures
 }
 
@@ -96,6 +76,6 @@ type User implements BaseNode {
   createTime: DateTime
   updateTime: DateTime
 
-  pictures: [Picture]
+  pictures(limit: Float): [Picture]
 }
 

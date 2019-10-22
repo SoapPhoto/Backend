@@ -6,18 +6,15 @@ query Picture($id: ID!) {
   }
 }
 
-query Pictures($page: Float, $pageSize: Float, $timestamp: Float) {
-  pictures(page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+query Pictures($query: PicturesQueryInput!) {
+  pictures(query: $query) {
     ...PictureListFragment
   }
 }
 
-query NewPictures($page: Float, $pageSize: Float, $timestamp: Float, $lastTimestamp: Float) {
+query NewPictures($query: NewPicturesQueryInput!) {
   newPictures(
-    page: $page,
-    pageSize: $pageSize,
-    timestamp: $timestamp,
-    lastTimestamp: $lastTimestamp
+    query: $query
   ) {
     ...PictureListFragment
   }
@@ -35,14 +32,21 @@ query Whoami {
   }
 }
 
-query UserPictures($type: UserPictureType = MY, $username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
-  userPicturesByName(type: $type, username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+query UserPictures(
+  $type: UserPictureType = MY,
+  $username: String!,
+  $query: PicturesQueryInput!
+) {
+  userPicturesByName(type: $type, username: $username, query: $query) {
     ...PictureListFragment
   }
 }
 
-query UserCollectionsByName($username: String!, $page: Float, $pageSize: Float, $timestamp: Float) {
-  userCollectionsByName(username: $username, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+query UserCollectionsByName(
+  $username: String!,
+  $query: PicturesQueryInput
+) {
+  userCollectionsByName(username: $username, query: $query) {
     ...CollectionListFragment
   }
 }
@@ -54,8 +58,8 @@ query Collection($id: ID!) {
 }
 
 
-query CollectionPictures($id: ID!, $page: Float, $pageSize: Float, $timestamp: Float) {
-  collectionPictures(id: $id, page: $page, pageSize: $pageSize, timestamp: $timestamp) {
+query CollectionPictures($id: ID!, $query: PicturesQueryInput!) {
+  collectionPictures(id: $id, query: $query) {
     ...PictureListFragment
   }
 }

@@ -27,8 +27,10 @@ export class UserScreenPictureList extends ListStore<PictureEntity, IUserPicture
     await this.baseGetList(username, {
       username,
       type: this.getType(),
-      ...this.listQuery,
-      ...query,
+      query: {
+        ...this.listQuery,
+        ...query,
+      },
     }, {
       success: data => this.setData(data.userPicturesByName, plus),
       cache: () => this.getCache(username, type),
@@ -49,7 +51,9 @@ export class UserScreenPictureList extends ListStore<PictureEntity, IUserPicture
     await this.baseGetCache(username, {
       username,
       type: this.getType(),
-      ...this.listQuery,
+      query: {
+        ...this.listQuery,
+      },
     }, {
       getList: async () => this.getList(username, type, {}, true),
       setData: ({ userPicturesByName }) => this.setData(userPicturesByName),

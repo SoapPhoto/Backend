@@ -165,7 +165,7 @@ fragment UserFragment on User {
 
 fragment UserDetailFragment on User {
   ...UserFragment
-  pictures {
+  pictures(limit: 3) {
     ...PictureFragment
   }
 }

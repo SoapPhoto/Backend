@@ -37,6 +37,7 @@ export const Progress = styled.div`
   bottom: 0;
   left: 0;
   width: 0px;
+  height: 100%;
   z-index: 2;
   transition: .2s width ease;
 `;

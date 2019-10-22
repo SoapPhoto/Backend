@@ -153,6 +153,15 @@ export class UserService {
     return undefined;
   }
 
+  /**
+   * 获取用户的详细信息
+   *
+   * @param {ID} query
+   * @param {(Maybe<UserEntity> | boolean)} user
+   * @param {string[]} [groups]
+   * @returns {Promise<UserEntity>}
+   * @memberof UserService
+   */
   public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
     const q = this.userEntity.createQueryBuilder('user');
     this.selectInfo<UserEntity>(q);
@@ -162,15 +171,16 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: query });
     }
-    q
-      .leftJoinAndMapMany(
-        'user.pictures',
-        PictureEntity,
-        'picture',
-        'picture.userId = user.id AND picture.isPrivate=0',
-      )
-      .orderBy('picture.createTime', 'DESC')
-      .limit(3);
+    /// graphql已查询
+    // q
+    //   .leftJoinAndMapMany(
+    //     'user.pictures',
+    //     PictureEntity,
+    //     'picture',
+    //     'picture.userId = user.id AND picture.isPrivate=0',
+    //   )
+    //   .orderBy('picture.createTime', 'DESC')
+    //   .limit(3);
     const data = await q.cache(100).getOne();
     return plainToClass(UserEntity, data, {
       groups,
@@ -185,9 +195,13 @@ export class UserService {
 
 
   public async getBaseUser(id: ID) {
-    return this.userEntity.createQueryBuilder('user')
-      .where('user.id=:id', { id })
-      .getOne();
+    const q = this.userEntity.createQueryBuilder('user');
+    if (this.isId(id)) {
+      q.where('user.id=:id', { id });
+    } else {
+      q.where('user.username=:username', { username: id });
+    }
+    return q.getOne();
   }
 
   public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
@@ -196,6 +210,10 @@ export class UserService {
 
   public async getUserLikePicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserLikePicture(idOrName, query, user);
+  }
+
+  public async getUserPreviewPictures(username: string, limit: number) {
+    return this.pictureService.getUserPreviewPictures(username, limit);
   }
 
   public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {
@@ -224,5 +242,9 @@ export class UserService {
     return plainToClass(UserEntity, data, {
       groups: [Role.OWNER],
     });
+  }
+
+  public isId(id: string | number) {
+    return validator.isNumber(id) || validator.isNumberString(id as string);
   }
 }

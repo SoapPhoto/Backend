@@ -26,7 +26,7 @@ export class PictureResolver {
   @Query()
   public async pictures(
     @Context('user') user: Maybe<UserEntity>,
-    @Args() query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto,
   ) {
     return this.pictureService.getList(user, query);
   }
@@ -34,7 +34,7 @@ export class PictureResolver {
   @Query()
   public async newPictures(
     @Context('user') user: Maybe<UserEntity>,
-    @Args() query: GetNewPictureListDto,
+    @Args('query') query: GetNewPictureListDto,
   ) {
     return this.pictureService.getNewList(user, query);
   }
@@ -42,9 +42,11 @@ export class PictureResolver {
   @Query()
   public async userPictures(
     @Context('user') user: Maybe<UserEntity>,
-    @Args() query: GetUserPictureListDto,
+    @Args('id') id: string,
+    @Args('username') username: string,
+    @Args('query') query: GetUserPictureListDto,
   ) {
-    return this.pictureService.getUserPicture(query.id || query.username, query, user);
+    return this.pictureService.getUserPicture(id || username, query, user);
   }
 
   @Query()

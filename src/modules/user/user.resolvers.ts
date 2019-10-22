@@ -1,5 +1,5 @@
 import {
-  Args, Context, Query, Resolver,
+  Args, Context, Query, Resolver, ResolveProperty, Parent,
 } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
@@ -42,7 +42,7 @@ export class UserResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args('username') username: string,
     @Args('type') type: UserPictureType,
-    @Args() query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto,
   ) {
     if (type === UserPictureType.MY) {
       return this.userService.getUserPicture(username, query, user);
@@ -55,7 +55,7 @@ export class UserResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args('type') type: UserPictureType,
-    @Args() query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto,
   ) {
     if (type === UserPictureType.MY) {
       return this.userService.getUserPicture(id, query, user);
@@ -67,7 +67,7 @@ export class UserResolver {
   public async userCollectionsByName(
     @Context('user') user: Maybe<UserEntity>,
     @Args('username') username: string,
-    @Args() query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto,
   ) {
     return this.collectionService.getUserCollectionList(username, query, user);
   }
@@ -76,15 +76,16 @@ export class UserResolver {
   public async userCollectionsById(
     @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
-    @Args() query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto,
   ) {
     return this.collectionService.getUserCollectionList(id, query, user);
   }
-  // @ResolveProperty('avatar')
-  // public async getAvatarSize(
-  //   @Parent() parent: any,
-  //   @Args() data: string,
-  // ) {
-  //   console.log(12312, parent, data);
-  // }
+
+  @ResolveProperty('pictures')
+  public async getAvatarSize(
+    @Parent() parent: UserEntity,
+    @Args('limit') limit: number,
+  ) {
+    return this.userService.getUserPreviewPictures(parent.username, limit);
+  }
 }

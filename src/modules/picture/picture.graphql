@@ -6,24 +6,12 @@ type Query {
 
   "获取图片列表"
   pictures(
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: PicturesQueryInput!
   ): Pictures
 
   "获取更新图片列表"
   newPictures(
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
-    "起始时间戳"
-    lastTimestamp: Float
+    query: NewPicturesQueryInput!
   ): Pictures
 
   "获取图片相关收藏夹"
@@ -37,12 +25,7 @@ type Query {
     id: ID!
     "用户名"
     username: String
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    query: PicturesQueryInput!
   ): Pictures
 }
 
@@ -69,6 +52,17 @@ input UpdatePictureInput {
   bio: String
   isPrivate: Boolean
   tags: [String]
+}
+
+input NewPicturesQueryInput {
+  "分页"
+  page: Float
+  "分页"
+  pageSize: Float
+  "时间戳"
+  timestamp: Float
+  "起始时间戳"
+  lastTimestamp: Float
 }
 
 type PictureRelatedCollectionReq implements BaseCountData {

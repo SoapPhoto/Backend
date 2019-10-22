@@ -1,6 +1,6 @@
 import { InMemoryCache } from 'apollo-boost';
 import ApolloClient from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
+import { BatchHttpLink } from 'apollo-link-batch-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { setContext } from 'apollo-link-context';
 import { ApolloLink, split } from 'apollo-link';
@@ -15,7 +15,7 @@ function createClient({ headers, initialState }: any) {
   const URL = `${(server && process.env.NODE_ENV === 'production') ? 'http://127.0.0.1:3001' : process.env.API_URL}/graphql`;
   const ssrMode = !(process as any).browser;
 
-  const httpLink = new HttpLink({
+  const httpLink = new BatchHttpLink({
     uri: URL,
     credentials: 'include',
   });

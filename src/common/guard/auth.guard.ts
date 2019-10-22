@@ -21,37 +21,6 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    // const isSocket = !!request.client;
-    // if (isSocket) {
-    //   const req = request as Socket;
-    //   const { token } = req.handshake.query;
-    //   console.log(req.handshake.headers, response);
-    //   if (!token) {
-    //     throw new WsException('error token');
-    //   } else {
-    //     try {
-    //       const data = await this.oauthServerService.server.authenticate(
-    //         new OAuth2Server.Request({
-    //           method: 'get',
-    //           query: {},
-    //           headers: {
-    //             ...parse(req.handshake.headers.cookie),
-    //           },
-    //         }),
-    //         new OAuth2Server.Response(response),
-    //       );
-    //       if (data) {
-    //         (req.handshake as any).user = data.user;
-    //         return true;
-    //       }
-    //       throw new WsException('error token');
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //     return true;
-    //   }
-    // } else {
-    // }
     let user;
     if (request) {
       ({ user } = request);

@@ -24,8 +24,10 @@ export class CollectionScreenPictureList extends ListStore<PictureEntity, IColle
     this.id = id;
     await this.baseGetList(id, {
       id: decodeURI(id),
-      ...this.listQuery,
-      ...query,
+      query: {
+        ...this.listQuery,
+        ...query,
+      },
     }, {
       success: data => this.setData(data.collectionPictures, plus),
       cache: () => this.getCache(id),
@@ -44,7 +46,9 @@ export class CollectionScreenPictureList extends ListStore<PictureEntity, IColle
     this.id = id;
     await this.baseGetCache(id, {
       id,
-      ...this.listQuery,
+      query: {
+        ...this.listQuery,
+      },
     }, {
       getList: async () => this.getList(id, {}, true),
       setData: ({ collectionPictures }) => this.setData(collectionPictures),

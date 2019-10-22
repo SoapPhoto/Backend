@@ -39,8 +39,10 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
       await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
         query: Pictures,
         variables: {
-          ...this.listQuery,
-          ...query,
+          query: {
+            ...this.listQuery,
+            ...query,
+          },
         },
         fetchPolicy: 'cache-and-network',
       }), (data) => {
@@ -56,8 +58,10 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
         const cacheData = this.client.readQuery<IPictureGqlReq>({
           query: Pictures,
           variables: {
-            ...this.listQuery,
-            page: 1,
+            query: {
+              ...this.listQuery,
+              page: 1,
+            },
           },
         });
         this.list = cacheData!.pictures.data;
@@ -86,10 +90,12 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
     queryToMobxObservable(this.client.watchQuery<INewPictureGqlReq>({
       query: NewPictures,
       variables: {
-        ...this.listQuery,
-        timestamp: this.getNowDate(),
-        lastTimestamp: dayjs(this.list[0].createTime).valueOf(),
-        ...query,
+        query: {
+          ...this.listQuery,
+          timestamp: this.getNowDate(),
+          lastTimestamp: dayjs(this.list[0].createTime).valueOf(),
+          ...query,
+        },
       },
       fetchPolicy: 'network-only',
     }), req => runInAction(() => {
@@ -104,8 +110,10 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
           this.client.writeQuery<IPictureGqlReq>({
             query: Pictures,
             variables: {
-              ...this.listQuery,
-              page: 1,
+              query: {
+                ...this.listQuery,
+                page: 1,
+              },
             },
             data: cache,
           });
