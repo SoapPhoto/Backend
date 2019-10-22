@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'react-feather';
@@ -12,6 +12,10 @@ interface IProps {
   visible: boolean;
   onClose: () => void;
   src: string;
+  size: {
+    width: number;
+    height: number;
+  };
 }
 
 const Wrapper = styled(motion.div)`
@@ -27,18 +31,22 @@ const Wrapper = styled(motion.div)`
   color: #fff;
 `;
 
-const Box = styled.div<{big: number}>`
+const Box = styled.div<{big: number; type: string}>`
   width: 100%;
   height: 100%;
   position: fixed;
   display: flex;
-  justify-content: center;
   overflow: auto;
+  justify-content: center;
+  align-items: center;
   ${_ => (_.big ? css`
-    align-items: baseline;
-  ` : css`
-    align-items: center;
-  `)}
+    ${/x/.test(_.type) ? css`
+      justify-content: normal;
+    ` : ''}
+    ${/y/.test(_.type) ? css`
+      align-items: baseline;
+    ` : ''}
+  ` : '')}
 `;
 
 const CloseBtn = styled(IconButton)`
@@ -55,7 +63,7 @@ const CloseBtn = styled(IconButton)`
   cursor: pointer;
 `;
 
-const Img = styled.img<{big: number}>`
+const Img = styled.img<{big: number; noBig: number}>`
   ${_ => (_.big ? css`
     max-width: inherit;
     max-height: inherit;
@@ -63,17 +71,39 @@ const Img = styled.img<{big: number}>`
   ` : css`
     max-width: 100vw;
     max-height: 100vh;
-    cursor: zoom-in;
+    ${!_.noBig ? `
+      cursor: zoom-in;
+    ` : ''}
   `)}
 `;
 
-export const LightBox: React.FC<IProps> = ({ visible, onClose, src }) => {
+export const LightBox: React.FC<IProps> = ({
+  visible, onClose, src, size,
+}) => {
   const [big, setBig] = useState(false);
+  const [bigType, setBigType] = useState('');
   useEffect(() => {
     if (visible) {
       disableScroll();
     }
   }, [visible]);
+  useEffect(() => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    let type = '';
+    if (size.width > width + 200) {
+      type += 'x';
+    }
+    if (size.height > height + 200) {
+      type += 'y';
+    }
+    setBigType(type);
+  }, [size]);
+  const openBig = useCallback(() => {
+    if (!(bigType === '')) {
+      setBig(!big);
+    }
+  }, [big, bigType]);
   return (
     <NoSSR>
       {
@@ -93,7 +123,7 @@ export const LightBox: React.FC<IProps> = ({ visible, onClose, src }) => {
                 transition={{ duration: 0.2 }}
                 exit={{ opacity: 0 }}
               >
-                <Box big={big ? 1 : 0}>
+                <Box big={big ? 1 : 0} type={bigType}>
                   <CloseBtn
                     onClick={onClose}
                   >
@@ -101,7 +131,8 @@ export const LightBox: React.FC<IProps> = ({ visible, onClose, src }) => {
                   </CloseBtn>
                   <Img
                     big={big ? 1 : 0}
-                    onClick={() => setBig(!big)}
+                    noBig={bigType === '' ? 1 : 0}
+                    onClick={openBig}
                     src={src}
                   />
                 </Box>

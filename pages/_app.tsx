@@ -13,7 +13,6 @@ import 'dayjs/locale/es';
 import 'dayjs/locale/zh-cn';
 
 import { Router as RouterProvider } from '@lib/router';
-import { PictureModal } from '@lib/components';
 import { HttpStatus } from '@lib/common/enums/http';
 import { parsePath, server, Histore } from '@lib/common/utils';
 import { Whoami } from '@lib/schemas/query';

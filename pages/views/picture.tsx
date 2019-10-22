@@ -190,7 +190,15 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         )
       }
       <Comment onConfirm={onConfirm} comment={comment} />
-      <LightBox visible={boxVisible} src={getPictureUrl(info.key, 'full')} onClose={closeLightBox} />
+      <LightBox
+        visible={boxVisible}
+        src={getPictureUrl(info.key, 'full')}
+        onClose={closeLightBox}
+        size={{
+          width: info.width,
+          height: info.height,
+        }}
+      />
     </Wrapper>
   );
 });
