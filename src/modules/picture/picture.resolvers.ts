@@ -52,10 +52,9 @@ export class PictureResolver {
   @Query()
   public async picture(
     @Context('user') user: Maybe<UserEntity>,
-    @Context() context: any,
     @Args('id') id: string,
   ) {
-    return this.pictureService.getOnePicture(id, user, true);
+    return this.pictureService.getPicture(id, user, true);
   }
 
   @Query()
@@ -103,10 +102,28 @@ export class PictureResolver {
   }
 
   @ResolveProperty('relatedCollections')
-  public async getAvatarSize(
+  public async relatedCollections(
     @Parent() parent: PictureEntity,
     @Args('limit') limit: number,
   ) {
     return this.collectionService.pictureRelatedCollection(parent.id, limit);
+  }
+
+  @ResolveProperty('likes')
+  public async likes(
+    @Parent() parent: PictureEntity,
+  ) {
+    return this.pictureService.getPictureLikes(parent.id);
+  }
+
+  @ResolveProperty('isLike')
+  public async isLike(
+    @Context('user') user: UserEntity,
+    @Parent() parent: PictureEntity,
+  ) {
+    if (!user) {
+      return false;
+    }
+    return this.pictureService.getUserIsLike(parent.id, user);
   }
 }

@@ -88,6 +88,20 @@ export class PictureUserActivityService {
     );
   }
 
+  public getLikes = async (id: ID) => this.activityRepository.createQueryBuilder('activity')
+    .where('activity.pictureId=:id AND activity.like=1', { id })
+    .getCount()
+
+  public isLike = async (id: ID, user: UserEntity) => {
+    const data = await this.activityRepository.createQueryBuilder('activity')
+      .where('activity.pictureId=:id AND activity.userId=:userId', {
+        id,
+        userId: user.id,
+      })
+      .getOne();
+    return data ? data.like : false;
+  }
+
   public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => entityManager
     .createQueryBuilder()
     .delete()
