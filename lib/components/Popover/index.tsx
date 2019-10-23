@@ -1,7 +1,6 @@
 import { isFunction } from 'lodash';
 import React, { Children } from 'react';
-import { Transition } from 'react-transition-group';
-import { TransitionStatus } from 'react-transition-group/Transition';
+import { motion, AnimatePresence } from 'framer-motion';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
@@ -11,15 +10,6 @@ import { timingFunctions } from 'polished';
 import { customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
-
-const transitionStyles: {
-  [key in TransitionStatus]?: any
-} = {
-  entering: { opacity: 1, transform: 'scale(1)' },
-  entered: { opacity: 1, transform: 'scale(1)' },
-  exiting: { opacity: 0, transform: 'scale(.98)' },
-  exited: { opacity: 0, transform: 'scale(.98)' },
-};
 
 type Trigger = 'hover' | 'click';
 
@@ -64,6 +54,7 @@ interface IPopoverProps {
 
 @observer
 export class Popover extends React.PureComponent<IPopoverProps> {
+  // eslint-disable-next-line react/sort-comp
   public static defaultProps: Partial<IPopoverProps> = {
     theme: 'light',
     placement: 'bottom',
@@ -241,45 +232,59 @@ export class Popover extends React.PureComponent<IPopoverProps> {
           if (arrow) {
             if (this.placement !== data.placement) {
               this.placement = data.placement;
+              this.forceUpdate();
             }
           }
         }}
         visible={this.visible}
         onClose={this.onClose}
         content={({ visible, close }) => (
-          <Transition
-            onExited={() => close()}
-            in={visible}
-            appear
-            timeout={200}
+          <AnimatePresence
+            onExitComplete={() => {
+              if (!visible) {
+                close();
+              }
+            }}
           >
-            {state => (
-              <div
-                style={{ ...transitionStyles[state] }}
-                css={`
-                      transition-timing-function: ${timingFunctions('easeInOutSine')};
-                      transition: .2s all;
-                    `}
-              >
-                {
-                  arrow && (
-                    <Arrow
-                      x-theme={theme}
-                      x-placement={this.placement}
-                      placement={this.placement}
-                      ref={this.arrowRef}
-                    />
-                  )
-                }
-                <Content x-theme={theme} style={contentStyle}>
-                  {cntentRender}
-                </Content>
-              </div>
-            )}
-          </Transition>
+            {
+              visible && (
+                <motion.div
+                  positionTransition
+                  initial={{ opacity: 0, transform: 'scale(0.96)' }}
+                  animate={{ opacity: 1, transform: 'scale(1)' }}
+                  exit={{ opacity: 0, transform: 'scale(0.96)' }}
+                  transition={{
+                    damping: 10,
+                    stiffness: 200,
+                    duration: 0.1,
+                    easings: ['easeIn', 'easeOut'],
+                  }}
+                  css={`
+                    transition-timing-function: ${timingFunctions('easeInOutSine')};
+                    transition: .2s all;
+                  `}
+                >
+                  {
+                    arrow && (
+                      <Arrow
+                        x-theme={theme}
+                        x-placement={this.placement}
+                        placement={this.placement}
+                        ref={this.arrowRef}
+                      />
+                    )
+                  }
+                  <Content x-theme={theme} style={contentStyle}>
+                    {cntentRender}
+                  </Content>
+                </motion.div>
+              )
+            }
+          </AnimatePresence>
         )}
       >
         {childrenRender}
+        <span x-placement={this.placement} style={{ display: 'none' }} />
       </Popper>
     );
   }

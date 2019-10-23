@@ -145,7 +145,9 @@ export class Popper extends React.Component<IPopperProps> {
     const { children, getContainer } = this.props;
     return (
       <>
-        {children}
+        <NoSSR server>
+          {children}
+        </NoSSR>
         <NoSSR>
           {!server && ReactDOM.createPortal(
             this.renderContent(),

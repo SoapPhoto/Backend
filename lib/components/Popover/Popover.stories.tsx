@@ -19,7 +19,7 @@ stories
         openDelay={100}
         content={<span>取消喜欢</span>}
       >
-        <span>点我</span>
+        <span style={{ marginLeft: '200px' }}>点我</span>
       </Popover>
     </div>
   ));
