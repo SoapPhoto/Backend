@@ -129,10 +129,6 @@ User.getInitialProps = async ({
   const { appStore, screen } = mobxStore;
   const { userCollectionStore, userPictureStore, userStore } = screen;
   const { location } = appStore;
-  let error: {
-    message: string;
-    statusCode: number;
-  } | undefined;
   const all = [];
   const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
@@ -152,7 +148,6 @@ User.getInitialProps = async ({
   }
   await Promise.all(all);
   return {
-    error,
     type,
     username: params.username,
   };

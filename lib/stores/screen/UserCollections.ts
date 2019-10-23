@@ -36,7 +36,9 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity> {
       query: UserCollectionsByName,
       variables: {
         username,
-        ...omit(this.listQuery, ['timestamp']),
+        query: {
+          ...omit(this.listQuery, ['timestamp']),
+        },
       },
       fetchPolicy: 'cache-and-network',
     }), (data) => {
