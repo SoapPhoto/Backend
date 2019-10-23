@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/Yiiu/soapBE/compare/v0.1.2...v0.1.3) (2019-10-23)
+
+
+### Bug Fixes
+
+* Fix Popover placement bug ([80e08df](https://github.com/Yiiu/soapBE/commit/80e08df))
+* Fix UserCollectionsByName query bug ([be24616](https://github.com/Yiiu/soapBE/commit/be24616))
+
 ### [0.1.2](https://github.com/Yiiu/soapBE/compare/v0.1.1...v0.1.2) (2019-10-21)
 
 
