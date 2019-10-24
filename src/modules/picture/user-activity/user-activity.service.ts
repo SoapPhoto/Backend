@@ -127,7 +127,11 @@ export class PictureUserActivityService {
           .andWhere('picture.isPrivate = 0');
       }
       if (!isCount) {
-        q.offset((query.page - 1) * query.pageSize).limit(query.pageSize);
+        q
+          .addSelect('likedTime')
+          .offset((query.page - 1) * query.pageSize)
+          .limit(query.pageSize)
+          .orderBy('activity.likedTime', 'DESC');
       }
       return q;
     };
