@@ -41,6 +41,16 @@ export default class MyDocument extends Document {
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
           <link rel="preload" as="style" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150810690-1" />
+          <script dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-150810690-1');`,
+          }}
+          />
         </Head>
         <body id="body">
           <Main />
