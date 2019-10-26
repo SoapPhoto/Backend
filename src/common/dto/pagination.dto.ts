@@ -22,6 +22,16 @@ export class PaginationDto {
   @Type(() => Number)
   public readonly timestamp?: number;
 
+  @Type(() => Number)
+  public readonly lastTimestamp?: number;
+
+  get lastTime() {
+    if (this.lastTimestamp) {
+      return dayjs(this.lastTimestamp).format();
+    }
+    return undefined;
+  }
+
   get time() {
     if (this.timestamp) {
       return dayjs(this.timestamp).format();

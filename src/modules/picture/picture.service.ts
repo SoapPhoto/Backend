@@ -336,7 +336,7 @@ export class PictureService {
         'picture.likes', 'picture.activitys', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
-    this.userService.selectInfo(q, value);
+    // this.userService.selectInfo(q, value);
     if (user) {
       q
         .loadRelationCountAndMap(
@@ -366,10 +366,10 @@ export class PictureService {
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断
    *
-   * @private
+   * @public
    * @memberof PictureService
    */
-  private getOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
+  public getOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
     .where('picture.id=:id', { id })
     .leftJoinAndSelect('picture.user', 'user')
     .getOne()

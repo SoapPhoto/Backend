@@ -87,6 +87,8 @@ export const LightBox: React.FC<IProps> = ({
       disableScroll();
     }
   }, [visible]);
+  // 组件销毁时恢复
+  useEffect(() => () => enableScroll(), []);
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;

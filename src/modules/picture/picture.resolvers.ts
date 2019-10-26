@@ -55,8 +55,7 @@ export class PictureResolver {
     @Context() context: any,
     @Args('id') id: string,
   ) {
-    console.log(context);
-    return this.pictureService.getPicture(id, user, true);
+    return this.pictureService.getOnePicture(id, user, true);
   }
 
   @Query()
@@ -111,21 +110,21 @@ export class PictureResolver {
     return this.collectionService.pictureRelatedCollection(parent.id, limit);
   }
 
-  @ResolveProperty('likes')
-  public async likes(
-    @Parent() parent: PictureEntity,
-  ) {
-    return this.pictureService.getPictureLikes(parent.id);
-  }
+  // @ResolveProperty('likes')
+  // public async likes(
+  //   @Parent() parent: PictureEntity,
+  // ) {
+  //   return this.pictureService.getPictureLikes(parent.id);
+  // }
 
-  @ResolveProperty('isLike')
-  public async isLike(
-    @Context() content: any,
-  ) {
-    if (!content) {
-      return false;
-    }
-    return false;
-    // return this.pictureService.getUserIsLike(parent.id, user);
-  }
+  // @ResolveProperty('isLike')
+  // public async isLike(
+  //   @Context() content: any,
+  // ) {
+  //   if (!content) {
+  //     return false;
+  //   }
+  //   return false;
+  //   // return this.pictureService.getUserIsLike(parent.id, user);
+  // }
 }
