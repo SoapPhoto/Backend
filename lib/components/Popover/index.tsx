@@ -261,7 +261,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
                   }}
                   style={{
                     transitionTimingFunction: timingFunctions('easeInOutSine'),
-                    transition: '.2s all'
+                    transition: '.2s all',
                   }}
                 >
                   {

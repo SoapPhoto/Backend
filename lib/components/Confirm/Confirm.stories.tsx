@@ -22,7 +22,7 @@ stories
           打开
         </Button>
         <Confirm
-          title={text('title', '确定眼删除吗？')}
+          title={text('title', '确定删除吗？')}
           visible={visible}
           onClose={() => setVisible(false)}
           confirmText={text('confirmText', '删除')}

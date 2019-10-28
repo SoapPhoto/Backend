@@ -21,6 +21,7 @@ export interface IModalProps {
   afterClose?: () => void;
   closeIcon?: boolean;
   theme?: DefaultTheme;
+  fullscreen?: boolean;
   boxStyle?: React.CSSProperties;
 }
 
@@ -48,6 +49,7 @@ export class Modal extends React.PureComponent<IModalProps> {
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   static defaultProps = {
     closeIcon: true,
+    fullscreen: true,
   }
 
   public shouldClose: null | boolean = null;
@@ -135,7 +137,7 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   public render() {
     const {
-      visible, boxStyle, children, closeIcon,
+      visible, boxStyle, children, closeIcon, fullscreen,
     } = this.props;
     if (this.isDestroy) {
       return null;
@@ -165,8 +167,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                           zIndex: 1000 + _modalIndex,
                         }}
                       />
-                      <Wrapper style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
-
+                      <Wrapper fullscreen={fullscreen ? 1 : 0} style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
                         <Content ref={this.contentRef}>
                           <Box
                             style={{
@@ -178,7 +179,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                             onClick={this.handleContentOnMouseUp}
                           >
                             {
-                              closeIcon
+                              closeIcon && fullscreen
                               && <XIcon onClick={this.onClose} />
                             }
                             {children}

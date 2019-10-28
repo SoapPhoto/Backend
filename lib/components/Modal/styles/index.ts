@@ -5,8 +5,27 @@ import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
+export const Box = styled.div`
+  ${props => box(props.theme, '100%', true)}
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
+  max-width: ${rem(customBreakpoints.medium)};
+  border: none;
+  margin: ${rem('24px')} auto;
+  transition-timing-function: ${timingFunctions('easeInOutSine')};
+  transition: .2s all;
+`;
 
-export const Wrapper = styled.div`
+export const Content = styled.div`
+  top: 0;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  width: 100%;
+`;
+
+export const Wrapper = styled.div<{fullscreen: number}>`
   position: fixed;
   top: 0;
   right: 0;
@@ -21,38 +40,30 @@ export const Wrapper = styled.div`
     height: 100%;
     vertical-align: middle;
     content: '';
+    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
+      vertical-align: bottom;
+    ` : customMedia.lessThan('medium')`
+    `)}
   }
-`;
-
-export const Box = styled.div`
-  ${props => box(props.theme, '100%', true)}
-  background-repeat: no-repeat;
-  background-position: top;
-  background-size: cover;
-  max-width: ${rem(customBreakpoints.medium)};
-  border: none;
-  margin: ${rem('24px')} auto;
-  transition-timing-function: ${timingFunctions('easeInOutSine')};
-  transition: .2s all;
-  ${customMedia.lessThan('medium')`
-    max-width: 100% !important;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    border-radius: 0;
-    overflow-y: auto;
-  `}
-`;
-
-export const Content = styled.div`
-  top: 0;
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle;
-  width: 100%;
-  ${customMedia.lessThan('medium')`
-    height: 100%;
-  `}
+  ${Content} {
+    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
+    ` : customMedia.lessThan('medium')`
+      height: 100%;
+    `)}
+  }
+  ${Box} {
+    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
+      max-width: calc(100% - ${rem(32)}) !important;
+      width: 100%;
+    ` : customMedia.lessThan('medium')`
+      max-width: 100% !important;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border-radius: 0;
+      overflow-y: auto;
+    `)}
+  }
 `;
 
 export const Mask = styled.div`
