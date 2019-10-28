@@ -18,62 +18,32 @@ interface INewPictureGqlReq {
 export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
   public listInit = false
 
+  public query = Pictures
+
+  public type = 'home'
+
   constructor() {
     super();
   }
 
-  @action public initQuery = () => {
-    this.listQuery = {
-      page: 1,
-      pageSize: Number(process.env.LIST_PAGE_SIZE),
-      timestamp: this.init ? this.listQuery.timestamp : this.getNowDate(),
-    };
-  }
+  // @action public initQuery = () => {
+  //   this.listQuery = {
+  //     page: 1,
+  //     pageSize: Number(process.env.LIST_PAGE_SIZE),
+  //     timestamp: this.init ? this.listQuery.timestamp : this.getNowDate(),
+  //   };
+  // }
 
   @action
-  public getList = async (query: Partial<IBaseQuery> = {}, plus = false) => {
-    if (!plus && !this.listInit) {
-      this.initQuery();
-    }
-    const get = async () => {
-      await queryToMobxObservable(this.client.watchQuery<IPictureGqlReq>({
-        query: Pictures,
-        variables: {
-          query: {
-            ...this.listQuery,
-            ...query,
-          },
-        },
-        fetchPolicy: 'cache-and-network',
-      }), (data) => {
-        this.listInit = true;
-        this.setData(data.pictures, plus);
-      });
-    };
-    if (!this.listInit || plus) {
-      await get();
-    } else {
-      // 不是初始化列表或者下拉加载的话，就直接获取缓存
-      try {
-        const cacheData = this.client.readQuery<IPictureGqlReq>({
-          query: Pictures,
-          variables: {
-            query: {
-              ...this.listQuery,
-              page: 1,
-            },
-          },
-        });
-        this.list = cacheData!.pictures.data;
-        if (this.list.length > 0) {
-          this.getNewPictures(cacheData!, query);
-        }
-      } catch (err) {
-        // 假如获取缓存出现问题就强制重新获取列表
-        this.listInit = false;
-        await this.getList();
-      }
-    }
+  public getList = async (query: Partial<IBaseQuery> = {}, plus = false, noCache = false) => {
+    await this.baseGetList('home', {
+      query: {
+        ...query,
+      },
+    }, {
+      success: data => this.setData(data.pictures, plus),
+      cache: () => this.getCache(),
+    }, noCache, plus);
   }
 
   public getPageList = async () => {
@@ -120,6 +90,17 @@ export class HomeScreenStore extends ListStore<PictureEntity, IPictureGqlReq> {
         }
       }
     }));
+  }
+
+  @action public getCache = async () => {
+    await this.baseGetCache('home', {
+      query: {
+        ...this.listQuery,
+      },
+    }, {
+      getList: async () => this.getList({}, false, true),
+      setData: ({ pictures }) => this.setData(pictures, false),
+    });
   }
 
   @action

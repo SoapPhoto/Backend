@@ -1,5 +1,5 @@
 import {
-  Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent,
+  Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent, Info,
 } from '@nestjs/graphql';
 
 import { UseGuards, Inject, forwardRef } from '@nestjs/common';
@@ -103,10 +103,28 @@ export class PictureResolver {
   }
 
   @ResolveProperty('relatedCollections')
-  public async getAvatarSize(
+  public async relatedCollections(
     @Parent() parent: PictureEntity,
     @Args('limit') limit: number,
   ) {
     return this.collectionService.pictureRelatedCollection(parent.id, limit);
   }
+
+  // @ResolveProperty('likes')
+  // public async likes(
+  //   @Parent() parent: PictureEntity,
+  // ) {
+  //   return this.pictureService.getPictureLikes(parent.id);
+  // }
+
+  // @ResolveProperty('isLike')
+  // public async isLike(
+  //   @Context() content: any,
+  // ) {
+  //   if (!content) {
+  //     return false;
+  //   }
+  //   return false;
+  //   // return this.pictureService.getUserIsLike(parent.id, user);
+  // }
 }

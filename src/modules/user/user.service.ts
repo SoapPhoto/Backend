@@ -20,7 +20,6 @@ import { plainToClass } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
-import { PictureEntity } from '../picture/picture.entity';
 import { FileService } from '../file/file.service';
 
 @Injectable()
@@ -139,9 +138,11 @@ export class UserService {
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
-    const user = await this.getUser(username, true, [Role.ADMIN]);
+    const user = await this.userEntity.createQueryBuilder('user')
+      .where('user.username=:username', { username })
+      .getOne();
     if (user) {
-      const hash = await crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
+      const hash = crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
       if (hash !== user.hash) {
         return undefined;
       }

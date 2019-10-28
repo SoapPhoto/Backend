@@ -28,7 +28,6 @@ export class UserScreenPictureList extends ListStore<PictureEntity, IUserPicture
       username,
       type: this.getType(),
       query: {
-        ...this.listQuery,
         ...query,
       },
     }, {

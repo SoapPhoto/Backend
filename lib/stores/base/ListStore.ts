@@ -9,6 +9,7 @@ import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
 import Fragments from '@lib/schemas/fragments';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { server } from '@lib/common/utils';
+import { omit } from 'lodash';
 import { BaseStore } from './BaseStore';
 
 export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> extends BaseStore {
@@ -100,15 +101,18 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
     }
   }
 
-  public setPlusListCache = (query: DocumentNode, label: string, data: IPictureListRequest, type: Record<string, any> = {}) => {
+  public setPlusListCache = (query: DocumentNode, label: string, data: IPictureListRequest, variables: Record<string, any> = {}) => {
     try {
-      const cacheData = this.client.readQuery({
-        query,
-        variables: {
+      const newVar = {
+        query: {
           ...this.listQuery,
-          ...type,
           page: 1,
         },
+        ...omit(variables, ['query']),
+      };
+      const cacheData = this.client.readQuery({
+        query,
+        variables: newVar,
       });
       if (cacheData) {
         cacheData[label].data = cacheData[label].data.concat(data.data);
@@ -116,11 +120,7 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
         cacheData[label].pageSize = data.pageSize;
         this.client.writeQuery({
           query,
-          variables: {
-            ...this.listQuery,
-            ...type,
-            page: 1,
-          },
+          variables: newVar,
           data: cacheData,
         });
       }
@@ -151,12 +151,16 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
     plus?: boolean,
   ) => {
     this.setListQuery(id);
+    const query = {
+      query: {
+        ...this.listQuery,
+        ...(variables.query || {}),
+      },
+      ...omit(variables, ['query']),
+    };
     if (!this.listInit || plus || server || noCache) {
       await queryToMobxObservable(this.client.watchQuery<V>({
-        variables: {
-          ...this.listQuery,
-          ...variables,
-        },
+        variables: query,
         query: this.query,
         fetchPolicy: 'cache-and-network',
       }), (data: any) => {
@@ -177,14 +181,18 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
     },
   ) => {
     this.setListQuery(id);
+    const query = {
+      query: {
+        ...this.listQuery,
+        ...(variables.query || {}),
+        page: 1,
+      },
+      ...omit(variables, ['query']),
+    };
     try {
       const data = this.client.readQuery<V>({
         query: this.query,
-        variables: {
-          ...this.listQuery,
-          ...variables,
-          page: 1,
-        },
+        variables: query,
       });
       if (!data) {
         await options.getList();

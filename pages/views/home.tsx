@@ -6,7 +6,7 @@ import { PictureList } from '@lib/containers/Picture/List';
 import { withError } from '@lib/components/withError';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, server } from '@lib/common/utils';
 import { useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
 
@@ -27,15 +27,16 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   );
 });
 
-Index.getInitialProps = async (_: ICustomNextContext) => {
-  if (
-    _.mobxStore.appStore.location
-    && _.mobxStore.appStore.location.action === 'POP'
-    && _.mobxStore.screen.homeStore.init
-  ) {
-    return {};
+Index.getInitialProps = async ({ mobxStore }: ICustomNextContext) => {
+  const { appStore, screen } = mobxStore;
+  const { homeStore } = screen;
+  const { location } = appStore;
+  const isPop = location && location.action === 'POP' && !server;
+  if (isPop) {
+    await homeStore.getCache();
+  } else {
+    await homeStore.getList();
   }
-  await _.mobxStore.screen.homeStore.getList();
   // eslint-disable-next-line no-throw-literal
   return {};
 };
