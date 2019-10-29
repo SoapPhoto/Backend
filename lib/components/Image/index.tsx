@@ -1,59 +1,53 @@
-import React, { useState, useEffect, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {
+  useState, useEffect, memo, useCallback,
+} from 'react';
 import { server } from '@lib/common/utils';
 
 export type IImageProps = React.ImgHTMLAttributes<HTMLImageElement>
 
+const imageCache: Record<string, boolean> = {};
+
+const inImageCache = (url: string) => imageCache[url] || false;
+
+const activateCacheForImage = (url: string) => imageCache[url] = true;
+
 export const Image: React.FC<IImageProps> = memo(({
   src, alt, className, title,
 }) => {
-  const [complete, setComplete] = useState(false);
-  const [isLoad, setLoad] = useState(false);
+  const [isFadeIn, setFadeIn] = useState(false);
+  const [isLoaded, setLoaded] = useState(false);
+  const handleImageLoaded = useCallback(() => {
+    activateCacheForImage(src!);
+    setLoaded(true);
+  }, [src]);
   useEffect(() => {
     const image = document.createElement('img');
     image.src = src!;
-    if (image.complete) {
-      setComplete(image.complete);
-      setLoad(true);
+    if (image.complete || inImageCache(src!)) {
+      handleImageLoaded();
       image.onload = null;
     } else {
+      setFadeIn(true);
       image.onload = () => {
-        setLoad(true);
+        handleImageLoaded();
       };
     }
     return () => { image.onload = null; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  if (complete || server) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        style={{ opacity: 1 }}
-        className={className}
-        title={title}
-      />
-    );
-  }
+  const shouldReveal = !isFadeIn || isLoaded || server;
+  const imageStyle = {
+    opacity: shouldReveal ? 1 : 0,
+    transition: isFadeIn ? 'opacity 300ms' : 'none',
+  };
   return (
-    <AnimatePresence>
-      {isLoad && (
-        <motion.img
-          transition={{
-            type: 'spring',
-            damping: 10,
-            stiffness: 100,
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          src={src}
-          alt={alt}
-          className={className}
-          title={title}
-        // {...restProps}
-        />
-      )}
-    </AnimatePresence>
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      title={title}
+      style={imageStyle}
+    // {...restProps}
+    />
   );
 });

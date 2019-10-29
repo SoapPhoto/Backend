@@ -16,7 +16,7 @@ type Query {
   "获取用户的收藏夹列表"
   userCollectionsByName(
     username: String!
-    query: CollectionsQueryInput!
+    query: CollectionsQueryInput
   ): Collections
 
   "获取用户的收藏夹列表"

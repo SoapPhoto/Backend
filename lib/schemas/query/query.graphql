@@ -44,7 +44,7 @@ query UserPictures(
 
 query UserCollectionsByName(
   $username: String!,
-  $query: CollectionsQueryInput!
+  $query: CollectionsQueryInput
 ) {
   userCollectionsByName(username: $username, query: $query) {
     ...CollectionListFragment
