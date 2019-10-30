@@ -5,11 +5,11 @@
       "module-resolver",
       {
         "root": [
-          "./.next/production-server"
+          "./dist"
         ],
         "alias": {
-          "@server": "./.next/production-server/src",
-          "@common": "./.next/production-server/common",
+          "@server": "./dist/src",
+          "@common": "./dist/common",
         }
       }
     ]
