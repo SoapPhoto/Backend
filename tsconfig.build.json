@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "outDir": ".next/production-server",
+    "outDir": "./dist",
     "target": "es2016",
     "module": "commonjs",
     "moduleResolution": "node"

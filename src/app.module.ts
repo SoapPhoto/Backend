@@ -28,16 +28,16 @@ import { GraphqlService } from './shared/graphql/graphql.service';
 
 @Module({
   imports: [
-    CacheModule.register({
-      store: redisStore,
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-      db: Number(process.env.REDIS_DB),
-      password: process.env.REDIS_PASSWORD,
-      keyPrefix: process.env.REDIS_PRIFIX,
-      ttl: 20, // seconds
-      max: 1000, // max number of items in cache
-    }),
+    // CacheModule.register({
+    //   store: redisStore,
+    //   host: process.env.REDIS_HOST,
+    //   port: Number(process.env.REDIS_PORT),
+    //   db: Number(process.env.REDIS_DB),
+    //   password: process.env.REDIS_PASSWORD,
+    //   keyPrefix: process.env.REDIS_PRIFIX,
+    //   ttl: 20, // seconds
+    //   max: 1000, // max number of items in cache
+    // }),
     RedisModule.register({
       host: process.env.REDIS_HOST,
       port: Number(process.env.REDIS_PORT),
