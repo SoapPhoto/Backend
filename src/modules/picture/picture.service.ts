@@ -146,7 +146,6 @@ export class PictureService {
     if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
-    // data.relateCollection = await this.collectionService.pictureRelatedCollection(data.id) as any;
     return classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : [],
     });

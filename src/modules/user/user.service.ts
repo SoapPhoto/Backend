@@ -172,17 +172,7 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: query });
     }
-    /// graphql已查询
-    // q
-    //   .leftJoinAndMapMany(
-    //     'user.pictures',
-    //     PictureEntity,
-    //     'picture',
-    //     'picture.userId = user.id AND picture.isPrivate=0',
-    //   )
-    //   .orderBy('picture.createTime', 'DESC')
-    //   .limit(3);
-    const data = await q.cache(100).getOne();
+    const data = await q.getOne();
     return plainToClass(UserEntity, data, {
       groups,
     });

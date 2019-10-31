@@ -73,6 +73,10 @@ type User implements BaseNode {
 
   "用户的picture数量"
   pictureCount: Float
+
+  "是否私人"
+  isPrivate: Boolean
+
   createTime: DateTime
   updateTime: DateTime
 

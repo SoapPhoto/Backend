@@ -6,6 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
+import { classToPlain } from 'class-transformer';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
@@ -22,10 +23,12 @@ export class UserResolver {
 
   @Query()
   @Roles(Role.USER)
-  public whoami(
+  public async whoami(
     @Context('user') user: UserEntity,
   ) {
-    return this.userService.getUser(user.id, user);
+    return classToPlain(await this.userService.getUser(user.id, user), {
+      groups: [Role.OWNER],
+    });
   }
 
   @Query()

@@ -9,6 +9,7 @@ import { Loading } from '../Loading';
 
 interface IEmptyProps {
   loading?: boolean;
+  emptyText?: string;
   size?: 'small' | 'large';
 }
 
@@ -29,6 +30,7 @@ const Wrapper = styled.div<{size?: 'small' | 'large'}>`
 
 export const Empty: React.FC<IEmptyProps> = ({
   loading = false,
+  emptyText,
   size,
 }) => {
   const { colors } = useTheme();
@@ -40,7 +42,7 @@ export const Empty: React.FC<IEmptyProps> = ({
         loading ? (
           <Loading size={loadingSize} color={colors.secondary} />
         ) : (
-          <span>{t('no_more')}</span>
+          <span>{emptyText || t('no_more')}</span>
         )
       }
     </Wrapper>

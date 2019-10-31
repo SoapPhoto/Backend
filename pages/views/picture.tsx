@@ -52,6 +52,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
   const [boxVisible, setBoxVisible] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(true);
   const {
     info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
   } = pictureStore;
@@ -59,8 +60,17 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
 
   useEffect(() => {
-    getComment();
-  }, [getComment]);
+    (async () => {
+      setCommentLoading(true);
+      try {
+        await getComment();
+      } finally {
+        setCommentLoading(false);
+      }
+    })();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
   const onConfirm = async (value: string) => {
@@ -117,7 +127,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         </UserHeaderInfo>
       </UserHeader>
       <PictureBox onClick={openLightBox}>
-        <PictureImage lazyload={false} size="full" detail={info} />
+        <PictureImage lazyload={false} size="regular" detail={info} />
       </PictureBox>
       <Content>
         <Title>
@@ -170,7 +180,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           )
         }
       </Content>
-      {
+      {/* {
         info.relatedCollections.count > 0 && (
           <RelateCollection>
             <RelateCollectionTitle>包含此图片的收藏夹</RelateCollectionTitle>
@@ -188,8 +198,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </OverlayScrollbarsComponent>
           </RelateCollection>
         )
-      }
-      <Comment onConfirm={onConfirm} comment={comment} />
+      } */}
+      <Comment onConfirm={onConfirm} comment={comment} loading={commentLoading} />
       <LightBox
         visible={boxVisible}
         src={getPictureUrl(info.key, 'full')}

@@ -20,8 +20,6 @@ import { CommentEntity } from './modules/comment/comment.entity';
 import { FileEntity } from './modules/file/file.entity';
 import { CredentialsEntity } from './modules/credentials/credentials.entity';
 
-console.log(process.env.DATABASE_HOST);
-
 const ormconfig: TypeOrmModuleOptions = {
   type: 'mysql',
   port: Number(process.env.DATABASE_PORT),
