@@ -19,6 +19,7 @@ import {
   PreviewBox,
   Preview,
   Progress,
+  TextArea,
 } from '@lib/styles/views/upload';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
@@ -157,7 +158,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       value={data.title}
                       onChange={e => setData('title', e.target.value)}
                     />
-                    <Input
+                    <TextArea
                       placeholder="简介"
                       value={data.bio}
                       onChange={e => setData('bio', e.target.value)}

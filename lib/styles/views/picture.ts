@@ -58,7 +58,7 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: ${theme('fontSizes[5]')};
+  font-size: ${_ => rem(theme('fontSizes[5]')(_))};
   margin-bottom: ${rem('18px')};
 `;
 

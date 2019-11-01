@@ -98,43 +98,54 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         title={title}
         description={bio}
       />
-      <UserHeader columns={2}>
-        <UserInfo width={1}>
-          <UserLink route={`/@${user.username}`}>
-            <Avatar
-              style={{ marginRight: rem(14) }}
-              src={user.avatar}
-              size={44}
-            />
-            <UserName>
-              <EmojiText
-                text={user.fullName}
-              />
-            </UserName>
-          </UserLink>
-        </UserInfo>
-        <UserHeaderInfo width={1}>
-          <BaseInfoItem
-            style={{ marginRight: rem(14) }}
-          >
-            <Eye size={20} />
-            <p>{info.views}</p>
-          </BaseInfoItem>
-          <BaseInfoItem>
-            <Heart size={20} />
-            <p>{info.likes}</p>
-          </BaseInfoItem>
-        </UserHeaderInfo>
-      </UserHeader>
-      <PictureBox onClick={openLightBox}>
-        <PictureImage lazyload={false} size="regular" detail={info} />
-      </PictureBox>
       <Content>
         <Title>
           <EmojiText
             text={info.title}
           />
         </Title>
+        {
+          info.bio && (
+            <Bio>
+              <EmojiText
+                text={info.bio}
+              />
+            </Bio>
+          )
+        }
+        <UserHeader columns={2}>
+          <UserInfo width={1}>
+            <UserLink route={`/@${user.username}`}>
+              <Avatar
+                style={{ marginRight: rem(14) }}
+                src={user.avatar}
+                size={44}
+              />
+              <UserName>
+                <EmojiText
+                  text={user.fullName}
+                />
+              </UserName>
+            </UserLink>
+          </UserInfo>
+          <UserHeaderInfo width={1}>
+            <BaseInfoItem
+              style={{ marginRight: rem(14) }}
+            >
+              <Eye size={20} />
+              <p>{info.views}</p>
+            </BaseInfoItem>
+            <BaseInfoItem>
+              <Heart size={20} />
+              <p>{info.likes}</p>
+            </BaseInfoItem>
+          </UserHeaderInfo>
+        </UserHeader>
+      </Content>
+      <PictureBox onClick={openLightBox}>
+        <PictureImage lazyload={false} size="regular" detail={info} />
+      </PictureBox>
+      <Content>
         <PictureInfo
           info={info}
           isOwner={isOwner}
@@ -161,15 +172,6 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
                 ))
               }
             </TagBox>
-          )
-        }
-        {
-          info.bio && (
-            <Bio>
-              <EmojiText
-                text={info.bio}
-              />
-            </Bio>
           )
         }
         {
