@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { rem } from 'polished';
 
 import { Modal } from '@lib/components/Modal';
 import { theme } from '@lib/common/utils/themes';
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { FieldInput, FieldSwitch } from '@lib/components/Formik';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { IconButton, Button } from '@lib/components/Button';
@@ -63,7 +63,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
   const [deleteConfirmLoading, setDeleteConfirmLoading] = React.useState(false);
   const [deleteConfirmDisabled, setDeleteConfirmDisabled] = React.useState(false);
   // const { colors } = useTheme();
-  const handleOk = useCallback(async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
+  const handleOk = useCallback(async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(true);
     try {

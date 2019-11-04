@@ -1,4 +1,4 @@
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import { NextSeo } from 'next-seo';
 
@@ -30,7 +30,7 @@ const SignUp = () => {
   const { query } = useRouter();
   const { signup } = useAccountStore();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
+  const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(false);
     try {

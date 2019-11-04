@@ -4,7 +4,7 @@ import { rem } from 'polished';
 import { Modal } from '@lib/components/Modal';
 import styled from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
-import { Formik, FormikActions, Field } from 'formik';
+import { Formik, FormikHelpers, Field } from 'formik';
 import { FieldInput, FieldSwitch } from '@lib/components/Formik';
 import { Button, IconButton } from '@lib/components/Button';
 import { Trash2 } from '@lib/icon';
@@ -77,7 +77,7 @@ export const EditPictureModal: React.FC<IProps> = ({
       // setConfirmVisible(false);
     };
   }, [onClose, visible]);
-  const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
+  const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     setSubmitting(false);
     setConfirmLoading(true);
     try {

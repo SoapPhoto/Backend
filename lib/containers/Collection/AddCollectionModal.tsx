@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import _ from 'lodash';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
-import { Formik, FormikActions, Form } from 'formik';
+import {
+  Formik, FormikHelpers, Form,
+} from 'formik';
 
 import { Modal } from '@lib/components/Modal';
 import { CreateCollectionDot, CollectionEntity } from '@lib/common/interfaces/collection';
@@ -29,8 +31,7 @@ const Title = styled.h2`
 
 export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk }) => {
   const [okLoading, setOkLoading] = useState(false);
-  const formRef = useRef<Formik<Values>>(null);
-  const onSubmit = async (values: Values, { setSubmitting }: FormikActions<Values>) => {
+  const onSubmit = async (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
     setOkLoading(true);
     try {
       const { data } = await addCollection(values);
@@ -57,7 +58,6 @@ export const AddCollectionModal: React.FC<IProps> = ({ visible, onClose, onOk })
             bio: '',
             isPrivate: false,
           }}
-          ref={formRef}
           onSubmit={onSubmit}
           validationSchema={
             Yup.object().shape({
