@@ -96,10 +96,14 @@ export const oauthOpen = (url: string) => {
     ) {
       clearInterval(scanTimer);
     }
-    window.postMessage(
-      { fromOauthWindow: openWindow!.location.search },
-      window.location.href,
-    );
+    if (openWindow && openWindow.location) {
+      window.postMessage(
+        { fromOauthWindow: openWindow!.location.search },
+        window.location.href,
+      );
+    } else {
+      clearInterval(scanTimer);
+    }
   }, 1000);
   window.addEventListener('message', (msg) => {
     if (

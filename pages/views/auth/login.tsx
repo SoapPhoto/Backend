@@ -1,4 +1,4 @@
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import React, { useCallback, useEffect } from 'react';
 import { NextSeo } from 'next-seo';
 
@@ -25,6 +25,7 @@ import {
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
 import { EmojiText } from '@lib/components';
+import { Popover } from '@lib/components/Popover';
 
 interface IValues {
   username: string;
@@ -51,7 +52,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
       window.location = '/' as any;
     }
   }, [query.redirectUrl]);
-  const handleOk = async (value: IValues, { setSubmitting }: FormikActions<IValues>) => {
+  const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(false);
     try {
@@ -124,20 +125,6 @@ const Login: React.FC<IBaseScreenProps> = () => {
               label={t('password')}
               style={{ marginTop: rem(24) }}
             />
-            <Handle>
-              <OauthIcon
-                type="button"
-                onClick={() => oauth(OauthType.GITHUB)}
-              >
-                <GitHub size={18} />
-              </OauthIcon>
-              {/* <OauthIcon
-                type="button"
-                onClick={() => oauth(OauthType.GOOGLE)}
-              >
-                <GoogleFill size={18} />
-              </OauthIcon> */}
-            </Handle>
             <Button
               loading={confirmLoading}
               style={{ marginTop: rem(42), width: '100%' }}
@@ -146,6 +133,31 @@ const Login: React.FC<IBaseScreenProps> = () => {
             >
               {t('login_btn')}
             </Button>
+            <Handle>
+              <Popover
+                openDelay={100}
+                trigger="hover"
+                placement="top"
+                theme="dark"
+                content={<span>使用 GITHUB 账号登录</span>}
+              >
+                <span>
+                  <OauthIcon
+                    type="button"
+                    style={{ backgroundColor: '#24292e' }}
+                    onClick={() => oauth(OauthType.GITHUB)}
+                  >
+                    <GitHub color="#fff" size={18} />
+                  </OauthIcon>
+                </span>
+              </Popover>
+              {/* <OauthIcon
+                type="button"
+                onClick={() => oauth(OauthType.GOOGLE)}
+              >
+                <GoogleFill size={18} />
+              </OauthIcon> */}
+            </Handle>
           </form>
         )}
       </Formik>
