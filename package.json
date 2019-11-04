@@ -80,6 +80,7 @@
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
+    "markdown-it": "^10.0.0",
     "mime-types": "^2.1.24",
     "mjml": "^4.5.1",
     "mobx": "^5.14.2",
