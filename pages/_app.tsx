@@ -177,6 +177,7 @@ class MyApp extends App<IProps> {
     } = this.props;
     const { i18n, mobxStore } = this.state;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
+    const noHeader = pageProps && pageProps.header === false;
     return (
       <I18nProvider value={i18n}>
         <ApolloProvider client={apollo}>
@@ -184,7 +185,7 @@ class MyApp extends App<IProps> {
             <RouterProvider route={router}>
               <Provider {...mobxStore}>
                 <ThemeWrapper>
-                  <BodyLayout header={!isError}>
+                  <BodyLayout header={!isError && !noHeader}>
                     <DefaultSeo
                       description="photo, life, happy"
                     />

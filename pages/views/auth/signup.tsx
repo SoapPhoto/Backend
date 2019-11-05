@@ -9,7 +9,9 @@ import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
 import { Router } from '@lib/routes';
-import { Title, Wrapper } from '@lib/styles/views/auth';
+import {
+  Title, Wrapper, Header, SubTitle,
+} from '@lib/styles/views/auth';
 import { rem } from 'polished';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -18,6 +20,7 @@ import { useRouter } from '@lib/router';
 import { useAccountStore } from '@lib/stores/hooks';
 import { withError } from '@lib/components/withError';
 import { EmojiText } from '@lib/components';
+import { A } from '@lib/components/A';
 
 interface IValues {
   email: string;
@@ -38,9 +41,11 @@ const SignUp = () => {
       setSubmitting(true);
       setTimeout(() => {
         if (query.redirectUrl) {
-          Router.replaceRoute(query.redirectUrl);
+          Router.replaceRoute('/signupMessage', {
+            redirectUrl: query.redirectUrl,
+          });
         } else {
-          Router.replaceRoute('/');
+          Router.replaceRoute('/signupMessage');
         }
       }, 400);
       Toast.success(t('signup_success'));
@@ -58,11 +63,17 @@ const SignUp = () => {
         title={getTitle('signup', t)}
         description="Sign Up to Soap"
       />
-      <Title>
-        <EmojiText
-          text={t('signup')}
-        />
-      </Title>
+      <Header>
+        <Title>
+          <EmojiText
+            text={t('signup')}
+          />
+        </Title>
+        <SubTitle>
+          已有账户？
+          <A route="/login">登录</A>
+        </SubTitle>
+      </Header>
       <Formik<IValues>
         initialValues={{
           email: '',
