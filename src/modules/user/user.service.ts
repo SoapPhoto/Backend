@@ -79,7 +79,6 @@ export class UserService {
       this.userEntity.findOne({ username }),
       this.userEntity.findOne({ email }),
     ]);
-    console.log(userData);
     if (nameData) {
       if (err) {
         throw new BadRequestException('Username already exists');

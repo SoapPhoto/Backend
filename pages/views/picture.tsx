@@ -164,7 +164,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </TagBox>
           )
         }
-        <MarkdownContent />
+        {/* <MarkdownContent /> */}
         {
           info.bio && (
             <Bio>
