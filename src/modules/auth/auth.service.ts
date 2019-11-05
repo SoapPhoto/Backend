@@ -49,7 +49,7 @@ export class AuthService {
       ...data,
       ...info,
     });
-    this.sendValidator(newUser);
+    await this.sendValidator(newUser);
   }
 
   public async resetMail(user: UserEntity) {

@@ -36,8 +36,16 @@ export const Btns = () => {
   const switchTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'base' : 'dark');
   }, [setTheme, theme]);
+  const isRedirect = [
+    '/',
+    '/validatoremail',
+    '/login',
+    '/signup',
+    '/signin',
+    '/signupMessage',
+  ].findIndex(v => v === pathname) < 0;
   let content = (
-    <Href route={`/login?redirectUrl=${pathname}`}>
+    <Href route={`/login${isRedirect ? `?redirectUrl=${pathname}` : ''}`}>
       <User />
     </Href>
   );

@@ -42,6 +42,7 @@ import { observer } from 'mobx-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { CollectionItem } from '@lib/containers/Collection/Item';
 import { getPictureUrl } from '@lib/common/utils/image';
+import { MarkdownContent } from '@lib/components/MarkdownContent';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -163,6 +164,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </TagBox>
           )
         }
+        <MarkdownContent />
         {
           info.bio && (
             <Bio>

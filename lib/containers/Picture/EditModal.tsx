@@ -17,6 +17,7 @@ import { UpdatePictureDot, PictureEntity } from '@lib/common/interfaces/picture'
 import { Confirm } from '@lib/components/Confirm';
 import { useRouter } from '@lib/router';
 import { useAccountStore } from '@lib/stores/hooks';
+import { FieldTextarea } from '@lib/components/Formik/FieldTextarea';
 
 interface IProps {
   visible: boolean;
@@ -131,7 +132,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                   label={t('picture_title')}
                   style={{ marginBottom: rem(24) }}
                 />
-                <FieldInput
+                <FieldTextarea
                   name="bio"
                   label={t('picture_bio')}
                   style={{ marginBottom: rem(24) }}

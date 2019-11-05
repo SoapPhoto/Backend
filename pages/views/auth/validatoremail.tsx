@@ -1,54 +1,72 @@
-import { rem } from 'polished';
 import React, { useEffect } from 'react';
 import Router from 'next/router';
-import styled from 'styled-components';
 
-import { ICustomNextPage } from '@lib/common/interfaces/global';
+import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { validatorEmail } from '@lib/services/auth';
+import { MessagePage } from '@lib/containers/Auth';
+import { withAuth } from '@lib/components/router/withAuth';
+import { withError } from '@lib/components/withError';
+import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
+import { I18nNamespace } from '@lib/i18n/Namespace';
+import { getTitle } from '@lib/common/utils';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import { NextSeo } from 'next-seo';
+import Head from 'next/head';
 
-const Wrapper = styled.div`
-  width: ${rem('700px')};
-  margin: ${rem('42px')} auto;
-  text-align: center;
-`;
-
-const Title = styled.div`
-  font-size: ${_ => rem(_.theme.fontSizes[4])};
-`;
-
-interface IProps {
+interface IProps extends IBaseScreenProps {
   info?: {
     statusCode: number;
     message: string;
   };
 }
 
-const ValidatorEmail: ICustomNextPage<IProps, IProps> = ({ info }) => {
+const ValidatorEmail: ICustomNextPage<IProps, Omit<IProps, 'error'>> = ({ info }) => {
+  const { t } = useTranslation();
   useEffect(() => {
     Router.events.on('routeChangeStart', (data) => {
       window.location.href = data;
     });
   }, []);
+  const title = info ? t(`validatoremail.${info.message}`) : '验证成功!';
   return (
-    <Wrapper>
-      {
-        info ? (
-          <Title>{info.message}</Title>
-        ) : (
-          <Title>验证成功</Title>
-        )
-      }
-    </Wrapper>
+    <>
+      <NextSeo
+        title={getTitle(title, t)}
+      />
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
+      <MessagePage
+        title={title}
+      />
+    </>
   );
 };
 
 ValidatorEmail.getInitialProps = async (ctx: any) => {
   try {
     await validatorEmail(ctx.query);
-    return {};
+    return {
+      header: false,
+    };
   } catch (err) {
-    return { info: err.response.data };
+    const info = {
+      statusCode: 500,
+      message: '错误！',
+    };
+    if (err && err.response && err.response.data) {
+      if (!Array.isArray(err.response.data.message)) {
+        info.message = err.response.data.message;
+      }
+      info.statusCode = err.response.data.statusCode;
+    }
+    return {
+      info,
+      header: false,
+    };
   }
 };
 
-export default ValidatorEmail;
+export default withAuth('guest')(
+  withError(pageWithTranslation(I18nNamespace.Auth)(ValidatorEmail)),
+);

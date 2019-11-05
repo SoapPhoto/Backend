@@ -11,11 +11,20 @@ export const Wrapper = styled.section`
   padding: ${rem('52px')} ${rem('80px')};
 `;
 
+export const Header = styled.header`
+  margin-bottom: ${rem('36px')};
+`;
+
 export const Title = styled.h2`
-  margin-bottom: ${rem('32px')};
-  font-weight: 500;
+  font-weight: 600;
   font-size: ${_ => rem(_.theme.fontSizes[5])};
   color: ${theme('colors.text')};
+`;
+
+export const SubTitle = styled.p`
+  margin-top: ${rem(12)};
+  font-weight: 400;
+  color: ${theme('colors.secondary')};
 `;
 
 export const OauthIcon = styled.button`

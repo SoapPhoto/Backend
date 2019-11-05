@@ -8,7 +8,9 @@ import { Button } from '@lib/components/Button';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
-import { Title, Wrapper, OauthIcon } from '@lib/styles/views/auth';
+import {
+  Title, Wrapper, OauthIcon, Header, SubTitle,
+} from '@lib/styles/views/auth';
 import rem from 'polished/lib/helpers/rem';
 import styled from 'styled-components';
 import { I18nNamespace } from '@lib/i18n/Namespace';
@@ -26,6 +28,7 @@ import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
 import { EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
+import { A } from '@lib/components/A';
 
 interface IValues {
   username: string;
@@ -97,11 +100,17 @@ const Login: React.FC<IBaseScreenProps> = () => {
         title={getTitle('login', t)}
         description="Login to Soap"
       />
-      <Title>
-        <EmojiText
-          text={t('login')}
-        />
-      </Title>
+      <Header>
+        <Title>
+          <EmojiText
+            text={t('login')}
+          />
+        </Title>
+        <SubTitle>
+          新用户？
+          <A route="/signup">创建账户</A>
+        </SubTitle>
+      </Header>
       <Formik<IValues>
         initialValues={{
           username: '',

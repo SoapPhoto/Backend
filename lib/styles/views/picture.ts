@@ -9,13 +9,13 @@ import { WrapperBox } from '@lib/common/utils/themes/common';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div`
-  ${WrapperBox(1400)};
+  ${WrapperBox(1000)};
   margin: ${rem('32px')} auto 0;
 `;
 
 export const UserHeader = styled(Grid)`
   margin: 0 auto ${rem('20px')};
-  max-width: ${rem(customBreakpoints.large)};
+  max-width: ${rem(customBreakpoints.medium)};
 `;
 
 export const UserLink = styled(A)`
@@ -26,7 +26,7 @@ export const UserLink = styled(A)`
 `;
 
 export const UserName = styled.h3`
-  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
 `;
 
 export const UserInfo = styled(Cell)`
@@ -53,12 +53,12 @@ export const PictureBox = styled.div`
 `;
 
 export const Content = styled.div`
-  max-width: ${rem(customBreakpoints.large)};
+  max-width: ${rem(customBreakpoints.medium)};
   margin: ${rem('48px')} auto;
 `;
 
 export const Title = styled.h2`
-  font-size: ${theme('fontSizes[5]')};
+  font-size: ${_ => rem(theme('fontSizes[5]')(_))};
   margin-bottom: ${rem('18px')};
 `;
 
@@ -103,13 +103,11 @@ export const InfoButton = styled(Info)`
 `;
 
 export const TagBox = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content;
   margin-top: ${rem('18px')};
-  & > a {
-    margin-right: ${rem('6px')};
-  }
-  /* grid-gap: ${rem('6px')};
-  grid-row-gap: ${rem('6px')}; */
+  grid-gap: ${rem('6px')};
+  grid-row-gap: ${rem('6px')};
 `;
 
 export const RelateCollectionTitle = styled.h3`
@@ -123,7 +121,7 @@ export const RelateCollectionTitle = styled.h3`
 
 
 export const RelateCollection = styled.div`
-  max-width: ${rem(customBreakpoints.large)};
+  max-width: ${rem(customBreakpoints.medium)};
   margin: ${rem('48px')} auto;
   ${customMedia.lessThan('mobile')`
     margin-left: -${rem(32)};
