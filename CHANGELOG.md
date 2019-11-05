@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/Yiiu/soapBE/compare/v0.1.3...v0.1.4) (2019-11-05)
+
+
+### Bug Fixes
+
+* bug ([b7899a1](https://github.com/Yiiu/soapBE/commit/b7899a1))
+* Bug ([895fac5](https://github.com/Yiiu/soapBE/commit/895fac5))
+* build bug ([1bb4b77](https://github.com/Yiiu/soapBE/commit/1bb4b77))
+* Fix collection query bug ([c239121](https://github.com/Yiiu/soapBE/commit/c239121))
+* Fix picture list cache bug ([f734c26](https://github.com/Yiiu/soapBE/commit/f734c26))
+* Fix user like list sort error bug ([491ff87](https://github.com/Yiiu/soapBE/commit/491ff87))
+
+
+### Features
+
+* Add GA ([da2a5f3](https://github.com/Yiiu/soapBE/commit/da2a5f3))
+
 ### [0.1.3](https://github.com/Yiiu/soapBE/compare/v0.1.2...v0.1.3) (2019-10-23)
 
 
