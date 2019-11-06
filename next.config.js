@@ -68,7 +68,16 @@ const nextConfig = {
 
 module.exports = composePlugins(
   [
-    [withOffline],
+    [withOffline, {
+      workboxOpts: {
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+            handler: 'CacheFirst',
+          },
+        ],
+      },
+    }],
     withBundleAnalyzer,
     withGraphql,
   ],
