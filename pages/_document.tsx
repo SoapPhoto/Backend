@@ -40,7 +40,7 @@ export default class MyDocument extends Document {
           <meta name="keywords" content="soap, picture, great photographers, photographers, photography images, photography, photos, sell photos online, sell your photos, share photos, your photos, 图片, 照片" />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
-          <link rel="preload" as="style" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
+          <link rel="preload" as="stylesheet" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
           <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150810690-1" />
           <script dangerouslySetInnerHTML={{
             __html: `
