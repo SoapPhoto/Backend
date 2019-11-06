@@ -1,7 +1,7 @@
 <mjml>
   <mj-body>
-    <mj-section full-width="full-width" border-radius="10px" background-color="#fff" border="1px solid #eaeaea" border-radius="10px">
-      <mj-column>
+    <mj-section full-width="full-width" background-color="#f8fafc">
+      <mj-column width="500px" background-color="#fff" border="1px solid #eaeaea" border-radius="10px">
         <mj-divider border-width="0px" padding="10px" />
         <mj-text font-size="24px" align="center" color="#000" font-family="helvetica">
           验证您的电子邮件以注册Soap

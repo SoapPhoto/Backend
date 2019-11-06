@@ -96,7 +96,7 @@ export const Btns = () => {
               </MenuItem>
               <MenuItem>
                 <MenuItemLink onClick={handleLogout}>
-                  {t('menu.signup')}
+                  {t('menu.signout')}
                 </MenuItemLink>
               </MenuItem>
             </Menu>

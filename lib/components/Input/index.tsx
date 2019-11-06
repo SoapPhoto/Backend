@@ -1,4 +1,5 @@
 import React from 'react';
+import { AnimatePresence } from 'framer-motion';
 import {
   ErrorBox, Label, LabelBox, StyleInput,
 } from './styles';
@@ -63,7 +64,7 @@ export const Input: Component = ({
     <LabelBox style={style} className={className}>
       {
         label
-        && <Label>{label}</Label>
+          && <Label>{label}</Label>
       }
       <StyleInput
         ref={inputRef}
@@ -72,10 +73,19 @@ export const Input: Component = ({
         type={type === 'password' ? 'password' : undefined}
         {...restProps}
       />
-      {
-        error
-        && <ErrorBox>{error}</ErrorBox>
-      }
+      <AnimatePresence>
+        {
+          error && (
+            <ErrorBox
+              initial={{ opacity: 0, transform: 'translateY(-100%)' }}
+              animate={{ opacity: 1, transform: 'translateY(0%)' }}
+              exit={{ opacity: 0 }}
+            >
+              {error}
+            </ErrorBox>
+          )
+        }
+      </AnimatePresence>
     </LabelBox>
   );
 };

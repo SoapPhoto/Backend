@@ -165,6 +165,7 @@ fragment UserFragment on User {
 
 fragment UserDetailFragment on User {
   ...UserFragment
+  signupType
   pictures(limit: 3) {
     ...PictureFragment
   }

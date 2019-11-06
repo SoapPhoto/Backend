@@ -163,7 +163,7 @@ export class UserService {
    * @returns {Promise<UserEntity>}
    * @memberof UserService
    */
-  public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]): Promise<UserEntity> {
+  public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]) {
     const q = this.userEntity.createQueryBuilder('user');
     this.selectInfo<UserEntity>(q);
     const isId = validator.isNumber(query) || validator.isNumberString(query as string);
@@ -173,9 +173,7 @@ export class UserService {
       q.where('user.username=:username', { username: query });
     }
     const data = await q.getOne();
-    return plainToClass(UserEntity, data, {
-      groups,
-    });
+    return data;
   }
 
   public async getEmailUser(email: string) {
