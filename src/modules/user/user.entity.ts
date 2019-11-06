@@ -4,10 +4,10 @@ import {
 import {
   Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn,
 } from 'typeorm';
+import { IsEmail, ValidateIf } from 'class-validator';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/modules/picture/picture.entity';
-import { IsEmail, ValidateIf } from 'class-validator';
 
 import { CollectionEntity } from '@server/modules/collection/collection.entity';
 import { CommentEntity } from '@server/modules/comment/comment.entity';
@@ -78,6 +78,18 @@ export class UserEntity extends BaseEntity {
     default: '',
   })
   @Expose({ groups: [Role.OWNER] })
+  @Transform((value?: string) => {
+    if (value) {
+      const m = value.match(/^(.*)@/);
+      if (m && m.length > 1) {
+        const left = m[1];
+        const { length } = m[1];
+        const sliceLength = length > 4 ? 4 : (length - 2) > 1 ? length - 2 : 1;
+        return value.replace(left, `${left.slice(0, sliceLength)}****`);
+      }
+    }
+    return value;
+  }, { toPlainOnly: true })
   public readonly email!: string;
 
   /** 密码验证 */
