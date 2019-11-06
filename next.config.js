@@ -72,8 +72,19 @@ module.exports = composePlugins(
       workboxOpts: {
         runtimeCaching: [
           {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|woff2|ttf)$/,
-            handler: 'CacheFirst',
+            urlPattern: /\.(?:png|jpg|jpeg|svg|woff2|ttf|js|css)$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'https-calls',
+              networkTimeoutSeconds: 15,
+              expiration: {
+                maxEntries: 150,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 1 month
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
           },
         ],
       },
