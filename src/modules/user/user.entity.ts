@@ -67,7 +67,7 @@ export class UserEntity extends BaseEntity {
 
   /** 注册的类型 */
   @Column({ type: 'enum', enum: SignupType, default: `${SignupType.EMAIL}` })
-  @Expose({ groups: [Role.OWNER] })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
   public signupType!: SignupType;
 
   /** 邮箱 */
@@ -77,7 +77,7 @@ export class UserEntity extends BaseEntity {
     unique: false,
     default: '',
   })
-  @Expose({ groups: [Role.OWNER] })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
   @Transform((value?: string) => {
     if (value) {
       const m = value.match(/^(.*)@/);
@@ -157,6 +157,11 @@ export class UserEntity extends BaseEntity {
   @Type(() => Number)
   @Expose()
   public pictureCount = 0;
+
+  @Type(() => Boolean)
+  @Column({ type: 'boolean', default: false })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  public isEmailVerified!: boolean;
 
   public isVerified() {
     return this.status === Status.VERIFIED;

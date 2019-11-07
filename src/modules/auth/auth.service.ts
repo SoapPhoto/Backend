@@ -32,6 +32,7 @@ export class AuthService {
       ) {
         await this.userService.updateUser(userInfo, {
           status: Status.VERIFIED,
+          isEmailVerified: true,
         });
         return;
       }

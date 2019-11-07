@@ -1,7 +1,7 @@
 import React, {
   useEffect, useCallback, useState, useRef,
 } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 
 import { useTranslation } from '@lib/i18n/useTranslation';
@@ -163,7 +163,7 @@ const Account = observer(() => {
       <Title>{t('setting_menu.account')}</Title>
       <List>
         {
-          OauthTypeValues.map((type) => {
+          OauthTypeValues.map((type: OauthType) => {
             const data = CredentialInfo[type];
             const currentInfo = crData[type];
             return (
@@ -191,7 +191,7 @@ const Account = observer(() => {
                         </Button>
                       </CrInfo>
                     ) : (
-                      <Button shape="round" size="small" onClick={() => authorize(type)}>
+                      <Button disabled={type === OauthType.GOOGLE} shape="round" size="small" onClick={() => authorize(type)}>
                         绑定
                       </Button>
                     )
@@ -218,13 +218,25 @@ const Account = observer(() => {
                 <CrInfo>
                   <InfoName style={{ marginRight: rem(12) }}>
                     {userInfo!.email}
+                    {
+                      !userInfo!.isEmailVerified && (
+                        <span css={css`
+                          font-size: 12px;
+                          margin-left: 4px;
+                          color: ${theme('colors.danger')};
+                        `}
+                        >
+                          (未验证)
+                        </span>
+                      )
+                    }
                   </InfoName>
-                  <Button shape="round" danger size="small">
+                  <Button disabled shape="round" danger size="small">
                     修改
                   </Button>
                 </CrInfo>
               ) : (
-                <Button shape="round" size="small">
+                <Button disabled shape="round" size="small">
                   绑定
                 </Button>
               )

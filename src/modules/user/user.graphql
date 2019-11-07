@@ -82,6 +82,12 @@ type User implements BaseNode {
   "是否私人"
   isPrivate: Boolean
 
+  "是否有设置密码"
+  isPassword: Boolean
+
+  "是否验证邮箱"
+  isEmailVerified: Boolean
+
   "注册方式"
   signupType: UserSignupType
 
