@@ -1,7 +1,7 @@
 import {
-  Body, Controller, Post, Res, UseFilters, HttpCode, HttpStatus, UseGuards, Put,
+  Body, Controller, Post, Res, UseFilters, HttpCode, HttpStatus, UseGuards, Put, Req,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { CreateUserDto } from '@server/modules/user/dto/user.dto';
@@ -12,6 +12,11 @@ import { AuthService } from './auth.service';
 import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
 import { Role } from '../user/enum/role.enum';
 import { UserEntity } from '../user/user.entity';
+import { OauthServerService } from '../oauth/oauth-server/oauth-server.service';
+
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const OAuth2Server = require('oauth2-server');
 
 @Controller('auth')
 @UseGuards(AuthGuard)
@@ -19,14 +24,38 @@ import { UserEntity } from '../user/user.entity';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly oauthServerService: OauthServerService,
   ) {}
 
   @Post('signup')
   public async signup(
     @Body() body: CreateUserDto,
+    @Req() req: Request,
+    @Res() res: Response,
   ) {
-    const data = await this.authService.emailSignup(body);
-    return data;
+    await this.authService.emailSignup(body);
+    const request = new OAuth2Server.Request({
+      method: 'POST',
+      headers: {
+        ...req.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      query: {},
+      body: {
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        grant_type: 'password',
+        username: body.username,
+        password: body.password,
+      },
+    });
+    const response = new OAuth2Server.Response(res);
+    const token = await this.oauthServerService.server.token(request, response);
+    res.cookie('Authorization', `Bearer ${token.accessToken}`, {
+      expires: token.accessTokenExpiresAt,
+      domain: process.env.COOKIE_DOMAIN,
+      path: '/',
+    });
+    res.json(token);
   }
 
   @Post('logout')

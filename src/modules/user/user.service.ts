@@ -146,9 +146,9 @@ export class UserService {
       if (hash !== user.hash) {
         return undefined;
       }
-      if (!user.isVerified()) {
-        throw new UnauthorizedException('Email is not activated');
-      }
+      // if (!user.isVerified()) {
+      //   throw new UnauthorizedException('Email is not activated');
+      // }
       return user;
     }
     return undefined;

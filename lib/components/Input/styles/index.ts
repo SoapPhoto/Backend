@@ -94,7 +94,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
 `;
 
 export const StyleInput = styled.input<{ error: boolean }>`
-  ${inputCss}
+  ${inputCss as any}
 `;
 export const ErrorBox = styled(motion.div)`
   position: absolute;

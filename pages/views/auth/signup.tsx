@@ -1,5 +1,5 @@
 import { Formik, FormikHelpers } from 'formik';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { NextSeo } from 'next-seo';
 
 import { SignUpSchema } from '@lib/common/dto/auth';
@@ -8,7 +8,6 @@ import { Button } from '@lib/components/Button';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { withAuth } from '@lib/components/router/withAuth';
 import Toast from '@lib/components/Toast';
-import { Router } from '@lib/routes';
 import {
   Title, Wrapper, Header, SubTitle,
 } from '@lib/styles/views/auth';
@@ -33,6 +32,13 @@ const SignUp = () => {
   const { query } = useRouter();
   const { signup } = useAccountStore();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const push = useCallback(() => {
+    if (query.redirectUrl) {
+      window.location = query.redirectUrl as any;
+    } else {
+      window.location = '/' as any;
+    }
+  }, [query.redirectUrl]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     setConfirmLoading(true);
     setSubmitting(false);
@@ -40,13 +46,7 @@ const SignUp = () => {
       await signup(value);
       setSubmitting(true);
       setTimeout(() => {
-        if (query.redirectUrl) {
-          Router.replaceRoute('/signupMessage', {
-            redirectUrl: query.redirectUrl,
-          });
-        } else {
-          Router.replaceRoute('/signupMessage');
-        }
+        push();
       }, 400);
       Toast.success(t('signup_success'));
     } catch (error) {

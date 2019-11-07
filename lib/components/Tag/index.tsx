@@ -34,10 +34,10 @@ export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   font-size: ${_ => rem(_.theme.fontSizes[0])};
   background: ${theme('colors.lightgray')};
   ${_ => (
-    _.edit ? `
+    _.edit ? css`
       font-size: ${rem(_.theme.fontSizes[1])};
       height: ${rem('32px')};
-    ` : `
+    ` : css`
       &:hover {
         background: ${_.theme.colors.primary};
         border-color: ${_.theme.colors.primary};
