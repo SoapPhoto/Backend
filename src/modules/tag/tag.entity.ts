@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import {
-  Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn,
+  Entity, ManyToMany, Column, PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
@@ -13,10 +13,11 @@ export class TagEntity extends BaseEntity {
   public readonly id!: string;
 
   /** tag名称 */
-  @PrimaryColumn({
+  @Column({
     readonly: true,
     unique: true,
     length: 120,
+    collation: 'utf8mb4_unicode_ci',
   })
   public readonly name!: string;
 

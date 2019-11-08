@@ -40,7 +40,6 @@ fragment PicturePreviewFragment on Picture {
   model
   createTime
   updateTime
-  isPrivate
 }
 
 fragment PictureDetailFragment on Picture {

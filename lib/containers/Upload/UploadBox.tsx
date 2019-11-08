@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { rem } from 'polished';
 
 import { Upload as RCUpload } from '@lib/components/Upload';
