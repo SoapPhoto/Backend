@@ -4,6 +4,7 @@ import {
 import styled, { css } from 'styled-components';
 
 import { theme } from '@lib/common/utils/themes';
+import { motion } from 'framer-motion';
 
 export const LabelBox = styled.label`
   position: relative;
@@ -93,9 +94,9 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
 `;
 
 export const StyleInput = styled.input<{ error: boolean }>`
-  ${inputCss}
+  ${inputCss as any}
 `;
-export const ErrorBox = styled.div`
+export const ErrorBox = styled(motion.div)`
   position: absolute;
   font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.danger')};

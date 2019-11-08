@@ -4,8 +4,8 @@ import uniqid from 'uniqid';
 import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { MailerService } from '@nest-modules/mailer';
+import { SignupType } from '@common/enum/signupType';
 import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
-import { SignupType } from '../user/enum/signup.type.enum';
 import { Status } from '../user/enum/status.enum';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { UserEntity } from '../user/user.entity';
@@ -32,6 +32,7 @@ export class AuthService {
       ) {
         await this.userService.updateUser(userInfo, {
           status: Status.VERIFIED,
+          isEmailVerified: true,
         });
         return;
       }

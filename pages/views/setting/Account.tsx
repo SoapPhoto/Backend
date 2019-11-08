@@ -1,7 +1,7 @@
 import React, {
   useEffect, useCallback, useState, useRef,
 } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 
 import { useTranslation } from '@lib/i18n/useTranslation';
@@ -21,6 +21,7 @@ import { useComputed } from 'mobx-react-lite';
 import { observer } from 'mobx-react';
 import { OauthType, OauthTypeValues } from '@common/enum/router';
 import { IGoogleUserInfo, IGithubUserInfo } from '@lib/common/interfaces/user';
+import { SignupType } from '@common/enum/signupType';
 
 interface IInfo {
   title: string;
@@ -48,7 +49,13 @@ const ItemInfo = styled.div`
 `;
 
 const InfoTitle = styled.h3`
-  font-size: ${theme('fontSizes[2]')};
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
+`;
+
+const InfoTip = styled.span`
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
+  font-weight: 400;
+  color: ${theme('colors.secondary')};
 `;
 
 const CrInfo = styled.div`
@@ -80,8 +87,10 @@ function oauthInfoName(type: OauthType, info: IGithubUserInfo | IGoogleUserInfo)
   return '';
 }
 
+
 const Account = observer(() => {
   const { t } = useTranslation();
+  const { userInfo } = useAccountStore();
   const { userCredentials, getCredentials } = useAccountStore();
   const timer = useRef<NodeJS.Timeout | undefined>();
   const [currentId, setCurrentId] = useState('');
@@ -154,13 +163,20 @@ const Account = observer(() => {
       <Title>{t('setting_menu.account')}</Title>
       <List>
         {
-          OauthTypeValues.map((type) => {
+          OauthTypeValues.map((type: OauthType) => {
             const data = CredentialInfo[type];
             const currentInfo = crData[type];
             return (
               <Item key={type}>
                 <ItemInfo>
-                  <InfoTitle>{data.title}</InfoTitle>
+                  <InfoTitle>
+                    {data.title}
+                    {
+                      userInfo!.signupType === type as any && (
+                        <InfoTip>（注册方式）</InfoTip>
+                      )
+                    }
+                  </InfoTitle>
                 </ItemInfo>
                 <div>
                   {
@@ -175,7 +191,7 @@ const Account = observer(() => {
                         </Button>
                       </CrInfo>
                     ) : (
-                      <Button shape="round" size="small" onClick={() => authorize(type)}>
+                      <Button disabled={type === OauthType.GOOGLE} shape="round" size="small" onClick={() => authorize(type)}>
                         绑定
                       </Button>
                     )
@@ -185,6 +201,48 @@ const Account = observer(() => {
             );
           })
         }
+        <Item>
+          <ItemInfo>
+            <InfoTitle>
+              邮箱
+              {
+                userInfo!.signupType === SignupType.EMAIL && (
+                  <InfoTip>（注册方式）</InfoTip>
+                )
+              }
+            </InfoTitle>
+          </ItemInfo>
+          <div>
+            {
+              userInfo!.email ? (
+                <CrInfo>
+                  <InfoName style={{ marginRight: rem(12) }}>
+                    {userInfo!.email}
+                    {
+                      !userInfo!.isEmailVerified && (
+                        <span css={css`
+                          font-size: 12px;
+                          margin-left: 4px;
+                          color: ${theme('colors.danger')};
+                        `}
+                        >
+                          (未验证)
+                        </span>
+                      )
+                    }
+                  </InfoName>
+                  <Button disabled shape="round" danger size="small">
+                    修改
+                  </Button>
+                </CrInfo>
+              ) : (
+                <Button disabled shape="round" size="small">
+                  绑定
+                </Button>
+              )
+            }
+          </div>
+        </Item>
       </List>
       <Confirm
         title="确定解绑吗？"

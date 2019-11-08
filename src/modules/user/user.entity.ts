@@ -4,18 +4,18 @@ import {
 import {
   Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn,
 } from 'typeorm';
+import { IsEmail, ValidateIf } from 'class-validator';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/modules/picture/picture.entity';
-import { IsEmail, ValidateIf } from 'class-validator';
 
 import { CollectionEntity } from '@server/modules/collection/collection.entity';
 import { CommentEntity } from '@server/modules/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/modules/picture/user-activity/user-activity.entity';
+import { SignupType } from '@common/enum/signupType';
 import { Role } from './enum/role.enum';
 import { Status } from './enum/status.enum';
-import { SignupType } from './enum/signup.type.enum';
 import { CredentialsEntity } from '../credentials/credentials.entity';
 
 @Exclude()
@@ -67,7 +67,7 @@ export class UserEntity extends BaseEntity {
 
   /** 注册的类型 */
   @Column({ type: 'enum', enum: SignupType, default: `${SignupType.EMAIL}` })
-  @Expose({ groups: [Role.ADMIN] })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
   public signupType!: SignupType;
 
   /** 邮箱 */
@@ -77,7 +77,19 @@ export class UserEntity extends BaseEntity {
     unique: false,
     default: '',
   })
-  @Expose()
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  @Transform((value?: string) => {
+    if (value) {
+      const m = value.match(/^(.*)@/);
+      if (m && m.length > 1) {
+        const left = m[1];
+        const { length } = m[1];
+        const sliceLength = length > 4 ? 4 : (length - 2) > 1 ? length - 2 : 1;
+        return value.replace(left, `${left.slice(0, sliceLength)}****`);
+      }
+    }
+    return value;
+  }, { toPlainOnly: true })
   public readonly email!: string;
 
   /** 密码验证 */
@@ -145,6 +157,11 @@ export class UserEntity extends BaseEntity {
   @Type(() => Number)
   @Expose()
   public pictureCount = 0;
+
+  @Type(() => Boolean)
+  @Column({ type: 'boolean', default: false })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  public isEmailVerified!: boolean;
 
   public isVerified() {
     return this.status === Status.VERIFIED;

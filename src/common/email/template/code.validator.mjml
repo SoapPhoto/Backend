@@ -1,0 +1,31 @@
+<mjml>
+  <mj-body>
+    <mj-section full-width="full-width" background-color="#f8fafc">
+      <mj-column width="500px" background-color="#fff" border="1px solid #eaeaea" border-radius="10px">
+        <mj-divider border-width="0px" padding="10px" />
+        <mj-text color="#05f" font-weight="700" font-size="24px" color="#000" font-family="helvetica">
+          Soap
+        </mj-text>
+        <mj-divider border-width="0px" padding="20px" />
+        <mj-text>Hello, <mj-text font-weight="700">${username}</mj-text>:</mj-text>
+        <mj-divider border-width="0px" padding="10px" />
+        <mj-text>
+          验证码为：
+        </mj-text>
+        <mj-divider border-width="0px" padding="10px" />
+        <mj-text color="#05f" font-size="26px" align="center" >
+          S124F
+        </mj-text>
+        <mj-divider border-width="0px" padding="10px" />
+        <mj-text>
+          验证码的有效期为5分钟，请在有效期内输入！
+        </mj-text>
+        <mj-divider border-width="0px" padding="10px" />
+        <mj-divider border-color="#05f" border-style="dashed" border-width="1px"></mj-divider>
+        <mj-text font-size="12px" color="#999">
+          本邮件为系统邮件不能回复，请勿回复。
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

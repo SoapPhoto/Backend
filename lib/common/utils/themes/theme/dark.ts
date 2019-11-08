@@ -31,8 +31,8 @@ const theme: DefaultTheme = {
   styles: {
     nprogress: colors.primary,
     link: {
-      hover: lighten(0.2, colors.text),
-      active: darken(0.2, colors.text),
+      hover: lighten(0.2, colors.primary),
+      active: darken(0.2, colors.primary),
       color: colors.text,
     },
     box: {

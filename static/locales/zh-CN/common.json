@@ -11,7 +11,7 @@
   "menu": {
     "upload": "上传",
     "setting": "设置",
-    "signup": "退出登录",
+    "signout": "退出登录",
     "dark": "暗色模式",
     "light": "亮色模式"
   },

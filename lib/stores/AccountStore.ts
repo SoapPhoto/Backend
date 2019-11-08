@@ -125,6 +125,10 @@ export class AccountStore {
   }
 
   public signup = async (value: CreateUserDto) => {
-    await request.post('auth/signup', value);
+    await request.post('auth/signup', value, {
+      headers: {
+        Authorization: `Basic ${process.env.BASIC_TOKEN}`,
+      },
+    });
   }
 }

@@ -24,10 +24,9 @@ const Item = styled.div<{read: number}>`
   grid-gap: ${rem(12)};
   padding: 14px 18px;
   border-bottom: 1px solid ${theme('styles.box.borderColor')};
-  ${
-  _ => (!_.read ? css`
+  ${_ => (!_.read ? css`
     background: ${theme('styles.notification.read.background')};
-    ` : '')
+    ` as any : undefined)
 }
 `;
 

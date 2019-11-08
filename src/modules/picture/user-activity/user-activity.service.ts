@@ -154,6 +154,6 @@ export class PictureUserActivityService {
       getQ(true).getRawOne(),
       getQ().getRawMany(),
     ]);
-    return [count.count, data.map(activity => activity.id as string)];
+    return [count.count, data.map((activity: {id: string}) => activity.id)];
   }
 }
