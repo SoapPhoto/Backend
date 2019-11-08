@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/Yiiu/soapBE/compare/v0.1.4...v0.1.5) (2019-11-08)
+
+
+### Bug Fixes
+
+* bug ([eb62128](https://github.com/Yiiu/soapBE/commit/eb62128))
+* bug ([0b35820](https://github.com/Yiiu/soapBE/commit/0b35820))
+* bug ([06e9f6c](https://github.com/Yiiu/soapBE/commit/06e9f6c))
+* bug ([622f85c](https://github.com/Yiiu/soapBE/commit/622f85c))
+
 ### [0.1.4](https://github.com/Yiiu/soapBE/compare/v0.1.3...v0.1.4) (2019-11-05)
 
 
