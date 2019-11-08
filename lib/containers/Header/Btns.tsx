@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
+import { css } from 'styled-components';
+import { rem } from 'polished';
 
 import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
-import { Upload, User } from '@lib/icon';
+import {
+  Upload, User, Moon, Sun,
+} from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
@@ -45,7 +49,7 @@ export const Btns = () => {
     '/signupMessage',
   ].findIndex(v => v === pathname) < 0;
   let content = (
-    <Href route={`/login${isRedirect ? `?redirectUrl=${pathname}` : ''}`}>
+    <Href style={{ fontSize: 0 }} route={`/login${isRedirect ? `?redirectUrl=${pathname}` : ''}`}>
       <User />
     </Href>
   );
@@ -89,11 +93,11 @@ export const Btns = () => {
                   {t('menu.setting')}
                 </MenuItemLink>
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <MenuItemLink onClick={switchTheme}>
                   {theme === 'dark' ? t('menu.light') : t('menu.dark')}
                 </MenuItemLink>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem>
                 <MenuItemLink onClick={handleLogout}>
                   {t('menu.signout')}
@@ -111,6 +115,19 @@ export const Btns = () => {
   }
   return (
     <RightWarpper>
+      {
+        theme === 'base' ? (
+          <Moon
+            onClick={switchTheme}
+            css={css`margin-right: ${rem(12)};cursor: pointer;` as any}
+          />
+        ) : (
+          <Sun
+            onClick={switchTheme}
+            css={css`margin-right: ${rem(12)};cursor: pointer;` as any}
+          />
+        )
+      }
       {content}
     </RightWarpper>
   );

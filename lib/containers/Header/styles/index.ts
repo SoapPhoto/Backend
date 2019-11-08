@@ -49,7 +49,7 @@ export const RightWarpper = styled.div`
 `;
 
 export const Href = styled(A)`
-  ${_ => href(_.theme.styles.link.color)}
+  ${_ => href(_.theme.colors.primary)}
 `;
 
 export const MenuProfile = styled.div`

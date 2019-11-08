@@ -12,6 +12,7 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useRouter } from '@lib/router';
+import { User, AtSign, Lock } from '@lib/icon';
 
 interface IProps extends WithRouterProps {
   type: SettingType;
@@ -35,16 +36,19 @@ const Setting = () => {
       value: 'profile',
       name: t('setting_menu.profile'),
       path: '/setting/profile',
+      icon: User,
     },
     {
       value: 'account',
       name: t('setting_menu.account'),
       path: '/setting/account',
+      icon: AtSign,
     },
     {
       value: 'resetPassword',
       name: t('setting_menu.resetPassword'),
       path: '/setting/resetPassword',
+      icon: Lock,
     },
   ];
   const currentMenu = menu.find(m => m.value === types);
