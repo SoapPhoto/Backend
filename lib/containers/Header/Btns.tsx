@@ -119,12 +119,12 @@ export const Btns = () => {
         theme === 'base' ? (
           <Moon
             onClick={switchTheme}
-            css={css`margin-right: ${rem(12)};cursor: pointer;` as any}
+            css={css`margin-right: ${rem(22)};cursor: pointer;` as any}
           />
         ) : (
           <Sun
             onClick={switchTheme}
-            css={css`margin-right: ${rem(12)};cursor: pointer;` as any}
+            css={css`margin-right: ${rem(22)};cursor: pointer;` as any}
           />
         )
       }

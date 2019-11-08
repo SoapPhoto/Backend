@@ -29,6 +29,7 @@ const Box = styled.span<{size: number; isClick: boolean}>`
   border: 2px solid #eee;
   line-height: 0;
   background: #fff;
+  user-select: none;
   ${props => props.isClick && 'cursor: pointer;'}
   width: ${props => rem(props.size)};
   height: ${props => rem(props.size)};
