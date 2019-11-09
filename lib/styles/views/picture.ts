@@ -103,11 +103,15 @@ export const InfoButton = styled(Info)`
 `;
 
 export const TagBox = styled.div`
-  display: grid;
-  grid-template-columns: max-content;
+  display: flex;
   margin-top: ${rem('18px')};
-  grid-gap: ${rem('6px')};
-  grid-row-gap: ${rem('6px')};
+  margin-bottom: ${rem(6)};
+  & > a {
+    &:last-child {
+      margin-right: ${rem(0)};
+    }
+    margin-right: ${rem(6)};
+  }
 `;
 
 export const RelateCollectionTitle = styled.h3`
