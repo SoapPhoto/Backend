@@ -45,7 +45,7 @@ export class PictureService {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
     }
     return classToPlain(await this.pictureRepository.save(
-      this.pictureRepository.create(data),
+      this.pictureRepository.create(newData),
     ), { groups: [Role.OWNER] });
   }
 
