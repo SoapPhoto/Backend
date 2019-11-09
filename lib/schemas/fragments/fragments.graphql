@@ -19,7 +19,6 @@ fragment PictureFragment on Picture {
   model
   createTime
   updateTime
-  isPrivate
 }
 
 fragment PicturePreviewFragment on Picture {
@@ -44,12 +43,13 @@ fragment PicturePreviewFragment on Picture {
 
 fragment PictureDetailFragment on Picture {
     ...PictureFragment
+    isPrivate
     currentCollections {
       ...CollectionFragment
     }
-    relatedCollections(limit: 3) {
-      ...RelatedCollectionFragment
-    }
+    # relatedCollections(limit: 3) {
+    #   ...RelatedCollectionFragment
+    # }
     user {
       ...UserFragment
     }
@@ -60,14 +60,6 @@ fragment PictureDetailFragment on Picture {
       ...EXIFFragment
     }
 }
-fragment UpdatePictureFragment on Picture {
-  title
-  bio
-  isPrivate
-  tags {
-    ...TagFragment
-  }
-}
 
 fragment PictureListFragment on Pictures {
     count
@@ -76,6 +68,7 @@ fragment PictureListFragment on Pictures {
     timestamp
     data {
       ...PictureFragment
+      isPrivate
       currentCollections {
         ...CollectionFragment
       }
@@ -88,12 +81,29 @@ fragment PictureListFragment on Pictures {
     }
 }
 
+fragment UpdatePictureFragment on Picture {
+  title
+  bio
+  isPrivate
+  tags {
+    ...TagFragment
+  }
+}
 fragment PictureLikeFragment on LikePictureReq {
   count
   isLike
 }
 
 # -------------------- Collection
+
+fragment CollectionFragment on Collection {
+  id
+  name
+  bio
+  isPrivate
+  createTime
+  updateTime
+}
 
 fragment RelatedCollectionFragment on PictureRelatedCollectionReq {
     count
@@ -105,24 +115,9 @@ fragment RelatedCollectionFragment on PictureRelatedCollectionReq {
     }
 }
 
-fragment CollectionFragment on Collection {
-  id
-  name
-  bio
-  isPrivate
-  pictureCount
-  createTime
-  updateTime
-}
-
 fragment CollectionDetailFragment on Collection {
-  id
-  name
-  bio
-  isPrivate
   pictureCount
-  createTime
-  updateTime
+  ...CollectionFragment
   user {
     ...UserFragment
   }
