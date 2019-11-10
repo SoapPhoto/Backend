@@ -132,6 +132,7 @@ fragment CollectionListFragment on Collections {
   pageSize
   data {
     ...CollectionFragment
+    pictureCount
     user {
       ...UserFragment
     }
