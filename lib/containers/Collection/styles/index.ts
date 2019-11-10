@@ -28,6 +28,10 @@ export const List = styled(Grid)`
   ${customMedia.greaterThan('large')`
     grid-template-columns: repeat(4,1fr);
   `}
+
+  ${customMedia.greaterThan('huge')`
+    grid-template-columns: repeat(5,1fr);
+  `}
   grid-gap: 24px;
 `;
 
