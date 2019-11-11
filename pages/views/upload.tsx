@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React, { useCallback, useState } from 'react';
+import { css } from 'styled-components';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
@@ -28,8 +29,11 @@ import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { useRouter } from '@lib/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { Trash2 } from '@lib/icon';
+import { Trash2, Edit } from '@lib/icon';
 import { UploadType } from '@common/enum/upload';
+import { FieldItem } from '@lib/components/Formik/FieldItem';
+import { theme } from '@lib/common/utils/themes';
+import { rem } from 'polished';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -164,7 +168,9 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       onChange={e => setData('bio', e.target.value)}
                     />
                   </Cell>
-                  <Cell>
+                  <Cell
+                    style={{ marginBottom: rem(24) }}
+                  >
                     <Switch
                       label="私人"
                       bio="仅自己可见"
@@ -174,14 +180,21 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                   </Cell>
                   {
                     imageInfo && imageInfo.exif && imageInfo.exif.location && (
-                      <Switch
-                        label="分享位置信息"
-                        bio="所有人都可以看到你图片拍摄的位置信息"
-                        checked={isLocation}
-                        onChange={checked => setIsLocation(checked)}
-                      />
+                      <Cell
+                        style={{ marginBottom: rem(24) }}
+                      >
+                        <Switch
+                          label="分享位置信息"
+                          bio="所有人都可以看到你图片拍摄的位置信息"
+                          checked={isLocation}
+                          onChange={checked => setIsLocation(checked)}
+                        />
+                      </Cell>
                     )
                   }
+                  <FieldItem onClick={() => console.log(11111)} label="修改EXIF信息" bio="照片的属性信息和拍摄数据">
+                    <Edit size={20} css={css`color: ${theme('colors.primary')};` as any} />
+                  </FieldItem>
                   <FormTag>
                     <Tag
                       value={data.tags}

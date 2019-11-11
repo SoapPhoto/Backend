@@ -40,22 +40,22 @@ export const Wrapper = styled.div<{fullscreen: number}>`
     height: 100%;
     vertical-align: middle;
     content: '';
-    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
+    ${_ => (!_.fullscreen ? customMedia.lessThan('mobile')`
       vertical-align: bottom;
-    ` : customMedia.lessThan('medium')`
+    ` : customMedia.lessThan('mobile')`
     `)}
   }
   ${Content} {
-    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
-    ` : customMedia.lessThan('medium')`
+    ${_ => (!_.fullscreen ? customMedia.lessThan('mobile')`
+    ` : customMedia.lessThan('mobile')`
       height: 100%;
     `)}
   }
   ${Box} {
-    ${_ => (!_.fullscreen ? customMedia.lessThan('medium')`
+    ${_ => (!_.fullscreen ? customMedia.lessThan('mobile')`
       max-width: calc(100% - ${rem(32)}) !important;
       width: 100%;
-    ` : customMedia.lessThan('medium')`
+    ` : customMedia.lessThan('mobile')`
       max-width: 100% !important;
       width: 100%;
       height: 100%;
@@ -86,7 +86,7 @@ export const XIcon = styled(X)`
   right: ${rem(24)};
   top: ${rem(24)};
   cursor: pointer;
-  ${customMedia.lessThan('medium')`
+  ${customMedia.lessThan('mobile')`
     display: block;
   `}
 `;
