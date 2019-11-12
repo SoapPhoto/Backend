@@ -28,7 +28,7 @@ const bootstrap = async () => {
   //       port: Number(process.env.REDIS_PORT),
   //       db: Number(process.env.REDIS_DB),
   //       password: process.env.REDIS_PASSWORD,
-  //       keyPrefix: process.env.REDIS_PRIFIX,
+  //       keyPrefix: process.env.REDIS_PREFIX,
   //     }),
   //   }),
   //   windowMs: 15 * 1000,

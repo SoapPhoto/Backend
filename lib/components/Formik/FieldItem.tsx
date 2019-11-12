@@ -38,7 +38,7 @@ const Content = styled(motion.div)<{isClicked: number}>`
     &:hover {
       &::before {
         transform: scale(1);
-        background: ${theme('colors.gray')};
+        background: ${theme('layout.header.menu.hover.background')};
       }
     }
   ` : '')}

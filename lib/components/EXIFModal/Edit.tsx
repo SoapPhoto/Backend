@@ -9,25 +9,37 @@ import { Modal } from '../Modal';
 import { FieldInput } from '../Formik';
 import { Button } from '../Button';
 
-interface IValues {
-  make: string;
-  model: string;
-  focalLength: string;
-  aperture: string;
-  exposureTime: string;
-  ISO: string;
+type ValueType = string | number | undefined;
+
+export interface IEXIFEditValues {
+  make: ValueType;
+  model: ValueType;
+  focalLength: ValueType;
+  aperture: ValueType;
+  exposureTime: ValueType;
+  ISO: ValueType;
 }
 
 interface IProps {
   visible: boolean;
-  initialValues: IValues;
+  initialValues: Partial<IEXIFEditValues>;
   onClose: () => void;
+  onOk: (value: IEXIFEditValues) => void;
 }
 
 interface IFormProps {
-  initialValues: IValues;
+  initialValues: Partial<IEXIFEditValues>;
   onClose: () => void;
+  onOk: (value: IEXIFEditValues) => void;
 }
+const init = {
+  make: '',
+  model: '',
+  focalLength: undefined,
+  aperture: undefined,
+  exposureTime: '',
+  ISO: undefined,
+};
 
 const Title = styled.h2`
   font-size: ${_ => rem(theme('fontSizes[3]')(_))};
@@ -40,19 +52,20 @@ const FormBox = styled.div`
   grid-gap: ${rem(16)};
 `;
 
-const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
-  const handleOk = async (value: IValues) => {
-    console.log(value);
-    onClose();
-  };
+const Form: React.FC<IFormProps> = ({ initialValues, onClose, onOk }) => {
   const FormSchema = Yup.object().shape({
     ISO: Yup.number(),
     aperture: Yup.number(),
     focalLength: Yup.number(),
   });
 
-  const validate = async (value: IValues): Promise<FormikErrors<IValues>> => {
-    const error: FormikErrors<IValues> = {
+  const handleOk = async (value: IEXIFEditValues) => {
+    onClose();
+    onOk(FormSchema.cast(value) as IEXIFEditValues);
+  };
+
+  const validate = async (value: IEXIFEditValues): Promise<FormikErrors<IEXIFEditValues>> => {
+    const error: FormikErrors<IEXIFEditValues> = {
 
     };
     try {
@@ -63,7 +76,7 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
       if (errors.inner) {
         errors.inner.forEach((err: any) => {
           if (err.type === 'typeError') {
-            error[err.path as keyof IValues] = '请输入数字';
+            error[err.path as keyof IEXIFEditValues] = '请输入数字';
           }
         });
       }
@@ -72,8 +85,8 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
   };
 
   return (
-    <Formik<IValues>
-      initialValues={initialValues}
+    <Formik<IEXIFEditValues>
+      initialValues={{ ...init, ...initialValues }}
       onSubmit={handleOk}
       validate={validate}
       validationSchema={FormSchema}
@@ -85,7 +98,7 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
         <form onSubmit={handleSubmit}>
           <FormBox>
             {
-              Object.keys(initialValues).map((value: string) => (
+              Object.keys(init).map((value: string) => (
                 <FieldInput
                   key={value}
                   name={value}
@@ -99,7 +112,7 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
             type="submit"
             disabled={isSubmitting}
           >
-            更新
+            修改
           </Button>
         </form>
       )}
@@ -107,13 +120,15 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose }) => {
   );
 };
 
-export const EXIFEditModal: React.FC<IProps> = ({ visible, onClose, initialValues }) => (
+export const EXIFEditModal: React.FC<IProps> = ({
+  visible, onClose, initialValues, onOk,
+}) => (
   <Modal
     visible={visible}
     onClose={onClose}
     boxStyle={{ maxWidth: '560px' }}
   >
     <Title>EXIF 信息修改</Title>
-    <Form onClose={onClose} initialValues={initialValues} />
+    <Form onOk={onOk} onClose={onClose} initialValues={initialValues} />
   </Modal>
 );

@@ -1,8 +1,8 @@
 import { $enum } from 'ts-enum-util';
 
-export enum FlieType {
+export enum FileType {
   AVATAR = 'AVATAR',
   PICTURE = 'PICTURE',
 }
 
-export const FlieTypeValues = $enum(FlieType).map(key => FlieType[key]);
+export const FileTypeValues = $enum(FileType).map(key => FileType[key]);

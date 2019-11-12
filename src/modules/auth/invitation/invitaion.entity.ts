@@ -3,8 +3,8 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 
-@Entity('auth_invitaion_code')
-export class AuthInvitaionCodeEntity extends BaseEntity {
+@Entity('auth_invitation_code')
+export class AuthInvitationCodeEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: string;
 

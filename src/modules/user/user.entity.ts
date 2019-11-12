@@ -146,7 +146,7 @@ export class UserEntity extends BaseEntity {
 
   /** 用户的picture操作 */
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
-  public readonly pictureActivitys!: PictureUserActivityEntity[];
+  public readonly pictureActivities!: PictureUserActivityEntity[];
 
   /** 喜欢的picture数量 */
   @Type(() => Number)

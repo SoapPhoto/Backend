@@ -80,7 +80,7 @@ export class NotificationStore {
   @action
   public unReadList = () => {
     this.unread = 0;
-    this.list.forEach(nofity => nofity.read = true);
+    this.list.forEach(notify => notify.read = true);
   }
 
   @action

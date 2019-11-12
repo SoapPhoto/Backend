@@ -13,7 +13,7 @@ import Toast from '@lib/components/Toast';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { PictureImage } from './Image';
 import {
-  HandleBox, InfoBox, ItemWapper, UserBox, UserName, LockIcon, Link, LikeContent, HeartIcon,
+  HandleBox, InfoBox, ItemWrapper, UserBox, UserName, LockIcon, Link, LikeContent, HeartIcon,
 } from './styles';
 import { UserPopper } from './components/UserPopper';
 
@@ -43,7 +43,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
     }
   }, [detail, isLogin, like]);
   return (
-    <ItemWapper>
+    <ItemWrapper>
       <Link route={`/picture/${detail.id}`} />
       {
         detail.isPrivate && (
@@ -100,6 +100,6 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
         </HandleBox>
       </InfoBox>
       <PictureImage lazyload={lazyload} detail={detail} {...restProps} />
-    </ItemWapper>
+    </ItemWrapper>
   );
 });

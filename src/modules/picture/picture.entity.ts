@@ -145,7 +145,7 @@ export class PictureEntity extends BaseEntity {
 
   @OneToMany(() => PictureUserActivityEntity, activity => activity.picture, { onDelete: 'CASCADE' })
   @Expose()
-  public readonly activitys!: PictureUserActivityEntity[];
+  public readonly activities!: PictureUserActivityEntity[];
 
   /* tagId */
   @ManyToMany(() => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })

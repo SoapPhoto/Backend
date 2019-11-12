@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React, { useCallback, useState } from 'react';
 import { css } from 'styled-components';
+import { pick, merge } from 'lodash';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
@@ -16,7 +17,7 @@ import {
   Content,
   FormTag,
   Input,
-  Wapper,
+  Wrapper,
   PreviewBox,
   Preview,
   Progress,
@@ -34,6 +35,7 @@ import { UploadType } from '@common/enum/upload';
 import { FieldItem } from '@lib/components/Formik/FieldItem';
 import { theme } from '@lib/common/utils/themes';
 import { rem } from 'polished';
+import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -63,6 +65,8 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
   const [percentComplete, setPercentComplete] = React.useState(0);
+  const [EXIFVisible, setEXIFVisible] = React.useState(false);
+  const [titleError, setTitleError] = React.useState<string>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_formatSpeed, seFormatSpeed] = React.useState('0Kb/s');
   const [data, _setData] = useState<ICreatePictureData>({
@@ -71,6 +75,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
 
   // eslint-disable-next-line arrow-parens
   const setData = <T extends keyof ICreatePictureData>(label: T, value: ICreatePictureData[T]) => {
+    if (label === 'title') {
+      if (value !== '') {
+        setTitleError(undefined);
+      } else {
+        setTitleError('请输入标题！');
+      }
+    }
     _setData(prev => ({
       ...prev,
       [label]: value,
@@ -82,7 +93,26 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     seFormatSpeed(speed);
   }, []);
 
+  const updateEXIF = useCallback((value: IEXIFEditValues) => {
+    if (imageInfo) {
+      const { make, model, ...rest } = value;
+      setImageInfo(
+        merge(imageInfo, {
+          make,
+          model,
+          exif: {
+            ...rest,
+          },
+        }) as IImageInfo,
+      );
+    }
+  }, [imageInfo]);
+
   const addPicture = useCallback(async () => {
+    if (data.title === '' || data.title === null || data.title === undefined) {
+      setTitleError('请输入标题！');
+      return;
+    }
     setUploadLoading(true);
     if (imageRef.current) {
       const key = await uploadQiniu(imageRef.current, UploadType.PICTURE, onUploadProgress);
@@ -120,7 +150,6 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     if (isImage(file.name)) {
       imageRef.current = file;
       const [info, url] = await getImageInfo(file);
-      console.log(info);
       setImageUrl(url);
       setImageInfo(info);
     } else {
@@ -134,7 +163,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     });
   }, []);
   return (
-    <Wapper>
+    <Wrapper>
       <Head>
         <title>{getTitle('上传')}</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
@@ -161,6 +190,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       placeholder="标题"
                       value={data.title}
                       onChange={e => setData('title', e.target.value)}
+                      error={titleError}
                     />
                     <TextArea
                       placeholder="简介"
@@ -192,7 +222,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       </Cell>
                     )
                   }
-                  <FieldItem onClick={() => console.log(11111)} label="修改EXIF信息" bio="照片的属性信息和拍摄数据">
+                  <FieldItem onClick={() => setEXIFVisible(true)} label="修改EXIF信息" bio="照片的属性信息和拍摄数据">
                     <Edit size={20} css={css`color: ${theme('colors.primary')};` as any} />
                   </FieldItem>
                   <FormTag>
@@ -220,7 +250,22 @@ const Upload: ICustomNextPage<IProps, any> = () => {
           )
         }
       </Box>
-    </Wapper>
+      <EXIFEditModal
+        initialValues={imageInfo ? {
+          make: imageInfo.make,
+          model: imageInfo.model,
+          ...pick(imageInfo.exif, [
+            'focalLength',
+            'aperture',
+            'exposureTime',
+            'ISO',
+          ]),
+        } : {}}
+        visible={EXIFVisible}
+        onOk={updateEXIF}
+        onClose={() => setEXIFVisible(false)}
+      />
+    </Wrapper>
   );
 };
 

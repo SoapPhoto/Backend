@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { StateTreeModal } from '@lib/components/StateTreeModal';
 import Head from 'next/head';
 import { Header } from '../Header';
-import { Wapper } from './styles';
+import { Wrapper } from './styles';
 
 interface IProps {
   header: boolean;
@@ -26,7 +26,7 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
   //   console.log(props);
   // });
   return (
-    <Wapper>
+    <Wrapper>
       <Head>
         {/* eslint-disable-next-line max-len */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" />
@@ -41,6 +41,6 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
         visible={treeVisible}
         onClose={() => setTreeVisible(false)}
       />
-    </Wapper>
+    </Wrapper>
   );
 };
