@@ -36,6 +36,7 @@ import { FieldItem } from '@lib/components/Formik/FieldItem';
 import { theme } from '@lib/common/utils/themes';
 import { rem } from 'polished';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -270,5 +271,5 @@ const Upload: ICustomNextPage<IProps, any> = () => {
 };
 
 export default withAuth('user')(
-  pageWithTranslation()(Upload),
+  pageWithTranslation(I18nNamespace.Picture)(Upload),
 );
