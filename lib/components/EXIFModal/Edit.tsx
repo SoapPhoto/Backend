@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikErrors } from 'formik';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Modal } from '../Modal';
 import { FieldInput } from '../Formik';
 import { Button } from '../Button';
@@ -53,6 +54,7 @@ const FormBox = styled.div`
 `;
 
 const Form: React.FC<IFormProps> = ({ initialValues, onClose, onOk }) => {
+  const { t } = useTranslation();
   const FormSchema = Yup.object().shape({
     ISO: Yup.number(),
     aperture: Yup.number(),
@@ -101,7 +103,7 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose, onOk }) => {
               Object.keys(init).map((value: string) => (
                 <FieldInput
                   key={value}
-                  name={value}
+                  name={t(`picture_info.${value}`)}
                   label={value}
                 />
               ))

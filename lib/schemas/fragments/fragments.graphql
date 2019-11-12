@@ -181,7 +181,7 @@ fragment EXIFFragment on EXIF {
   aperture
   exposureTime
   focalLength
-  iso
+  ISO
 }
 
 

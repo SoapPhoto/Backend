@@ -58,7 +58,7 @@ export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) 
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.aperture')}</EXIFTitle>
-            <EXIFInfo>{isNull(aperture) ? `f/${aperture}` : '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(aperture) ? '--' : `f/${aperture}`}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.exposureTime')}</EXIFTitle>
