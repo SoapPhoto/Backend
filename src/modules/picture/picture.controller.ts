@@ -46,7 +46,7 @@ export class PictureController {
     const file = await this.fileService.getOne(body.key);
     if (file) {
       await Promise.all([
-        this.fileService.actived(body.key),
+        this.fileService.activated(body.key),
         this.pictureService.create({
           ...info,
           ...restInfo,

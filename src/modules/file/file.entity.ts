@@ -3,7 +3,7 @@ import {
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
-import { FlieType } from './enum/type.enum';
+import { FileType } from './enum/type.enum';
 import { UserEntity } from '../user/user.entity';
 import { PictureEntity } from '../picture/picture.entity';
 
@@ -12,8 +12,8 @@ export class FileEntity extends BaseEntity {
   @PrimaryColumn()
   public readonly key!: string;
 
-  @Column({ type: 'enum', enum: FlieType })
-  public type!: FlieType;
+  @Column({ type: 'enum', enum: FileType })
+  public type!: FileType;
 
   @ManyToOne(() => UserEntity, { eager: true })
   public readonly user?: UserEntity;

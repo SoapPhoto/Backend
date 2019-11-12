@@ -11,7 +11,7 @@ import { CollectionScreenStore } from '@lib/stores/screen/Collection';
 import { Package, Lock, Settings } from '@lib/icon';
 import { Avatar, EmojiText } from '@lib/components';
 import { A } from '@lib/components/A';
-import { theme, activte } from '@lib/common/utils/themes';
+import { theme, activate } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Popover } from '@lib/components/Popover';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -76,14 +76,14 @@ const UserName = styled(A)`
   font-weight: 600;
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: ${theme('colors.text')};
-  ${activte()}
+  ${activate()}
 `;
 
 const EditIcon = styled(Settings)`
   margin-left: ${rem(12)};
   stroke: ${theme('colors.secondary')};
   cursor: pointer;
-  ${activte(0.8)}
+  ${activate(0.8)}
 `;
 
 
@@ -181,7 +181,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
         <Info>
           <User>
             <A route={`/@${user.username}`}>
-              <Avatar css={css`${activte()}` as any} src={user.avatar} />
+              <Avatar css={css`${activate()}` as any} src={user.avatar} />
             </A>
             <UserName route={`/@${user.username}`}>
               <EmojiText

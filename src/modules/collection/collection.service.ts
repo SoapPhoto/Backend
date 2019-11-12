@@ -283,9 +283,9 @@ export class CollectionService {
         .getMany()),
     );
     const newData = data.map((collection, index) => {
-      const preivewInfos = previewList[index];
-      if (preivewInfos) {
-        collection.info = preivewInfos;
+      const previewInfos = previewList[index];
+      if (previewInfos) {
+        collection.info = previewInfos;
       } else {
         collection.info = [];
       }

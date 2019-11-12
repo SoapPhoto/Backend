@@ -13,7 +13,7 @@ import {
 import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
-import { theme, activte } from '@lib/common/utils/themes';
+import { theme, activate } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
 
 import { useStores } from '@lib/stores/hooks';
@@ -56,7 +56,7 @@ const CollectionItemBox = styled.button`
   position: relative;
   text-align: inherit;
   transition: transform 0.1s;
-  ${activte()}
+  ${activate()}
 `;
 
 const CollectionBox = styled.div`
@@ -141,7 +141,7 @@ const ItemHandleIcon = styled.div`
   }
 `;
 
-export const AddPictureCollectonModal: React.FC<IProps> = observer(({
+export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   visible,
   picture,
   onClose,

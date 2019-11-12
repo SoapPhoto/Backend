@@ -31,7 +31,7 @@ export class FileService {
       .getOne();
   }
 
-  public async actived(key: string) {
+  public async activated(key: string) {
     return this.fileRepository
       .createQueryBuilder()
       .update(FileEntity)

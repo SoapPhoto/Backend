@@ -1,4 +1,3 @@
-import { rem } from 'polished';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 

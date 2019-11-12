@@ -33,7 +33,7 @@ const Content = styled.div`
   `}
 `;
 
-const Btns = styled.div`
+const BtnGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: ${rem(32)};
@@ -80,7 +80,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
           <Title>{title}</Title>
         </div>
       </Content>
-      <Btns>
+      <BtnGroup>
         <Button
           text
           {...cancelProps}
@@ -92,7 +92,7 @@ export const Confirm: React.FC<IConfirmProps> = ({
           {confirmIcon}
           {confirmText || t('ok')}
         </Button>
-      </Btns>
+      </BtnGroup>
     </Modal>
   );
 };

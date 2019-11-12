@@ -4,7 +4,7 @@ import { Cell, Grid } from 'styled-css-grid';
 
 import { Info } from '@lib/icon';
 import { A } from '@lib/components/A';
-import { theme, activte } from '@lib/common/utils/themes';
+import { theme, activate } from '@lib/common/utils/themes';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
@@ -99,7 +99,7 @@ export const InfoButton = styled(Info)`
   cursor: pointer;
   user-select: none;
   transition: transform 0.1s;
-  ${activte(0.7)}
+  ${activate(0.7)}
 `;
 
 export const TagBox = styled.div`

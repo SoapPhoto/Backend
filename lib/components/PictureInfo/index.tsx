@@ -12,7 +12,7 @@ import {
 import {
   BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
 } from '@lib/styles/views/picture';
-import { AddPictureCollectonModal } from '@lib/containers/Collection/AddPictureCollectonModal';
+import { AddPictureCollectionModal } from '@lib/containers/Collection/AddPictureCollectionModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useRouter } from '@lib/router/useRouter';
@@ -189,7 +189,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
       {
         isLogin && (
           <>
-            <AddPictureCollectonModal
+            <AddPictureCollectionModal
               picture={info}
               visible={collectionVisible}
               onClose={closeCollection}

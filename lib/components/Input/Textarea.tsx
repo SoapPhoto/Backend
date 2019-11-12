@@ -71,7 +71,7 @@ export const Textarea: React.FC<ITextareaProps> = memo(({
       onFocus(e);
     }
   }, [onFocus]);
-  const onBasenBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
+  const onBaseBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
     setFocus(false);
     if (isFunction(onBlur)) {
       onBlur(e);
@@ -93,7 +93,7 @@ export const Textarea: React.FC<ITextareaProps> = memo(({
           minRows={minRows}
           style={textareaStyle}
           onFocus={onBaseFocus}
-          onBlur={onBasenBlur}
+          onBlur={onBaseBlur}
           {...restProps}
         />
       </TextareaBox>

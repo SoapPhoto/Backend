@@ -14,7 +14,7 @@ import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
-  Href, MenuProfile, RightWarpper, UserName,
+  Href, MenuProfile, RightWrapper, UserName,
 } from './styles';
 import { Notify } from './Notify';
 
@@ -23,7 +23,7 @@ export interface IProps {
   themeStore?: ThemeStore;
 }
 
-export const Btns = () => {
+export const BtnGroup = () => {
   const { t } = useTranslation();
   const PopoverRef = React.useRef<Popover>(null);
   const { isLogin, userInfo, logout } = useAccountStore();
@@ -114,7 +114,7 @@ export const Btns = () => {
     );
   }
   return (
-    <RightWarpper>
+    <RightWrapper>
       {
         theme === 'base' ? (
           <Moon
@@ -129,6 +129,6 @@ export const Btns = () => {
         )
       }
       {content}
-    </RightWarpper>
+    </RightWrapper>
   );
 };

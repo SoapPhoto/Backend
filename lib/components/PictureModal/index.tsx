@@ -9,7 +9,7 @@ import { Router } from '@lib/routes';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
-  Box, Content, ImgBox, Mask, Warpper,
+  Box, Content, ImgBox, Mask, Wrapper,
 } from './styles';
 
 interface IProps {
@@ -65,7 +65,7 @@ export class PictureModal extends React.Component<IProps> {
       (
         <div>
           <Mask />
-          <Warpper ref={this.wrapperRef} onClick={this.handleClick}>
+          <Wrapper ref={this.wrapperRef} onClick={this.handleClick}>
             {
               this.detail
               && (
@@ -81,7 +81,7 @@ export class PictureModal extends React.Component<IProps> {
                 </Content>
               )
             }
-          </Warpper>
+          </Wrapper>
         </div>
       ),
       document.querySelector('body')!,

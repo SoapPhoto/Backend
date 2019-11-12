@@ -34,7 +34,7 @@ import { GraphqlService } from './shared/graphql/graphql.service';
     //   port: Number(process.env.REDIS_PORT),
     //   db: Number(process.env.REDIS_DB),
     //   password: process.env.REDIS_PASSWORD,
-    //   keyPrefix: process.env.REDIS_PRIFIX,
+    //   keyPrefix: process.env.REDIS_PREFIX,
     //   ttl: 20, // seconds
     //   max: 1000, // max number of items in cache
     // }),
@@ -43,7 +43,7 @@ import { GraphqlService } from './shared/graphql/graphql.service';
       port: Number(process.env.REDIS_PORT),
       db: Number(process.env.REDIS_DB),
       password: process.env.REDIS_PASSWORD,
-      keyPrefix: process.env.REDIS_PRIFIX,
+      keyPrefix: process.env.REDIS_PREFIX,
     }),
     TypeOrmModule.forRoot(ormconfig),
     GraphQLModule.forRootAsync({

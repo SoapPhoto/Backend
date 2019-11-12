@@ -36,11 +36,11 @@ export const Logo = styled.div`
   font-size: ${_ => rem(_.theme.fontSizes[5])};
 `;
 
-export const MenuWapper = styled.nav`
+export const MenuWrapper = styled.nav`
 
 `;
 
-export const RightWarpper = styled.div`
+export const RightWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
