@@ -16,7 +16,7 @@ stories
     return (
       <div>
         <Button onClick={() => setVisible(true)}>打开</Button>
-        <EXIFEditModal
+        {/* <EXIFEditModal
           visible={visible}
           initialValues={{
             make: '',
@@ -27,7 +27,7 @@ stories
             ISO: '400',
           }}
           onClose={() => setVisible(false)}
-        />
+        /> */}
       </div>
     );
   });
