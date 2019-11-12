@@ -29,7 +29,7 @@
   "save": "保存",
   "no_more": "没有更多内容啦！",
   "go_home": "前往首页",
-  "update_sccuess": "修改成功！",
+  "update_success": "修改成功！",
   "visible_yourself": "这个{0}仅自己可见",
   "delete_confirm": "确认要删除此{0}吗？删除后将不可恢复。",
   "yup_required": "请输入{0}！",

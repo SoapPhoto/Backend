@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { getTitle } from '@lib/common/utils';
 import { withAuth } from '@lib/components/router/withAuth';
 import { Menu } from '@lib/components/WrapperMenu';
-import { Warpper } from '@lib/styles/views/setting';
+import { Wrapper } from '@lib/styles/views/setting';
 import { SettingType } from '@common/enum/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
@@ -52,9 +52,9 @@ const Setting = () => {
     },
   ];
   const currentMenu = menu.find(m => m.value === types);
-  const CurentCompoent = components[types];
+  const CurrentComponent = components[types];
   return (
-    <Warpper>
+    <Wrapper>
       <Head>
         <title>{getTitle(currentMenu!.name, t)}</title>
       </Head>
@@ -62,9 +62,9 @@ const Setting = () => {
         value={types}
         data={menu}
       >
-        <CurentCompoent />
+        <CurrentComponent />
       </Menu>
-    </Warpper>
+    </Wrapper>
   );
 };
 

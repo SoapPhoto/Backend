@@ -181,7 +181,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
       ...event,
     });
     const contentChild = Children.only(content);
-    const cntentRender = React.cloneElement(contentChild, {
+    const contentRender = React.cloneElement(contentChild, {
       onMouseOver: (e: any) => {
         if (trigger === 'hover') {
           clearTimeout(this._timer!);
@@ -275,7 +275,7 @@ export class Popover extends React.PureComponent<IPopoverProps> {
                     )
                   }
                   <Content x-theme={theme} style={contentStyle}>
-                    {cntentRender}
+                    {contentRender}
                   </Content>
                 </motion.div>
               )

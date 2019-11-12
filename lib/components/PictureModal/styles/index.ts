@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const padding = 48;
 
-export const Warpper = styled.div`
+export const Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;

@@ -20,7 +20,7 @@ export const theme = (path: string) => <P, T>(context: ThemedStyledProps<P, T>):
   _.get(context, `theme.${path}`)
 );
 
-export const activte = (scale = 0.96) => `
+export const activate = (scale = 0.96) => `
   transition: transform 0.1s;
   &:active {
     transform: scale(${scale});

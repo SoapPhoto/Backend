@@ -273,7 +273,7 @@ export class PictureService {
   public select = (user: Maybe<UserEntity>) => {
     const q = this.pictureRepository.createQueryBuilder('picture');
     // .loadRelationCountAndMap(
-    //   'picture.likes', 'picture.activitys', 'activity',
+    //   'picture.likes', 'picture.activities', 'activity',
     //   qb => qb.andWhere('activity.like=:like', { like: true }),
     // );
     this.selectInfo(q, user);
@@ -332,14 +332,14 @@ export class PictureService {
   public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
     q.leftJoinAndSelect('picture.user', value)
       .loadRelationCountAndMap(
-        'picture.likes', 'picture.activitys', 'activity',
+        'picture.likes', 'picture.activities', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
     // this.userService.selectInfo(q, value);
     if (user) {
       q
         .loadRelationCountAndMap(
-          'picture.isLike', 'picture.activitys', 'activity',
+          'picture.isLike', 'picture.activities', 'activity',
           qb => qb.andWhere(
             'activity.userId=:userId AND activity.like=:like',
             { userId: user.id, like: true },
