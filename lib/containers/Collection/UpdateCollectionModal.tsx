@@ -69,7 +69,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
     try {
       await onUpdate(value);
       onClose();
-      Toast.success(t('update_sccuess'));
+      Toast.success(t('update_success'));
     } catch (error) {
       setSubmitting(false);
       Toast.error(t(error.message));

@@ -13,6 +13,8 @@ import {
   EXIFBox, EXIFInfo, EXIFTitle, Info, Title,
 } from './styles';
 
+const isNull = (value: any) => value === undefined || value === null || value === '';
+
 interface IProps {
   visible: boolean;
   onClose: () => void;
@@ -44,27 +46,27 @@ export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) 
         <EXIFBox columns="repeat(auto-fit, minmax(150px, 1fr))">
           <Cell>
             <EXIFTitle>{t('picture_info.make')}</EXIFTitle>
-            <EXIFInfo>{make || '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(make) ? '--' : make}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.model')}</EXIFTitle>
-            <EXIFInfo>{model || '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(model) ? '--' : model}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.focalLength')}</EXIFTitle>
-            <EXIFInfo>{focalLength ? `${focalLength}mm` : '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(focalLength) ? '--' : `${focalLength}mm`}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.aperture')}</EXIFTitle>
-            <EXIFInfo>{aperture ? `f/${aperture}` : '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(aperture) ? `f/${aperture}` : '--'}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.exposureTime')}</EXIFTitle>
-            <EXIFInfo>{exposureTime === undefined ? '--' : `${exposureTime}s`}</EXIFInfo>
+            <EXIFInfo>{isNull(exposureTime) ? '--' : `${exposureTime}s`}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.ISO')}</EXIFTitle>
-            <EXIFInfo>{ISO || '--'}</EXIFInfo>
+            <EXIFInfo>{isNull(ISO) ? '--' : ISO}</EXIFInfo>
           </Cell>
           <Cell>
             <EXIFTitle>{t('picture_info.dimensions')}</EXIFTitle>

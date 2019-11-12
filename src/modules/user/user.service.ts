@@ -130,7 +130,7 @@ export class UserService {
       `${value}.pictureCount`, `${value}.pictures`,
     )
       .loadRelationCountAndMap(
-        `${value}.likes`, `${value}.pictureActivitys`, 'activity',
+        `${value}.likes`, `${value}.pictureActivities`, 'activity',
         qb => qb.andWhere(
           'activity.like=TRUE',
         ),
@@ -219,7 +219,7 @@ export class UserService {
 
   public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto) {
     const [, data] = await Promise.all([
-      this.fileService.actived(body.key),
+      this.fileService.activated(body.key),
       this.userEntity.save(
         this.userEntity.merge(
           user,

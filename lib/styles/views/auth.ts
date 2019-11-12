@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { box } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
-import { theme, activte } from '@lib/common/utils/themes';
+import { theme, activate } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.section`
   ${props => box(props.theme, '480px', true)}
@@ -39,5 +39,5 @@ export const OauthIcon = styled.button`
   justify-content: center;
   outline: none;
   cursor: pointer;
-  ${activte(0.9)}
+  ${activate(0.9)}
 `;

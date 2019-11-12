@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
-import { theme, activte, initButton } from '@lib/common/utils/themes';
+import { theme, initButton, activate } from '@lib/common/utils/themes';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 import { Heart } from '@lib/icon';
 import { motion } from 'framer-motion';
@@ -56,7 +56,7 @@ export const ColItem = styled.div`
   }
 `;
 
-export const ItemWapper = styled.div`
+export const ItemWrapper = styled.div`
   position: relative;
   border-radius: ${rem('4px')};
   overflow: hidden;
@@ -73,7 +73,7 @@ const handleHover = css`
   ${customMedia.lessThan('medium')`
     opacity: 1;
   `}
-  ${ItemWapper}:hover & {
+  ${ItemWrapper}:hover & {
     opacity: 1;
   }
 `;
@@ -91,7 +91,7 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   background-color: ${props => props.background};
   width: 100%;
   transition: .2s filter ease-in-out;
-  /* ${ItemWapper}:hover & {
+  /* ${ItemWrapper}:hover & {
     filter: blur(2px);
   } */
 `;
@@ -136,7 +136,7 @@ export const UserName = styled(A)`
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
-  ${activte()}
+  ${activate()}
 `;
 
 export const HandleBox = styled.div`

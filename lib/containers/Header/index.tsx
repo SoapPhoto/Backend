@@ -6,9 +6,9 @@ import { ThemeStore } from '@lib/stores/ThemeStore';
 import { A } from '@lib/components/A';
 import { useRouter } from '@lib/router';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { Btns } from './Btns';
+import { BtnGroup } from './BtnGroup';
 import { Icon } from './Icon';
-import { Logo, MenuWapper, Wrapper } from './styles';
+import { Logo, MenuWrapper, Wrapper } from './styles';
 
 interface IProps extends WithRouterProps {
   themeStore?: ThemeStore;
@@ -28,12 +28,12 @@ export const Header = memo(() => {
             />
           </A>
         </Logo>
-        <MenuWapper>
+        <MenuWrapper>
           {/* <MenuItem>首页</MenuItem> */}
-        </MenuWapper>
+        </MenuWrapper>
         {
           !isLog
-              && <Btns />
+              && <BtnGroup />
         }
       </Wrapper>
       {

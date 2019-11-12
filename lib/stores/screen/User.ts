@@ -16,7 +16,7 @@ export class UserScreenStore extends BaseStore {
 
   @observable public username?: string;
 
-  @observable public actived = false;
+  @observable public activated = false;
 
   @action
   public getInit = async (username: string, type?: string) => {

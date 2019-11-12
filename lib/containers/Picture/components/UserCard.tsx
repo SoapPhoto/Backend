@@ -50,7 +50,7 @@ const PicturePreview = styled.div`
   grid-gap: ${rem('6px')};
 `;
 
-const PrviewBox = styled.div`
+const PreviewBox = styled.div`
   position: relative;
   padding-bottom: 75%;
   border-radius: 2px;
@@ -107,7 +107,7 @@ const UserCard: React.FC<IProps> = ({
         <PicturePreview>
           {
             user.pictures.map((picture, index) => (
-              <PrviewBox
+              <PreviewBox
                 key={picture.id}
                 style={{
                   backgroundColor: picture.color,
@@ -123,7 +123,7 @@ const UserCard: React.FC<IProps> = ({
                 >
                   <Img src={getPictureUrl(picture.key, 'thumb')} alt="" />
                 </A>
-              </PrviewBox>
+              </PreviewBox>
             ))
           }
         </PicturePreview>

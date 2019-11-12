@@ -8,7 +8,7 @@ import { theme } from '@lib/common/utils/themes';
 import { IconButtonStyled } from '@lib/components/Button';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 
-export const Wapper = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -82,18 +82,18 @@ export const Content = styled(Cell)`
 `;
 
 export const Input = styled(BaseInput)<{isTitle?: boolean}>`
+  margin-bottom: ${rem('24px')};
   input {
     font-size: ${_ => rem(_.isTitle ? _.theme.fontSizes[5] : _.theme.fontSizes[2])};
     border: none;
     background-color: transparent;
-    margin-bottom: ${rem('24px')};
     height: auto;
     padding: ${rem('12px')} 0;
     box-shadow: none !important;
-    border-bottom: 1px solid ${theme('colors.gray')} !important;
+    border-bottom: 1px solid ${theme('colors.gray')};
     border-radius: 0;
     &:focus, &:hover {
-      border-color: ${theme('colors.primary')} !important;
+      border-color: ${theme('colors.primary')};
     }
   }
 `;
