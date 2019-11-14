@@ -7,6 +7,12 @@ enum UserSignupType {
   GITHUB
   GOOGLE
 }
+enum UserStatusType {
+  UNVERIFIED
+  VERIFIED
+  SUSPENDED
+  BANNED
+}
 
 type Query {
   "获取登录用户信息"
@@ -90,6 +96,8 @@ type User implements BaseNode {
 
   "注册方式"
   signupType: UserSignupType
+
+  status: UserStatusType
 
   createTime: DateTime
   updateTime: DateTime

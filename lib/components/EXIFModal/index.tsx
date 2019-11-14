@@ -10,7 +10,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { Modal } from '../Modal';
 import {
-  EXIFBox, EXIFInfo, EXIFTitle, Info, Title,
+  EXIFBox, EXIFInfo, EXIFTitle, Info, Title, Background,
 } from './styles';
 
 const isNull = (value: any) => value === undefined || value === null || value === '';
@@ -39,8 +39,9 @@ export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) 
     <Modal
       visible={visible}
       onClose={onClose}
-      boxStyle={{ backgroundImage: background, padding: 0, maxWidth: rem(500) }}
+      boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
+      <Background background={background} />
       <Title>{t('picture_info.title')}</Title>
       <Info>
         <EXIFBox columns="repeat(auto-fit, minmax(150px, 1fr))">

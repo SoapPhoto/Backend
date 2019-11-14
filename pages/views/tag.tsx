@@ -52,6 +52,7 @@ const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
     <Wrapper>
       <NextSeo
         title={title}
+        description={`${info.name}的Soap照片专题页。`}
       />
       <Header>
         <Title>

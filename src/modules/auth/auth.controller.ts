@@ -18,7 +18,7 @@ import { OauthServerService } from '../oauth/oauth-server/oauth-server.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
 
-@Controller('auth')
+@Controller('api/auth')
 @UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class AuthController {

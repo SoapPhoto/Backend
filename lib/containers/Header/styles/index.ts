@@ -1,9 +1,13 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import { href } from '@lib/common/utils/themes/common';
 import { rem, rgba } from 'polished';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
+import { IconButton } from '@lib/components/Button';
+
+export const verifyHeight = 35;
 
 export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
@@ -61,5 +65,43 @@ export const UserName = styled.div`
   font-size: ${_ => rem(theme('fontSizes[2]')(_))};
   margin-left: ${rem('12px')};
   flex-direction: column;
+  justify-content: center;
+`;
+
+export const VerifyMessage = styled(motion.div)`
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  z-index: 101;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  height: ${rem(verifyHeight)};
+  line-height: ${rem(verifyHeight)};
+  text-align: center;
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
+`;
+
+export const Again = styled.button`
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  border: none;
+  background: none;
+  color: ${theme('colors.primary')};
+  cursor: pointer;
+`;
+
+export const Close = styled(IconButton)`
+  position: absolute;
+  right: ${rem(12)};
+  top: ${rem(5)};
+  color: #fff;
+  width: ${rem(20)};
+  height: ${rem(20)};
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
   justify-content: center;
 `;

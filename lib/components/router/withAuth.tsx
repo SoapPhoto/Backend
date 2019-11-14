@@ -6,6 +6,7 @@ import { Router } from '@lib/routes';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { store } from '@lib/stores/init';
 import { reaction } from 'mobx';
+import { Status } from '@common/enum/userStatus';
 
 type Props = {accountStore?: AccountStore};
 
@@ -19,7 +20,7 @@ export const withAuth = <P extends any>(role?: string) => (
   public static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`;
 
   public static async getInitialProps(ctx: ICustomNextContext) {
-    const { isLogin } = store.accountStore;
+    const { isLogin, userInfo } = store.accountStore;
     switch (role) {
       case 'guest':
         if (isLogin) {
@@ -40,6 +41,24 @@ export const withAuth = <P extends any>(role?: string) => (
             ctx.res.redirect(`/login?redirectUrl=${ctx.req.url}`);
           } else {
             Router.replaceRoute('/login');
+          }
+        }
+        break;
+      case 'user-verified':
+        if (!(isLogin && userInfo && userInfo.status === Status.VERIFIED)) {
+          if (server && ctx.res && ctx.req) {
+            ctx.res.redirect('/auth/verify');
+          } else {
+            Router.replaceRoute('/auth/verify');
+          }
+        }
+        break;
+      case 'user-unverified':
+        if (!(isLogin && userInfo && userInfo.status === Status.UNVERIFIED)) {
+          if (server && ctx.res && ctx.req) {
+            ctx.res.redirect('/');
+          } else {
+            Router.replaceRoute('/');
           }
         }
         break;

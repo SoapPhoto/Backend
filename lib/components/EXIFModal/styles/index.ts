@@ -27,3 +27,14 @@ export const EXIFInfo = styled.div`
 export const EXIFBox = styled(Grid)`
   grid-gap: ${rem('24px')};
 `;
+
+export const Background = styled.div<{background: string}>`
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 150px;
+  filter: blur(4px);
+  background: ${_ => _.background};
+  background-position: center;
+`;

@@ -14,8 +14,8 @@ import { CommentEntity } from '@server/modules/comment/comment.entity';
 import { transformAvatar } from '@server/common/utils/transform';
 import { PictureUserActivityEntity } from '@server/modules/picture/user-activity/user-activity.entity';
 import { SignupType } from '@common/enum/signupType';
+import { Status } from '@common/enum/userStatus';
 import { Role } from './enum/role.enum';
-import { Status } from './enum/status.enum';
 import { CredentialsEntity } from '../credentials/credentials.entity';
 
 @Exclude()
@@ -62,7 +62,7 @@ export class UserEntity extends BaseEntity {
   public verificationToken!: string;
 
   @Column({ type: 'enum', enum: Status, default: `${Status.UNVERIFIED}` })
-  @Expose({ groups: [Role.ADMIN] })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
   public status!: Status;
 
   /** 注册的类型 */

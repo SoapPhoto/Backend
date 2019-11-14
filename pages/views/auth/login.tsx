@@ -98,7 +98,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
     <Wrapper>
       <NextSeo
         title={getTitle('login', t)}
-        description="Login to Soap"
+        description="登录 Soap 分享创造你的生活给你的小伙伴。"
       />
       <Header>
         <Title>

@@ -9,7 +9,6 @@ import { withError } from '@lib/components/withError';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import Head from 'next/head';
 
 const SignupMessage: ICustomNextPage<IBaseScreenProps, any> = () => {
   const { t } = useTranslation();
@@ -22,10 +21,8 @@ const SignupMessage: ICustomNextPage<IBaseScreenProps, any> = () => {
     <>
       <NextSeo
         title={getTitle('验证邮箱', t)}
+        noindex
       />
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
       <MessagePage
         title="请检查您的电子邮件"
         message={(

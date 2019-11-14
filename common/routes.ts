@@ -11,6 +11,7 @@ export const routeObject: Record<string, string> = {
   '/tag/:name': 'views/tag',
   '/authenticate': 'views/auth/authenticate',
   '/signupMessage': 'views/auth/signupMessage',
+  '/auth/verify': 'views/auth/verify',
   [`/picture/:id([0-9]+)/:type(${PictureTypeValues.join('|')})?`]: 'views/picture',
   [`/setting/:type(${SettingTypeValues.join('|')})`]: 'views/setting',
   [`/@:username/:type(${UserTypeValues.join('|')})?`]: 'views/user',

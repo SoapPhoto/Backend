@@ -11,11 +11,11 @@ import { RedisService } from 'nestjs-redis';
 import { OauthStateType } from '@common/enum/oauthState';
 import { OauthType } from '@common/enum/router';
 import { SignupType } from '@common/enum/signupType';
+import { Status } from '@common/enum/userStatus';
 import { ClientService } from './client/client.service';
 import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
-import { Status } from '../user/enum/status.enum';
 import { OauthQueryDto } from './dto/oauth.dto';
 import { UserEntity } from '../user/user.entity';
 

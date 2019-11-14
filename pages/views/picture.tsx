@@ -86,6 +86,11 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const closeLightBox = useCallback(() => {
     setBoxVisible(false);
   }, []);
+  const deletes = useCallback(async () => {
+    await deletePicture();
+    // 删除后返回用户首页
+    window.location.href = `/@${user.username}`;
+  }, [deletePicture, user.username]);
   const title = getTitle(`${info.title} (@${user.username})`, t);
   return (
     <Wrapper>
@@ -97,7 +102,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       </Head>
       <NextSeo
         title={title}
-        description={bio}
+        description={`${bio ? `${bio}-` : ''}${user.username}所拍摄的照片。`}
       />
       <UserHeader columns={2}>
         <UserInfo width={1}>
@@ -141,7 +146,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           isOwner={isOwner}
           onLike={like}
           onOk={onOk}
-          deletePicture={deletePicture}
+          deletePicture={deletes}
           isCollected={isCollected}
         />
         {

@@ -61,7 +61,7 @@ const SignUp = () => {
     <Wrapper>
       <NextSeo
         title={getTitle('signup', t)}
-        description="Sign Up to Soap"
+        description="注册 Soap 分享创造你的生活给你的小伙伴。"
       />
       <Header>
         <Title>

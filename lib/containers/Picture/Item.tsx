@@ -43,7 +43,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
     }
   }, [detail, isLogin, like]);
   return (
-    <ItemWrapper>
+    <ItemWrapper private={detail.isPrivate ? 1 : 0}>
       <Link route={`/picture/${detail.id}`} />
       {
         detail.isPrivate && (
@@ -55,7 +55,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
             content={<span>{t('private_xx', t('picture'))}</span>}
           >
             <LockIcon>
-              <Lock style={{ strokeWidth: 3 }} size={12} color="#fff" />
+              <Lock size={14} color="#fff" />
             </LockIcon>
           </Popover>
         )
