@@ -163,6 +163,7 @@ fragment UserDetailFragment on User {
   isEmailVerified
   isPassword
   signupType
+  status
   pictures(limit: 3) {
     ...PictureFragment
   }

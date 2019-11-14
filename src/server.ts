@@ -78,10 +78,6 @@ app.prepare().then(() => {
       proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );
     server.use(
-      '/auth',
-      proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
-    );
-    server.use(
       '/graphql',
       proxy({ target: process.env.SERVER_URL, changeOrigin: true }),
     );

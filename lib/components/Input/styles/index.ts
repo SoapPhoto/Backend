@@ -19,7 +19,7 @@ export const Label = styled.span`
   letter-spacing: 0.61px;
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   margin-bottom: ${rem('8px')};
-  color: ${theme('colors.secondary')};
+  color: ${theme('colors.text')};
 `;
 
 export const inputCss = css<{ error?: boolean; focus?: boolean }>`
@@ -29,7 +29,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
   padding: ${rem('5px')} ${rem('10px')};
   transition: border .25s ease;
   text-align: left;
-  color: ${_ => rgba(theme('colors.text')(_), 0.7)};
+  color: ${_ => theme('colors.text')(_)};
   border: none;
   border-radius: ${rem('5px')};
   outline: 0;
@@ -76,7 +76,7 @@ export const inputCss = css<{ error?: boolean; focus?: boolean }>`
 };
   }
   &::placeholder {
-    color: ${_ => rgba(theme('colors.text')(_), 0.7)};
+    color: ${_ => rgba(theme('colors.text')(_), 0.6)};
   }
   &[disabled] {
     background-color: ${theme('styles.input.disabled.background')};

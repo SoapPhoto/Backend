@@ -3,13 +3,17 @@ import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from '@lib/common
 
 
 export const validatorEmail = async (data: ValidatorEmailDto) => (
-  request.post('/auth/validatoremail', data)
+  request.post('/api/auth/validatoremail', data)
 );
 
 export const resetPassword = async (data: ResetPasswordDto) => (
-  request.put('/auth/resetPassword', data)
+  request.put('/api/auth/resetPassword', data)
 );
 
 export const newPassword = async (data: NewPasswordDto) => (
-  request.put('/auth/newPassword', data)
+  request.put('/api/auth/newPassword', data)
+);
+
+export const resetVerifyMail = async () => (
+  request.post('/api/auth/resetMail')
 );

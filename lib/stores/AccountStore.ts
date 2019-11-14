@@ -1,5 +1,5 @@
 import { action, computed, observable } from 'mobx';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
@@ -7,6 +7,10 @@ import { oauthToken, oauth } from '@lib/services/oauth';
 import { OauthType } from '@common/enum/router';
 import { CredentialsEntity } from '@lib/common/interfaces/credentials';
 import { getUserCredentialList } from '@lib/services/credentials';
+import { resetVerifyMail } from '@lib/services/auth';
+import Toast from '@lib/components/Toast';
+
+let resetDate: undefined | Dayjs;
 
 export class AccountStore {
   @computed get isLogin() {
@@ -120,15 +124,24 @@ export class AccountStore {
   }
 
   public logout = async () => {
-    await request.post('auth/logout');
+    await request.post('/api/auth/logout');
     window.location.href = '/';
   }
 
   public signup = async (value: CreateUserDto) => {
-    await request.post('auth/signup', value, {
+    await request.post('/api/auth/signup', value, {
       headers: {
         Authorization: `Basic ${process.env.BASIC_TOKEN}`,
       },
     });
+  }
+
+  public resetVerifyEmail = async () => {
+    if (resetDate && dayjs().isBefore(resetDate)) {
+      Toast.warning('操作太频繁，请1分钟后重试！');
+      return null;
+    }
+    resetDate = dayjs().add(1, 'M');
+    return resetVerifyMail();
   }
 }

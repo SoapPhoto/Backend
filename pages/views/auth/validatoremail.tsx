@@ -67,6 +67,4 @@ ValidatorEmail.getInitialProps = async (ctx: any) => {
   }
 };
 
-export default withAuth('guest')(
-  withError(pageWithTranslation(I18nNamespace.Auth)(ValidatorEmail)),
-);
+export default withError(pageWithTranslation(I18nNamespace.Auth)(ValidatorEmail));

@@ -270,6 +270,6 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   );
 };
 
-export default withAuth('user')(
+export default withAuth('user-verified')(
   pageWithTranslation(I18nNamespace.Picture)(Upload),
 );
