@@ -11,6 +11,17 @@ import { motion } from 'framer-motion';
 
 const padding = 30;
 
+export const ItemImage = styled(Image)`
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  user-select: none;
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transition: .2s opacity ease-in;
+`;
+
 export const PictureContent = styled.div`
   ${customMedia.lessThan('mobile')`
     &>div:nth-child(4) {
@@ -56,11 +67,24 @@ export const ColItem = styled.div`
   }
 `;
 
-export const ItemWrapper = styled.div`
+export const ItemWrapper = styled.div<{private: number}>`
   position: relative;
   border-radius: ${rem('4px')};
   overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+  ${_ => (_.private ? css`
+    &:hover {
+      ${ItemImage} {
+        filter: blur(0px);
+      }
+    }
+    ${ItemImage} {
+      ${customMedia.lessThan('medium')`
+        filter: blur(0px);
+      `}
+      filter: blur(12px);
+    }
+  ` : '')}
   /* &:active {
     transform: scale(0.98);
     transition: transform 0.1s;
@@ -94,17 +118,6 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   /* ${ItemWrapper}:hover & {
     filter: blur(2px);
   } */
-`;
-
-export const ItemImage = styled(Image)`
-  pointer-events: auto;
-  position: absolute;
-  top: 0;
-  user-select: none;
-  display: block;
-  width: 100%;
-  opacity: 0;
-  transition: .2s opacity ease-in;
 `;
 
 export const InfoBox = styled.div`
@@ -151,12 +164,12 @@ export const LockIcon = styled.div`
   position: absolute;
   z-index: 2;
   background: #ccc;
-  right: ${rem(6)};
-  top: ${rem(6)};
-  background: #000;
+  top: ${rem(12)};
+  left: ${rem(12)};
+  background: rgba(0, 0, 0, .8);
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: ${rem(30)};
+  height: ${rem(30)};
   display: flex;
   justify-content: center;
   align-items: center;
