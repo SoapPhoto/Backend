@@ -102,7 +102,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       </Head>
       <NextSeo
         title={title}
-        description={bio}
+        description={`${bio ? `${bio}-` : ''}${user.username}所拍摄的照片。`}
       />
       <UserHeader columns={2}>
         <UserInfo width={1}>

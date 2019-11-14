@@ -150,7 +150,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
     <div>
       <NextSeo
         title={getTitle(`${name} (@${user.username})`, t)}
-        description={bio}
+        description={`${bio ? `${bio}-` : ''}${user.username}的照片收藏夹。`}
       />
       <Header>
         <Title>

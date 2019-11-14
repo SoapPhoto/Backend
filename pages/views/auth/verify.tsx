@@ -55,10 +55,8 @@ const AuthVerify = () => {
     <Wrapper>
       <NextSeo
         title="验证邮箱"
+        noindex
       />
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
       <Box>
         <Title>验证邮箱</Title>
         <P>在继续之前，请检查您的电子邮件以验证邮箱。如果您没有收到电子邮件，请单击下面的按钮以重新发送验证邮件。</P>
