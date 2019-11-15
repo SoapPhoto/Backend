@@ -19,8 +19,9 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
   if (!namespace) return {};
   const name = Array.isArray(namespace) ? namespace : [namespace];
   try {
+    const url = server ? `http://127.0.0.1:${process.env.PAGE_PORT}` : process.env.URL;
     const dataArr = await Promise.all(
-      name.map(n => request.get(`${process.env.URL}/static/locales/${locale}/${n}.json`)),
+      name.map(n => request.get(`${url}/static/locales/${locale}/${n}.json`)),
     );
     const test: Record<I18nNamespace, any> = {} as any;
     dataArr.forEach(({ data }, i) => {
