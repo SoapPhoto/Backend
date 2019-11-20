@@ -1,14 +1,9 @@
 
 import { pick } from 'lodash';
-import pathToRegexp from 'path-to-regexp';
+import { pathToRegexp, Key } from 'path-to-regexp';
 import parse from 'url-parse';
 
 import { routeObject } from '@common/routes';
-
-interface IKey {
-  name: string;
-}
-type Keys = IKey[];
 
 export interface IPathInfo extends Pick<parse, 'pathname' | 'href' | 'query'> {
   params: { [key: string]: string | undefined };
@@ -22,14 +17,16 @@ export const parsePath = (asPath: string) => {
   const route = setUrlPath(info.pathname);
   if (route) {
     const params: {[keyof: string]: string} = {};
-    const keys: Keys = [];
+    const keys: Key[] = [];
     const regexp = pathToRegexp(route, keys);
     const result = regexp.exec(info.pathname);
-    // tslint:disable-next-line:no-increment-decrement
-    for (let i = 0; i < keys.length; i += 1) {
-      params[keys[i].name] = result[i + 1];
+    if (result) {
+      // tslint:disable-next-line:no-increment-decrement
+      for (let i = 0; i < keys.length; i += 1) {
+        params[keys[i].name] = result[i + 1];
+      }
+      info.params = params;
     }
-    info.params = params;
   }
   return info;
 };
@@ -51,7 +48,9 @@ export const histore = () => {
   if (typeof window === 'undefined') return undefined;
   type func = (data: any, title: string, url?: string | null) => void;
   const get = (key: string) => window.history.state && window.history.state[key];
-  const set = (state: Record<string, string | undefined>) => {
+  const set = (key: string, value: any) => {
+    const state: any = {};
+    state[key] = value;
     window.history.replaceState(state, '');
   };
   const wrap = (m: func) => (state: Record<string, string | undefined>, title: string, url?: string) => (

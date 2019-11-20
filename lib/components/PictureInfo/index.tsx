@@ -41,7 +41,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
   isCollected,
 }) => {
   const {
-    pushRoute, params, back, replaceRoute,
+    pushRoute, params, back, replaceRoute, pathname,
   } = useRouter();
   const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
@@ -56,17 +56,17 @@ export const PictureInfo: React.FC<IProps> = observer(({
     if (value) {
       func(`/picture/${params.id}/${label}`, {}, {
         shallow: true,
-        state: {
-          data: `child-${label}`,
-        },
+        // state: {
+        //   modal: `child-${label}`,
+        // },
       });
     } else {
-      const child = Histore!.get('data');
+      const child = Histore!.get('modal');
       if (child === `child-${label}`) {
+        // Histore.set({
+        //   data: `child-${label}-back`,
+        // });
         back();
-        Histore.set({
-          data: `child-${label}-back`,
-        });
       } else {
         func(`/picture/${params.id}`, {}, {
           shallow: true,
@@ -76,9 +76,8 @@ export const PictureInfo: React.FC<IProps> = observer(({
   }, [back, params.id, pushRoute, replaceRoute]);
 
   useEffect(() => {
-    const { type } = params;
-    if (type) {
-      switch (type) {
+    if (params.type) {
+      switch (params.type) {
         case 'info':
           setEXIFVisible(true);
           break;
@@ -98,7 +97,8 @@ export const PictureInfo: React.FC<IProps> = observer(({
       setCollectionVisible(false);
       setEditVisible(false);
     }
-  }, [isLogin, isOwner, params, push]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.type, pathname]);
 
   const closeEXIF = useCallback(() => {
     push('info');

@@ -33,7 +33,7 @@ export const Link: React.FC<ILinkProps> = (props) => {
       {React.cloneElement(child, {
         ...restProps,
         onClick: (e: any) => {
-          Histore!.set({ data: undefined });
+          Histore!.set('modal', undefined);
           store.appStore.setRoute({
             as: as as string,
             href: href as string,

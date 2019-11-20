@@ -15,18 +15,21 @@ const hybridRouter = (route: RouterProps): IRouter => {
   const data = parsePath(route.asPath);
   // eslint-disable-next-line max-len
   const func: (fu: RouterPush, action: RouterAction) => RouterPush = (fu, action) => async (routes, params, options) => {
-    if (options && options.state && Histore) {
-      Histore!.set(options.state);
-    } else {
-      Histore!.set({ data: undefined });
-    }
     store.appStore.setRoute({
       as: route.route,
       options,
       href: data.href,
       action,
     });
-    return fu(routes, params, options);
+    const re = fu(routes, params, options);
+    if (options && options.state && Histore) {
+      Object.keys(options.state).forEach(key => (
+        Histore!.set(key, options.state[key])
+      ));
+    } else {
+      Histore!.set('modal', undefined);
+    }
+    return re;
   };
   return {
     ...data,

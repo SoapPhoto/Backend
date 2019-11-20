@@ -4,8 +4,6 @@
 declare module 'oauth2-server';
 declare module 'oauth2-server/lib/handlers/token-handler';
 
-declare module 'path-to-regexp';
-
 declare module 'react-simple-img';
 
 declare module 'react-keydown';
