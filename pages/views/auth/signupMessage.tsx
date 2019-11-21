@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { Router } from 'next/router';
+
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { MessagePage } from '@lib/containers/Auth';
 import { getTitle } from '@lib/common/utils';
-import { NextSeo } from 'next-seo';
 import { withAuth } from '@lib/components/router/withAuth';
 import { withError } from '@lib/components/withError';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { SEO } from '@lib/components';
 
 const SignupMessage: ICustomNextPage<IBaseScreenProps, any> = () => {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ const SignupMessage: ICustomNextPage<IBaseScreenProps, any> = () => {
   }, []);
   return (
     <>
-      <NextSeo
+      <SEO
         title={getTitle('验证邮箱', t)}
         noindex
       />

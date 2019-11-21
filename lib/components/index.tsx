@@ -8,3 +8,4 @@ export * from './EmojiText';
 export * from './Modal';
 export * from './Empty';
 export * from './LightBox';
+export * from './SEO';

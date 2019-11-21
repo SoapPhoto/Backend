@@ -1,6 +1,5 @@
 import { Formik, FormikHelpers } from 'formik';
 import React, { useCallback, useEffect } from 'react';
-import { NextSeo } from 'next-seo';
 
 import { LoginSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -26,7 +25,7 @@ import {
 } from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
 import { OauthStateType } from '@common/enum/oauthState';
-import { EmojiText } from '@lib/components';
+import { EmojiText, SEO } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import { A } from '@lib/components/A';
 
@@ -96,7 +95,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
   useEffect(() => () => window.removeEventListener('message', messageCb), [messageCb]);
   return (
     <Wrapper>
-      <NextSeo
+      <SEO
         title={getTitle('login', t)}
         description="登录 Soap 分享创造你的生活给你的小伙伴。"
       />

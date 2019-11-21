@@ -46,6 +46,7 @@ export const pictureStyle = {
   regular: '-pictureRegular',
   thumb: '-pictureThumb',
   blur: '-pictureThumbBlur',
+  itemprop: '-itemprop',
 };
 
 export type PictureStyle = keyof typeof pictureStyle;

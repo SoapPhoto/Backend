@@ -1,12 +1,11 @@
 import Head from 'next/head';
 import React, { useEffect, useCallback, useState } from 'react';
-import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getTitle, Histore } from '@lib/common/utils';
 import {
-  Avatar, GpsImage, EmojiText, LightBox,
+  Avatar, GpsImage, EmojiText, LightBox, SEO,
 } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
@@ -99,8 +98,11 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
         />
       </Head>
-      <NextSeo
+      <SEO
         title={title}
+        itemprop={{
+          image: `http:${getPictureUrl(info.key, 'itemprop')}`,
+        }}
         description={`${bio ? `${bio}-` : ''}${user.username}所拍摄的照片。`}
       />
       <UserHeader columns={2}>

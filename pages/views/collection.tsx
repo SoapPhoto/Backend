@@ -2,14 +2,13 @@ import React, { useEffect, useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
 import { pick } from 'lodash';
-import { NextSeo } from 'next-seo';
 
 import { withError } from '@lib/components/withError';
 import { getTitle, Histore, server } from '@lib/common/utils';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { CollectionScreenStore } from '@lib/stores/screen/Collection';
 import { Package, Lock, Settings } from '@lib/icon';
-import { Avatar, EmojiText } from '@lib/components';
+import { Avatar, EmojiText, SEO } from '@lib/components';
 import { A } from '@lib/components/A';
 import { theme, activate } from '@lib/common/utils/themes';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -148,7 +147,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   }, [setUpdateVisible]);
   return (
     <div>
-      <NextSeo
+      <SEO
         title={getTitle(`${name} (@${user.username})`, t)}
         description={`${bio ? `${bio}-` : ''}${user.username}的照片收藏夹。`}
       />

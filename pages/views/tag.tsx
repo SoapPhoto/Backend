@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { NextSeo } from 'next-seo';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle, server } from '@lib/common/utils';
@@ -13,6 +12,7 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { observer } from 'mobx-react';
+import { SEO } from '@lib/components';
 
 const Wrapper = styled.div``;
 
@@ -50,7 +50,7 @@ const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   const title = getTitle(`# ${info.name}`, t);
   return (
     <Wrapper>
-      <NextSeo
+      <SEO
         title={title}
         description={`${info.name}的Soap照片专题页。`}
       />

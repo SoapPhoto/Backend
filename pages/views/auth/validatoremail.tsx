@@ -9,7 +9,7 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { getTitle } from '@lib/common/utils';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { NextSeo } from 'next-seo';
+import { SEO } from '@lib/components';
 
 interface IProps extends IBaseScreenProps {
   info?: {
@@ -28,7 +28,7 @@ const ValidatorEmail: ICustomNextPage<IProps, Omit<IProps, 'error'>> = ({ info }
   const title = info ? t(`validatoremail.${info.message}`) : '验证成功!';
   return (
     <>
-      <NextSeo
+      <SEO
         title={getTitle(title, t)}
         noindex
       />

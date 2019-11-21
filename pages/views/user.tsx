@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import parse from 'url-parse';
-import { NextSeo } from 'next-seo';
 
 import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
 import {
-  Avatar, Nav, NavItem, EmojiText,
+  Avatar, Nav, NavItem, EmojiText, SEO,
 } from '@lib/components';
 import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -49,7 +48,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
   const { user } = userStore;
   return (
     <Wrapper>
-      <NextSeo
+      <SEO
         title={getTitle(`${user.fullName} (@${user.username})`, t)}
         description={`${user.bio ? `${user.bio}-` : ''}查看${user.username}的Soap照片。`}
       />

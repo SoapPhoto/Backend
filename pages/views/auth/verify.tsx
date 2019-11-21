@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
-import { NextSeo } from 'next-seo';
-import Head from 'next/head';
 
 import { WrapperBox, box } from '@lib/common/utils/themes/common';
 import { Button } from '@lib/components/Button';
@@ -11,6 +9,7 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useAccountStore } from '@lib/stores/hooks';
 import Toast from '@lib/components/Toast';
+import { SEO } from '@lib/components';
 
 const Wrapper = styled.section`
   ${WrapperBox(520)}
@@ -53,7 +52,7 @@ const AuthVerify = () => {
   }, [sendLoading]);
   return (
     <Wrapper>
-      <NextSeo
+      <SEO
         title="验证邮箱"
         noindex
       />

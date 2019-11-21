@@ -1,6 +1,5 @@
 import { Formik, FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
-import { NextSeo } from 'next-seo';
 
 import { SignUpSchema } from '@lib/common/dto/auth';
 import { getTitle } from '@lib/common/utils';
@@ -18,7 +17,7 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useRouter } from '@lib/router';
 import { useAccountStore } from '@lib/stores/hooks';
 import { withError } from '@lib/components/withError';
-import { EmojiText } from '@lib/components';
+import { EmojiText, SEO } from '@lib/components';
 import { A } from '@lib/components/A';
 
 interface IValues {
@@ -59,7 +58,7 @@ const SignUp = () => {
   };
   return (
     <Wrapper>
-      <NextSeo
+      <SEO
         title={getTitle('signup', t)}
         description="注册 Soap 分享创造你的生活给你的小伙伴。"
       />
