@@ -148,8 +148,8 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
   return (
     <div>
       <SEO
-        title={getTitle(`${name} (@${user.username})`, t)}
-        description={`${bio ? `${bio}-` : ''}${user.username}的照片收藏夹。`}
+        title={getTitle(`${name} (@${user.name})`, t)}
+        description={`${bio ? `${bio}-` : ''}${user.name}的照片收藏夹。`}
       />
       <Header>
         <Title>

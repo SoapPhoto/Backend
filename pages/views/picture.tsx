@@ -89,7 +89,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
     // 删除后返回用户首页
     window.location.href = `/@${user.username}`;
   }, [deletePicture, user.username]);
-  const title = getTitle(`${info.title} (@${user.username})`, t);
+  const title = getTitle(`${info.title} (@${user.name})`, t);
   return (
     <Wrapper>
       <Head>
@@ -103,7 +103,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         itemprop={{
           image: `http:${getPictureUrl(info.key, 'itemprop')}`,
         }}
-        description={`${bio ? `${bio}-` : ''}${user.username}所拍摄的照片。`}
+        description={`${bio ? `${bio}-` : ''}${user.name}所拍摄的照片。`}
       />
       <UserHeader columns={2}>
         <UserInfo width={1}>

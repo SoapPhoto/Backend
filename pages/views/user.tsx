@@ -50,7 +50,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
     <Wrapper>
       <SEO
         title={getTitle(`${user.fullName} (@${user.username})`, t)}
-        description={`${user.bio ? `${user.bio}-` : ''}查看${user.username}的Soap照片。`}
+        description={`${user.bio ? `${user.bio}-` : ''}查看${user.name}的Soap照片。`}
       />
       <UserHeader>
         <HeaderGrid columns="140px auto" gap="32px">
