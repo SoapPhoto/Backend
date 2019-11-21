@@ -51,7 +51,7 @@ export const histore = () => {
   const set = (key: string, value: any) => {
     const state: any = {};
     state[key] = value;
-    window.history.replaceState(state, '');
+    window.history.replaceState(state, window.location.pathname);
   };
   const wrap = (m: func) => (state: Record<string, string | undefined>, title: string, url?: string) => (
     m.call(window.history, { ...window.history.state, ...state || {} }, title, url)

@@ -42,7 +42,6 @@ import { observer } from 'mobx-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { CollectionItem } from '@lib/containers/Collection/Item';
 import { getPictureUrl } from '@lib/common/utils/image';
-import { MarkdownContent } from '@lib/components/MarkdownContent';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -233,7 +232,7 @@ Picture.getInitialProps = async ({
   let isChild = false;
   if (appStore.location) {
     if (appStore.location.action === 'POP') isPop = true;
-    const data = Histore!.get('data');
+    const data = Histore!.get('modal');
     if (
       /^child/g.test(data)
     ) isChild = true;

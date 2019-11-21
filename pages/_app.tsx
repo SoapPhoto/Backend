@@ -158,7 +158,7 @@ class MyApp extends App<IProps> {
       }
     });
     Router.beforePopState(({ url, as, options }) => {
-      Histore.set('modal', Histore.get('data'));
+      Histore.set('modal', Histore.get('modal'));
       this.state.mobxStore.appStore.setRoute({
         as,
         options,

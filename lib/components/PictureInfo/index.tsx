@@ -56,17 +56,15 @@ export const PictureInfo: React.FC<IProps> = observer(({
     if (value) {
       func(`/picture/${params.id}/${label}`, {}, {
         shallow: true,
-        // state: {
-        //   modal: `child-${label}`,
-        // },
+        state: {
+          modal: `child-${label}`,
+        },
       });
     } else {
       const child = Histore!.get('modal');
-      if (child === `child-${label}`) {
-        // Histore.set({
-        //   data: `child-${label}-back`,
-        // });
+      if (/^child/g.test(child)) {
         back();
+        Histore.set('modal', `child-${label}-back`);
       } else {
         func(`/picture/${params.id}`, {}, {
           shallow: true,
@@ -144,6 +142,8 @@ export const PictureInfo: React.FC<IProps> = observer(({
           </BaseInfoItem>
         </Popover>
       </div>
+      {/* //TODO */}
+      <span style={{ display: 'none' }}>{params.type}</span>
       <BaseInfoHandleBox
         flow="column"
         columns="auto"
