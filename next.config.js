@@ -11,10 +11,14 @@ require('dotenv').config({
   path: process.env.NODE_ENV === 'production' ? path.resolve(__dirname, './.env.production') : undefined,
 });
 
+const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
+  crossOrigin: 'anonymous',
   analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
   analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
+  assetPrefix: isProd ? `https:${process.env.CDN_URL}` : '',
+  // assetPrefix: `https:${process.env.CDN_URL}`,
   bundleAnalyzerConfig: {
     server: {
       analyzerMode: 'static',
