@@ -34,6 +34,12 @@ const ssrCache = new LRUCache({
 
 app.prepare().then(() => {
   const server = express();
+  server.use((req: any, res: any, nextCb) => {
+    if (!dev) {
+      app.setAssetPrefix(process.env.CDN_URL);
+    }
+    nextCb();
+  });
   server.use(helmet());
   server.use(cookieParser());
   server.use(responseTime());
