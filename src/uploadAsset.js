@@ -35,7 +35,7 @@ async function upFile() {
   await Promise.all(files.map(async (v) => {
     const key = v.replace(PUBLIC_PATH, PREFIX).replace(/\\/g, '/');
     return new Promise((resolve, reject) => {
-      formUploader.putFile(uploadToken, key, files[0], putExtra, (respErr,
+      formUploader.putFile(uploadToken, key, v, putExtra, (respErr,
         respBody, respInfo) => {
         if (respErr) {
           reject(respErr);
