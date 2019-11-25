@@ -133,24 +133,48 @@ export class PictureScreenStore extends BaseStore {
     }
   }
 
+  @action
+  public setPicture = (picture: Partial<PictureEntity>) => {
+    const cacheData = this.getCachePicture();
+    if (cacheData) {
+      this.info = {
+        ...cacheData,
+        ...picture,
+      } as PictureEntity;
+      this.setCachePicture(this.info);
+    }
+  }
+
   public updateInfo = (picture: PictureEntity) => {
-    const cacheData = this.client.readFragment<PictureEntity>({
-      fragment: Fragments,
-      fragmentName: 'PictureDetailFragment',
-      id: `Picture:${this.info.id.toString()}`,
-    });
+    const cacheData = this.getCachePicture();
     const newData = pick(picture, ['title', 'bio', 'tags', 'isPrivate']);
     if (cacheData) {
-      this.client.writeFragment<PictureEntity>({
-        fragment: Fragments,
-        fragmentName: 'PictureDetailFragment',
-        id: `Picture:${this.info.id.toString()}`,
-        data: {
-          ...cacheData,
-          ...newData,
-        } as PictureEntity,
-      });
+      this.setCachePicture({
+        ...cacheData,
+        ...newData,
+      } as PictureEntity);
     }
     this.setInfo(merge(this.info, newData));
+  }
+
+  public setCachePicture = (picture: PictureEntity) => {
+    this.client.writeFragment<PictureEntity>({
+      fragment: Fragments,
+      fragmentName: 'PictureDetailFragment',
+      id: `Picture:${this.info.id}`,
+      data: picture,
+    });
+  }
+
+  public getCachePicture = () => {
+    try {
+      return this.client.readFragment<PictureEntity>({
+        fragment: Fragments,
+        fragmentName: 'PictureDetailFragment',
+        id: `Picture:${this.info.id}`,
+      });
+    } catch {
+      return null;
+    }
   }
 }

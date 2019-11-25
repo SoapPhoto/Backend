@@ -53,7 +53,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const [boxVisible, setBoxVisible] = useState(false);
   const [commentLoading, setCommentLoading] = useState(true);
   const {
-    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected,
+    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected, setPicture,
   } = pictureStore;
   const { user, tags, bio } = info;
   const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
@@ -149,6 +149,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           onOk={onOk}
           deletePicture={deletes}
           isCollected={isCollected}
+          setPicture={setPicture}
         />
         {
           tags.length > 0

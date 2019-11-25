@@ -30,6 +30,7 @@ interface IProps {
   onLike: () => Promise<void>;
   onOk: (info: PictureEntity) => void;
   deletePicture: () => Promise<void>;
+  setPicture: (picture: Partial<PictureEntity>) => void;
 }
 
 export const PictureInfo: React.FC<IProps> = observer(({
@@ -39,6 +40,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
   onOk,
   deletePicture,
   isCollected,
+  setPicture,
 }) => {
   const {
     pushRoute, params, back, replaceRoute, pathname,
@@ -194,10 +196,10 @@ export const PictureInfo: React.FC<IProps> = observer(({
               visible={collectionVisible}
               onClose={closeCollection}
               currentCollections={info.currentCollections || []}
+              setPicture={setPicture}
             />
             {
               isOwner && (
-
                 <EditPictureModal
                   visible={editVisible}
                   onClose={closeEdit}

@@ -1,25 +1,26 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
+import { useApolloClient } from 'react-apollo';
+import { rgba, rem } from 'polished';
+import styled from 'styled-components';
 
 import { Modal, EmojiText, Empty } from '@lib/components';
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { rgba, rem } from 'polished';
 import { getPictureUrl } from '@lib/common/utils/image';
-import styled from 'styled-components';
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import {
   Check, Minus, PlusCircle, Lock,
 } from '@lib/icon';
-import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
+// import { removePictureCollection, addPictureCollection } from '@lib/services/collection';
 import { Loading } from '@lib/components/Loading';
 import { Image } from '@lib/components/Image';
 import { theme, activate } from '@lib/common/utils/themes';
 import { useTranslation } from '@lib/i18n/useTranslation';
-
 import { useStores } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { observer } from 'mobx-react';
 import { Popover } from '@lib/components/Popover';
+import { RemovePictureCollection, AddPictureCollection } from '@lib/schemas/mutations';
 import { AddCollectionModal } from './AddCollectionModal';
 
 interface IProps {
@@ -27,6 +28,7 @@ interface IProps {
   picture: PictureEntity;
   onClose: () => void;
   currentCollections: CollectionEntity[];
+  setPicture?: (picture: Partial<PictureEntity>) => void;
 }
 
 const Title = styled.h2`
@@ -146,6 +148,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   picture,
   onClose,
   currentCollections,
+  setPicture,
 }) => {
   const { t } = useTranslation();
   const { key, id } = picture;
@@ -154,14 +157,10 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     addCollection, getCollection, userCollection, collectionLoading,
   } = appStore;
   const { colors } = useTheme();
+  const client = useApolloClient();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
-  // const { data: req } = useQuery<{userCollectionsByName: ICollectionListRequest}>(UserCollectionsByName, {
-  //   variables: {
-  //     username: userInfo!.username,
-  //   },
-  // });
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);
@@ -170,14 +169,12 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
       setAddCollectionVisible(false);
     } else {
       getCollection();
+      setCurrent(
+        new Map(currentCollections.map(collection => [collection.id, collection])),
+      );
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
-  useEffect(() => {
-    setCurrent(
-      new Map(currentCollections.map(collection => [collection.id, collection])),
-    );
-  }, [currentCollections]);
   useEffect(() => {
     const obj: Record<string, boolean> = {};
     userCollection.forEach(collection => obj[collection.id] = false);
@@ -194,11 +191,33 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     }));
     try {
       if (isCollected) {
-        await removePictureCollection(collection.id, id);
+        await client.mutate({
+          mutation: RemovePictureCollection,
+          variables: {
+            id: collection.id,
+            pictureId: id,
+          },
+        });
         current.delete(collection.id);
         setCurrent(current);
+        if (setPicture) {
+          if (current.size === 0) {
+            setPicture({ currentCollections: [] });
+          } else {
+            setPicture({ currentCollections: currentCollections.filter(v => v.id !== collection.id) });
+          }
+        }
       } else {
-        await addPictureCollection(collection.id, id);
+        const { data } = await client.mutate<{addPictureCollection: CollectionEntity}>({
+          mutation: AddPictureCollection,
+          variables: {
+            id: collection.id,
+            pictureId: id,
+          },
+        });
+        if (data && setPicture) {
+          setPicture({ currentCollections: [...currentCollections, data.addPictureCollection] });
+        }
         setCurrent(current.set(collection.id, collection));
       }
       getCollection();

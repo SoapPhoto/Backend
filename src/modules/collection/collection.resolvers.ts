@@ -42,4 +42,17 @@ export class CollectionResolver {
   ) {
     return this.collectionService.addPicture(id, pictureId, user);
   }
+
+  @Mutation()
+  @Roles(Role.USER)
+  public async removePictureCollection(
+    @Context('user') user: UserEntity,
+    @Args('id') id: string,
+    @Args('pictureId') pictureId: string,
+  ) {
+    await this.collectionService.removePicture(id, pictureId, user);
+    return {
+      done: true,
+    };
+  }
 }

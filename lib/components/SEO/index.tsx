@@ -15,6 +15,7 @@ export const SEO: React.FC<IProps> = ({ itemprop, ...rest }) => {
   if (itemprop) {
     meta.push(
       <meta
+        key="image"
         itemProp="image"
         content={itemprop.image || `http:${process.env.CDN_URL}/logo-512x512.png`}
       />,
@@ -28,10 +29,12 @@ export const SEO: React.FC<IProps> = ({ itemprop, ...rest }) => {
       <Head>
         {meta}
         <meta
+          key="name"
           itemProp="name"
           content={rest.title}
         />
         <meta
+          key="description"
           itemProp="description"
           content={rest.description}
         />

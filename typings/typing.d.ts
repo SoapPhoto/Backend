@@ -47,6 +47,8 @@ declare module '*/mutations.graphql' {
   export const LikePicture: DocumentNode;
   export const UnLikePicture: DocumentNode;
   export const MarkNotificationReadAll: DocumentNode;
+  export const AddPictureCollection: DocumentNode;
+  export const RemovePictureCollection: DocumentNode;
 }
 declare module '*/subscription.graphql' {
   import { DocumentNode } from 'graphql';

@@ -7,6 +7,8 @@ import { ServerStyleSheet } from 'styled-components';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as _ from '@lib/common/utils';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 export default class MyDocument extends Document {
   public static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
@@ -41,16 +43,22 @@ export default class MyDocument extends Document {
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
           <link rel="stylesheet" href="//fonts.loli.net/css?family=Noto+Sans+SC|Rubik" />
-          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150810690-1" />
-          <script dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+          {
+            isProd && (
+              <>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150810690-1" />
+                <script dangerouslySetInnerHTML={{
+                  __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
 
-            gtag('config', 'UA-150810690-1');`,
-          }}
-          />
+                  gtag('config', 'UA-150810690-1');`,
+                }}
+                />
+              </>
+            )
+          }
         </Head>
         <body id="body">
           <Main />

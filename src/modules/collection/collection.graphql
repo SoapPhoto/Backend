@@ -24,14 +24,14 @@ type Mutation {
     id: ID!
     "图片id"
     pictureId: ID!
-  ): Boolean
+  ): Collection
   "从收藏夹删除图片"
   removePictureCollection(
     "收藏夹id"
     id: ID!
     "图片id"
     pictureId: ID!
-  ): Boolean
+  ): Status
 }
 
 type Collections implements BaseList {

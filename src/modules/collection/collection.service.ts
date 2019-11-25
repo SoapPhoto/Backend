@@ -96,6 +96,11 @@ export class CollectionService {
         user,
       }),
     );
+    return classToPlain(
+      collection, {
+        groups: [Role.OWNER],
+      },
+    );
   }
 
   public async removePicture(id: string, pictureId: string, _user: UserEntity) {
