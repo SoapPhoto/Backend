@@ -51,6 +51,7 @@ declare module '*/mutations.graphql' {
   export const AddPictureCollection: DocumentNode;
   export const RemovePictureCollection: DocumentNode;
   export const DeleteCollection: DocumentNode;
+  export const UpdateProfile: DocumentNode;
 }
 declare module '*/subscription.graphql' {
   import { DocumentNode } from 'graphql';

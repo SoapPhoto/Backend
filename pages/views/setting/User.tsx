@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Cell, Grid } from 'styled-css-grid';
+import Head from 'next/head';
+import { useApolloClient } from 'react-apollo';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageUrl } from '@lib/common/utils/image';
@@ -8,14 +10,17 @@ import { Button } from '@lib/components/Button';
 import { Input } from '@lib/components/Input';
 import Toast from '@lib/components/Toast';
 import { Upload } from '@lib/components/Upload';
-import Head from 'next/head';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
 import { uploadQiniu } from '@lib/services/file';
+import { UpdateProfile } from '@lib/schemas/mutations';
+
 import { UploadType } from '@common/enum/upload';
+import { UserEntity } from '@lib/common/interfaces/user';
 
 const User: React.FC = () => {
-  const { userInfo, updateProfile } = useAccountStore();
+  const client = useApolloClient();
+  const { userInfo, setUserInfo } = useAccountStore();
   const { t } = useTranslation();
 
   const [data, setData] = useState({
@@ -35,10 +40,21 @@ const User: React.FC = () => {
       key = await uploadQiniu(avatarFile.current, UploadType.AVATAR);
     }
     try {
-      await updateProfile({
-        ...data,
-        key,
+      const response = await client.mutate<{updateProfile: UserEntity}>({
+        mutation: UpdateProfile,
+        variables: {
+          data: {
+            ...data,
+            key,
+          },
+        },
       });
+      if (response.data) {
+        setUserInfo({
+          ...userInfo!,
+          ...response.data.updateProfile,
+        } as UserEntity);
+      }
       Toast.success('修改成功');
     } finally {
       setBtnLoading(false);

@@ -12,6 +12,7 @@ import { ThemeStore } from '@lib/stores/ThemeStore';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
+import { observer } from 'mobx-react';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
   Href, MenuProfile, RightWrapper, UserName,
@@ -23,7 +24,7 @@ export interface IProps {
   themeStore?: ThemeStore;
 }
 
-export const BtnGroup = () => {
+export const BtnGroup = observer(() => {
   const { t } = useTranslation();
   const PopoverRef = React.useRef<Popover>(null);
   const { isLogin, userInfo, logout } = useAccountStore();
@@ -74,9 +75,10 @@ export const BtnGroup = () => {
                       size={48}
                       src={userInfo!.avatar}
                     />
+                    {console.log(userInfo.name)}
                     <UserName>
                       <EmojiText
-                        text={userInfo.fullName}
+                        text={userInfo.name}
                       />
                     </UserName>
                   </MenuProfile>
@@ -131,4 +133,4 @@ export const BtnGroup = () => {
       {content}
     </RightWrapper>
   );
-};
+});

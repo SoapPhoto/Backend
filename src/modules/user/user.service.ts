@@ -16,7 +16,7 @@ import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, classToPlain } from 'class-transformer';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
@@ -228,7 +228,7 @@ export class UserService {
         ),
       ),
     ]);
-    return plainToClass(UserEntity, data, {
+    return classToPlain(data, {
       groups: [Role.OWNER],
     });
   }

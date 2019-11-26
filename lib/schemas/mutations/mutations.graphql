@@ -41,3 +41,9 @@ mutation DeleteCollection($id: ID!) {
     done
   }
 }
+
+mutation UpdateProfile($data: UpdateProfileInput!) {
+  updateProfile(data: $data) {
+    ...UserFragment
+  }
+}

@@ -52,6 +52,19 @@ type Query {
   ): Pictures
 }
 
+type Mutation {
+  updateProfile(
+    data: UpdateProfileInput!
+  ): User
+}
+
+input UpdateProfileInput {
+  name: String
+  bio: String
+  website: String
+  key: String
+}
+
 """
 用户
 """

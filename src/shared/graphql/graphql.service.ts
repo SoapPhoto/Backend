@@ -5,6 +5,8 @@ import { GraphQLError } from 'graphql';
 import * as OAuth2Server from 'oauth2-server';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
+import { validator } from '@server/common/validator';
+import { formatValidatorClass } from '@server/common/validator/error';
 import { Logger } from '../logging/logging.service';
 
 const pubSub = new PubSub();
@@ -68,14 +70,28 @@ export class GraphqlService implements GqlOptionsFactory {
         },
       },
       formatError: (error: GraphQLError) => {
-        Logger.error(
-          JSON.stringify({
-            message: error.message,
-            location: error.locations,
-            stack: error.stack ? error.stack.split('\n') : [],
-            path: error.path,
-          }),
-        );
+        const returnError = (message: string, err?: any) => ({
+          ...error,
+          message,
+          error: err,
+        });
+        if (validator.isString(error.message)) {
+          Logger.error(
+            error.message,
+            error.stack ? error.stack.split('\n').toString() : '',
+            `graphql-${error.path?.toString()}`,
+          );
+          return returnError(error.message);
+        }
+        const { message } = error as any;
+        if (message.statusCode === 400) {
+          Logger.warn(
+            'Validation Error',
+            // error.stack,
+            `graphql-${error.path?.toString()}`,
+          );
+          return returnError('Validation Error', formatValidatorClass(message.message));
+        }
         return error;
       },
     };

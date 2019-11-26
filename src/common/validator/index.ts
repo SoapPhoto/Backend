@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationArguments, Validator } from 'class-validator';
 
-const validator = new Validator();
+export const validator = new Validator();
 
 // tslint:disable-next-line: function-name
 export function IsUserName() {

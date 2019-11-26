@@ -1,5 +1,5 @@
 import {
-  Args, Context, Query, Resolver, ResolveProperty, Parent,
+  Args, Context, Query, Resolver, ResolveProperty, Parent, Mutation,
 } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
@@ -12,6 +12,7 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
 import { UserPictureType } from './enum/picture.type.enum';
+import { UpdateProfileSettingDto } from './dto/user.dto';
 
 @Resolver('User')
 @UseGuards(AuthGuard)
@@ -82,6 +83,14 @@ export class UserResolver {
     @Args('query') query: GetPictureListDto,
   ) {
     return this.collectionService.getUserCollectionList(id, query, user);
+  }
+
+  @Mutation()
+  public async updateProfile(
+    @Context('user') user: UserEntity,
+    @Args('data') data: UpdateProfileSettingDto,
+  ) {
+    return this.userService.updateUserProfile(user, data);
   }
 
   @ResolveProperty('pictures')
