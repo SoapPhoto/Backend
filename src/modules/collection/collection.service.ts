@@ -239,7 +239,6 @@ export class CollectionService {
     const q = this.pictureService.selectList(user);
     q.andWhere('picture.id IN (:...ids)', { ids: list.map((d: {pictureId: string}) => d.pictureId) });
     const pictureList = await q.getMany();
-    console.log(classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }));
     return listRequest(query, classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }), count.count as number);
   }
 

@@ -10,6 +10,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { IconButton, Button } from '@lib/components/Button';
 // import { Trash2 } from '@lib/icon';
 // import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { DeleteCollection } from '@lib/schemas/mutations';
 import { UpdateCollectionDot } from '@lib/common/interfaces/collection';
 import Toast from '@lib/components/Toast';
 import { UpdateCollectionSchema } from '@lib/common/dto/collection';
@@ -18,8 +19,10 @@ import { useRouter } from '@lib/router';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { Trash2 } from '@lib/icon';
+import { useApolloClient } from 'react-apollo';
 
 interface IProps<T> {
+  id: ID;
   visible: boolean;
   onClose: () => void;
   onUpdate: (value: T) => Promise<void>;
@@ -49,11 +52,13 @@ const Footer = styled.div`
 `;
 
 export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
+  id,
   visible,
   onClose,
   onUpdate,
   defaultValue,
 }) => {
+  const client = useApolloClient();
   const { replaceRoute } = useRouter();
   const { userInfo } = useAccountStore();
   const { t } = useTranslation();
@@ -80,13 +85,18 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
   const deleteConfirm = useCallback(async () => {
     if (deleteConfirmLoading) return;
     setDeleteConfirmLoading(true);
-    // await deletePicture();
+    await client.mutate({
+      mutation: DeleteCollection,
+      variables: {
+        id,
+      },
+    });
     Toast.success('删除成功！');
     setDeleteConfirmLoading(false);
     setDeleteConfirmDisabled(true);
     await replaceRoute(`/@${userInfo!.username}`);
     window.scrollTo(0, 0);
-  }, [deleteConfirmLoading, replaceRoute, userInfo]);
+  }, [client, deleteConfirmLoading, id, replaceRoute, userInfo]);
   return (
     <Modal
       boxStyle={{ maxWidth: rem(500), padding: 0 }}

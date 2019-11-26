@@ -29,3 +29,9 @@ mutation RemovePictureCollection($id: ID!, $pictureId: ID!) {
     done
   }
 }
+
+mutation DeleteCollection($id: ID!) {
+  deleteCollection(id: $id) {
+    done
+  }
+}

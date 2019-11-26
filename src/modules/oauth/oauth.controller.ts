@@ -73,7 +73,7 @@ export class OauthController {
       }
       res.cookie('Authorization', `Bearer ${token.accessToken}`, {
         expires: token.accessTokenExpiresAt,
-        domain: process.env.COOKIE_DOMAIN,
+        // domain: process.env.COOKIE_DOMAIN,
         path: '/',
       });
       res.json(token);

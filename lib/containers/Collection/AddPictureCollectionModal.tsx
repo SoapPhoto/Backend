@@ -176,6 +176,11 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
   useEffect(() => {
+    setCurrent(
+      new Map(currentCollections.map(collection => [collection.id, collection])),
+    );
+  }, [currentCollections])
+  useEffect(() => {
     const obj: Record<string, boolean> = {};
     userCollection.forEach(collection => obj[collection.id] = false);
     setLoading(obj);
@@ -198,8 +203,6 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
             pictureId: id,
           },
         });
-        current.delete(collection.id);
-        setCurrent(current);
         if (setPicture) {
           if (current.size === 0) {
             setPicture({ currentCollections: [] });
@@ -207,6 +210,8 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
             setPicture({ currentCollections: currentCollections.filter(v => v.id !== collection.id) });
           }
         }
+        current.delete(collection.id);
+        setCurrent(current);
       } else {
         const { data } = await client.mutate<{addPictureCollection: CollectionEntity}>({
           mutation: AddPictureCollection,

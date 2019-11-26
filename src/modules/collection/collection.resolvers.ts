@@ -55,4 +55,16 @@ export class CollectionResolver {
       done: true,
     };
   }
+
+  @Mutation()
+  @Roles(Role.USER)
+  public async deleteCollection(
+    @Context('user') user: UserEntity,
+    @Args('id') id: string,
+  ) {
+    await this.collectionService.deleteCollection(id, user);
+    return {
+      done: true,
+    };
+  }
 }

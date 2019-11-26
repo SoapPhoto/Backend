@@ -32,6 +32,10 @@ type Mutation {
     "图片id"
     pictureId: ID!
   ): Status
+  deleteCollection(
+    "收藏夹id"
+    id: ID!
+  ): Status
 }
 
 type Collections implements BaseList {

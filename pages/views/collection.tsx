@@ -197,6 +197,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
         </Info>
       </Header>
       <UpdateCollectionModal
+        id={info!.id}
         visible={updateVisible}
         onClose={onUpdateClose}
         onUpdate={updateCollection}

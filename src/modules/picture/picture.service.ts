@@ -348,7 +348,10 @@ export class PictureService {
         .leftJoinAndMapMany(
           'picture.info',
           CollectionPictureEntity,
-          'picture_collection_info', 'picture_collection_info.pictureId = picture.id',
+          'picture_collection_info',
+          'picture_collection_info.pictureId = picture.id AND picture_collection_info.userId=:userId', {
+            userId: user.id,
+          },
         )
         .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
