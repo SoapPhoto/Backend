@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/Yiiu/Soap/compare/v0.1.5...v0.1.6) (2019-11-26)
+
+
+### Bug Fixes
+
+* bug ([86f5bc0](https://github.com/Yiiu/Soap/commit/86f5bc0))
+* bug ([bd444bc](https://github.com/Yiiu/Soap/commit/bd444bc))
+* build bug ([690ccb7](https://github.com/Yiiu/Soap/commit/690ccb7))
+* CurrentCollection bug ([4f40fa8](https://github.com/Yiiu/Soap/commit/4f40fa8))
+* EXIF ([aeeb1be](https://github.com/Yiiu/Soap/commit/aeeb1be))
+* Modal Router bug ([5e83301](https://github.com/Yiiu/Soap/commit/5e83301))
+* notifaction bug ([13698d9](https://github.com/Yiiu/Soap/commit/13698d9))
+* tag key bug ([320df5d](https://github.com/Yiiu/Soap/commit/320df5d))
+* **picture:** Upload Picture error bug ([45df5f7](https://github.com/Yiiu/Soap/commit/45df5f7)), closes [#11](https://github.com/Yiiu/Soap/issues/11)
+* typo ([112ca51](https://github.com/Yiiu/Soap/commit/112ca51))
+* Upload Picture error bug ([d0f4fb2](https://github.com/Yiiu/Soap/commit/d0f4fb2))
+* Upload qiniu bug ([c2f82af](https://github.com/Yiiu/Soap/commit/c2f82af))
+* User collections error bug ([5eec003](https://github.com/Yiiu/Soap/commit/5eec003))
+
 ### [0.1.5](https://github.com/Yiiu/soapBE/compare/v0.1.4...v0.1.5) (2019-11-08)
 
 
