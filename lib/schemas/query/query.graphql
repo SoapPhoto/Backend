@@ -81,3 +81,9 @@ query UserNotification {
     ...NotificationFragment
   }
 }
+
+query UnreadNotificationCount {
+  unreadNotificationCount {
+    count
+  }
+}

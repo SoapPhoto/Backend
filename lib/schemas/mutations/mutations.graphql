@@ -18,6 +18,12 @@ mutation UnLikePicture($id: ID!) {
   }
 }
 
+mutation MarkNotificationReadAll {
+  markNotificationReadAll {
+    done
+  }
+}
+
 mutation AddPictureCollection($id: ID!, $pictureId: ID!) {
   addPictureCollection(id: $id, pictureId: $pictureId) {
     ...CollectionFragment

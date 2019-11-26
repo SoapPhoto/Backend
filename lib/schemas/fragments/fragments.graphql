@@ -69,9 +69,6 @@ fragment PictureListFragment on Pictures {
     data {
       ...PictureFragment
       isPrivate
-      currentCollections {
-        ...CollectionFragment
-      }
       user {
         ...UserFragment
       }

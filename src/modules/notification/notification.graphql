@@ -13,7 +13,9 @@ union NotificationMedia = Picture | Comment | Collection
 
 type Query {
   userNotification: [Notification]
+  unreadNotificationCount: Count
 }
+
 
 type Mutation {
   markNotificationReadAll: Status
@@ -21,6 +23,10 @@ type Mutation {
 
 type Subscription {
   newNotification: Notification
+}
+
+type Count {
+  count: Float
 }
 
 type Notification implements BaseNode {

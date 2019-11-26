@@ -39,6 +39,7 @@ declare module '*/query.graphql' {
   export const Tag: DocumentNode;
   export const TagPictures: DocumentNode;
   export const UserNotification: DocumentNode;
+  export const UnreadNotificationCount: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';

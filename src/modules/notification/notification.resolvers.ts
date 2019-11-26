@@ -25,6 +25,17 @@ export class NotificationResolver {
     return this.notificationService.getList(user);
   }
 
+  @Query()
+  @Roles(Role.USER)
+  public async unreadNotificationCount(
+    @Context('user') user: UserEntity,
+  ) {
+    const count = await this.notificationService.getUnReadCount(user);
+    return {
+      count,
+    };
+  }
+
   @Subscription(_returns => NotificationEntity, {
     filter: (payload, _var, context) => {
       const { req } = context;
@@ -32,7 +43,6 @@ export class NotificationResolver {
       return user.id.toString() === payload.subscribers.id.toString();
     },
   })
-
   @Roles(Role.USER)
   public async newNotification() {
     return this.notificationService.pubSub.asyncIterator('newNotification');

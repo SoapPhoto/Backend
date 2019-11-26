@@ -333,6 +333,15 @@ export class CollectionService {
     };
   }
 
+  public async getCurrentCollections(pictureId: ID, user: UserEntity) {
+    const q = this.collectionEntity.createQueryBuilder('ct')
+      .leftJoin('ct.info', 'ct_info')
+      .where('ct_info.pictureId=:pictureId AND ct_info.userId=:userId', {
+        userId: user.id, pictureId,
+      });
+    return q.getMany();
+  }
+
   /**
    * 是否已收藏
    *

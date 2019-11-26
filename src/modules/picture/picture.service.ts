@@ -315,6 +315,21 @@ export class PictureService {
   }
 
   /**
+   * 获取用户对某个图片收藏的收藏夹
+   *
+   * @param {ID} id
+   * @param {UserEntity} user
+   * @returns
+   * @memberof PictureService
+   */
+  public async getCurrentCollections(id: ID, user: UserEntity) {
+    return classToPlain(
+      await this.collectionService.getCurrentCollections(id, user),
+      { groups: [Role.OWNER] },
+    );
+  }
+
+  /**
    * 没有任何关联的查询图片信息
    *
    * @memberof PictureService
@@ -344,26 +359,22 @@ export class PictureService {
             'activity.userId=:userId AND activity.like=:like',
             { userId: user.id, like: true },
           ),
-        )
-        .leftJoinAndMapMany(
-          'picture.info',
-          CollectionPictureEntity,
-          'picture_collection_info',
-          'picture_collection_info.pictureId = picture.id AND picture_collection_info.userId=:userId', {
-            userId: user.id,
-          },
-        )
-        .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
+        );
+      // .leftJoinAndMapMany(
+      //   'picture.info',
+      //   CollectionPictureEntity,
+      //   'picture_collection_info',
+      //   'picture_collection_info.pictureId = picture.id AND picture_collection_info.userId=:userId', {
+      //     userId: user.id,
+      //   },
+      // )
+      // .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
   }
 
   public getPictureLikes = (id: ID) => this.activityService.getLikes(id)
 
   public getUserIsLike = (id: ID, user: UserEntity) => this.activityService.isLike(id, user)
-
-  // public async getCurrentCollections(id: string, user: UserEntity) {
-
-  // }
 
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断

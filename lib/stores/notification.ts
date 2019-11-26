@@ -3,7 +3,7 @@ import { ApolloClient } from 'apollo-boost';
 
 import { NotificationEntity } from '@lib/common/interfaces/notification';
 import { queryToMobxObservable } from '@lib/common/apollo';
-import { UserNotification } from '@lib/schemas/query';
+import { UserNotification, UnreadNotificationCount } from '@lib/schemas/query';
 import { NewNotification } from '@lib/schemas/subscription';
 import { MarkNotificationReadAll } from '@lib/schemas/mutations';
 
@@ -30,6 +30,7 @@ export class NotificationStore {
 
   public createSocket = () => {
     if (!this.init) {
+      this.getUnread();
       this.client.subscribe<{newNotification: NotificationEntity}>({
         query: NewNotification,
       }).subscribe({
@@ -74,6 +75,15 @@ export class NotificationStore {
     this.unReadList();
     this.client.mutate({
       mutation: MarkNotificationReadAll,
+    });
+  }
+
+  public getUnread = () => {
+    queryToMobxObservable(this.client.watchQuery<{unreadNotificationCount: {count: number}}>({
+      query: UnreadNotificationCount,
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setUnRead(data.unreadNotificationCount.count);
     });
   }
 
