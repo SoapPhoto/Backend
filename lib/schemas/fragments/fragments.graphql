@@ -162,7 +162,7 @@ fragment UserDetailFragment on User {
   signupType
   status
   pictures(limit: 3) {
-    ...PictureFragment
+    ...PicturePreviewFragment
   }
 }
 
@@ -194,7 +194,7 @@ fragment NotificationFragment on Notification {
   read
   media {
     ...on Picture {
-      ...PictureFragment
+      ...PicturePreviewFragment
     }
   }
 }
