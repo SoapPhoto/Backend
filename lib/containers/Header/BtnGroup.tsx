@@ -77,7 +77,7 @@ export const BtnGroup = observer(() => {
                     />
                     <UserName>
                       <EmojiText
-                        text={userInfo.name}
+                        text={userInfo.fullName}
                       />
                     </UserName>
                   </MenuProfile>
