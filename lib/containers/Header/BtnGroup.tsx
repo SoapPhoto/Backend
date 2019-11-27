@@ -75,7 +75,6 @@ export const BtnGroup = observer(() => {
                       size={48}
                       src={userInfo!.avatar}
                     />
-                    {console.log(userInfo.name)}
                     <UserName>
                       <EmojiText
                         text={userInfo.name}

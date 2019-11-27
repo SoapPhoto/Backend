@@ -55,21 +55,23 @@ const Login: React.FC<IBaseScreenProps> = () => {
     }
   }, [query.redirectUrl]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
-    setConfirmLoading(true);
-    setSubmitting(false);
-    try {
-      await login(value.username, value.password);
-      setSubmitting(true);
-      setTimeout(async () => {
-        push();
-      }, 400);
-      Toast.success(t('login_successful'));
-    } catch (error) {
+    (async () => {
+      setConfirmLoading(true);
       setSubmitting(false);
-      Toast.error(t(error.message));
-    } finally {
-      setConfirmLoading(false);
-    }
+      try {
+        await login(value.username, value.password);
+        setSubmitting(true);
+        setTimeout(async () => {
+          push();
+        }, 400);
+        Toast.success(t('login_successful'));
+      } catch (error) {
+        setSubmitting(false);
+        Toast.error(t(error.message));
+      } finally {
+        setConfirmLoading(false);
+      }
+    })();
   };
   const getInfo = useCallback(async (data: IOauthSuccessData) => {
     try {
