@@ -19,6 +19,6 @@ export class CommentEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, user => user.comments)
   public readonly user!: UserEntity;
 
-  @ManyToOne(() => PictureEntity, item => item.comments)
+  @ManyToOne(() => PictureEntity, item => item.comments, { onDelete: 'CASCADE' })
   public readonly picture!: PictureEntity;
 }

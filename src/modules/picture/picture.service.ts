@@ -18,7 +18,6 @@ import { GetTagPictureListDto } from '@server/modules/tag/dto/tag.dto';
 import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
