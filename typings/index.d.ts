@@ -11,6 +11,7 @@ type RecordPartial<K extends keyof any, T> = {
 type ID = string | number;
 
 interface IEXIF {
+  orientation?: number;
   meteringMode?: string;
   exposureMode?: string;
   exposureBias?: string;

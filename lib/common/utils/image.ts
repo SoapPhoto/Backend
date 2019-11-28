@@ -6,6 +6,28 @@ import { validator } from './validator';
 import { changeToDu } from './gps';
 import { round } from './math';
 
+export const ORIENT_TRANSFORMS: Record<number, string> = {
+  1: '',
+  2: 'rotateY(180deg)',
+  3: 'rotate(180deg)',
+  4: 'rotate(180deg) rotateY(180deg)',
+  5: 'rotate(270deg) rotateY(180deg)',
+  6: 'rotate(90deg)',
+  7: 'rotate(90deg) rotateY(180deg)',
+  8: 'rotate(270deg)',
+};
+
+export const ORIENT_ORIENTATION: Record<number, string> = {
+  1: '',
+  2: 'flip',
+  3: '180deg',
+  4: '180deg flip',
+  5: '270deg flip',
+  6: '90deg',
+  7: '90deg flip',
+  8: '270deg',
+};
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface Window {
@@ -26,6 +48,7 @@ export enum ExifProperties {
   ExposureBias = 'exposureBias',
   DateTimeOriginal = 'date',
   Software = 'software',
+  Orientation = 'orientation',
   _Location = 'location',
 }
 
@@ -154,6 +177,102 @@ export function getImageEXIF(image: File) {
   });
 }
 
+export function getImageMinSize(
+  width: number,
+  height: number,
+  maxWidth: number,
+  maxHeight: number,
+) {
+  // 目标尺寸
+  let targetWidth = width;
+  let targetHeight = height;
+  // 图片尺寸超过400x400的限制
+  if (width > maxWidth || height > maxHeight) {
+    if (width / height > maxWidth / maxHeight) {
+      // 更宽，按照宽度限定尺寸
+      targetWidth = maxWidth;
+      targetHeight = Math.round(maxWidth * (height / width));
+    } else {
+      targetHeight = maxHeight;
+      targetWidth = Math.round(maxHeight * (width / height));
+    }
+  }
+  return [targetWidth, targetHeight];
+}
+
+export function previewImage(
+  img: HTMLImageElement,
+  orientation?: number,
+): Promise<string> {
+  return new Promise((resolve) => {
+    const [width, height] = getImageMinSize(img.naturalWidth, img.naturalHeight, 600, 600);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d')!;
+    switch (orientation) {
+      case 2:
+        canvas.width = width;
+        canvas.height = height;
+        // horizontal flip
+        ctx.translate(width, 0);
+        ctx.scale(-1, 1);
+        break;
+      case 3:
+        canvas.width = width;
+        canvas.height = height;
+        // 180 graus
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate((180 * Math.PI) / 180);
+        ctx.translate(-width / 2, -height / 2);
+        break;
+      case 4:
+        canvas.width = width;
+        canvas.height = height;
+        // vertical flip
+        ctx.translate(0, height);
+        ctx.scale(1, -1);
+        break;
+      case 5:
+        // vertical flip + 90 rotate right
+        canvas.height = width;
+        canvas.width = height;
+        ctx.rotate(0.5 * Math.PI);
+        ctx.scale(1, -1);
+        break;
+      case 6:
+        canvas.width = height;
+        canvas.height = width;
+        // 90 graus
+        ctx.translate(height / 2, width / 2);
+        ctx.rotate((90 * Math.PI) / 180);
+        ctx.translate(-width / 2, -height / 2);
+        break;
+      case 7:
+        // horizontal flip + 90 rotate right
+        canvas.height = width;
+        canvas.width = height;
+        ctx.rotate(0.5 * Math.PI);
+        ctx.translate(width, -height);
+        ctx.scale(-1, 1);
+        break;
+      case 8:
+        canvas.height = width;
+        canvas.width = height;
+        // -90 graus
+        ctx.translate(height / 2, width / 2);
+        ctx.rotate((-90 * Math.PI) / 180);
+        ctx.translate(-width / 2, -height / 2);
+        break;
+      default:
+        canvas.width = width;
+        canvas.height = height;
+    }
+    ctx.drawImage(img, 0, 0, width, height);
+    canvas.toBlob((blob) => {
+      resolve(window.URL.createObjectURL(blob));
+    });
+  });
+}
+
 /**
  * 获取图片详细信息
  *
@@ -162,38 +281,41 @@ export function getImageEXIF(image: File) {
  * @returns {Promise<[IImageInfo, string]>}
  */
 export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
-  return new Promise((resolve) => {
-    window.EXIF.getData(image, async () => {
-      const info: IImageInfo = {
-        exif: {},
-        color: '#fff',
-        isDark: false,
-        height: 0,
-        width: 0,
-        make: undefined,
-        model: undefined,
-      };
-      const imgSrc = window.URL.createObjectURL(image);
-      const imgHtml = document.createElement('img');
-      imgHtml.src = imgSrc;
-      const fac = new window.FastAverageColor();
-      await (async () => new Promise((res) => {
-        imgHtml.onload = () => {
-          const color = fac.getColor(imgHtml);
-          info.color = color.hex;
-          info.isDark = color.isDark;
-          info.height = imgHtml.naturalHeight;
-          info.width = imgHtml.naturalWidth;
-          res();
-        };
-      }))();
-      const exif = await getImageEXIF(image);
-      info.make = exif.make;
-      info.model = exif.model;
-      info.exif = _.omit(exif, ['model', 'make']);
-      resolve([info, imgSrc]);
-    });
-  });
+  const info: IImageInfo = {
+    exif: {},
+    color: '#fff',
+    isDark: false,
+    height: 0,
+    width: 0,
+    make: undefined,
+    model: undefined,
+  };
+  const imgSrc = window.URL.createObjectURL(image);
+  const imgHtml = document.createElement('img');
+  imgHtml.src = imgSrc;
+  const fac = new window.FastAverageColor();
+  const exif = await getImageEXIF(image);
+  info.make = exif.make;
+  info.model = exif.model;
+  info.exif = _.omit(exif, ['model', 'make']);
+  const previewSrc = await (async () => new Promise<string>((res) => {
+    imgHtml.onload = async () => {
+      const color = fac.getColor(imgHtml);
+      info.color = color.hex;
+      info.isDark = color.isDark;
+      info.height = imgHtml.naturalHeight;
+      info.width = imgHtml.naturalWidth;
+      if (info.exif && info.exif.orientation) {
+        // 有翻转的长宽对调
+        if (info.exif.orientation >= 5) {
+          info.height = imgHtml.naturalWidth;
+          info.width = imgHtml.naturalHeight;
+        }
+      }
+      res(await previewImage(imgHtml, info.exif.orientation));
+    };
+  }))();
+  return [info, previewSrc];
 }
 
 /**

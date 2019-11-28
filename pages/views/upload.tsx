@@ -4,7 +4,9 @@ import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
 import { getTitle } from '@lib/common/utils';
-import { getImageInfo, IImageInfo, isImage } from '@lib/common/utils/image';
+import {
+  getImageInfo, IImageInfo, isImage,
+} from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
 import { Button, IconButton } from '@lib/components/Button';
 import { withAuth } from '@lib/components/router/withAuth';
