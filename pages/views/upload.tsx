@@ -60,7 +60,6 @@ const initUploadData = {
 };
 
 const Upload: ICustomNextPage<IProps, any> = () => {
-  const { pushRoute } = useRouter();
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
@@ -134,7 +133,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setDisabled(true);
         Toast.success('上传成功！');
         setTimeout(() => {
-          pushRoute('/');
+          window.location = '/' as any;
         }, 100);
       } catch (err) {
         Toast.error('图片上传失败!');
@@ -143,7 +142,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setPercentComplete(0);
       }
     }
-  }, [onUploadProgress, imageInfo, isLocation, data, pushRoute]);
+  }, [onUploadProgress, imageInfo, isLocation, data]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);

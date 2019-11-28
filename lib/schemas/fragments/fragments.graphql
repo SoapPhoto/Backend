@@ -180,6 +180,7 @@ fragment EXIFFragment on EXIF {
   exposureTime
   focalLength
   ISO
+  location
 }
 
 

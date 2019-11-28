@@ -88,6 +88,7 @@ type EXIF {
   exposureTime: String
   focalLength: Float
   ISO: Float
+  location: [Float]
 }
 
 """
