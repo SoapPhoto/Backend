@@ -5,6 +5,7 @@ import { X } from 'react-feather';
 import styled, { css } from 'styled-components';
 
 import { enableScroll, disableScroll, server } from '@lib/common/utils';
+import { Image } from '../Image';
 import { IconButton } from '../Button';
 import { NoSSR } from '../SSR';
 
@@ -63,7 +64,7 @@ const CloseBtn = styled(IconButton)`
   cursor: pointer;
 `;
 
-const Img = styled.img<{big: number; noBig: number}>`
+const Img = styled(Image)<{big: number; noBig: number}>`
   ${_ => (_.big ? css`
     max-width: inherit;
     max-height: inherit;

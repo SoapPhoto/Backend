@@ -12,7 +12,7 @@ const inImageCache = (url: string) => imageCache[url] || false;
 const activateCacheForImage = (url: string) => imageCache[url] = true;
 
 export const Image: React.FC<IImageProps> = memo(({
-  src, alt, className, title,
+  src, alt, className, title, ...restProps
 }) => {
   const [isFadeIn, setFadeIn] = useState(false);
   const [isLoaded, setLoaded] = useState(false);
@@ -47,7 +47,7 @@ export const Image: React.FC<IImageProps> = memo(({
       className={className}
       title={title}
       style={imageStyle}
-    // {...restProps}
+      {...restProps}
     />
   );
 });
