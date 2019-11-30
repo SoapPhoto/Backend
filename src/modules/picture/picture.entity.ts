@@ -139,7 +139,7 @@ export class PictureEntity extends BaseEntity {
   public readonly user!: UserEntity;
 
   /** 图片的评论 */
-  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE', cascade: true })
+  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE' })
   @Expose()
   public readonly comments!: CommentEntity[];
 

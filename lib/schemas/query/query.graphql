@@ -87,3 +87,9 @@ query UnreadNotificationCount {
     count
   }
 }
+
+query Comments($id: ID!, $query: CommentsQueryInput) {
+  comments(id: $id, query: $query) {
+    ...CommentListFragment
+  }
+}

@@ -5,15 +5,15 @@ import { merge, pick } from 'lodash';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity, IPictureLikeRequest } from '@lib/common/interfaces/picture';
-import { addComment, getPictureComment } from '@lib/services/comment';
 import {
   deletePicture,
 } from '@lib/services/picture';
 
-import { Picture } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import { Picture, Comments } from '@lib/schemas/query';
 import Fragments from '@lib/schemas/fragments';
-import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
+import { LikePicture, UnLikePicture, AddComment } from '@lib/schemas/mutations';
+import { IPaginationList } from '@lib/common/interfaces/global';
 import { BaseStore } from '../base/BaseStore';
 
 interface IPictureGqlReq {
@@ -54,13 +54,30 @@ export class PictureScreenStore extends BaseStore {
   }
 
   @action public getComment = async () => {
-    const { data } = await getPictureComment(this.id);
-    this.setComment(data.data);
+    await queryToMobxObservable(this.client.watchQuery<{comments: IPaginationList<CommentEntity>}>({
+      query: Comments,
+      variables: { id: this.id },
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setComment(data.comments.data);
+    });
+    // // const { data } = await getPictureComment(this.id);
   }
 
-  public addComment = async (content: string) => {
-    const { data } = await addComment(content, this.id);
-    this.pushComment(data);
+  public addComment = async (content: string, commentId?: ID) => {
+    const data = await this.client.mutate({
+      mutation: AddComment,
+      variables: {
+        id: this.id,
+        commentId,
+        data: {
+          content,
+        },
+      },
+    });
+    console.log(data);
+    // const { data } = await addComment(content, this.id);
+    // this.pushComment(data);
   }
 
   public deletePicture = async () => {

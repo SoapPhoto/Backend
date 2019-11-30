@@ -12,10 +12,12 @@ import { HandleBox, Wrapper } from './styles/editor';
 interface IProps {
   accountStore?: AccountStore;
   onConfirm: (value: string) => Promise<void>;
+  placeholder?: string;
 }
 
 export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
   accountStore,
+  placeholder,
   onConfirm,
 }) => {
   const { t } = useTranslation();
@@ -45,7 +47,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
         <Textarea
           value={value}
           minRows={1}
-          placeholder={t('comment.placeholder')}
+          placeholder={placeholder || t('comment.placeholder')}
           boxStyle={{
             paddingBottom: rem('48px'),
           }}

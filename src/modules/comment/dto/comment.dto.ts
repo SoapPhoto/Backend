@@ -18,5 +18,4 @@ export class CreatePictureCommentDot implements Partial<CommentEntity> {
 }
 
 export class GetPictureCommentListDto extends PaginationDto {
-
 }

@@ -47,3 +47,9 @@ mutation UpdateProfile($data: UpdateProfileInput!) {
     ...UserFragment
   }
 }
+
+mutation AddComment($id: ID!, $commentId: ID, $data: AddCommentInput!) {
+  addComment(id: $id, commentId: $commentId, data: $data) {
+    ...CommentFragment
+  }
+}

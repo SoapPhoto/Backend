@@ -1,13 +1,7 @@
 type Query {
   comments(
-    "图片id"
-    id: ID!
-    "分页"
-    page: Float
-    "分页"
-    pageSize: Float
-    "时间戳"
-    timestamp: Float
+    id:ID!
+    query: CommentsQueryInput
   ): Comments
 }
 
@@ -15,6 +9,7 @@ type Mutation {
   addComment(
     "图片id"
     id: ID!
+    commentId: ID
     data: AddCommentInput!
   ): Comment
 }
@@ -44,4 +39,10 @@ type Comment implements BaseNode {
   picture: Picture
   createTime: DateTime
   updateTime: DateTime
+  replyUser: User
+  replyComment: Comment
+  parentComment: Comment
+
+  "子评论"
+  childComments(limit: Float): [Comment]
 }

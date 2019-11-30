@@ -129,7 +129,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public async getOnePicture(
-    id: string,
+    id: ID,
     user: Maybe<UserEntity>,
     view?: boolean,
   ) {

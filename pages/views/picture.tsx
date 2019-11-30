@@ -72,8 +72,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   }, []);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
-  const onConfirm = async (value: string) => {
-    await addComment(value);
+  const onConfirm = async (value: string, commentId?: ID) => {
+    await addComment(value, commentId);
   };
   const onOk = useCallback((picture: PictureEntity) => {
     updateInfo(picture);
