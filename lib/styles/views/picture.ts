@@ -41,8 +41,6 @@ export const UserHeaderInfo = styled(Cell)`
 `;
 
 export const PictureBox = styled.div`
-  border-radius: ${rem('3px')};
-  overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   cursor: zoom-in;
   ${customMedia.lessThan('medium')`

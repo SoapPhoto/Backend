@@ -20,6 +20,8 @@ export const ItemImage = styled(Image)`
   width: 100%;
   opacity: 0;
   transition: .2s opacity ease-in;
+  z-index: 1;
+  border-radius: 4px;
 `;
 
 export const PictureContent = styled.div`
@@ -70,7 +72,6 @@ export const ColItem = styled.div`
 export const ItemWrapper = styled.div<{private: number}>`
   position: relative;
   border-radius: ${rem('4px')};
-  overflow: hidden;
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   ${_ => (_.private ? css`
     &:hover {
@@ -115,6 +116,7 @@ export const ImageBox = styled.div<{height: number; background: string}>`
   background-color: ${props => props.background};
   width: 100%;
   transition: .2s filter ease-in-out;
+  border-radius: 4px;
   /* ${ItemWrapper}:hover & {
     filter: blur(2px);
   } */
@@ -124,6 +126,7 @@ export const InfoBox = styled.div`
   z-index: 3;
   pointer-events: none;
   position: absolute;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -213,4 +216,15 @@ export const HeartIcon = styled(Heart)<{islike: number}>`
   fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
   stroke: ${_ => (_.islike ? _.theme.colors.danger : _.color || '#fff')};
   margin-right: ${rem(4)};
+`;
+
+export const Shadow = styled.div`
+  position: absolute;
+  height: 10%;
+  width: 90%;
+  left: 5%;
+  bottom: 2px;
+  background-position-y: 100%;
+  filter: blur(10px);
+  z-index: 0;
 `;
