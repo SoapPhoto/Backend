@@ -107,3 +107,14 @@ export const disableScroll = () => {
   disableBodyScroll(document.querySelector('body')!, defaultScrollOptions);
   disableBodyScroll(document.querySelector('html')!, defaultScrollOptions);
 };
+
+export function isIn(target: Node, parent: Element) {
+  const path: Node[] = [];
+  let parentNode: Node | null = target;
+  while (parentNode && parentNode !== document.body) {
+    path.push(parentNode);
+    // eslint-disable-next-line prefer-destructuring
+    parentNode = parentNode.parentNode;
+  }
+  return path.indexOf(parent) !== -1;
+}

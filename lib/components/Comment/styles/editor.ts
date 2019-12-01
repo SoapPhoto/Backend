@@ -2,9 +2,14 @@ import { rem } from 'polished';
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-gap: ${rem('18px')};
+  display: flex;
+  margin-right: ${rem(24)};
+  padding-bottom: ${rem(12)};
+  margin-bottom: ${rem(12)};
+`;
+
+export const Box = styled.div`
+  flex: 1;
 `;
 
 export const HandleBox = styled.div`

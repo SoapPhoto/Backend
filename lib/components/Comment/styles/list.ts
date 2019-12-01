@@ -16,8 +16,14 @@ export const ItemBox = styled.div`
 
 export const UserName = styled.p`
   font-weight: 700;
-  color: ${theme('colors.text')};
+  /* color: ${theme('colors.text')}; */
   font-size: ${_ => rem(theme('fontSizes[2]')(_))};
+`;
+
+export const UserLabel = styled.span`
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
+  color: ${theme('colors.secondary')};
+  margin-left: ${rem(6)};
 `;
 
 export const MainBox = styled.div`
@@ -26,11 +32,6 @@ export const MainBox = styled.div`
 `;
 
 export const ContentBox = styled.div`
-  display: grid;
-  grid-template-columns: 100%;
-  grid-gap: ${rem('6px')};
-  grid-template-areas: 'name'
-                       'content'
 `;
 
 export const InfoBox = styled.div`
@@ -38,4 +39,21 @@ export const InfoBox = styled.div`
   align-items: center;
   font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.secondary')};
+`;
+
+export const ReplyLabel = styled.span`
+  color: ${theme('colors.secondary')};
+`;
+
+export const ContentItem = styled.div`
+  margin-bottom: ${rem(4)};
+`;
+
+export const ConfirmText = styled.button`
+  display: inline-block;
+  border: none;
+  background: none;
+  outline: none;
+  color: inherit;
+  cursor: pointer;
 `;

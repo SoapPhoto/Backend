@@ -1,17 +1,16 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeepPartial } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
-import { plainToClass, classToPlain } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
-import { PictureEntity } from '../picture/picture.entity';
 
 @Injectable()
 export class CommentService {
@@ -27,11 +26,10 @@ export class CommentService {
     const q = this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', { id })
-      .orderBy('comment.createTime', 'DESC')
+      .orderBy('comment.createTime', 'ASC')
       .leftJoinAndSelect('comment.user', 'user');
     this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
-    console.log(data);
     return listRequest(query, classToPlain(data), count);
   }
 
@@ -56,7 +54,6 @@ export class CommentService {
     if (commentId !== undefined) {
       const comment = await this.getOne(commentId);
       if (comment) {
-        console.log(comment);
         if (comment.parentComment) {
           createData.parentComment = comment.parentComment;
         } else {
@@ -95,6 +92,7 @@ export class CommentService {
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.replyUser', 'replyUser')
+      .orderBy('comment.createTime', 'ASC')
       .getMany();
     return classToPlain(data);
   }

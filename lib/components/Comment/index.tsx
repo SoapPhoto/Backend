@@ -3,14 +3,14 @@ import React from 'react';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
-import { css } from 'styled-components';
-import { rem } from 'polished';
+import { UserEntity } from '@lib/common/interfaces/user';
 import { CommentEditor } from './Editor';
 import { CommentList } from './List';
 import { Wrapper } from './styles';
 import { Empty } from '..';
 
 interface IProps {
+  author: UserEntity;
   accountStore?: AccountStore;
   comment: CommentEntity[];
   loading?: boolean;
@@ -18,6 +18,7 @@ interface IProps {
 }
 
 export const Comment = connect<React.FC<IProps>>('accountStore')(({
+  author,
   accountStore,
   comment,
   onConfirm,
@@ -28,12 +29,10 @@ export const Comment = connect<React.FC<IProps>>('accountStore')(({
     <Wrapper>
       {
         isLogin && (
-          <div css={css`margin-bottom: ${rem(32)}` as any}>
-            <CommentEditor onConfirm={onConfirm} />
-          </div>
+          <CommentEditor onConfirm={onConfirm} />
         )
       }
-      <CommentList onConfirm={onConfirm} comment={comment} />
+      <CommentList author={author} onConfirm={onConfirm} comment={comment} />
       {
         (loading || (!loading && comment.length === 0)) && (
           <Empty emptyText="暂无评论！" loading={loading} />

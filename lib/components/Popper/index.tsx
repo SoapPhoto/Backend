@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
-import { server } from '@lib/common/utils';
+import { server, isIn } from '@lib/common/utils';
 import { NoSSR } from '../SSR';
 
 interface IChildProps {
@@ -30,17 +30,6 @@ export interface IPopperProps {
 export const PopperWrapper = styled.div`
   z-index: 1100;
 `;
-
-export function isIn(target: Node, parent: Element) {
-  const path: Node[] = [];
-  let parentNode: Node | null = target;
-  while (parentNode && parentNode !== document.body) {
-    path.push(parentNode);
-    // eslint-disable-next-line prefer-destructuring
-    parentNode = parentNode.parentNode;
-  }
-  return path.indexOf(parent) !== -1;
-}
 
 export class Popper extends React.Component<IPopperProps> {
   public static getDerivedStateFromProps(nextProps: IPopperProps) {

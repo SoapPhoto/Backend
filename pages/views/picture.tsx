@@ -208,7 +208,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           </RelateCollection>
         )
       } */}
-      <Comment onConfirm={onConfirm} comment={comment} loading={commentLoading} />
+      <Comment author={info.user} onConfirm={onConfirm} comment={comment} loading={commentLoading} />
       <LightBox
         visible={boxVisible}
         src={getPictureUrl(info.key, 'full')}
