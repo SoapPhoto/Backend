@@ -205,6 +205,7 @@ fragment CommentBaseFragment on Comment {
   content
   createTime
   updateTime
+  subCount
 }
 
 fragment CommentChildFragment on Comment {
@@ -231,7 +232,7 @@ fragment CommentFragment on Comment {
   parentComment {
     ...CommentBaseFragment
   }
-  childComments {
+  childComments(limit: 3) {
     ...CommentChildFragment
   }
   user {

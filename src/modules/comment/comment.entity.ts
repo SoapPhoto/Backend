@@ -1,5 +1,5 @@
 import {
-  Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany,
+  Column, Entity, ManyToOne, PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expose, Exclude, Type } from 'class-transformer';
 
@@ -33,15 +33,10 @@ export class CommentEntity extends BaseEntity {
   @Expose()
   public readonly parentComment!: CommentEntity;
 
-  // 评论的评论
+  // 回复的评论
   @ManyToOne(() => CommentEntity, { onDelete: 'CASCADE' })
   @Expose()
   public readonly replyComment!: CommentEntity;
-
-  // // 所有评论
-  // @OneToMany(() => CommentEntity, comment => comment.parentComment, { onDelete: 'CASCADE' })
-  // @Expose()
-  // public readonly childComment!: CommentEntity[];
 
   // 评论的用户
   @ManyToOne(() => UserEntity, { onDelete: 'CASCADE', cascade: true })

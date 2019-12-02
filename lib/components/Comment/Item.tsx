@@ -12,28 +12,34 @@ import { Avatar, EmojiText } from '..';
 import { Popover } from '../Popover';
 import { CommentEditor } from './Editor';
 import {
-  ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel,
+  ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel, ChildComment, Dot, MoreChildComment,
 } from './styles/list';
 import { CommentList } from './List';
 
 interface ICommentItem {
+  parent?: CommentEntity;
   author: UserEntity;
   comment: CommentEntity;
   onConfirm: (value: string, commentId?: string) => Promise<void>;
 }
 
 export const CommentItem: React.FC<ICommentItem> = observer(({
+  parent,
   author,
   comment,
   onConfirm,
 }) => {
   const [isComment, setComment] = useState(false);
+  const [visibleComment, setVisibleComment] = useState(true);
   const {
     user, id, content, createTime, childComments, replyUser, replyComment,
   } = comment;
   const openComment = useCallback(() => {
     setComment(!isComment);
   }, [isComment]);
+  const handleChildComment = useCallback(() => {
+    setVisibleComment(!visibleComment);
+  }, [visibleComment]);
   const addComment = useCallback(async (commentContent: string) => {
     await onConfirm(commentContent, comment.id);
     setComment(false);
@@ -68,7 +74,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
           </ContentItem>
           <div>
             {
-              !!(replyComment && replyUser) && (
+              !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
                   <span>回复 </span>
                   <UserPopper username={user.username}>
@@ -102,7 +108,19 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
           >
             <p>{day(createTime).fromNow()}</p>
           </Popover>
-          <span css={css`font-family: monospace;margin: ${rem(4)};`}> · </span>
+          {
+            childComments?.length > 0 && (
+              <>
+                <Dot>·</Dot>
+                <ConfirmText
+                  onClick={handleChildComment}
+                >
+                  {visibleComment ? '收起回复' : `展开 ${comment.subCount} 条回复`}
+                </ConfirmText>
+              </>
+            )
+          }
+          <Dot>·</Dot>
           <ConfirmText
             onClick={openComment}
           >
@@ -122,8 +140,15 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
           )
         }
         {
-          childComments && childComments.length > 0 && (
-            <CommentList author={author} onConfirm={onConfirm} comment={childComments} />
+          childComments?.length > 0 && visibleComment && (
+            <ChildComment>
+              <CommentList parent={comment} author={author} onConfirm={onConfirm} comment={childComments} />
+              {
+                comment.subCount > 3 && (
+                  <MoreChildComment>查看所有评论</MoreChildComment>
+                )
+              }
+            </ChildComment>
           )
         }
       </MainBox>

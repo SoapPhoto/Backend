@@ -16,7 +16,7 @@ export const ItemBox = styled.div`
 
 export const UserName = styled.p`
   font-weight: 700;
-  /* color: ${theme('colors.text')}; */
+  color: ${theme('colors.text')};
   font-size: ${_ => rem(theme('fontSizes[2]')(_))};
 `;
 
@@ -56,4 +56,27 @@ export const ConfirmText = styled.button`
   outline: none;
   color: inherit;
   cursor: pointer;
+`;
+
+export const ChildComment = styled.div`
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    left: -24px;
+    top: 0px;
+    background-color: ${theme('colors.gray')};
+  }
+`;
+
+export const Dot = styled.span`
+  font-family: monospace;
+  margin: ${rem(4)} 0;
+`;
+
+export const MoreChildComment = styled.div`
+  color: ${theme('colors.primary')};
+  text-align: center;
 `;

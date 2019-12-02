@@ -42,8 +42,17 @@ export class CommentResolver {
   public async childComments(
     @Parent() parent: CommentEntity,
     @Context('user') user: Maybe<UserEntity>,
+    @Args('limit') limit?: number,
   ) {
     if (!parent || (parent && parent.parentComment)) return [];
-    return this.commentService.childComments(parent.id, user);
+    return this.commentService.childComments(parent.id, user, limit);
+  }
+
+  @ResolveProperty('subCount')
+  public async subCount(
+    @Parent() parent: CommentEntity,
+  ) {
+    if (!parent || (parent && parent.parentComment)) return 0;
+    return this.commentService.setSubCount(parent.id);
   }
 }

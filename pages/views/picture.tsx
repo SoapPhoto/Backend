@@ -152,8 +152,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           setPicture={setPicture}
         />
         {
-          tags.length > 0
-          && (
+          tags.length > 0 && (
             <TagBox>
               {
                 tags.map(tag => (

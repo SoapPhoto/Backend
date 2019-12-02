@@ -45,4 +45,7 @@ type Comment implements BaseNode {
 
   "子评论"
   childComments(limit: Float): [Comment]
+
+  "子评论数量"
+  subCount: Float
 }

@@ -8,6 +8,7 @@ import { Wrapper } from './styles/list';
 import { CommentItem } from './Item';
 
 interface IProps {
+  parent?: CommentEntity;
   author: UserEntity;
   accountStore?: AccountStore;
   comment: CommentEntity[];
@@ -15,6 +16,7 @@ interface IProps {
 }
 
 export const CommentList: React.FC<IProps> = observer(({
+  parent,
   author,
   comment,
   onConfirm,
@@ -22,7 +24,7 @@ export const CommentList: React.FC<IProps> = observer(({
   <Wrapper>
     {
       comment.map(data => (
-        <CommentItem author={author} onConfirm={onConfirm} key={data.id} comment={data} />
+        <CommentItem parent={parent} author={author} onConfirm={onConfirm} key={data.id} comment={data} />
       ))
     }
   </Wrapper>

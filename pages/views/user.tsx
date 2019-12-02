@@ -63,8 +63,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
                 text={user.fullName}
               />
               {
-                isLogin && userInfo && userInfo.username === user.username
-                && (
+                isLogin && userInfo?.username === user.username && (
                   <A route="/setting/profile">
                     <EditIcon size={18} />
                   </A>
@@ -73,8 +72,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
             </UserName>
             <Profile>
               {
-                user.website
-                && (
+                user.website && (
                   <ProfileItem>
                     <ProfileItemLink href={user.website} target="__blank">
                       <LinkIcon size={14} />

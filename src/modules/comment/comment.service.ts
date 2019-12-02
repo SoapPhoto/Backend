@@ -85,15 +85,24 @@ export class CommentService {
     return classToPlain(comment);
   }
 
-  public async childComments(id: ID, user: Maybe<UserEntity>) {
-    const data = await this.commentRepository.createQueryBuilder('comment')
+  public async childComments(id: ID, user: Maybe<UserEntity>, limit?: number) {
+    const q = this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
       .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.replyUser', 'replyUser')
-      .orderBy('comment.createTime', 'ASC')
-      .getMany();
+      .orderBy('comment.createTime', 'ASC');
+    if (limit) {
+      q.limit(limit);
+    }
+    return classToPlain(await q.getMany());
+  }
+
+  public async setSubCount(id: ID) {
+    const data = await this.commentRepository.createQueryBuilder('comment')
+      .where('comment.parentComment=:id', { id })
+      .getCount();
     return classToPlain(data);
   }
 }
