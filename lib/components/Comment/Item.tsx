@@ -86,14 +86,14 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
               !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
                   <span>回复 </span>
-                  <UserPopper username={user.username}>
+                  <UserPopper username={replyUser.username}>
                     <A
-                      route={`/@${user.username}`}
+                      route={`/@${replyUser.username}`}
                       css={css`text-decoration: none;display: inline-block;` as any}
                     >
                       <span>
                         <EmojiText
-                          text={user.fullName}
+                          text={replyUser.fullName}
                         />
                       </span>
                     </A>
