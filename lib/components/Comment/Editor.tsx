@@ -10,7 +10,9 @@ import { isIn } from '@lib/common/utils';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Textarea } from '../Input';
-import { HandleBox, Wrapper, Box } from './styles/editor';
+import {
+  HandleBox, Wrapper, Box, AvatarBox,
+} from './styles/editor';
 
 interface IProps {
   child?: boolean;
@@ -58,7 +60,8 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
     try {
       await onConfirm(value);
       if (!child) setValue('');
-    } catch {
+    } catch (err) {
+      console.error(err);
       setLoading(false);
     } finally {
       if (!child) setLoading(false);
@@ -66,7 +69,9 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
   }, [child, onConfirm, value]);
   return (
     <Wrapper ref={wrapperRef}>
-      <Avatar style={{ marginRight: rem(12) }} src={userInfo!.avatar} />
+      <AvatarBox>
+        <Avatar style={{ marginRight: rem(12) }} src={userInfo!.avatar} />
+      </AvatarBox>
       <Box>
         <Textarea
           value={value}

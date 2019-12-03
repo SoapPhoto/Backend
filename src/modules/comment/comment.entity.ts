@@ -47,5 +47,5 @@ export class CommentEntity extends BaseEntity {
   @Expose()
   public subCount = 0;
 
-  public childComments!: CommentEntity[];
+  public childComments: CommentEntity[] = [];
 }

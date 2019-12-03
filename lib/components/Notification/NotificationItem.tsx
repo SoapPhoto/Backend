@@ -70,19 +70,35 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
   const content = useCallback(() => {
     switch (data.category) {
       case NotificationCategory.LIKED:
-        return '喜欢了你的照片 ❤️';
+        return '喜欢了你的照片';
       case NotificationCategory.COMMENT:
-        return '评论了你的照片 😁';
+        if (data.comment) {
+          return `评论了：${data.comment.content}`;
+        }
+        return '';
       case NotificationCategory.REPLY:
-        return '回复了你的评论';
+        if (data.comment) {
+          return `回复了：${data.comment.content}`;
+        }
+        return '';
       default:
         return '';
     }
-  }, [data.category]);
+  }, [data.category, data.comment]);
   const handle = useCallback(() => {
-    if (data.category === NotificationCategory.LIKED || data.category === NotificationCategory.COMMENT) {
-      if (data.picture) {
-        const { key, id } = data.picture;
+    if (
+      data.category === NotificationCategory.LIKED
+      || data.category === NotificationCategory.COMMENT
+      || data.category === NotificationCategory.REPLY
+    ) {
+      let picture: PictureEntity | undefined;
+      if (data.category === NotificationCategory.LIKED) {
+        picture = data.picture;
+      } else {
+        picture = data.comment?.picture;
+      }
+      if (picture) {
+        const { key, id } = picture;
         return (
           <Picture route={`/picture/${id}`}>
             <Image src={getPictureUrl(key)} />
@@ -94,7 +110,7 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
       );
     }
     return null;
-  }, [data.category, data.picture]);
+  }, [data.category, data.comment, data.picture]);
   return (
     <Item read={data.read ? 1 : 0}>
       <User>

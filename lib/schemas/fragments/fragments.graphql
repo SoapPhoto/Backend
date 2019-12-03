@@ -197,7 +197,7 @@ fragment NotificationFragment on Notification {
     ...PicturePreviewFragment
   }
   comment {
-    ...CommentChildFragment
+    ...CommentNotificationFragment
   }
 }
 
@@ -207,6 +207,25 @@ fragment CommentBaseFragment on Comment {
   createTime
   updateTime
   subCount
+}
+
+fragment CommentNotificationFragment on Comment {
+  ...CommentBaseFragment
+  replyComment {
+    ...CommentBaseFragment
+  }
+  parentComment {
+    ...CommentBaseFragment
+  }
+  user {
+    ...UserFragment
+  }
+  replyUser {
+    ...UserFragment
+  }
+  picture {
+    ...PicturePreviewFragment
+  }
 }
 
 fragment CommentChildFragment on Comment {

@@ -45,6 +45,7 @@ export class CommentService {
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
       .leftJoinAndSelect('comment.replyUser', 'replyUser')
       .leftJoinAndSelect('comment.user', 'user')
+      .leftJoinAndSelect('comment.picture', 'picture')
       .getOne();
   }
 
