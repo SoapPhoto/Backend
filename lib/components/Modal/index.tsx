@@ -23,6 +23,7 @@ export interface IModalProps {
   theme?: DefaultTheme;
   fullscreen?: boolean;
   boxStyle?: React.CSSProperties;
+  className?: string;
 }
 
 const transitionStyles: {
@@ -137,11 +138,12 @@ export class Modal extends React.PureComponent<IModalProps> {
 
   public render() {
     const {
-      visible, boxStyle, children, closeIcon, fullscreen,
+      visible, boxStyle, children, closeIcon, fullscreen, className,
     } = this.props;
     if (this.isDestroy) {
       return null;
     }
+    console.log(className);
     return (
       <NoSSR>
         {
@@ -174,6 +176,7 @@ export class Modal extends React.PureComponent<IModalProps> {
                               ...transitionStyles[state],
                               ...boxStyle || {},
                             }}
+                            className={className}
                             onMouseDown={this.handleContentOnMouseDown}
                             onMouseUp={this.handleContentOnMouseUp}
                             onClick={this.handleContentOnMouseUp}

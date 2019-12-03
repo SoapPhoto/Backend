@@ -1,4 +1,6 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException, Injectable, forwardRef, Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -17,9 +19,12 @@ export class CommentService {
   constructor(
     @InjectRepository(CommentEntity)
     private commentRepository: Repository<CommentEntity>,
-    private pictureService: PictureService,
-    private userService: UserService,
-    private notificationService: NotificationService,
+    @Inject(forwardRef(() => PictureService))
+    private readonly pictureService: PictureService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => NotificationService))
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async getPictureList(id: string, query: GetPictureCommentListDto, _user: Maybe<UserEntity>) {
@@ -31,6 +36,17 @@ export class CommentService {
     // this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, classToPlain(data), count);
+  }
+
+  public async getRawOne(id: ID) {
+    return this.commentRepository.createQueryBuilder('comment')
+      .where('comment.id=:id', { id })
+      .leftJoinAndSelect('comment.parentComment', 'parentComment')
+      .leftJoinAndSelect('comment.replyComment', 'replyComment')
+      .leftJoinAndSelect('comment.replyUser', 'replyUser')
+      .leftJoinAndSelect('comment.user', 'user')
+      .leftJoinAndSelect('comment.picture', 'picture')
+      .getOne();
   }
 
   public async getOne(id: ID) {
@@ -77,8 +93,8 @@ export class CommentService {
         createData.replyUser,
         {
           type: NotificationType.USER,
-          category: NotificationCategory.COMMENT,
-          mediaId: picture.id.toString(),
+          category: commentId ? NotificationCategory.REPLY : NotificationCategory.COMMENT,
+          mediaId: comment.id.toString(),
         },
       );
     }

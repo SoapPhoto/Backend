@@ -11,6 +11,8 @@ import { IPaginationList } from '@lib/common/interfaces/global';
 import { X } from '@lib/icon';
 import { AddComment } from '@lib/schemas/mutations';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import { UserEntity } from '@lib/common/interfaces/user';
+import { customMedia } from '@lib/common/utils/mediaQuery';
 import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
@@ -18,6 +20,7 @@ import { Empty } from '../Empty';
 
 interface IProps {
   id: ID;
+  author: UserEntity;
   visible: boolean;
   onClose: () => void;
   comment?: CommentEntity;
@@ -56,8 +59,23 @@ const XButton = styled(X)`
   color: ${theme('colors.text')};
 `;
 
+const ModalContent = styled(Modal)`
+  padding: 0 !important;
+  max-width: rem(600) !important;
+  height: calc(100vh - ${rem(24 * 2)}) !important;
+  margin: ${rem(24)} auto !important;
+  ${customMedia.lessThan('mobile')`
+    height: 80vh !important;
+    margin-top: 20vh !important;
+    margin-bottom: 0 !important;
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+  `}
+`;
+
 export const CommentModal: React.FC<IProps> = ({
   id,
+  author,
   visible,
   onClose,
   comment,
@@ -107,16 +125,10 @@ export const CommentModal: React.FC<IProps> = ({
     setCount(state => state + 1);
   }, [client, id]);
   return (
-    <Modal
+    <ModalContent
       visible={visible}
       onClose={onClose}
       closeIcon={false}
-      boxStyle={{
-        padding: 0,
-        maxWidth: rem(600),
-        height: `calc(100vh - ${rem(24 * 2)})`,
-        margin: `${rem(24)} auto`,
-      }}
     >
       {
         (loading || !list || !comment) ? (
@@ -135,7 +147,7 @@ export const CommentModal: React.FC<IProps> = ({
               <CommentListBox>
                 <CommentList
                   parent={comment}
-                  author={comment.user}
+                  author={author}
                   onConfirm={addComment}
                   comment={list}
                 />
@@ -144,6 +156,6 @@ export const CommentModal: React.FC<IProps> = ({
           </Wrapper>
         )
       }
-    </Modal>
+    </ModalContent>
   );
 };

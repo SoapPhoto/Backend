@@ -145,6 +145,7 @@ const Container = styled.div`
   bottom: 0;
   height: ${rem(height)};
   right: 0;
+  cursor: pointer;
 `;
 
 const ToastBox = styled.div<{type?: ToastType}>`
@@ -214,6 +215,7 @@ export class ToastComponent extends React.Component {
                   ...this.animate(state, key),
                   zIndex: 1000 + key,
                 }}
+                onClick={() => this.removeConfig(value)}
               >
                 <ToastBox type={value.type}>{value.title}</ToastBox>
               </Container>

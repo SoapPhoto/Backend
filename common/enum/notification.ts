@@ -8,6 +8,7 @@ export enum NotificationType {
 export enum NotificationCategory {
   LIKED = 'LIKED',
   COMMENT = 'COMMENT',
+  REPLY = 'REPLY',
   FOLLOW = 'FOLLOW'
 }
 

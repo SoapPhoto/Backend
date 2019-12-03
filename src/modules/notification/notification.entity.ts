@@ -41,7 +41,23 @@ export class NotificationEntity extends BaseEntity {
   @Expose()
   public media?: PictureEntity | CommentEntity | CollectionEntity;
 
+  @Expose()
+  get comment(): CommentEntity | undefined {
+    if (this.category === NotificationCategory.REPLY || this.category === NotificationCategory.COMMENT) {
+      return this.media as CommentEntity;
+    }
+    return undefined;
+  }
+
+  @Expose()
+  get picture(): PictureEntity | undefined {
+    if (this.category === NotificationCategory.LIKED) {
+      return this.media as PictureEntity;
+    }
+    return undefined;
+  }
+
   @Type(() => Boolean)
   @Expose()
-  public read = false;
+  public read = false
 }

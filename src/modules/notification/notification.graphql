@@ -2,6 +2,7 @@ enum NotificationCategory {
   LIKED
   COMMENT
   FOLLOW
+  REPLY
 }
 
 enum NotificationType {
@@ -49,4 +50,8 @@ type Notification implements BaseNode {
 
   "是否已读"
   media: NotificationMedia
+
+  picture: Picture
+
+  comment: Comment
 }

@@ -127,7 +127,8 @@ const Account = observer(() => {
       Toast.success('解绑成功!');
       setConfirmVisible(false);
       getCredentials();
-    } catch {
+    } catch (err) {
+      console.error(err);
       Toast.error('解绑失败');
       getCredentials();
     } finally {

@@ -92,6 +92,8 @@ export class PictureScreenStore extends BaseStore {
           if (index >= 0) {
             this.comment[index].childComments.push(comment);
           }
+        } else if (!item.childComments) {
+          item.childComments = [comment];
         } else {
           item.childComments.push(comment);
         }
@@ -112,7 +114,7 @@ export class PictureScreenStore extends BaseStore {
           verticalOffset: -window.innerHeight / 2,
         });
       }
-    }, 500);
+    }, 300);
   }
 
   @action
@@ -172,7 +174,8 @@ export class PictureScreenStore extends BaseStore {
       } else {
         throw new Error();
       }
-    } catch {
+    } catch (err) {
+      console.error(err);
       await this.getPictureInfo(id);
     }
   }
@@ -217,7 +220,8 @@ export class PictureScreenStore extends BaseStore {
         fragmentName: 'PictureDetailFragment',
         id: `Picture:${this.info.id}`,
       });
-    } catch {
+    } catch (err) {
+      console.error(err);
       return null;
     }
   }

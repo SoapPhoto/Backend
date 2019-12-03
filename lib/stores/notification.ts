@@ -6,6 +6,7 @@ import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserNotification, UnreadNotificationCount } from '@lib/schemas/query';
 import { NewNotification } from '@lib/schemas/subscription';
 import { MarkNotificationReadAll } from '@lib/schemas/mutations';
+import Toast from '@lib/components/Toast';
 
 export class NotificationStore {
   public io?: SocketIOClient.Socket;
@@ -45,17 +46,6 @@ export class NotificationStore {
       // this.io = setupSocket();
       // this.message();
     }
-  }
-
-  public message = () => {
-    const socket = this.io!;
-    socket.on('message', (data: any) => {
-      if (data.event === 'message') {
-        this.pushNotification(data.data);
-      }
-    });
-    // 连接成功后会返回未读数量
-    socket.on('CONNECT_USER', (data: { unread: number }) => this.setUnRead(data.unread));
   }
 
   public getList = async () => {
@@ -102,6 +92,7 @@ export class NotificationStore {
   @action
   public pushNotification = (data: NotificationEntity) => {
     this.unread++;
+    Toast.success('收到了新消息！');
     if (!this.loading) {
       this.list.unshift(data);
     } else {
