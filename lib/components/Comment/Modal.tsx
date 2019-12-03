@@ -11,6 +11,7 @@ import { IPaginationList } from '@lib/common/interfaces/global';
 import { X } from '@lib/icon';
 import { AddComment } from '@lib/schemas/mutations';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import { UserEntity } from '@lib/common/interfaces/user';
 import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
@@ -18,6 +19,7 @@ import { Empty } from '../Empty';
 
 interface IProps {
   id: ID;
+  author: UserEntity;
   visible: boolean;
   onClose: () => void;
   comment?: CommentEntity;
@@ -58,6 +60,7 @@ const XButton = styled(X)`
 
 export const CommentModal: React.FC<IProps> = ({
   id,
+  author,
   visible,
   onClose,
   comment,
@@ -135,7 +138,7 @@ export const CommentModal: React.FC<IProps> = ({
               <CommentListBox>
                 <CommentList
                   parent={comment}
-                  author={comment.user}
+                  author={author}
                   onConfirm={addComment}
                   comment={list}
                 />

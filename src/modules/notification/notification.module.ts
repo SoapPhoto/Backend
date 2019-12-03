@@ -12,6 +12,7 @@ import { NotificationSubscribersUserEntity } from './subscribers-user/subscriber
 import { SubscribersUserModule } from './subscribers-user/subscribers-user.module';
 import { PictureModule } from '../picture/picture.module';
 import { NotificationResolver, NotificationMediaResolver } from './notification.resolvers';
+import { CommentModule } from '../comment/comment.module';
 
 @Module({
   providers: [NotificationService, NotificationResolver, NotificationMediaResolver],
@@ -21,6 +22,7 @@ import { NotificationResolver, NotificationMediaResolver } from './notification.
     SubscribersUserModule,
     EventsModule,
     forwardRef(() => PictureModule),
+    forwardRef(() => CommentModule),
   ],
   exports: [NotificationService],
 })

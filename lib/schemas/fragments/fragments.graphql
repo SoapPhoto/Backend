@@ -193,10 +193,11 @@ fragment NotificationFragment on Notification {
   }
   category
   read
-  media {
-    ...on Picture {
-      ...PicturePreviewFragment
-    }
+  picture {
+    ...PicturePreviewFragment
+  }
+  comment {
+    ...CommentChildFragment
   }
 }
 

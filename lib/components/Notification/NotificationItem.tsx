@@ -73,14 +73,16 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
         return '喜欢了你的照片 ❤️';
       case NotificationCategory.COMMENT:
         return '评论了你的照片 😁';
+      case NotificationCategory.REPLY:
+        return '回复了你的评论';
       default:
         return '';
     }
   }, [data.category]);
   const handle = useCallback(() => {
     if (data.category === NotificationCategory.LIKED || data.category === NotificationCategory.COMMENT) {
-      if (data.media) {
-        const { key, id } = data.media as PictureEntity;
+      if (data.picture) {
+        const { key, id } = data.picture;
         return (
           <Picture route={`/picture/${id}`}>
             <Image src={getPictureUrl(key)} />
@@ -92,7 +94,7 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
       );
     }
     return null;
-  }, [data.category, data.media]);
+  }, [data.category, data.picture]);
   return (
     <Item read={data.read ? 1 : 0}>
       <User>

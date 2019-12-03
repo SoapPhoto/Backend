@@ -55,7 +55,13 @@ export const Comment = observer(({
           <Empty emptyText="暂无评论！" loading={loading} />
         )
       }
-      <CommentModal id={id} comment={modalState} visible={modalVisible} onClose={closeModal} />
+      <CommentModal
+        author={author}
+        id={id}
+        comment={modalState}
+        visible={modalVisible}
+        onClose={closeModal}
+      />
     </Wrapper>
   );
 });

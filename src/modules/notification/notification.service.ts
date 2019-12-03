@@ -11,6 +11,7 @@ import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
+import { CommentService } from '../comment/comment.service';
 
 export const pubSub = new PubSub();
 
@@ -26,6 +27,8 @@ export class NotificationService {
     private subscribersUserRepository: Repository<NotificationSubscribersUserEntity>,
     @Inject(forwardRef(() => PictureService))
     private readonly pictureService: PictureService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
     @Inject(forwardRef(() => SubscribersUserService))
     private readonly subscribersService: SubscribersUserService,
   ) {}
@@ -85,9 +88,12 @@ export class NotificationService {
   public setNotificationItemMedia = async (notify: NotificationEntity) => {
     if (
       notify.category === NotificationCategory.LIKED
-      || notify.category === NotificationCategory.COMMENT
     ) {
       return this.pictureService.getRawOne(notify.mediaId!);
+    }
+    if (notify.category === NotificationCategory.REPLY
+      || notify.category === NotificationCategory.COMMENT) {
+      return this.commentService.getRawOne(notify.mediaId!);
     }
     return undefined;
   }
