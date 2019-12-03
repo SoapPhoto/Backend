@@ -40,6 +40,8 @@ declare module '*/query.graphql' {
   export const TagPictures: DocumentNode;
   export const UserNotification: DocumentNode;
   export const UnreadNotificationCount: DocumentNode;
+  export const Comments: DocumentNode;
+  export const ChildComments: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';
@@ -52,6 +54,7 @@ declare module '*/mutations.graphql' {
   export const RemovePictureCollection: DocumentNode;
   export const DeleteCollection: DocumentNode;
   export const UpdateProfile: DocumentNode;
+  export const AddComment: DocumentNode;
 }
 declare module '*/subscription.graphql' {
   import { DocumentNode } from 'graphql';

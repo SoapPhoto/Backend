@@ -30,7 +30,6 @@ import { Switch } from '@lib/components/Switch';
 import { uploadQiniu } from '@lib/services/file';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
-import { useRouter } from '@lib/router';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { Trash2, Edit } from '@lib/icon';
 import { UploadType } from '@common/enum/upload';
@@ -39,6 +38,7 @@ import { theme } from '@lib/common/utils/themes';
 import { rem } from 'polished';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 import { I18nNamespace } from '@lib/i18n/Namespace';
+import { validator } from '@lib/common/utils/validator';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -111,7 +111,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   }, [imageInfo]);
 
   const addPicture = useCallback(async () => {
-    if (data.title === '' || data.title === null || data.title === undefined) {
+    if (validator.isEmpty(data.title)) {
       setTitleError('请输入标题！');
       return;
     }
@@ -119,7 +119,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     if (imageRef.current) {
       const key = await uploadQiniu(imageRef.current, UploadType.PICTURE, onUploadProgress);
       const info = imageInfo;
-      if (!isLocation && info && info.exif && info.exif.location) {
+      if (!isLocation && info?.exif?.location) {
         delete info.exif.location;
       }
       const addData = {

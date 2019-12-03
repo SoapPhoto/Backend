@@ -5,6 +5,8 @@
     "yiiu/typescript"
   ],
   "rules": {
+    "no-undef": 0,
+    // "no-unused-locals": 1,
     "no-plusplus": "off",
     "max-len": ["error", 160],
     "no-const-assign": "off"

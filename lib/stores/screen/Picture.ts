@@ -2,18 +2,20 @@ import {
   action, observable, computed,
 } from 'mobx';
 import { merge, pick } from 'lodash';
+import animateScrollTo from 'animated-scroll-to';
 
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { PictureEntity, IPictureLikeRequest } from '@lib/common/interfaces/picture';
-import { addComment, getPictureComment } from '@lib/services/comment';
 import {
   deletePicture,
 } from '@lib/services/picture';
 
-import { Picture } from '@lib/schemas/query';
 import { queryToMobxObservable } from '@lib/common/apollo';
+import { Picture, Comments } from '@lib/schemas/query';
 import Fragments from '@lib/schemas/fragments';
-import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
+import { LikePicture, UnLikePicture, AddComment } from '@lib/schemas/mutations';
+import { IPaginationList } from '@lib/common/interfaces/global';
+import Toast from '@lib/components/Toast';
 import { BaseStore } from '../base/BaseStore';
 
 interface IPictureGqlReq {
@@ -54,21 +56,63 @@ export class PictureScreenStore extends BaseStore {
   }
 
   @action public getComment = async () => {
-    const { data } = await getPictureComment(this.id);
-    this.setComment(data.data);
+    await queryToMobxObservable(this.client.watchQuery<{comments: IPaginationList<CommentEntity>}>({
+      query: Comments,
+      variables: { id: this.id },
+      fetchPolicy: 'cache-and-network',
+    }), (data) => {
+      this.setComment(data.comments.data);
+    });
+    // // const { data } = await getPictureComment(this.id);
   }
 
-  public addComment = async (content: string) => {
-    const { data } = await addComment(content, this.id);
-    this.pushComment(data);
+  public addComment = async (content: string, commentId?: ID) => {
+    const { data } = await this.client.mutate<{addComment: CommentEntity}>({
+      mutation: AddComment,
+      variables: {
+        id: this.id,
+        commentId,
+        data: {
+          content,
+        },
+      },
+    });
+    this.pushComment(data!.addComment, commentId);
   }
 
   public deletePicture = async () => {
     await deletePicture(this.id);
   }
 
-  @action public pushComment = (comment: CommentEntity) => {
-    this.comment.unshift(comment);
+  @action public pushComment = (comment: CommentEntity, commentId?: ID) => {
+    const func = (child: CommentEntity[]) => child.forEach((item) => {
+      if (item.id === commentId) {
+        if (item.parentComment) {
+          const index = this.comment.findIndex(v => v.id === item.parentComment.id);
+          if (index >= 0) {
+            this.comment[index].childComments.push(comment);
+          }
+        } else {
+          item.childComments.push(comment);
+        }
+      } else {
+        func(item.childComments || []);
+      }
+    });
+    if (commentId) {
+      func(this.comment);
+    } else {
+      this.comment.push(comment);
+    }
+    Toast.success('评论成功！');
+    setTimeout(() => {
+      const query = document.querySelector(`#comment-${comment.id}`);
+      if (query) {
+        animateScrollTo(query, {
+          verticalOffset: -window.innerHeight / 2,
+        });
+      }
+    }, 500);
   }
 
   @action

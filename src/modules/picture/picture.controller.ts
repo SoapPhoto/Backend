@@ -128,13 +128,13 @@ export class PictureController {
     return this.commentService.getPictureList(id, query, user);
   }
 
-  @Post(':id([0-9]+)/comment')
-  @Roles(Role.USER)
-  public async createPictureComment(
-    @Body() data: CreatePictureCommentDot,
-    @Param('id') id: string,
-    @User() user: UserEntity,
-  ) {
-    return this.commentService.create(data, id, user);
-  }
+  // @Post(':id([0-9]+)/comment')
+  // @Roles(Role.USER)
+  // public async createPictureComment(
+  //   @Body() data: CreatePictureCommentDot,
+  //   @Param('id') id: string,
+  //   @User() user: UserEntity,
+  // ) {
+  //   return this.commentService.create(data, id, user);
+  // }
 }

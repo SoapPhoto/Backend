@@ -1,30 +1,54 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback, useRef, useState, useEffect,
+} from 'react';
 
 import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { rem } from 'polished';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { isIn } from '@lib/common/utils';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Textarea } from '../Input';
-import { HandleBox, Wrapper } from './styles/editor';
+import { HandleBox, Wrapper, Box } from './styles/editor';
 
 interface IProps {
+  child?: boolean;
   accountStore?: AccountStore;
   onConfirm: (value: string) => Promise<void>;
+  onClose?: () => void;
+  placeholder?: string;
 }
 
 export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
+  child = false,
   accountStore,
+  placeholder,
   onConfirm,
+  onClose,
 }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const { userInfo } = accountStore!;
   const setInputFocus = useCallback(() => {
     inputRef.current!.focus();
+  }, []);
+  useEffect(() => {
+    if (inputRef.current && child) inputRef.current.focus();
+    const ifEl = (e: MouseEvent) => {
+      if (!isIn(e.target as Node, wrapperRef.current!) && onClose) {
+        setTimeout(() => onClose(), 100);
+      }
+    };
+    if (child) {
+      document.addEventListener('mousedown', ifEl);
+      return () => document.removeEventListener('mousedown', ifEl);
+    }
+    return () => null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
@@ -33,19 +57,21 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
     setLoading(true);
     try {
       await onConfirm(value);
-      setValue('');
-    } finally {
+      if (!child) setValue('');
+    } catch {
       setLoading(false);
+    } finally {
+      if (!child) setLoading(false);
     }
-  }, [onConfirm, value]);
+  }, [child, onConfirm, value]);
   return (
-    <Wrapper>
-      <Avatar src={userInfo!.avatar} />
-      <div>
+    <Wrapper ref={wrapperRef}>
+      <Avatar style={{ marginRight: rem(12) }} src={userInfo!.avatar} />
+      <Box>
         <Textarea
           value={value}
           minRows={1}
-          placeholder={t('comment.placeholder')}
+          placeholder={placeholder || t('comment.placeholder')}
           boxStyle={{
             paddingBottom: rem('48px'),
           }}
@@ -58,7 +84,7 @@ export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
           <span />
           <Button loading={loading} onClick={onConfirmClick} disabled={!value}>{t('comment.send')}</Button>
         </HandleBox>
-      </div>
+      </Box>
     </Wrapper>
   );
 });

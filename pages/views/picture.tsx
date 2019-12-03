@@ -72,8 +72,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   }, []);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
-  const onConfirm = async (value: string) => {
-    await addComment(value);
+  const onConfirm = async (value: string, commentId?: ID) => {
+    await addComment(value, commentId);
   };
   const onOk = useCallback((picture: PictureEntity) => {
     updateInfo(picture);
@@ -152,8 +152,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           setPicture={setPicture}
         />
         {
-          tags.length > 0
-          && (
+          tags.length > 0 && (
             <TagBox>
               {
                 tags.map(tag => (
@@ -208,7 +207,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           </RelateCollection>
         )
       } */}
-      <Comment onConfirm={onConfirm} comment={comment} loading={commentLoading} />
+      <Comment id={info.id} author={info.user} onConfirm={onConfirm} comment={comment} loading={commentLoading} />
       <LightBox
         visible={boxVisible}
         src={getPictureUrl(info.key, 'full')}

@@ -179,7 +179,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     setCurrent(
       new Map(currentCollections.map(collection => [collection.id, collection])),
     );
-  }, [currentCollections])
+  }, [currentCollections]);
   useEffect(() => {
     const obj: Record<string, boolean> = {};
     userCollection.forEach(collection => obj[collection.id] = false);

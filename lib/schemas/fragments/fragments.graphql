@@ -199,3 +199,66 @@ fragment NotificationFragment on Notification {
     }
   }
 }
+
+fragment CommentBaseFragment on Comment {
+  id
+  content
+  createTime
+  updateTime
+  subCount
+}
+
+fragment CommentChildFragment on Comment {
+  ...CommentBaseFragment
+  replyComment {
+    ...CommentBaseFragment
+  }
+  parentComment {
+    ...CommentBaseFragment
+  }
+  user {
+    ...UserFragment
+  }
+  replyUser {
+    ...UserFragment
+  }
+}
+
+fragment CommentFragment on Comment {
+  ...CommentBaseFragment
+  replyComment {
+    ...CommentBaseFragment
+  }
+  parentComment {
+    ...CommentBaseFragment
+  }
+  childComments(limit: 3) {
+    ...CommentChildFragment
+  }
+  user {
+    ...UserFragment
+  }
+  replyUser {
+    ...UserFragment
+  }
+}
+
+fragment ChildCommentListFragment on Comments {
+    count
+    page
+    pageSize
+    timestamp
+    data {
+      ...CommentChildFragment
+    }
+}
+
+fragment CommentListFragment on Comments {
+    count
+    page
+    pageSize
+    timestamp
+    data {
+      ...CommentFragment
+    }
+}
