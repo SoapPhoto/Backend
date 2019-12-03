@@ -3,6 +3,10 @@ type Query {
     id:ID!
     query: CommentsQueryInput
   ): Comments
+  childComments(
+    id:ID!
+    query: CommentsQueryInput
+  ): Comments
 }
 
 type Mutation {

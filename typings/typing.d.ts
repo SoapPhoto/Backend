@@ -41,6 +41,7 @@ declare module '*/query.graphql' {
   export const UserNotification: DocumentNode;
   export const UnreadNotificationCount: DocumentNode;
   export const Comments: DocumentNode;
+  export const ChildComments: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';

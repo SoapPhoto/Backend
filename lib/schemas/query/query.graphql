@@ -93,3 +93,9 @@ query Comments($id: ID!, $query: CommentsQueryInput) {
     ...CommentListFragment
   }
 }
+
+query ChildComments($id: ID!, $query: CommentsQueryInput) {
+  childComments(id: $id, query: $query) {
+    ...ChildCommentListFragment
+  }
+}

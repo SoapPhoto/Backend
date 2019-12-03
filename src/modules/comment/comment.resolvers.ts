@@ -27,6 +27,15 @@ export class CommentResolver {
     return this.commentService.getPictureList(id, query, user);
   }
 
+  @Query('childComments')
+  public async childCommentList(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('id') id: string,
+    @Args('query') query: GetPictureCommentListDto,
+  ) {
+    return this.commentService.childComments(id, user, undefined, query);
+  }
+
   @Mutation()
   @Roles(Role.USER)
   public async addComment(
@@ -53,6 +62,6 @@ export class CommentResolver {
     @Parent() parent: CommentEntity,
   ) {
     if (!parent || (parent && parent.parentComment)) return 0;
-    return this.commentService.setSubCount(parent.id);
+    return this.commentService.getSubCount(parent.id);
   }
 }

@@ -243,6 +243,16 @@ fragment CommentFragment on Comment {
   }
 }
 
+fragment ChildCommentListFragment on Comments {
+    count
+    page
+    pageSize
+    timestamp
+    data {
+      ...CommentChildFragment
+    }
+}
+
 fragment CommentListFragment on Comments {
     count
     page

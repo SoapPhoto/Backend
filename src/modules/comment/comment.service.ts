@@ -28,7 +28,7 @@ export class CommentService {
       .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', { id })
       .orderBy('comment.createTime', 'ASC')
       .leftJoinAndSelect('comment.user', 'user');
-    this.userService.selectInfo(q);
+    // this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, classToPlain(data), count);
   }
@@ -85,7 +85,7 @@ export class CommentService {
     return classToPlain(comment);
   }
 
-  public async childComments(id: ID, user: Maybe<UserEntity>, limit?: number) {
+  public async childComments(id: ID, user: Maybe<UserEntity>, limit?: number, query?: GetPictureCommentListDto) {
     const q = this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
@@ -96,10 +96,18 @@ export class CommentService {
     if (limit) {
       q.limit(limit);
     }
+    if (query) {
+      if (query.timestamp) {
+        q.where('comment.createTime <= :time', { time: query.time });
+      }
+      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+      const [data, count] = await q.getManyAndCount();
+      return listRequest(query, classToPlain(data), count);
+    }
     return classToPlain(await q.getMany());
   }
 
-  public async setSubCount(id: ID) {
+  public async getSubCount(id: ID) {
     const data = await this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .getCount();

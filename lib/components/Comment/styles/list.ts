@@ -1,7 +1,7 @@
 import { rem } from 'polished';
 import styled from 'styled-components';
 
-import { theme } from '@lib/common/utils/themes';
+import { theme, activate } from '@lib/common/utils/themes';
 
 export const Wrapper = styled.div`
   display: grid;
@@ -43,6 +43,8 @@ export const InfoBox = styled.div`
 
 export const ReplyLabel = styled.span`
   color: ${theme('colors.secondary')};
+  display: inline-block;
+  margin-left: ${rem(6)};
 `;
 
 export const ContentItem = styled.div`
@@ -77,6 +79,15 @@ export const Dot = styled.span`
 `;
 
 export const MoreChildComment = styled.div`
-  color: ${theme('colors.primary')};
   text-align: center;
+`;
+
+export const MoreChildCommentBtn = styled.button`
+  cursor: pointer;
+  display: inline-block;
+  border: none;
+  background: none;
+  outline: none;
+  color: ${theme('colors.primary')};
+  ${activate()}
 `;

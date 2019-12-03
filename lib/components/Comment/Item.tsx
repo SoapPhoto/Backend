@@ -7,28 +7,34 @@ import day from 'dayjs';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { UserEntity } from '@lib/common/interfaces/user';
+import { useAccountStore } from '@lib/stores/hooks';
 import { A } from '../A';
 import { Avatar, EmojiText } from '..';
 import { Popover } from '../Popover';
 import { CommentEditor } from './Editor';
 import {
-  ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel, ChildComment, Dot, MoreChildComment,
+  ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel, ChildComment, Dot, MoreChildComment, MoreChildCommentBtn,
 } from './styles/list';
 import { CommentList } from './List';
 
 interface ICommentItem {
+  visibleChild?: boolean;
   parent?: CommentEntity;
   author: UserEntity;
   comment: CommentEntity;
   onConfirm: (value: string, commentId?: string) => Promise<void>;
+  openModal?: (data: CommentEntity) => void;
 }
 
 export const CommentItem: React.FC<ICommentItem> = observer(({
+  visibleChild = true,
   parent,
   author,
   comment,
   onConfirm,
+  openModal,
 }) => {
+  const { isLogin } = useAccountStore();
   const [isComment, setComment] = useState(false);
   const [visibleComment, setVisibleComment] = useState(true);
   const {
@@ -44,15 +50,20 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
     await onConfirm(commentContent, comment.id);
     setComment(false);
   }, [comment.id, onConfirm]);
+  const openItemModal = useCallback(() => {
+    if (openModal) {
+      openModal(comment);
+    }
+  }, [comment, openModal]);
   return (
     <ItemBox id={`comment-${id}`}>
-      <UserPopper username={user.username}>
-        <A
-          route={`/@${user.username}`}
-        >
+      <A
+        route={`/@${user.username}`}
+      >
+        <UserPopper username={user.username}>
           <Avatar src={user.avatar} />
-        </A>
-      </UserPopper>
+        </UserPopper>
+      </A>
       <MainBox>
         <ContentBox>
           <ContentItem>
@@ -71,8 +82,6 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
                 <UserLabel>(作者)</UserLabel>
               )
             }
-          </ContentItem>
-          <div>
             {
               !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
@@ -93,6 +102,8 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
                 </ReplyLabel>
               )
             }
+          </ContentItem>
+          <div>
             <EmojiText
               text={content}
             />
@@ -109,7 +120,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
             <p>{day(createTime).fromNow()}</p>
           </Popover>
           {
-            childComments?.length > 0 && (
+            childComments?.length > 0 && visibleChild && (
               <>
                 <Dot>·</Dot>
                 <ConfirmText
@@ -120,12 +131,18 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
               </>
             )
           }
-          <Dot>·</Dot>
-          <ConfirmText
-            onClick={openComment}
-          >
-            回复
-          </ConfirmText>
+          {
+            isLogin && (
+              <>
+                <Dot>·</Dot>
+                <ConfirmText
+                  onClick={openComment}
+                >
+                回复
+                </ConfirmText>
+              </>
+            )
+          }
         </InfoBox>
         {
           isComment && (
@@ -140,12 +157,20 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
           )
         }
         {
-          childComments?.length > 0 && visibleComment && (
+          childComments?.length > 0 && visibleComment && visibleChild && (
             <ChildComment>
-              <CommentList parent={comment} author={author} onConfirm={onConfirm} comment={childComments} />
+              <CommentList
+                openModal={openModal}
+                parent={comment}
+                author={author}
+                onConfirm={onConfirm}
+                comment={childComments}
+              />
               {
-                comment.subCount > 3 && (
-                  <MoreChildComment>查看所有评论</MoreChildComment>
+                openModal && comment.subCount > 3 && (
+                  <MoreChildComment>
+                    <MoreChildCommentBtn onClick={openItemModal}>查看所有评论</MoreChildCommentBtn>
+                  </MoreChildComment>
                 )
               }
             </ChildComment>

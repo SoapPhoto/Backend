@@ -13,6 +13,7 @@ interface IProps {
   accountStore?: AccountStore;
   comment: CommentEntity[];
   onConfirm: (value: string, commentId?: string) => Promise<void>;
+  openModal?: (data: CommentEntity) => void;
 }
 
 export const CommentList: React.FC<IProps> = observer(({
@@ -20,11 +21,19 @@ export const CommentList: React.FC<IProps> = observer(({
   author,
   comment,
   onConfirm,
+  openModal,
 }) => (
   <Wrapper>
     {
       comment.map(data => (
-        <CommentItem parent={parent} author={author} onConfirm={onConfirm} key={data.id} comment={data} />
+        <CommentItem
+          parent={parent}
+          author={author}
+          onConfirm={onConfirm}
+          key={data.id}
+          comment={data}
+          openModal={openModal}
+        />
       ))
     }
   </Wrapper>
