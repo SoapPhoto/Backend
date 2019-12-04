@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/Yiiu/Soap/compare/v0.1.6...v0.1.7) (2019-12-04)
+
+
+### Bug Fixes
+
+* bug ([ec2f473](https://github.com/Yiiu/Soap/commit/ec2f473))
+* fragments type bug ([3e4899e](https://github.com/Yiiu/Soap/commit/3e4899e))
+* Picture delete bug ([0fb3dd9](https://github.com/Yiiu/Soap/commit/0fb3dd9))
+* Picture GPS bug ([8d9a3bc](https://github.com/Yiiu/Soap/commit/8d9a3bc))
+* Reply comment bug ([b000b01](https://github.com/Yiiu/Soap/commit/b000b01))
+* 修复修改用户信息报错BUG ([2540084](https://github.com/Yiiu/Soap/commit/2540084))
+* 图片尺寸错误bug ([cbf19ac](https://github.com/Yiiu/Soap/commit/cbf19ac))
+
+
+### Features
+
+* Add child comment ([ca370c5](https://github.com/Yiiu/Soap/commit/ca370c5))
+* Add reply notify ([a79fa4c](https://github.com/Yiiu/Soap/commit/a79fa4c))
+
 ### [0.1.6](https://github.com/Yiiu/Soap/compare/v0.1.5...v0.1.6) (2019-11-26)
 
 
