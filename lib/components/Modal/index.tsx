@@ -143,7 +143,6 @@ export class Modal extends React.PureComponent<IModalProps> {
     if (this.isDestroy) {
       return null;
     }
-    console.log(className);
     return (
       <NoSSR>
         {

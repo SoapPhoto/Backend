@@ -113,6 +113,9 @@ type Picture implements BaseNode {
   "浏览次数"
   views: Float
 
+  "图片评论数量"
+  commentCount: Float
+
   "图片原始文件名"
   originalname: String
 

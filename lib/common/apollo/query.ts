@@ -20,7 +20,6 @@ export const watchQuery = <T = any, TVariables = OperationVariables>(
     error: error => reject(error),
   }));
 
-// eslint-disable-next-line arrow-parens
 export const queryToMobxObservable = <T = any, TVariables = OperationVariables>(
   queryObservable: ObservableQuery<T, TVariables>,
   cb: (data: T) => void,

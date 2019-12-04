@@ -12,7 +12,9 @@ import { PictureInfo } from '@lib/components/PictureInfo';
 import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
-import { Eye, Heart } from '@lib/icon';
+import {
+  Heart, MessageSquare, Target, Clock,
+} from '@lib/icon';
 import {
   BaseInfoItem,
   Bio,
@@ -41,6 +43,10 @@ import { observer } from 'mobx-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import { CollectionItem } from '@lib/containers/Collection/Item';
 import { getPictureUrl } from '@lib/common/utils/image';
+import dayjs from 'dayjs';
+import { Popover } from '@lib/components/Popover';
+import { css } from 'styled-components';
+import { theme } from '@lib/common/utils/themes';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -113,23 +119,65 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               src={user.avatar}
               size={44}
             />
-            <UserName>
-              <EmojiText
-                text={user.fullName}
-              />
-            </UserName>
           </UserLink>
+          <div>
+            <UserLink style={{ marginBottom: rem(4) }} route={`/@${user.username}`}>
+              <UserName>
+                <EmojiText
+                  text={user.fullName}
+                />
+              </UserName>
+            </UserLink>
+            <Popover
+              openDelay={100}
+              trigger="hover"
+              placement="top"
+              theme="dark"
+              content={<span>{dayjs(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+            >
+              <BaseInfoItem>
+                {/* <Clock
+                  style={{ strokeWidth: 2.5 }}
+                  size={14}
+                /> */}
+                <p
+                  css={css`font-size: ${_ => rem(theme('fontSizes[0]')(_))};`}
+                >
+                  {dayjs(info.createTime).fromNow()}
+
+                </p>
+              </BaseInfoItem>
+            </Popover>
+          </div>
         </UserInfo>
         <UserHeaderInfo width={1}>
           <BaseInfoItem
             style={{ marginRight: rem(14) }}
           >
-            <Eye size={20} />
+            <Target
+              color="#57aae7"
+              style={{ strokeWidth: 2.5 }}
+              size={20}
+            />
             <p>{info.views}</p>
           </BaseInfoItem>
-          <BaseInfoItem>
-            <Heart size={20} />
+          <BaseInfoItem
+            style={{ marginRight: rem(14) }}
+          >
+            <Heart
+              color="#e71a4d"
+              style={{ strokeWidth: 2.5 }}
+              size={20}
+            />
             <p>{info.likes}</p>
+          </BaseInfoItem>
+          <BaseInfoItem>
+            <MessageSquare
+              color="#c155f4"
+              style={{ strokeWidth: 2.5 }}
+              size={20}
+            />
+            <p>{info.commentCount}</p>
           </BaseInfoItem>
         </UserHeaderInfo>
       </UserHeader>

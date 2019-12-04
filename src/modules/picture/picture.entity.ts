@@ -92,6 +92,11 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public likes = 0;
 
+  /** 图片评论数量 */
+  @Type(() => Number)
+  @Expose()
+  public commentCount = 0;
+
   /** 图片的主色调 */
   @Column()
   @Expose()

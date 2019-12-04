@@ -44,6 +44,7 @@ fragment PicturePreviewFragment on Picture {
 fragment PictureDetailFragment on Picture {
     ...PictureFragment
     isPrivate
+    commentCount
     currentCollections {
       ...CollectionFragment
     }

@@ -1,23 +1,21 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { PubSub } from 'graphql-subscriptions';
 
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationCategory } from '@common/enum/notification';
 import { plainToClass, classToPlain } from 'class-transformer';
+import { pubSub } from '@server/common/pubSub';
 import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 import { CommentService } from '../comment/comment.service';
 
-export const pubSub = new PubSub();
-
 @Injectable()
 export class NotificationService {
-  public pubSub = new PubSub();
+  public pubSub = pubSub;
 
   constructor(
     private wss: EventsGateway,

@@ -10,9 +10,9 @@ import { CommentEntity } from '@lib/common/interfaces/comment';
 import { IPaginationList } from '@lib/common/interfaces/global';
 import { X } from '@lib/icon';
 import { AddComment } from '@lib/schemas/mutations';
-import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { customMedia } from '@lib/common/utils/mediaQuery';
+import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
 import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
@@ -80,35 +80,32 @@ export const CommentModal: React.FC<IProps> = ({
   onClose,
   comment,
 }) => {
-  const client = useApolloClient();
+  const { mutate } = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState<CommentEntity[]>();
   const [count, setCount] = useState(0);
+  const [getChildComments] = useWatchQuery<{childComments: IPaginationList<CommentEntity>}>(ChildComments);
   useEffect(() => {
     if (visible && comment) {
       (async () => {
         setLoading(true);
-        queryToMobxObservable(client.watchQuery<{childComments: IPaginationList<CommentEntity>}>({
-          query: ChildComments,
-          fetchPolicy: 'cache-and-network',
-          variables: {
-            id: comment.id,
-            query: {
-              page: 1,
-              pageSize: 50,
-            },
-          },
-        }), (data) => {
-          setList(data.childComments.data);
-          setCount(data.childComments.count);
+        getChildComments(({ childComments }) => {
+          setList(childComments.data);
+          setCount(childComments.count);
           setLoading(false);
+        }, {
+          id: comment.id,
+          query: {
+            page: 1,
+            pageSize: 50,
+          },
         });
       })();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, visible]);
   const addComment = useCallback(async (content: string, commentId?: string) => {
-    const { data } = await client.mutate<{addComment: CommentEntity}>({
+    const { data } = await mutate<{addComment: CommentEntity}>({
       mutation: AddComment,
       variables: {
         id,
@@ -123,7 +120,7 @@ export const CommentModal: React.FC<IProps> = ({
       return state;
     });
     setCount(state => state + 1);
-  }, [client, id]);
+  }, [id, mutate]);
   return (
     <ModalContent
       visible={visible}

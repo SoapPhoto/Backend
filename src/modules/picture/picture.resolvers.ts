@@ -13,6 +13,7 @@ import {
 import { PictureService } from './picture.service';
 import { CollectionService } from '../collection/collection.service';
 import { PictureEntity } from './picture.entity';
+import { CommentService } from '../comment/comment.service';
 
 @Resolver('Picture')
 @UseGuards(AuthGuard)
@@ -20,6 +21,8 @@ export class PictureResolver {
   constructor(
     @Inject(forwardRef(() => CollectionService))
     private readonly collectionService: CollectionService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
   ) {}
 
@@ -102,12 +105,11 @@ export class PictureResolver {
     return this.pictureService.delete(id, user);
   }
 
-  @ResolveProperty('relatedCollections')
-  public async relatedCollections(
+  @ResolveProperty('commentCount')
+  public async commentCount(
     @Parent() parent: PictureEntity,
-    @Args('limit') limit: number,
   ) {
-    return this.collectionService.pictureRelatedCollection(parent.id, limit);
+    return this.commentService.getPictureCommentCount(parent.id);
   }
 
   @ResolveProperty('currentCollections')

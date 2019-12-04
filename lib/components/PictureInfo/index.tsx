@@ -130,20 +130,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
   };
   return (
     <PictureBaseInfo>
-      <div>
-        <Popover
-          openDelay={100}
-          trigger="hover"
-          placement="top"
-          theme="dark"
-          content={<span>{dayjs(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
-        >
-          <BaseInfoItem>
-            <Clock size={20} />
-            <p>{dayjs(info.createTime).fromNow()}</p>
-          </BaseInfoItem>
-        </Popover>
-      </div>
+      <div />
       {/* //TODO */}
       <span style={{ display: 'none' }}>{params.type}</span>
       <BaseInfoHandleBox

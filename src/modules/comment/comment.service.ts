@@ -127,6 +127,13 @@ export class CommentService {
     const data = await this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .getCount();
-    return classToPlain(data);
+    return data;
+  }
+
+  public async getPictureCommentCount(pictureId: ID) {
+    const data = await this.commentRepository.createQueryBuilder('comment')
+      .where('comment.pictureId=:pictureId', { pictureId })
+      .getCount();
+    return data;
   }
 }

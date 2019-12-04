@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useApolloClient } from 'react-apollo';
 import { rgba, rem } from 'polished';
 import styled from 'styled-components';
@@ -157,7 +157,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     addCollection, getCollection, userCollection, collectionLoading,
   } = appStore;
   const { colors } = useTheme();
-  const client = useApolloClient();
+  const { mutate } = useApolloClient();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
@@ -185,8 +185,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     userCollection.forEach(collection => obj[collection.id] = false);
     setLoading(obj);
   }, [userCollection]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onCollected = async (collection: CollectionEntity, isCollected: boolean) => {
+  const onCollected = useCallback(async (collection: CollectionEntity, isCollected: boolean) => {
     if (loadingObj[collection.id]) {
       return;
     }
@@ -196,7 +195,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     }));
     try {
       if (isCollected) {
-        await client.mutate({
+        await mutate({
           mutation: RemovePictureCollection,
           variables: {
             id: collection.id,
@@ -213,7 +212,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
         current.delete(collection.id);
         setCurrent(current);
       } else {
-        const { data } = await client.mutate<{addPictureCollection: CollectionEntity}>({
+        const { data } = await mutate<{addPictureCollection: CollectionEntity}>({
           mutation: AddPictureCollection,
           variables: {
             id: collection.id,
@@ -232,7 +231,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
         [collection.id]: false,
       }));
     }
-  };
+  }, [current, currentCollections, getCollection, id, loadingObj, mutate, setPicture]);
   const onAddCollectionOk = (data: CollectionEntity) => {
     addCollection(data);
     setAddCollectionVisible(false);

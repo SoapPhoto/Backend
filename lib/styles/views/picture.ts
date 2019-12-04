@@ -10,11 +10,11 @@ import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 
 export const Wrapper = styled.div`
   ${WrapperBox(1000)};
-  margin: ${rem('32px')} auto 0;
+  margin: ${rem('24px')} auto 0;
 `;
 
 export const UserHeader = styled(Grid)`
-  margin: 0 auto ${rem('20px')};
+  margin: 0 auto ${rem('24px')};
   max-width: ${rem(customBreakpoints.medium)};
 `;
 
@@ -52,12 +52,12 @@ export const PictureBox = styled.div`
 
 export const Content = styled.div`
   max-width: ${rem(customBreakpoints.medium)};
-  margin: ${rem('48px')} auto;
+  margin: ${rem('34px')} auto;
 `;
 
 export const Title = styled.h2`
   font-size: ${_ => rem(theme('fontSizes[5]')(_))};
-  margin-bottom: ${rem('18px')};
+  margin-bottom: ${rem('16px')};
 `;
 
 export const GpsContent = styled.div`
@@ -90,7 +90,7 @@ export const BaseInfoHandleBox = styled(Grid)`
 
 export const Bio = styled.div`
   font-size: ${_ => rem(theme('fontSizes[2]')(_))};
-  margin-top: ${rem('18px')};
+  margin-top: ${rem('16px')};
 `;
 
 export const InfoButton = styled(Info)`
@@ -102,7 +102,7 @@ export const InfoButton = styled(Info)`
 
 export const TagBox = styled.div`
   display: flex;
-  margin-top: ${rem('18px')};
+  margin-top: ${rem('16px')};
   margin-bottom: ${rem(6)};
   & > a {
     &:last-child {
