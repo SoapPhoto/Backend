@@ -87,6 +87,9 @@ function oauthInfoName(type: OauthType, info: IOauthUserInfo) {
   if (type === OauthType.GOOGLE) {
     return (info as IGoogleUserInfo).email;
   }
+  if (type === OauthType.WEIBO) {
+    return (info as IGoogleUserInfo).name;
+  }
   return '';
 }
 
@@ -131,8 +134,11 @@ const Account = observer(() => {
       setConfirmVisible(false);
       getCredentials();
     } catch (err) {
-      console.error(err);
-      Toast.error('解绑失败');
+      if (err?.response?.data?.message === 'reserved login type') {
+        Toast.error('必须预留一种登录方式，请绑定其他账号或者设置密码后重试！');
+      } else {
+        Toast.error('解绑失败');
+      }
       getCredentials();
     } finally {
       setConfirmLoading(false);
@@ -155,7 +161,7 @@ const Account = observer(() => {
     oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
-    if (type === OauthType.GOOGLE || type === OauthType.WEIBO) {
+    if (type === OauthType.GOOGLE) {
       Toast.warning('Google 暂不可用!');
       return;
     }
@@ -195,7 +201,7 @@ const Account = observer(() => {
                         </Button>
                       </CrInfo>
                     ) : (
-                      <Button disabled={type === OauthType.GOOGLE || type === OauthType.WEIBO} shape="round" size="small" onClick={() => authorize(type)}>
+                      <Button disabled={type === OauthType.GOOGLE} shape="round" size="small" onClick={() => authorize(type)}>
                         绑定
                       </Button>
                     )

@@ -81,7 +81,7 @@ const User: React.FC = () => {
       </Head>
       <Formik<IValues>
         initialValues={{
-          name: userInfo!.fullName || '',
+          name: userInfo!.name || '',
           website: userInfo!.website || '',
           bio: userInfo!.bio || '',
         }}

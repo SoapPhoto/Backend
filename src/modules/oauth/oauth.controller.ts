@@ -1,5 +1,5 @@
 import {
-  BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters, Get, Param, Query,
+  BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters, Get, Param, Query, Body,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -9,7 +9,7 @@ import { LoggingService } from '@server/shared/logging/logging.service';
 import { OauthActionType } from '@common/enum/oauthState';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 import { OauthService } from './oauth.service';
-import { OauthQueryDto } from './dto/oauth.dto';
+import { OauthQueryDto, ActiveUserDto } from './dto/oauth.dto';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
@@ -66,6 +66,16 @@ export class OauthController {
       this.logger.error(message, undefined, `OAUTH-${type.toUpperCase()}`);
       res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
     }
+  }
+
+  @Post('/active')
+  public async active(
+    @Body() body: ActiveUserDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const { type } = await this.oauthService.activeUser(body);
+    return this.token(req, res, type);
   }
 
   private token = async (req: Request, res: Response, type?: OauthType) => {

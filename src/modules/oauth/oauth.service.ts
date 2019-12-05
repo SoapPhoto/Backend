@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 import {
-  Injectable, UnauthorizedException, BadGatewayException,
+  Injectable, UnauthorizedException, BadGatewayException, BadRequestException,
 } from '@nestjs/common';
 import axios from 'axios';
 
@@ -10,12 +10,17 @@ import SocksProxyAgent from 'socks-proxy-agent';
 import { RedisService } from 'nestjs-redis';
 import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { OauthType } from '@common/enum/router';
+import { SignupType } from '@common/enum/signupType';
+import { Status } from '@common/enum/userStatus';
 import { ClientService } from './client/client.service';
-import { IOauthUserInfo } from '../user/user.interface';
+import {
+  IOauthUserInfo, IGithubUserInfo, IWeiboUserInfo,
+} from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
-import { OauthQueryDto } from './dto/oauth.dto';
+import { OauthQueryDto, ActiveUserDto } from './dto/oauth.dto';
 import { CredentialsEntity } from '../credentials/credentials.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class OauthService {
@@ -145,10 +150,6 @@ export class OauthService {
     return null;
   }
 
-  // public async verifyUser(type: OauthType.GITHUB, id: ID, data: IGithubUserInfo): Promise<UserEntity | null>
-
-  // public async verifyUser(type: OauthType.GOOGLE, id: ID, data: IGoogleUserInfo): Promise<UserEntity | null>
-
   public async verifyUser(type: OauthType, id: ID, data: IOauthUserInfo): Promise<CredentialsEntity> {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
     if (cr) {
@@ -159,60 +160,54 @@ export class OauthService {
       type,
       info: data,
     });
+  }
 
-    // if (cr) {
-    //   newCr = cr;
-    // } else {
-    //   newCr = await this.credentialsService.create({
-    //     id: `${type}_${id}`,
-    //     type,
-    //     info: data,
-    //   });
-    // }
-    // let createData: Partial<UserEntity> = {};
-    // switch (type) {
-    //   case OauthType.GOOGLE:
-    //     // eslint-disable-next-line no-case-declarations
-    //     const googleData = data as IGoogleUserInfo;
-    //     createData = {
-    //       username: `${googleData.family_name}-${googleData.given_name}`,
-    //       name: data.name,
-    //       status: Status.VERIFIED,
-    //     };
-    //     break;
-    //   case OauthType.GITHUB:
-    //     // eslint-disable-next-line no-case-declarations
-    //     const githubData = data as IGithubUserInfo;
-    //     createData = {
-    //       username: githubData.login,
-    //       avatar: githubData.avatar_url,
-    //       name: githubData.name,
-    //       status: Status.VERIFIED,
-    //       bio: githubData.bio,
-    //       website: githubData.blog,
-    //       signupType: (type as any) as SignupType,
-    //     };
-    //     break;
-    //   // case OauthType.WEIBO:
-    //   //   // eslint-disable-next-line no-case-declarations
-    //   //   const weiboData = data as IWeiboUserInfo;
-    //   //   createData = {
-    //   //     username: weiboData.login,
-    //   //     avatar: weiboData.avatar_url,
-    //   //     name: weiboData.name,
-    //   //     status: Status.VERIFIED,
-    //   //     bio: weiboData.bio,
-    //   //     website: weiboData.blog,
-    //   //     signupType: (type as any) as SignupType,
-    //   //   };
-    //   //   break;
-    //   default:
-    //     return null;
-    // }
-    // return this.userService.createOauthUser({
-    //   ...createData,
-    //   credentials: [newCr],
-    //   signupType: (type as any) as SignupType,
-    // });
+  public async activeUser({ code, ...userInfo }: ActiveUserDto) {
+    const redisClient = this.redisService.getClient();
+    const infoStr = await redisClient.get(`oauth.active.${code}`);
+    if (infoStr) {
+      const { type, cr } = JSON.parse(infoStr);
+      let createData: Maybe<Partial<UserEntity>> = null;
+      if (type === OauthType.GOOGLE) {
+        createData = {
+          ...userInfo,
+        };
+      } else if (type === OauthType.GITHUB) {
+        const githubData = cr.info as IGithubUserInfo;
+        createData = {
+          avatar: githubData.avatar_url,
+          bio: githubData.bio,
+          website: githubData.blog,
+          ...userInfo,
+        };
+      } else if (type === OauthType.WEIBO) {
+        const weiboData = cr.info as IWeiboUserInfo;
+        createData = {
+          avatar: weiboData.avatar_hd,
+          name: weiboData.name,
+          bio: weiboData.description,
+          website: weiboData.url,
+          ...userInfo,
+        };
+      }
+      if (!createData) throw new BadRequestException('type_err');
+      const user = await this.userService.createOauthUser({
+        ...createData,
+        status: Status.VERIFIED,
+        credentials: [cr],
+        signupType: type as SignupType,
+      });
+      await redisClient.del(`oauth.active.${code}`);
+      await redisClient.set(`oauth.code.${code}`, JSON.stringify({
+        type,
+        user,
+        client: await this.clientService.getBaseClient(),
+      }), 'EX', 2000);
+      return {
+        type,
+        user,
+      };
+    }
+    throw new BadRequestException('no_info');
   }
 }

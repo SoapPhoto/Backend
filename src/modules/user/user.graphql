@@ -6,6 +6,7 @@ enum UserSignupType {
   EMAIL
   GITHUB
   GOOGLE
+  WEIBO
 }
 enum UserStatusType {
   UNVERIFIED

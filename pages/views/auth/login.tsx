@@ -77,6 +77,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
   const getInfo = useCallback(async (data: IOauthSuccessData) => {
     try {
       if (data.action === OauthActionType.active) {
+        window.location = `/auth/complete?code=${data.code}&redirectUrl=${query.redirectUrl ?? '/'}` as any;
         replaceRoute(`/auth/complete?code=${data.code}`);
       } else {
         await codeLogin(data.code!, data.type!);
@@ -90,7 +91,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
     } finally {
       setConfirmLoading(false);
     }
-  }, [codeLogin, push, t]);
+  }, [codeLogin, push, query.redirectUrl, replaceRoute, t]);
   const messageCb = useCallback((e: MessageEvent) => {
     oauthSuccess(e, getInfo, () => window.removeEventListener('message', messageCb));
   }, [getInfo]);

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { rem } from 'polished';
 import styled from 'styled-components';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 
 import { Header, Title } from '@lib/styles/views/auth';
 import { FieldInput } from '@lib/components/Formik';
@@ -9,6 +9,10 @@ import { Button } from '@lib/components/Button';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { box } from '@lib/common/utils/themes/common';
 import { validator, isUserName } from '@common/validator';
+import { useRouter } from 'next/router';
+import Toast from '@lib/components/Toast';
+import { useTranslation } from '@lib/i18n/useTranslation';
+import { useAccountStore } from '@lib/stores/hooks';
 
 interface IValues {
   username: string;
@@ -41,8 +45,34 @@ const Content = styled.div`
 `;
 
 const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
+  const { activeUser } = useAccountStore();
+  const { query } = useRouter();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const handleOk = () => {};
+  const push = useCallback(() => {
+    if (query.redirectUrl) {
+      window.location = query.redirectUrl as any;
+    } else {
+      window.location = '/' as any;
+    }
+  }, [query.redirectUrl]);
+  const handleOk = useCallback((value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
+    (async () => {
+      setConfirmLoading(true);
+      try {
+        await activeUser({
+          ...value,
+          code: query.code as string,
+        });
+        setTimeout(async () => {
+          push();
+        }, 400);
+        Toast.success('注册成功！正在跳转首页');
+      } catch (err) {
+        console.error(err);
+        setSubmitting(false);
+      }
+    })();
+  }, [activeUser, push, query.code]);
   const validate = useCallback((values: IValues) => {
     if (validator.isEmpty(values.username)) {
       return {
@@ -92,7 +122,7 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                    完成注册
+                  完成注册
                 </Button>
               </form>
             )}
