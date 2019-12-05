@@ -6,7 +6,7 @@ import { QueryFailedError } from 'typeorm';
 
 import { Logger } from '@server/shared/logging/logging.service';
 import { ValidationError } from 'class-validator';
-import { validator } from '../utils/validator';
+import { validator } from '@common/validator';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {

@@ -5,4 +5,10 @@ export enum OauthStateType {
   authorize = 'authorize'
 }
 
+export enum OauthActionType {
+  login = 'login',
+  authorize = 'authorize',
+  active = 'active,'
+}
+
 export const OauthStateTypeValues = $enum(OauthStateType).map(key => OauthStateType[key]);

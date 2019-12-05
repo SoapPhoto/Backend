@@ -6,7 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { Roles } from '@server/common/decorator/roles.decorator';
-import { validator } from '@server/common/validator';
+import { validator } from '@common/validator';
 import { NotificationService } from './notification.service';
 import { Role } from '../user/enum/role.enum';
 import { NotificationEntity } from './notification.entity';

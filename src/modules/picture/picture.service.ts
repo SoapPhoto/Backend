@@ -13,7 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { listRequest } from '@server/common/utils/request';
-import { validator } from '@server/common/utils/validator';
+import { validator } from '@common/validator';
 import { GetTagPictureListDto } from '@server/modules/tag/dto/tag.dto';
 import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';

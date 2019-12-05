@@ -8,20 +8,20 @@ import axios from 'axios';
 
 import SocksProxyAgent from 'socks-proxy-agent';
 import { RedisService } from 'nestjs-redis';
-import { OauthStateType } from '@common/enum/oauthState';
+import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { OauthType } from '@common/enum/router';
-import { SignupType } from '@common/enum/signupType';
-import { Status } from '@common/enum/userStatus';
 import { ClientService } from './client/client.service';
-import { IGithubUserInfo, IGoogleUserInfo } from '../user/user.interface';
+import { IOauthUserInfo } from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
 import { OauthQueryDto } from './dto/oauth.dto';
-import { UserEntity } from '../user/user.entity';
+import { CredentialsEntity } from '../credentials/credentials.entity';
 
 @Injectable()
 export class OauthService {
   private github_authorize = 'https://github.com/login/oauth/access_token'
+
+  private weibo_authorize = 'https://api.weibo.com/oauth2/access_token'
 
   private google_authorize = 'https://www.googleapis.com/oauth2/v4/token'
 
@@ -44,17 +44,15 @@ export class OauthService {
       },
     });
     if (info.access_token) {
-      const { data } = await axios.get<IGithubUserInfo>('https://api.github.com/user', {
+      const { data } = await axios.get('https://api.github.com/user', {
         headers: {
           accept: 'application/json',
           Authorization: `token ${info.access_token}`,
         },
       });
-      await this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
-    } else {
-      throw new UnauthorizedException('No GITHUB Oauth error');
+      return this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
     }
-    return code;
+    return null;
   }
 
   public async google({ code, state }: OauthQueryDto) {
@@ -79,26 +77,61 @@ export class OauthService {
           Authorization: `Bearer ${info.access_token}`,
         },
       });
-      await this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
+      return this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
     }
-    return code;
+    return null;
   }
 
-  // public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType.GOOGLE, id: ID, data: IGoogleUserInfo): Promise<void>
+  public async weibo({ code, state }: OauthQueryDto) {
+    const { data: info } = await axios.post(this.weibo_authorize, {}, {
+      params: {
+        client_id: process.env.OAUTH_WEIBO_CLIENT_ID,
+        client_secret: process.env.OAUTH_WEIBO_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        redirect_uri: 'https://soapphoto.com/oauth/weibo/redirect',
+        code,
+      },
+      headers: {
+        accept: 'application/json',
+      },
+    });
+    if (info?.access_token) {
+      const { data } = await axios.get('https://api.weibo.com/2/users/show.json', {
+        params: {
+          access_token: info.access_token,
+          uid: info.uid,
+        },
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      return this.saveOauthInfo(code, state, OauthType.WEIBO, data.id, data);
+    }
+    return null;
+  }
 
-  // public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType.GITHUB, id: ID, data: IGithubUserInfo): Promise<void>
-
-  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: ID, data: IGoogleUserInfo | IGithubUserInfo): Promise<void> {
+  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: ID, data: IOauthUserInfo): Promise<{code: string; action: OauthActionType} | null> {
     const redisClient = this.redisService.getClient();
     if (state === OauthStateType.login) {
-      const user = await this.verifyUser(type, id, data);
-      if (!user) throw new UnauthorizedException('No Credential Info');
-      await redisClient.set(`oauth.code.${code}`, JSON.stringify({
+      // 这边验证oauth账户，有存在的话就返回，不存在就创建并返回创建的数据
+      const cr = await this.verifyUser(type, id, data);
+      if (!cr) throw new UnauthorizedException('No Credential Info');
+      if (cr.user) {
+        await redisClient.set(`oauth.code.${code}`, JSON.stringify({
+          type,
+          client: await this.clientService.getBaseClient(),
+          user: cr.user,
+        }), 'EX', 2000);
+        return { code, action: OauthActionType.login };
+      }
+      await redisClient.set(`oauth.active.${code}`, JSON.stringify({
         type,
         client: await this.clientService.getBaseClient(),
-        user,
+        cr,
       }), 'EX', 2000);
-    } else if (state === OauthStateType.authorize) {
+      return { code, action: OauthActionType.active };
+    }
+    if (state === OauthStateType.authorize) {
       const cr = await this.credentialsService.getInfo(`${type}_${id}`);
       if (cr) {
         throw new BadGatewayException('authorized user');
@@ -106,60 +139,80 @@ export class OauthService {
       await redisClient.set(`oauth.authorize.${code}`, JSON.stringify({
         type,
         data,
-      }), 'EX', 2000);
+      }), 'EX', 5000);
+      return { code, action: OauthActionType.authorize };
     }
+    return null;
   }
 
   // public async verifyUser(type: OauthType.GITHUB, id: ID, data: IGithubUserInfo): Promise<UserEntity | null>
 
   // public async verifyUser(type: OauthType.GOOGLE, id: ID, data: IGoogleUserInfo): Promise<UserEntity | null>
 
-  public async verifyUser(type: OauthType, id: ID, data: IGithubUserInfo | IGoogleUserInfo): Promise<UserEntity | null> {
+  public async verifyUser(type: OauthType, id: ID, data: IOauthUserInfo): Promise<CredentialsEntity> {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
-    if (cr && cr.isActive) {
-      return cr.user;
-    }
-    let newCr;
     if (cr) {
-      newCr = cr;
-    } else {
-      newCr = await this.credentialsService.create({
-        id: `${type}_${id}`,
-        type,
-        info: data,
-      });
+      return cr;
     }
-    let createData: Partial<UserEntity> = {};
-    switch (type) {
-      case OauthType.GOOGLE:
-        // eslint-disable-next-line no-case-declarations
-        const googleData = data as IGoogleUserInfo;
-        createData = {
-          username: `${googleData.family_name}-${googleData.given_name}`,
-          name: data.name,
-          status: Status.VERIFIED,
-        };
-        break;
-      case OauthType.GITHUB:
-        // eslint-disable-next-line no-case-declarations
-        const githubData = data as IGithubUserInfo;
-        createData = {
-          username: githubData.login,
-          avatar: githubData.avatar_url,
-          name: githubData.name,
-          status: Status.VERIFIED,
-          bio: githubData.bio,
-          website: githubData.blog,
-          signupType: (type as any) as SignupType,
-        };
-        break;
-      default:
-        return null;
-    }
-    return this.userService.createOauthUser({
-      ...createData,
-      credentials: [newCr],
-      signupType: (type as any) as SignupType,
+    return this.credentialsService.create({
+      id: `${type}_${id}`,
+      type,
+      info: data,
     });
+
+    // if (cr) {
+    //   newCr = cr;
+    // } else {
+    //   newCr = await this.credentialsService.create({
+    //     id: `${type}_${id}`,
+    //     type,
+    //     info: data,
+    //   });
+    // }
+    // let createData: Partial<UserEntity> = {};
+    // switch (type) {
+    //   case OauthType.GOOGLE:
+    //     // eslint-disable-next-line no-case-declarations
+    //     const googleData = data as IGoogleUserInfo;
+    //     createData = {
+    //       username: `${googleData.family_name}-${googleData.given_name}`,
+    //       name: data.name,
+    //       status: Status.VERIFIED,
+    //     };
+    //     break;
+    //   case OauthType.GITHUB:
+    //     // eslint-disable-next-line no-case-declarations
+    //     const githubData = data as IGithubUserInfo;
+    //     createData = {
+    //       username: githubData.login,
+    //       avatar: githubData.avatar_url,
+    //       name: githubData.name,
+    //       status: Status.VERIFIED,
+    //       bio: githubData.bio,
+    //       website: githubData.blog,
+    //       signupType: (type as any) as SignupType,
+    //     };
+    //     break;
+    //   // case OauthType.WEIBO:
+    //   //   // eslint-disable-next-line no-case-declarations
+    //   //   const weiboData = data as IWeiboUserInfo;
+    //   //   createData = {
+    //   //     username: weiboData.login,
+    //   //     avatar: weiboData.avatar_url,
+    //   //     name: weiboData.name,
+    //   //     status: Status.VERIFIED,
+    //   //     bio: weiboData.bio,
+    //   //     website: weiboData.blog,
+    //   //     signupType: (type as any) as SignupType,
+    //   //   };
+    //   //   break;
+    //   default:
+    //     return null;
+    // }
+    // return this.userService.createOauthUser({
+    //   ...createData,
+    //   credentials: [newCr],
+    //   signupType: (type as any) as SignupType,
+    // });
   }
 }

@@ -1,5 +1,8 @@
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { css } from 'styled-components';
+import { rem } from 'polished';
+import { theme } from '@lib/common/utils/themes';
 import {
   ErrorBox, Label, LabelBox, StyleInput,
 } from './styles';
@@ -30,6 +33,15 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   inputRef?: React.Ref<HTMLInputElement>;
 
   type?: 'password';
+
+  /**
+   * 是否是必填字段
+   *
+   * @type {boolean}
+   * @memberof IInputProps
+   */
+  required?: boolean;
+
   /**
    * 回车执行的事件
    *
@@ -50,6 +62,7 @@ export const Input: Component = ({
   error,
   type = 'input',
   className,
+  required = false,
   ...restProps
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,8 +76,16 @@ export const Input: Component = ({
   return (
     <LabelBox style={style} className={className}>
       {
-        label
-          && <Label>{label}</Label>
+        label && (
+          <Label>
+            {
+              required && (
+                <span css={css`margin-right: ${rem(4)};color: ${theme('colors.danger')}`}>*</span>
+              )
+            }
+            <span>{label}</span>
+          </Label>
+        )
       }
       <StyleInput
         ref={inputRef}

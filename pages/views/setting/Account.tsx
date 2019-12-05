@@ -20,7 +20,7 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useComputed } from 'mobx-react-lite';
 import { observer } from 'mobx-react';
 import { OauthType, OauthTypeValues } from '@common/enum/router';
-import { IGoogleUserInfo, IGithubUserInfo } from '@lib/common/interfaces/user';
+import { IGoogleUserInfo, IGithubUserInfo, IOauthUserInfo } from '@lib/common/interfaces/user';
 import { SignupType } from '@common/enum/signupType';
 
 interface IInfo {
@@ -75,9 +75,12 @@ const CredentialInfo: Record<OauthType, IInfo> = {
   [OauthType.GOOGLE]: {
     title: 'Google',
   },
+  [OauthType.WEIBO]: {
+    title: '微博',
+  },
 };
 
-function oauthInfoName(type: OauthType, info: IGithubUserInfo | IGoogleUserInfo) {
+function oauthInfoName(type: OauthType, info: IOauthUserInfo) {
   if (type === OauthType.GITHUB) {
     return (info as IGithubUserInfo).login;
   }
@@ -152,12 +155,12 @@ const Account = observer(() => {
     oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
-    if (type !== OauthType.GOOGLE) {
-      oauthOpen(getOauthUrl(type, OauthStateType.authorize));
-      window.addEventListener('message', messageCb);
-    } else {
+    if (type === OauthType.GOOGLE || type === OauthType.WEIBO) {
       Toast.warning('Google 暂不可用!');
+      return;
     }
+    oauthOpen(getOauthUrl(type, OauthStateType.authorize));
+    window.addEventListener('message', messageCb);
   }, [messageCb]);
   return (
     <div>
@@ -192,7 +195,7 @@ const Account = observer(() => {
                         </Button>
                       </CrInfo>
                     ) : (
-                      <Button disabled={type === OauthType.GOOGLE} shape="round" size="small" onClick={() => authorize(type)}>
+                      <Button disabled={type === OauthType.GOOGLE || type === OauthType.WEIBO} shape="round" size="small" onClick={() => authorize(type)}>
                         绑定
                       </Button>
                     )

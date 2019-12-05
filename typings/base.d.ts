@@ -89,5 +89,8 @@ declare namespace NodeJS {
 
     OAUTH_GOOGLE_CLIENT_ID: string;
     OAUTH_GOOGLE_CLIENT_SECRET: string;
+
+    OAUTH_WEIBO_CLIENT_ID: string;
+    OAUTH_WEIBO_CLIENT_SECRET: string;
   }
 }

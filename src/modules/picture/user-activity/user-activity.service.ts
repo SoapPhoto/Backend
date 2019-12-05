@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { validator } from '@server/common/utils/validator';
+import { validator } from '@common/validator';
 import { NotificationService } from '@server/modules/notification/notification.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 

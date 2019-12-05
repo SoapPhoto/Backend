@@ -19,7 +19,7 @@ import { UpdateProfile } from '@lib/schemas/mutations';
 import { UploadType } from '@common/enum/upload';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { FieldInput } from '@lib/components/Formik';
-import { validator } from '@lib/common/utils/validator';
+import { validator } from '@common/validator';
 
 interface IValues {
   name: string;
@@ -89,10 +89,10 @@ const User: React.FC = () => {
         validate={(value) => {
           if (validator.isNotEmpty(value.website) && !validator.isURL(value.website)) {
             return {
-              website: '请输入正确的网址!'
-            }
+              website: '请输入正确的网址!',
+            };
           }
-          return {}
+          return {};
         }}
       >
         {({

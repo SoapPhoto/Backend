@@ -19,15 +19,16 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useRouter } from '@lib/router';
 import { withError } from '@lib/components/withError';
 import { IBaseScreenProps } from '@lib/common/interfaces/global';
-import { GitHub } from '@lib/icon';
+import { GitHubLogo } from '@lib/icon';
 import {
   oauthOpen, getOauthUrl, oauthSuccess, IOauthSuccessData,
 } from '@lib/common/utils/oauth';
 import { OauthType } from '@common/enum/router';
-import { OauthStateType } from '@common/enum/oauthState';
+import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { EmojiText, SEO } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import { A } from '@lib/components/A';
+import { Weibo } from '@lib/icon/Weibo';
 
 interface IValues {
   username: string;
@@ -43,7 +44,7 @@ const Handle = styled.div`
 `;
 
 const Login: React.FC<IBaseScreenProps> = () => {
-  const { query } = useRouter();
+  const { query, replaceRoute } = useRouter();
   const { login, codeLogin } = useAccountStore();
   const { t } = useTranslation();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -75,11 +76,15 @@ const Login: React.FC<IBaseScreenProps> = () => {
   };
   const getInfo = useCallback(async (data: IOauthSuccessData) => {
     try {
-      await codeLogin(data.code!, data.type!);
-      setTimeout(() => {
-        push();
-      }, 400);
-      Toast.success(t('login_successful'));
+      if (data.action === OauthActionType.active) {
+        replaceRoute(`/auth/complete?code=${data.code}`);
+      } else {
+        await codeLogin(data.code!, data.type!);
+        setTimeout(() => {
+          push();
+        }, 400);
+        Toast.success(t('login_successful'));
+      }
     } catch (error) {
       Toast.error(t(error.message));
     } finally {
@@ -157,16 +162,17 @@ const Login: React.FC<IBaseScreenProps> = () => {
                     style={{ backgroundColor: '#24292e' }}
                     onClick={() => oauth(OauthType.GITHUB)}
                   >
-                    <GitHub color="#fff" size={18} />
+                    <GitHubLogo color="#fff" size={18} />
                   </OauthIcon>
                 </span>
               </Popover>
-              {/* <OauthIcon
+              <OauthIcon
                 type="button"
-                onClick={() => oauth(OauthType.GOOGLE)}
+                style={{ backgroundColor: '#ffda5d' }}
+                onClick={() => oauth(OauthType.WEIBO)}
               >
-                <GoogleFill size={18} />
-              </OauthIcon> */}
+                <Weibo size={18} />
+              </OauthIcon>
             </Handle>
           </form>
         )}

@@ -5,6 +5,8 @@ import { Request, Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { OauthTypeValues, OauthType } from '@common/enum/router';
+import { LoggingService } from '@server/shared/logging/logging.service';
+import { OauthActionType } from '@common/enum/oauthState';
 import { OauthServerService } from './oauth-server/oauth-server.service';
 import { OauthService } from './oauth.service';
 import { OauthQueryDto } from './dto/oauth.dto';
@@ -16,6 +18,7 @@ const OAuth2Server = require('oauth2-server');
 @UseFilters(new AllExceptionFilter())
 export class OauthController {
   constructor(
+    private readonly logger: LoggingService,
     private readonly oauthServerService: OauthServerService,
     private readonly oauthService: OauthService,
   ) {}
@@ -44,20 +47,24 @@ export class OauthController {
     @Query() query: OauthQueryDto,
     @Res() res: Response,
   ) {
-    let code = '';
+    let data: { code: string; action: OauthActionType } | null = null;
     try {
       if (type.toUpperCase() === OauthType.GITHUB) {
-        code = await this.oauthService.github(query);
+        data = await this.oauthService.github(query);
       } else if (type.toUpperCase() === OauthType.GOOGLE) {
-        code = await this.oauthService.google(query);
+        data = await this.oauthService.google(query);
+      } else if (type.toUpperCase() === OauthType.WEIBO) {
+        data = await this.oauthService.weibo(query);
       }
-      if (code) {
-        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?code=${code}&type=${type.toUpperCase()}`);
+      if (data) {
+        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?code=${data.code}&type=${type.toUpperCase()}&action=${data.action}`);
       } else {
         res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err) {
-      res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${err.message.message}`);
+      const message = err?.response?.data?.error ?? err.message.message;
+      this.logger.error(message, undefined, `OAUTH-${type.toUpperCase()}`);
+      res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
     }
   }
 

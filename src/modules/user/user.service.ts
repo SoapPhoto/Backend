@@ -11,7 +11,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
 import { omit } from 'lodash';
 
-import { validator } from '@server/common/utils/validator';
+import { validator } from '@common/validator';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';

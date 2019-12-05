@@ -2,13 +2,14 @@
 import qs from 'querystring';
 
 import { OauthType } from '@common/enum/router';
-import { OauthStateType } from '@common/enum/oauthState';
+import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { isFunction } from 'lodash';
 
 export interface IOauthSuccessData {
   code?: string;
   message?: string;
   type: OauthType;
+  action?: OauthActionType;
 }
 
 let openWindow: Window | null = null;
@@ -33,6 +34,15 @@ export const getOauthUrl = (type: OauthType, state: OauthStateType) => {
       client_id: clientId,
       response_type: 'code',
       scope: 'profile email',
+      redirect_uri: cb,
+    };
+  } else if (type === OauthType.WEIBO) {
+    const clientId = process.env.OAUTH_WEIBO_CLIENT_ID;
+    url = 'https://api.weibo.com/oauth2/authorize';
+    query = {
+      state,
+      client_id: clientId,
+      response_type: 'code',
       redirect_uri: cb,
     };
   }
