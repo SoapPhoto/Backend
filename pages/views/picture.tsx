@@ -103,6 +103,13 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           type="text/javascript"
           src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
         />
+        <script
+          type="text/javascript"
+          src="https://tjs.sjs.sinajs.cn/open/api/js/wb.js"
+        />
+        <meta property="weibo:image:full_image" content={getPictureUrl(info.key, 'full')} />
+        <meta name="weibo:image:create_at" content={info.createTime.toString()} />
+        <meta name="weibo:image:update_at" content={info.updateTime.toString()} />
       </Head>
       <SEO
         title={title}
@@ -110,6 +117,17 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           image: `http:${getPictureUrl(info.key, 'itemprop')}`,
         }}
         description={`${bio ? `${bio}-` : ''}${user.name}所拍摄的照片。`}
+        openGraph={{
+          type: 'image',
+          url: `${process.env.URL}/picture/${info.id}`,
+          title,
+          description: `${bio ? `${bio}-` : ''}${user.name}所拍摄的照片。`,
+          images: [
+            {
+              url: `http:${getPictureUrl(info.key, 'small')}`,
+            },
+          ],
+        }}
       />
       <UserHeader columns={2}>
         <UserInfo width={1}>
@@ -218,7 +236,6 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             </TagBox>
           )
         }
-        {/* <MarkdownContent /> */}
         {
           info.bio && (
             <Bio>

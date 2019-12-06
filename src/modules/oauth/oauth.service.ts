@@ -12,6 +12,7 @@ import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { OauthType } from '@common/enum/router';
 import { SignupType } from '@common/enum/signupType';
 import { Status } from '@common/enum/userStatus';
+import { ValidationException } from '@server/common/exception/validation.exception';
 import { ClientService } from './client/client.service';
 import {
   IOauthUserInfo, IGithubUserInfo, IWeiboUserInfo,
@@ -191,6 +192,10 @@ export class OauthService {
         };
       }
       if (!createData) throw new BadRequestException('type_err');
+      // 检查username是否被注册
+      if (await this.userService.getBaseUser(createData.username!)) {
+        throw new ValidationException('username', 'username already exists');
+      }
       const user = await this.userService.createOauthUser({
         ...createData,
         status: Status.VERIFIED,

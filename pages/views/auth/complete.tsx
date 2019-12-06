@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { Formik, FormikHelpers } from 'formik';
 
-import { Header, Title } from '@lib/styles/views/auth';
+import { SEO } from '@lib/components';
+import { Header, Title, SubTitle } from '@lib/styles/views/auth';
 import { FieldInput } from '@lib/components/Formik';
 import { Button } from '@lib/components/Button';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
@@ -11,8 +12,10 @@ import { box } from '@lib/common/utils/themes/common';
 import { validator, isUserName } from '@common/validator';
 import { useRouter } from 'next/router';
 import Toast from '@lib/components/Toast';
-import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore } from '@lib/stores/hooks';
+import { A } from '@lib/components/A';
+import { ArrowLeft, StrutAlign } from '@lib/icon';
+import { getTitle } from '@lib/common/utils';
 
 interface IValues {
   username: string;
@@ -47,7 +50,11 @@ const Content = styled.div`
 const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
   const { activeUser } = useAccountStore();
   const { query } = useRouter();
+  const [isDisabled, setDisabled] = useState(true);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  useEffect(() => {
+    setDisabled(false);
+  }, []);
   const push = useCallback(() => {
     if (query.redirectUrl) {
       window.location = query.redirectUrl as any;
@@ -57,6 +64,7 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
   }, [query.redirectUrl]);
   const handleOk = useCallback((value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     (async () => {
+      setSubmitting(true);
       setConfirmLoading(true);
       try {
         await activeUser({
@@ -68,7 +76,10 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
         }, 400);
         Toast.success('注册成功！正在跳转首页');
       } catch (err) {
-        console.error(err);
+        if (err.message === 'no_info') {
+          Toast.error('验证信息已过期，请返回登录页面重新登录');
+        }
+        setConfirmLoading(false);
         setSubmitting(false);
       }
     })();
@@ -88,10 +99,24 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
   }, []);
   return (
     <Wrapper>
+      <SEO
+        title={getTitle('完善账号信息')}
+        description="登录 Soap 分享创造你的生活给你的小伙伴。"
+      />
       <Content>
         <Box>
           <Header>
             <Title>完善账号信息</Title>
+            <SubTitle>
+              <A route="/login">
+                <StrutAlign>
+                  <ArrowLeft
+                    size={14}
+                  />
+                </StrutAlign>
+                返回登录界面
+              </A>
+            </SubTitle>
           </Header>
           <Formik<IValues>
             initialValues={{
@@ -120,7 +145,7 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
                   loading={confirmLoading}
                   style={{ marginTop: rem(42), width: '100%' }}
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isDisabled || isSubmitting}
                 >
                   完成注册
                 </Button>

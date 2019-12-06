@@ -1,16 +1,14 @@
-import dayjs from 'dayjs';
 import React, { useCallback, useState, useEffect } from 'react';
 import { pick } from 'lodash';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
-import { Popover } from '@lib/components/Popover';
 import {
-  Clock, Bookmark, Info, Settings,
+  Bookmark, Info, Settings,
 } from '@lib/icon';
 import {
-  BaseInfoHandleBox, BaseInfoItem, PictureBaseInfo,
+  BaseInfoHandleBox, PictureBaseInfo,
 } from '@lib/styles/views/picture';
 import { AddPictureCollectionModal } from '@lib/containers/Collection/AddPictureCollectionModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
@@ -130,7 +128,13 @@ export const PictureInfo: React.FC<IProps> = observer(({
   };
   return (
     <PictureBaseInfo>
-      <div />
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `
+            <wb:like appkey="3ssHeA" type="simple"></wb:like>
+          `,
+        }}
+      />
       {/* //TODO */}
       <span style={{ display: 'none' }}>{params.type}</span>
       <BaseInfoHandleBox

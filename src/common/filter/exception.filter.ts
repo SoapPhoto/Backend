@@ -50,8 +50,8 @@ export class AllExceptionFilter implements ExceptionFilter {
       } else if (exRes.message) {
         if (Array.isArray(exRes.message)) {
           doneRes({
-            statusCode: exRes.statusCode,
-            error: exRes.error,
+            statusCode: exRes.statusCode ?? status,
+            error: 'Validation Error',
             message: this.formatValidatorClass(exRes.message),
           }, exception.stack);
         } else {
@@ -75,6 +75,8 @@ export class AllExceptionFilter implements ExceptionFilter {
         const message = Object.values(msg.constraints);
         const err = { param: msg.property, message };
         formatedErrors.push(err);
+      } else {
+        formatedErrors.push(msg);
       }
     }
     return formatedErrors;
