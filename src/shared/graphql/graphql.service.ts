@@ -4,7 +4,7 @@ import { GraphQLError } from 'graphql';
 import * as OAuth2Server from 'oauth2-server';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
-import { validator } from '@server/common/validator';
+import { validator } from '@common/validator';
 import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { Logger } from '../logging/logging.service';

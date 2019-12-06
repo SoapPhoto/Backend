@@ -8,3 +8,5 @@ export type CreateUserDto = import('@server/modules/user/dto/user.dto').CreateUs
 export type IGithubUserInfo = import('@server/modules/user/user.interface.ts').IGithubUserInfo;
 
 export type IGoogleUserInfo = import('@server/modules/user/user.interface.ts').IGoogleUserInfo;
+
+export type IOauthUserInfo = import('@server/modules/user/user.interface.ts').IOauthUserInfo;

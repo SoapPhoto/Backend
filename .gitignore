@@ -64,3 +64,5 @@ static/test
 yarn.lock
 
 package-lock.json
+
+dump.rdb

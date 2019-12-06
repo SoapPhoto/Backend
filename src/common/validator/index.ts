@@ -1,6 +1,5 @@
-import { registerDecorator, ValidationArguments, Validator } from 'class-validator';
-
-export const validator = new Validator();
+import { registerDecorator, ValidationArguments } from 'class-validator';
+import { isUserName } from '@common/validator';
 
 // tslint:disable-next-line: function-name
 export function IsUserName() {
@@ -12,7 +11,7 @@ export function IsUserName() {
       options: {},
       validator: {
         validate(value: any, _: ValidationArguments) {
-          return validator.isAlphanumeric(value) && !validator.isNumberString(value);
+          return isUserName(value);
         },
         defaultMessage(_: ValidationArguments) {
           return 'Text ($value) is no username!';

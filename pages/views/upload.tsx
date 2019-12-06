@@ -38,7 +38,7 @@ import { theme } from '@lib/common/utils/themes';
 import { rem } from 'polished';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 import { I18nNamespace } from '@lib/i18n/Namespace';
-import { validator } from '@lib/common/utils/validator';
+import { validator } from '@common/validator';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {

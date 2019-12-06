@@ -20,7 +20,7 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { useComputed } from 'mobx-react-lite';
 import { observer } from 'mobx-react';
 import { OauthType, OauthTypeValues } from '@common/enum/router';
-import { IGoogleUserInfo, IGithubUserInfo } from '@lib/common/interfaces/user';
+import { IGoogleUserInfo, IGithubUserInfo, IOauthUserInfo } from '@lib/common/interfaces/user';
 import { SignupType } from '@common/enum/signupType';
 
 interface IInfo {
@@ -75,14 +75,20 @@ const CredentialInfo: Record<OauthType, IInfo> = {
   [OauthType.GOOGLE]: {
     title: 'Google',
   },
+  [OauthType.WEIBO]: {
+    title: '微博',
+  },
 };
 
-function oauthInfoName(type: OauthType, info: IGithubUserInfo | IGoogleUserInfo) {
+function oauthInfoName(type: OauthType, info: IOauthUserInfo) {
   if (type === OauthType.GITHUB) {
     return (info as IGithubUserInfo).login;
   }
   if (type === OauthType.GOOGLE) {
     return (info as IGoogleUserInfo).email;
+  }
+  if (type === OauthType.WEIBO) {
+    return (info as IGoogleUserInfo).name;
   }
   return '';
 }
@@ -128,8 +134,11 @@ const Account = observer(() => {
       setConfirmVisible(false);
       getCredentials();
     } catch (err) {
-      console.error(err);
-      Toast.error('解绑失败');
+      if (err?.response?.data?.message === 'reserved login type') {
+        Toast.error('必须预留一种登录方式，请绑定其他账号或者设置密码后重试！');
+      } else {
+        Toast.error('解绑失败');
+      }
       getCredentials();
     } finally {
       setConfirmLoading(false);
@@ -152,12 +161,12 @@ const Account = observer(() => {
     oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
-    if (type !== OauthType.GOOGLE) {
-      oauthOpen(getOauthUrl(type, OauthStateType.authorize));
-      window.addEventListener('message', messageCb);
-    } else {
+    if (type === OauthType.GOOGLE) {
       Toast.warning('Google 暂不可用!');
+      return;
     }
+    oauthOpen(getOauthUrl(type, OauthStateType.authorize));
+    window.addEventListener('message', messageCb);
   }, [messageCb]);
   return (
     <div>

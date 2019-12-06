@@ -11,12 +11,14 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
 import { omit } from 'lodash';
 
-import { validator } from '@server/common/utils/validator';
+import { validator } from '@common/validator';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { plainToClass, classToPlain } from 'class-transformer';
+import { ValidationError } from 'class-validator';
+import { ValidationException } from '@server/common/exception/validation.exception';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
@@ -81,13 +83,13 @@ export class UserService {
     ]);
     if (nameData) {
       if (err) {
-        throw new BadRequestException('Username already exists');
+        throw new ValidationException('username', 'username already exists');
       }
       return 'username';
     }
     if (userData) {
       if (err) {
-        throw new BadRequestException('Email already exists');
+        throw new ValidationException('email', 'email already exists');
       }
       return 'email';
     }

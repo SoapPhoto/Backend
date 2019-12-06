@@ -3,12 +3,13 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { CreateUserDto, UpdateProfileSettingDto, UserEntity } from '@lib/common/interfaces/user';
 import { request } from '@lib/common/utils/request';
-import { oauthToken, oauth } from '@lib/services/oauth';
+import { oauthToken, oauth, activeUser } from '@lib/services/oauth';
 import { OauthType } from '@common/enum/router';
 import { CredentialsEntity } from '@lib/common/interfaces/credentials';
 import { getUserCredentialList } from '@lib/services/credentials';
 import { resetVerifyMail } from '@lib/services/auth';
 import Toast from '@lib/components/Toast';
+import { ActiveUserDto } from '@lib/common/interfaces/oauth';
 
 let resetDate: undefined | Dayjs;
 
@@ -80,7 +81,16 @@ export class AccountStore {
     params.append('grant_type', 'authorization_code');
     const data = await oauthToken(type, params);
     localStorage.setItem('token', JSON.stringify(data.data));
-    this.setUserInfo(data.data.user);
+  }
+
+  public activeUser = async ({ code, username, name }: ActiveUserDto) => {
+    const params = new URLSearchParams();
+    params.append('code', code as string);
+    params.append('username', username);
+    params.append('name', name);
+    params.append('grant_type', 'authorization_code');
+    const data = await activeUser(params);
+    localStorage.setItem('token', JSON.stringify(data.data));
   }
 
   public refreshToken = async () => {

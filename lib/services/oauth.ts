@@ -18,3 +18,12 @@ export const oauthToken = (type: OauthType, params: URLSearchParams) => (
     },
   })
 );
+
+export const activeUser = async (data: URLSearchParams) => (
+  request.post('oauth/active', data, {
+    headers: {
+      Authorization: `Basic ${process.env.BASIC_TOKEN}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+);

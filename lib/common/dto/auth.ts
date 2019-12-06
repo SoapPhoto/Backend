@@ -22,3 +22,10 @@ export const SignUpSchema = (t: TFunction) => Yup.object().shape({
     .required(t('yup_required', t('email'))),
   ...baseSchema(t),
 });
+
+export const CompleteUserInfoSchema = (t: TFunction) => ({
+  username: Yup.string()
+    .min(1, t('yup_longer', t('username'), '1'))
+    .max(26, t('yup_greater', t('username'), '26'))
+    .required(t('yup_required', t('username'))),
+});
