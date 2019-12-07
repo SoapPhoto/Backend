@@ -66,3 +66,5 @@ yarn.lock
 package-lock.json
 
 dump.rdb
+
+.progress-estimator
