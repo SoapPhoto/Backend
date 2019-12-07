@@ -13,7 +13,7 @@ import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import {
-  Heart, MessageSquare, Target, Clock,
+  Heart, MessageSquare, Target,
 } from '@lib/icon';
 import {
   BaseInfoItem,
@@ -29,9 +29,6 @@ import {
   UserLink,
   UserName,
   Wrapper,
-  RelateCollection,
-  RelateCollectionTitle,
-  RelateCollectionList,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -40,8 +37,6 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
-import { CollectionItem } from '@lib/containers/Collection/Item';
 import { getPictureUrl } from '@lib/common/utils/image';
 import dayjs from 'dayjs';
 import { Popover } from '@lib/components/Popover';
@@ -75,7 +70,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
     })();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [info.id]);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
   const onConfirm = async (value: string, commentId?: ID) => {
