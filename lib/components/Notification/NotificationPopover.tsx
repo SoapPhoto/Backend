@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { observer } from 'mobx-react';
@@ -11,6 +11,8 @@ import { Empty } from '../Empty';
 
 const Wrapper = styled.div`
   width: ${rem(380)};
+  /* height: 200px;
+  overflow: auto; */
   /* display: grid;
   grid-auto-rows: max-content;
   grid-gap: ${rem(12)}; */
@@ -29,8 +31,10 @@ export const NotificationPopover = observer(() => {
   const {
     getList, list, loading, listInit, unReadAll,
   } = useNotification();
+  const [init, setInit] = useState(false);
   useEffect(() => {
     if (!listInit) getList();
+    setInit(true);
     return () => {
       unReadAll();
     };
@@ -43,9 +47,11 @@ export const NotificationPopover = observer(() => {
       >
         <ListBox>
           {
-            list.map(notify => (
-              <NotificationItem key={notify.id} data={notify} />
-            ))
+            init && (
+              list.map(notify => (
+                <NotificationItem key={notify.id} data={notify} />
+              ))
+            )
           }
           {
             list.length === 0 && (

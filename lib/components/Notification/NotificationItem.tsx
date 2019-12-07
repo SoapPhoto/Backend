@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { NotificationEntity } from '@lib/common/interfaces/notification';
 import styled, { css } from 'styled-components';
 import { NotificationCategory } from '@common/enum/notification';
@@ -7,6 +7,7 @@ import { getPictureUrl } from '@lib/common/utils/image';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
 import { Avatar } from '..';
 import { EmojiText } from '../EmojiText';
 import { Image } from '../Image';
@@ -66,7 +67,7 @@ const Date = styled.span`
   margin-left: ${rem(8)};
 `;
 
-export const NotificationItem: React.FC<IProps> = ({ data }) => {
+export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
   const content = useCallback(() => {
     switch (data.category) {
       case NotificationCategory.LIKED:
@@ -101,7 +102,7 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
         const { key, id } = picture;
         return (
           <Picture route={`/picture/${id}`}>
-            <Image src={getPictureUrl(key)} />
+            <Image src={getPictureUrl(key, 'itemprop')} />
           </Picture>
         );
       }
@@ -136,4 +137,4 @@ export const NotificationItem: React.FC<IProps> = ({ data }) => {
       <Handle>{handle()}</Handle>
     </Item>
   );
-};
+});

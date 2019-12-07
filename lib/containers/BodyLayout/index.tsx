@@ -4,6 +4,7 @@ import { StateTreeModal } from '@lib/components/StateTreeModal';
 import Head from 'next/head';
 import { Header } from '../Header';
 import { Wrapper } from './styles';
+import { Footer } from '../Footer';
 
 interface IProps {
   header: boolean;
@@ -37,6 +38,11 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
           : <div />
       }
       {children}
+      {
+        header
+          ? <Footer />
+          : <div />
+      }
       <StateTreeModal
         visible={treeVisible}
         onClose={() => setTreeVisible(false)}

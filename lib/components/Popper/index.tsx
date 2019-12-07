@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
 import { server, isIn } from '@lib/common/utils';
+import { observer } from 'mobx-react';
 import { NoSSR } from '../SSR';
 
 interface IChildProps {
@@ -31,22 +32,23 @@ export const PopperWrapper = styled.div`
   z-index: 1100;
 `;
 
+@observer
 export class Popper extends React.Component<IPopperProps> {
-  public static getDerivedStateFromProps(nextProps: IPopperProps) {
-    if (nextProps.visible) {
-      return {
-        exited: false,
-      };
-    }
+  // public static getDerivedStateFromProps(nextProps: IPopperProps) {
+  //   if (nextProps.visible) {
+  //     return {
+  //       exited: false,
+  //     };
+  //   }
 
-    if (!nextProps.transition) {
-      return {
-        exited: true,
-      };
-    }
+  //   if (!nextProps.transition) {
+  //     return {
+  //       exited: true,
+  //     };
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   public popperRef = React.createRef<HTMLDivElement>();
 
@@ -109,6 +111,10 @@ export class Popper extends React.Component<IPopperProps> {
   }
 
   public renderContent = () => {
+  }
+
+  public render() {
+    const { children, getContainer } = this.props;
     const { visible, content, transition } = this.props;
     const { exited } = this.state;
     const childProps: IChildProps = {
@@ -120,18 +126,16 @@ export class Popper extends React.Component<IPopperProps> {
         });
       },
     };
+    let renders = null;
     if (!visible && (!transition || exited)) {
-      return null;
+      renders = null;
+    } else {
+      renders = (
+        <PopperWrapper ref={this.popperRef}>
+          {typeof content === 'function' ? content(childProps) : content}
+        </PopperWrapper>
+      );
     }
-    return (
-      <PopperWrapper ref={this.popperRef}>
-        {typeof content === 'function' ? content(childProps) : content}
-      </PopperWrapper>
-    );
-  }
-
-  public render() {
-    const { children, getContainer } = this.props;
     return (
       <>
         <NoSSR server>
@@ -139,7 +143,7 @@ export class Popper extends React.Component<IPopperProps> {
         </NoSSR>
         <NoSSR>
           {!server && ReactDOM.createPortal(
-            this.renderContent(),
+            renders,
             getContainer || document.querySelector('body')!,
           )}
         </NoSSR>

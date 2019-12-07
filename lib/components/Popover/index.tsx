@@ -53,7 +53,7 @@ interface IPopoverProps {
 }
 
 @observer
-export class Popover extends React.PureComponent<IPopoverProps> {
+export class Popover extends React.Component<IPopoverProps> {
   // eslint-disable-next-line react/sort-comp
   public static defaultProps: Partial<IPopoverProps> = {
     theme: 'light',
@@ -87,7 +87,9 @@ export class Popover extends React.PureComponent<IPopoverProps> {
     if (this._media) this._media.removeListener(this.handleMedia);
   }
 
-  @action public setVisible = (value: boolean) => this.visible = value;
+  @action public setVisible = (value: boolean) => {
+    this.visible = value;
+  };
 
   public handleMedia = () => {
     this.isMini = this._media!.matches;
@@ -232,7 +234,6 @@ export class Popover extends React.PureComponent<IPopoverProps> {
           if (arrow) {
             if (this.placement !== data.placement) {
               this.placement = data.placement;
-              this.forceUpdate();
             }
           }
         }}
