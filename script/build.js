@@ -33,7 +33,7 @@ const getBuild = async project => new Promise((resolve) => {
   }
   // console.log(sp);
   const result = spawn('npm', ['run', sp], { stdio: 'inherit' });
-  result.on('close', () => {
+  result.on('close', (code) => {
     if (code === 0) {
       resolve();
     } else {
