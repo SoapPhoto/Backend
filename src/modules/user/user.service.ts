@@ -121,7 +121,7 @@ export class UserService {
   }
 
   /**
-   * 查询出用户的一些必要数据： `pictureCount`, `likes`
+   * 查询出用户的一些必要数据： `pictureCount`, `likedCount`
    *
    * @param {SelectQueryBuilder<UserEntity>} q
    * @returns
@@ -132,7 +132,7 @@ export class UserService {
       `${value}.pictureCount`, `${value}.pictures`,
     )
       .loadRelationCountAndMap(
-        `${value}.likes`, `${value}.pictureActivities`, 'activity',
+        `${value}.likedCount`, `${value}.pictureActivities`, 'activity',
         qb => qb.andWhere(
           'activity.like=TRUE',
         ),
@@ -178,12 +178,17 @@ export class UserService {
     return data;
   }
 
+  public async getRawIdsList(ids: string[], user: Maybe<UserEntity>) {
+    const q = this.userEntity.createQueryBuilder('user')
+      .where('user.id IN (:...ids)', { ids });
+    return q.getMany();
+  }
+
   public async getEmailUser(email: string) {
     return this.userEntity.createQueryBuilder('user')
       .where('user.email=:email', { email })
       .getOne();
   }
-
 
   public async getBaseUser(id: ID) {
     const q = this.userEntity.createQueryBuilder('user');

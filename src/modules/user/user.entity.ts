@@ -148,20 +148,30 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
   public readonly pictureActivities!: PictureUserActivityEntity[];
 
+  @Type(() => Boolean)
+  @Column({ type: 'boolean', default: false })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  public isEmailVerified!: boolean;
+
   /** 喜欢的picture数量 */
   @Type(() => Number)
   @Expose()
-  public likes = 0;
+  public likedCount = 0;
 
   /** 用户的picture数量 */
   @Type(() => Number)
   @Expose()
   public pictureCount = 0;
 
-  @Type(() => Boolean)
-  @Column({ type: 'boolean', default: false })
-  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
-  public isEmailVerified!: boolean;
+  /** 粉丝数量 */
+  @Type(() => Number)
+  @Expose()
+  public followerCount = 0;
+
+  /** 关注数量 */
+  @Type(() => Number)
+  @Expose()
+  public followedCount = 0;
 
   public isVerified() {
     return this.status === Status.VERIFIED;

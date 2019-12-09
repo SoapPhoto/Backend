@@ -10,7 +10,7 @@ fragment PictureFragment on Picture {
   mimetype
   size
   isLike
-  likes
+  likedCount
   color
   isDark
   height
@@ -150,7 +150,7 @@ fragment UserFragment on User {
   avatar
   bio
   website
-  likes
+  likedCount
   pictureCount
   createTime
   updateTime

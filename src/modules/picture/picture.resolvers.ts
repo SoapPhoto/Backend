@@ -113,7 +113,7 @@ export class PictureResolver {
   }
 
   @ResolveProperty('currentCollections')
-  public async likes(
+  public async currentCollections(
     @Parent() parent: PictureEntity,
     @Context('user') user?: UserEntity,
   ) {

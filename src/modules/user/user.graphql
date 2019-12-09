@@ -94,10 +94,16 @@ type User implements BaseNode {
   website: String
 
   "喜欢的picture数量"
-  likes: Float
+  likedCount: Float
 
   "用户的picture数量"
   pictureCount: Float
+
+  "粉丝数量"
+  followerCount: Float
+
+  "关注的人数量"
+  followedCount: Float
 
   "是否私人"
   isPrivate: Boolean

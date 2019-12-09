@@ -139,7 +139,7 @@ export class PictureScreenStore extends BaseStore {
         req = data!.unlikePicture;
       }
       this.info.isLike = req.isLike;
-      this.info.likes = req.count;
+      this.info.likedCount = req.count;
       const cacheData = this.client.readFragment<PictureEntity>({
         fragment: Fragments,
         fragmentName: 'PictureFragment',
@@ -153,7 +153,7 @@ export class PictureScreenStore extends BaseStore {
           data: {
             ...cacheData,
             isLike: req.isLike,
-            likes: req.count,
+            likedCount: req.count,
           } as PictureEntity,
         });
       }

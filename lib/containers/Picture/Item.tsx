@@ -71,7 +71,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
           color={colors.danger}
           islike={detail.isLike ? 1 : 0}
         />
-        <p>{detail.likes}</p>
+        <p>{detail.likedCount}</p>
       </LikeContent>
       <InfoBox>
         <UserBox>
