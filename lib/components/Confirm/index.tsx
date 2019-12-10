@@ -86,11 +86,11 @@ export const Confirm: React.FC<IConfirmProps> = ({
           {...cancelProps}
           onClick={onClose}
         >
-          {cancelText || t('cancel')}
+          {cancelText || t('btn.cancel')}
         </Button>
         <Button {...confirmProps} loading={confirmLoading}>
           {confirmIcon}
-          {confirmText || t('ok')}
+          {confirmText || t('btn.ok')}
         </Button>
       </BtnGroup>
     </Modal>

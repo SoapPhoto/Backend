@@ -85,7 +85,7 @@ export const EditPictureModal: React.FC<IProps> = ({
       const data = await update(value);
       onClose();
       onOk(data);
-      Toast.success(t('update_success'));
+      Toast.success(t('btn.update_success'));
       setSubmitting(true);
     } catch (error) {
       setSubmitting(false);
@@ -118,7 +118,7 @@ export const EditPictureModal: React.FC<IProps> = ({
       boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
       <Wrapper>
-        <Title>{t('picture_edit.title')}</Title>
+        <Title>{t('picture.edit.title')}</Title>
         <Content>
           <Formik<IValues>
             initialValues={defaultValue}
@@ -129,12 +129,12 @@ export const EditPictureModal: React.FC<IProps> = ({
               <>
                 <FieldInput
                   name="title"
-                  label={t('picture_title')}
+                  label={t('label.picture_title')}
                   style={{ marginBottom: rem(24) }}
                 />
                 <FieldTextarea
                   name="bio"
-                  label={t('picture_bio')}
+                  label={t('label.picture_bio')}
                   style={{ marginBottom: rem(24) }}
                 />
                 <Field
@@ -157,11 +157,11 @@ export const EditPictureModal: React.FC<IProps> = ({
                 <FieldSwitch
                   name="isPrivate"
                   label={t('private')}
-                  bio={t('visible_yourself', t('picture'))}
+                  bio={t('message.visible_yourself', t('label.picture'))}
                 />
                 <Footer>
                   <IconButton
-                    popover={t('delete_picture')}
+                    popover={t('picture.delete')}
                     onClick={() => setConfirmVisible(true)}
                   >
                     <Trash2
@@ -174,7 +174,7 @@ export const EditPictureModal: React.FC<IProps> = ({
                     disabled={isSubmitting}
                     type="submit"
                   >
-                    {t('save')}
+                    {t('btn.save')}
                   </Button>
                 </Footer>
               </>
@@ -183,9 +183,9 @@ export const EditPictureModal: React.FC<IProps> = ({
         </Content>
       </Wrapper>
       <Confirm
-        title={t('delete_confirm', t('picture'))}
+        title={t('delete_confirm', t('label.picture'))}
         visible={confirmVisible}
-        confirmText={t('delete')}
+        confirmText={t('btn.delete')}
         confirmProps={{
           disabled: deleteConfirmDisabled,
           danger: true,

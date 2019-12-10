@@ -90,7 +90,7 @@ export class PictureEntity extends BaseEntity {
   /** picture喜欢的数量 */
   @Type(() => Number)
   @Expose()
-  public likes = 0;
+  public likedCount = 0;
 
   /** 图片评论数量 */
   @Type(() => Number)

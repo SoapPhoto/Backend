@@ -1,0 +1,25 @@
+
+type Query {
+  "关注的用户"
+  followedUsers(limit: Float, offset: Float, id: ID): [User]
+  "粉丝"
+  followerUsers(limit: Float, offset: Float, id: ID): [User]
+}
+
+type Mutation {
+  followUser(input: FollowUserInput): Status
+  unFollowUser(input: FollowUserInput): Status
+}
+
+input FollowUserInput {
+  userId: ID!
+}
+
+type Follow {
+  "被关注的人"
+  followed: User
+  "关注的人"
+  follower: User
+  createTime: DateTime
+  updateTime: DateTime
+}

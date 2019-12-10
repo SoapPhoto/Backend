@@ -13,6 +13,7 @@ import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
 import { UserPictureType } from './enum/picture.type.enum';
 import { UpdateProfileSettingDto } from './dto/user.dto';
+import { FollowService } from '../follow/follow.service';
 
 @Resolver('User')
 @UseGuards(AuthGuard)
@@ -20,6 +21,7 @@ export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
+    private readonly followService: FollowService,
   ) {}
 
   @Query()
@@ -91,6 +93,27 @@ export class UserResolver {
     @Args('data') data: UpdateProfileSettingDto,
   ) {
     return this.userService.updateUserProfile(user, data);
+  }
+
+  @ResolveProperty('likesCount')
+  public async likesCount(
+    @Parent() parent: UserEntity,
+  ) {
+    return this.userService.userLikesCount(parent.id);
+  }
+
+  @ResolveProperty('followerCount')
+  public async followerCount(
+    @Parent() parent: UserEntity,
+  ) {
+    return this.followService.followerCount(parent.id);
+  }
+
+  @ResolveProperty('followedCount')
+  public async followedCount(
+    @Parent() parent: UserEntity,
+  ) {
+    return this.followService.followedCount(parent.id);
   }
 
   @ResolveProperty('pictures')

@@ -182,7 +182,7 @@ export class PictureService {
   public likePicture = async (id: string, user: UserEntity, data: boolean) => {
     const picture = await this.getOne(id);
     if (!picture) {
-      throw new BadRequestException('no_picture');
+      throw new BadRequestException('no_exist_picture');
     }
     return this.activityService.like(picture, user, data);
   }
@@ -272,7 +272,7 @@ export class PictureService {
   public select = (user: Maybe<UserEntity>) => {
     const q = this.pictureRepository.createQueryBuilder('picture');
     // .loadRelationCountAndMap(
-    //   'picture.likes', 'picture.activities', 'activity',
+    //   'picture.likedCount', 'picture.activities', 'activity',
     //   qb => qb.andWhere('activity.like=:like', { like: true }),
     // );
     this.selectInfo(q, user);
@@ -338,7 +338,7 @@ export class PictureService {
     .getOne()
 
   /**
-   * 获取图片的一些基础信息的查询，如：`likes`,`isLike`
+   * 获取图片的一些基础信息的查询，如：`likedCount`,`isLike`
    *
    * @memberof PictureService
    */
@@ -346,7 +346,7 @@ export class PictureService {
   public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
     q.leftJoinAndSelect('picture.user', value)
       .loadRelationCountAndMap(
-        'picture.likes', 'picture.activities', 'activity',
+        'picture.likedCount', 'picture.activities', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
     // this.userService.selectInfo(q, value);
@@ -374,6 +374,8 @@ export class PictureService {
   public getPictureLikes = (id: ID) => this.activityService.getLikes(id)
 
   public getUserIsLike = (id: ID, user: UserEntity) => this.activityService.isLike(id, user)
+
+  public userLikesCount = (id: ID) => this.activityService.userLikesCount(id)
 
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断

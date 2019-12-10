@@ -1,0 +1,8 @@
+{
+  "validation": {
+    "yup_required": "请输入{0}！",
+    "yup_format": "{0}格式不正确!",
+    "yup_longer": "{0}必须大于{1}位！",
+    "yup_greater": "{0}不得大于{1}位！"
+  }
+}

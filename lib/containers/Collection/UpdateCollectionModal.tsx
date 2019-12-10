@@ -74,7 +74,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
     try {
       await onUpdate(value);
       onClose();
-      Toast.success(t('update_success'));
+      Toast.success(t('btn.update_success'));
     } catch (error) {
       setSubmitting(false);
       Toast.error(t(error.message));
@@ -104,7 +104,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
       onClose={onClose}
     >
       <Wrapper>
-        <Title>{t('collection_edit.title')}</Title>
+        <Title>{t('collection.edit.title')}</Title>
         <Content>
           <Formik<IValues>
             initialValues={defaultValue}
@@ -115,22 +115,22 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
               <>
                 <FieldInput
                   name="name"
-                  label={t('collection_name')}
+                  label={t('collection.label.name')}
                   style={{ marginBottom: rem(24) }}
                 />
                 <FieldInput
                   name="bio"
-                  label={t('collection_bio')}
+                  label={t('collection.label.bio')}
                   style={{ marginBottom: rem(32) }}
                 />
                 <FieldSwitch
                   name="isPrivate"
                   label={t('private')}
-                  bio={t('visible_yourself', t('collection'))}
+                  bio={t('message.visible_yourself', t('label.collection'))}
                 />
                 <Footer>
                   <IconButton
-                    popover={t('delete_collection')}
+                    popover={t('collection.delete')}
                     onClick={() => setConfirmVisible(true)}
                   >
                     <Trash2
@@ -143,7 +143,7 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
                     disabled={isSubmitting}
                     type="submit"
                   >
-                    {t('save')}
+                    {t('btn.save')}
                   </Button>
                 </Footer>
               </>
@@ -152,9 +152,9 @@ export const UpdateCollectionModal: React.FC<IProps<UpdateCollectionDot>> = ({
         </Content>
       </Wrapper>
       <Confirm
-        title={t('delete_confirm', t('collection'))}
+        title={t('delete_confirm', t('label.collection'))}
         visible={confirmVisible}
-        confirmText={t('delete')}
+        confirmText={t('btn.delete')}
         confirmProps={{
           disabled: deleteConfirmDisabled,
           danger: true,

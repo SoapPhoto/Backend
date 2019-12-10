@@ -42,7 +42,7 @@ export const Empty: React.FC<IEmptyProps> = ({
         loading ? (
           <Loading size={loadingSize} color={colors.secondary} />
         ) : (
-          <span>{emptyText || t('no_more')}</span>
+          <span>{emptyText || t('btn.no_more')}</span>
         )
       }
     </Wrapper>

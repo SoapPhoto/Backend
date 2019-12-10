@@ -170,7 +170,7 @@ const Account = observer(() => {
   }, [messageCb]);
   return (
     <div>
-      <Title>{t('setting_menu.account')}</Title>
+      <Title>{t('setting.menu.account')}</Title>
       <List>
         {
           OauthTypeValues.map((type: OauthType) => {

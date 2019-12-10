@@ -38,7 +38,7 @@ const Authenticate: React.FC<IBaseScreenProps> = () => {
       window.location.href = query.redirectUrl as string;
     } catch (err) {
       console.error(err);
-      Toast.error(t('authenticate.error_message'));
+      Toast.error(t('auth.message.authenticate.error_message'));
       setTimeout(() => {
         window.location.href = `/login?redirectUrl=${redirectUrl}`;
       }, 300);
@@ -48,7 +48,7 @@ const Authenticate: React.FC<IBaseScreenProps> = () => {
     refresh();
   }, [refresh]);
   return (
-    <Wrapper>{t('authentication user information')}</Wrapper>
+    <Wrapper>{t('auth.message.auth_user_info')}</Wrapper>
   );
 };
 

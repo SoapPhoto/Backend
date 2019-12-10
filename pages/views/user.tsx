@@ -21,6 +21,11 @@ import {
   Wrapper,
   HeaderGrid,
   AvatarBox,
+  Info,
+  InfoItem,
+  InfoItemCount,
+  InfoItemLabel,
+  InfoBox,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
@@ -85,18 +90,34 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
             <Bio>
               {user.bio}
             </Bio>
+            <InfoBox>
+              <Info>
+                <InfoItem>
+                  <InfoItemCount>{user.followerCount}</InfoItemCount>
+                  <InfoItemLabel>粉丝</InfoItemLabel>
+                </InfoItem>
+                <InfoItem>
+                  <InfoItemCount>{user.followedCount}</InfoItemCount>
+                  <InfoItemLabel>关注</InfoItemLabel>
+                </InfoItem>
+                <InfoItem>
+                  <InfoItemCount>{user.likesCount}</InfoItemCount>
+                  <InfoItemLabel>喜欢</InfoItemLabel>
+                </InfoItem>
+              </Info>
+            </InfoBox>
           </Cell>
         </HeaderGrid>
       </UserHeader>
       <Nav>
         <NavItem route={`/@${user.username}`}>
-          {t('user_menu.picture')}
+          {t('user.menu.picture')}
         </NavItem>
         <NavItem route={`/@${user.username}/like`}>
-          {t('user_menu.like')}
+          {t('user.menu.like')}
         </NavItem>
         <NavItem route={`/@${user.username}/collections`}>
-          {t('user_menu.collection')}
+          {t('user.menu.collection')}
         </NavItem>
       </Nav>
       {

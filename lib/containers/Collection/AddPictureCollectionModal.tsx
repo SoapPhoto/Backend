@@ -262,7 +262,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
                       placement="top"
                       theme="dark"
                       openDelay={100}
-                      content={<span>{t('private_xx', t('collection'))}</span>}
+                      content={<span>{t('private_xx', t('label.collection'))}</span>}
                     >
                       <Lock style={{ marginRight: '6px', strokeWidth: '3px' }} size={16} />
                     </Popover>
@@ -299,7 +299,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
       onClose={onClose}
       boxStyle={{ backgroundImage: background, padding: 0, maxWidth: rem(500) }}
     >
-      <Title>{t('collection_picture.title')}</Title>
+      <Title>{t('picture.collection.title')}</Title>
       <CollectionBox>
         <CollectionItemBox
           onClick={() => setAddCollectionVisible(true)}
@@ -308,7 +308,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
             <div>
               <ItemInfoTitle style={{ marginBottom: 0 }}>
                 <PlusCircle style={{ marginRight: '12px' }} />
-                <span>{t('collection_picture.add')}</span>
+                <span>{t('picture.collection.add')}</span>
               </ItemInfoTitle>
             </div>
           </ItemInfoBox>

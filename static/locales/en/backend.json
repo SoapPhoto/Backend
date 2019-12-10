@@ -1,0 +1,24 @@
+{
+  "backend_error": {
+    "verified": "Verified",
+    "verified_error": "Verification info is invalid",
+    "no_user": "User does not exist",
+    "no_exist_picture": "picture not exist",
+    "no_exist_collection": "Collection not exist",
+    "no_exist_comment": "Comments failed",
+    "collected": "Collected",
+    "no_collect": "No Collect",
+
+    "code_credentials_invalid": "Code credentials are invalid",
+    "client_credentials_invalid": "Client credentials are invalid",
+    "user_credentials_invalid": "User credentials are invalid",
+
+    "authorized": "Authorized other account",
+    "reserved_login": "You must leave a login info",
+    "activation_email_failed": "Activation email failed",
+    "validation": {
+      "username_exists": "Username exists",
+      "email_exists": "Email exists"
+    }
+  }
+}

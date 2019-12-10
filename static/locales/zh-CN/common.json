@@ -1,13 +1,9 @@
 {
-  "title": "肥皂",
-  "home": "首页",
-  "setting": "设置",
-  "picture_info": "图片信息",
-  "add_collection": "添加收藏",
-  "un_like": "取消喜欢",
-  "like": "喜欢",
-  "img_count": "{0} 个图片",
-  "private_xx": "私人{0}",
+  "title": {
+    "name": "肥皂",
+    "home": "首页",
+    "setting": "设置"
+  },
   "menu": {
     "upload": "上传",
     "setting": "设置",
@@ -15,27 +11,35 @@
     "dark": "暗色模式",
     "light": "亮色模式"
   },
-  "collection": "收藏夹",
-  "picture": "图片",
+  "label": {
+    "collection": "收藏夹",
+    "picture": "图片",
+    "username": "用户名",
+    "password": "密码",
+    "picture_title": "标题",
+    "picture_bio": "说明",
+    "email": "邮箱"
+  },
+  "btn": {
+    "delete": "删除",
+    "cancel": "关闭",
+    "ok": "确定",
+    "save": "保存"
+  },
+  "message": {
+    "no_more": "没有更多内容啦！",
+    "go_home": "前往首页",
+    "update_success": "修改成功！",
+    "visible_yourself": "这个{0}仅自己可见"
+  },
+  "picture_info": "图片信息",
+  "add_collection": "添加收藏",
+  "un_like": "取消喜欢",
+  "like": "喜欢",
+  "img_count": "{0} 个图片",
+  "private_xx": "私人{0}",
   "private": "私人",
-  "username": "用户名",
-  "password": "密码",
-  "picture_title": "标题",
-  "picture_bio": "说明",
-  "email": "邮箱",
-  "delete": "删除",
-  "cancel": "关闭",
-  "ok": "确定",
-  "save": "保存",
-  "no_more": "没有更多内容啦！",
-  "go_home": "前往首页",
-  "update_success": "修改成功！",
-  "visible_yourself": "这个{0}仅自己可见",
   "delete_confirm": "确认要删除此{0}吗？删除后将不可恢复。",
-  "yup_required": "请输入{0}！",
-  "yup_format": "{0}格式不正确!",
-  "yup_longer": "{0}必须大于{1}位！",
-  "yup_greater": "{0}不得大于{1}位！",
   "comment": {
     "placeholder": "输入评论",
     "send": "评论"

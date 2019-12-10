@@ -41,7 +41,7 @@ export class CredentialsService {
     const redisClient = this.redisService.getClient();
     const strData = await redisClient.get(`oauth.${OauthStateType.authorize}.${code}`);
     if (!strData) {
-      throw new UnauthorizedException('code credentials are invalid');
+      throw new UnauthorizedException('code_credentials_invalid');
     }
     const { data, type } = JSON.parse(strData);
     const isAuthorize = await Promise.all([
@@ -53,10 +53,10 @@ export class CredentialsService {
         .getOne(),
     ]);
     if (isAuthorize[0]) {
-      throw new UnauthorizedException(`authorized ${type}`);
+      throw new UnauthorizedException('authorized');
     }
     if (isAuthorize[1]) {
-      throw new UnauthorizedException('github account authorized');
+      throw new UnauthorizedException('authorized');
     }
     await this.create({
       id: `${type}_${data.id}`,
@@ -75,7 +75,7 @@ export class CredentialsService {
       .where('cr.userId=:id', { id: user.id })
       .getCount();
     if (count === 1 && !user.isPassword) {
-      throw new BadGatewayException('reserved login type');
+      throw new BadGatewayException('reserved_login');
     }
     await this.credentialsRepository.createQueryBuilder()
       .delete()

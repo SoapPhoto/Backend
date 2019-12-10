@@ -1,15 +1,17 @@
 {
-  "setting_menu": {
-    "profile": "Profile",
-    "resetPassword": "Reset Password",
-    "account": "Account"
-  },
-  "setting_upload_avatar": "Upload avatar",
-  "setting_update": "Update settings",
-  "setting_label": {
-    "username": "Username (login name)",
-    "name": "name (name displayed)",
-    "website": "Website",
-    "bio": "Bio"
+  "setting": {
+    "menu": {
+      "profile": "Profile",
+      "resetPassword": "Reset Password",
+      "account": "Account"
+    },
+    "label": {
+      "username": "Username (login name)",
+      "name": "name (name displayed)",
+      "website": "Website",
+      "bio": "Bio"
+    },
+    "upload_avatar": "Upload avatar",
+    "update": "Update settings"
   }
 }

@@ -12,8 +12,11 @@ export const Wrapper = styled.div``;
 export const UserHeader = styled.div`
   max-width: ${rem('700px')};
   width: 100%;
-  margin: 64px auto;
+  margin: ${rem(48)} auto;
   padding: 0 ${rem('20px')};
+  ${customMedia.lessThan('small')`
+    margin: ${rem(32)} auto;
+  `}
 `;
 
 export const HeaderGrid = styled(Grid)`
@@ -35,17 +38,59 @@ export const UserName = styled.h2`
   font-size: ${_ => rem(_.theme.fontSizes[5])};
   margin-top: ${rem('6px')};
   margin-bottom: ${rem('12px')};
+  ${customMedia.lessThan('small')`
+    text-align: center;
+  `}
+`;
+
+export const InfoBox = styled.div`
+`;
+
+export const Info = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: ${rem('6px')};
+  margin-left: ${rem(-12)};
+  margin-right: ${rem(-12)};
+  ${customMedia.lessThan('small')`
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-around;
+  `}
+`;
+
+export const InfoItem = styled.div`
+  padding: 0 ${rem(12)};
+  ${customMedia.lessThan('small')`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  `}
+`;
+
+export const InfoItemCount = styled.span`
+  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
+  margin-right: ${rem('4px')};
+  font-family: Rubik;
+`;
+
+export const InfoItemLabel = styled.span`
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
+  color: ${theme('colors.secondary')};
 `;
 
 export const Profile = styled.div`
   display: flex;
   margin-bottom: ${rem('4px')};
+  ${customMedia.lessThan('small')`
+    display: none;
+  `}
 `;
 
 export const ProfileItem = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: ${rem('8px')};
   margin-right: ${rem('24px')};
   min-width: 0;
   font-family: Rubik;
@@ -64,6 +109,10 @@ export const ProfileItemLink = styled.a`
 export const Bio = styled.p`
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   font-family: Rubik;
+  color: ${theme('colors.secondary')};
+  ${customMedia.lessThan('small')`
+    text-align: center;
+  `}
 `;
 
 export const EditIcon = styled(Settings)`

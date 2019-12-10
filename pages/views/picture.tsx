@@ -182,7 +182,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
               style={{ strokeWidth: 2.5 }}
               size={20}
             />
-            <p>{info.likes}</p>
+            <p>{info.likedCount}</p>
           </BaseInfoItem>
           <BaseInfoItem>
             <MessageSquare

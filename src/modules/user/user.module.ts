@@ -11,6 +11,7 @@ import { UserEntity } from './user.entity';
 import { UserResolver } from './user.resolvers';
 import { UserService } from './user.service';
 import { FileModule } from '../file/file.module';
+import { FollowModule } from '../follow/follow.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FileModule } from '../file/file.module';
     forwardRef(() => PictureModule),
     forwardRef(() => CollectionModule),
     forwardRef(() => FileModule),
+    forwardRef(() => FollowModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

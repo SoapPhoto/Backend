@@ -10,6 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { OptionModule } from './modules/option/option.module';
 import { FileModule } from './modules/file/file.module';
 import { CredentialsModule } from './modules/credentials/credentials.module';
+import { FollowModule } from './modules/follow/follow.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CredentialsModule } from './modules/credentials/credentials.module';
     OptionModule,
     FileModule,
     CredentialsModule,
+    FollowModule,
   ],
   exports: [
     ClientModule,

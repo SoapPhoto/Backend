@@ -1,22 +1,24 @@
 {
-  "picture_info": {
-    "title": "Info",
-    "make": "Camera Make",
-    "model": "Camera Model",
-    "focalLength": "Focal Length",
-    "aperture": "Focal Length",
-    "exposureTime": "Exposure Time",
-    "ISO": "ISO",
-    "dimensions": "Dimensions",
-    "size": "Size"
-  },
-  "picture_edit": {
-    "title": "Edit Picture"
-  },
-  "delete_picture": "Delete Picture",
-  "picture_update_sccuess": "Update Sccuess",
-  "collection_picture": {
-    "title": "Add to Collection",
-    "add": "Add Collection"
+  "picture": {
+    "info": {
+      "title": "Info",
+      "make": "Camera Make",
+      "model": "Camera Model",
+      "focalLength": "Focal Length",
+      "aperture": "Focal Length",
+      "exposureTime": "Exposure Time",
+      "ISO": "ISO",
+      "dimensions": "Dimensions",
+      "size": "Size"
+    },
+    "edit": {
+      "title": "Edit Picture",
+      "success_message": "Update success！"
+    },
+    "delete": "Delete Picture",
+    "collection": {
+      "title": "Add to Collection",
+      "add": "Add Collection"
+    }
   }
 }

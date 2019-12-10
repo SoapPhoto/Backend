@@ -87,13 +87,13 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
           data: {
             ...cacheData,
             isLike: req.isLike,
-            likes: req.count,
+            likedCount: req.count,
           } as PictureEntity,
         });
       }
       runInAction(() => {
         picture.isLike = req.isLike;
-        picture.likes = req.count;
+        picture.likedCount = req.count;
       });
     // tslint:disable-next-line: no-empty
     } catch (err) {

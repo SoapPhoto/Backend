@@ -1,15 +1,17 @@
 {
-  "setting_menu": {
-    "profile": "用户设置",
-    "resetPassword": "重置密码",
-    "account": "账号设置"
-  },
-  "setting_upload_avatar": "上传头像",
-  "setting_update": "更新设置",
-  "setting_label": {
-    "username": "用户名（登录名）",
-    "name": "昵称（显示的名称）",
-    "website": "个人网站",
-    "bio": "简介"
+  "setting": {
+    "menu": {
+      "profile": "用户设置",
+      "resetPassword": "重置密码",
+      "account": "账号设置"
+    },
+    "label": {
+      "username": "用户名（登录名）",
+      "name": "昵称（显示的名称）",
+      "website": "个人网站",
+      "bio": "简介"
+    },
+    "upload_avatar": "上传头像",
+    "update": "更新设置"
   }
 }

@@ -80,14 +80,14 @@ export class CollectionService {
       this.collectionEntity.findOne(id),
     ]);
     if (!picture) {
-      throw new BadRequestException('no picture');
+      throw new NotFoundException('no_exist_picture');
     }
     if (!collection) {
-      throw new BadRequestException('no collection');
+      throw new NotFoundException('no_exist_collection');
     }
     const isCollected = await this.isCollected(id, pictureId);
     if (isCollected) {
-      throw new BadRequestException('collected');
+      throw new NotFoundException('collected');
     }
     await this.collectionPictureEntity.save(
       this.collectionPictureEntity.create({
@@ -111,7 +111,7 @@ export class CollectionService {
     if (data) {
       await this.collectionPictureEntity.delete(data.id);
     } else {
-      throw new BadRequestException('no collect');
+      throw new NotFoundException();
     }
   }
 
