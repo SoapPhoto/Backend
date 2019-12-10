@@ -182,7 +182,7 @@ export class PictureService {
   public likePicture = async (id: string, user: UserEntity, data: boolean) => {
     const picture = await this.getOne(id);
     if (!picture) {
-      throw new BadRequestException('no_picture');
+      throw new BadRequestException('no_exist_picture');
     }
     return this.activityService.like(picture, user, data);
   }

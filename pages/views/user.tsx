@@ -90,13 +90,13 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
       </UserHeader>
       <Nav>
         <NavItem route={`/@${user.username}`}>
-          {t('user_menu.picture')}
+          {t('user.menu.picture')}
         </NavItem>
         <NavItem route={`/@${user.username}/like`}>
-          {t('user_menu.like')}
+          {t('user.menu.like')}
         </NavItem>
         <NavItem route={`/@${user.username}/collections`}>
-          {t('user_menu.collection')}
+          {t('user.menu.collection')}
         </NavItem>
       </Nav>
       {

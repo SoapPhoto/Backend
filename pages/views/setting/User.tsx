@@ -77,7 +77,7 @@ const User: React.FC = () => {
   return (
     <>
       <Head>
-        <title>{getTitle('setting', t)}</title>
+        <title>{getTitle('title.setting', t)}</title>
       </Head>
       <Formik<IValues>
         initialValues={{
@@ -109,7 +109,7 @@ const User: React.FC = () => {
                   <Cell width={1} middle>
                     <div>
                       <Upload onFileChange={handleAvatarChange}>
-                        <Button>{t('setting_upload_avatar')}</Button>
+                        <Button>{t('setting.upload_avatar')}</Button>
                       </Upload>
                     </div>
                   </Cell>
@@ -118,12 +118,12 @@ const User: React.FC = () => {
               <Cell>
                 <Grid gap="24px" columns={2}>
                   <Cell width={1} middle>
-                    <Input label={t('setting_label.username')} disabled defaultValue={userInfo!.username} />
+                    <Input label={t('setting.label.username')} disabled defaultValue={userInfo!.username} />
                   </Cell>
                   <Cell width={1} center>
                     <FieldInput
                       name="name"
-                      label={t('setting_label.name')}
+                      label={t('setting.label.name')}
                     />
                   </Cell>
                 </Grid>
@@ -132,7 +132,7 @@ const User: React.FC = () => {
                 <Grid columns={1} gap="24px">
                   <FieldInput
                     name="website"
-                    label={t('setting_label.website')}
+                    label={t('setting.label.website')}
                     placeholder="https://"
                   />
                 </Grid>
@@ -141,7 +141,7 @@ const User: React.FC = () => {
                 <Grid columns={1} gap="24px">
                   <FieldInput
                     name="bio"
-                    label={t('setting_label.bio')}
+                    label={t('setting.label.bio')}
                   />
                 </Grid>
               </Cell>
@@ -153,7 +153,7 @@ const User: React.FC = () => {
                       disabled={isSubmitting}
                       type="submit"
                     >
-                      {t('setting_update')}
+                      {t('setting.update')}
                     </Button>
                   </Cell>
                 </Grid>

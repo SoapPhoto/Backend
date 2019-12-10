@@ -6,6 +6,7 @@ import { Role } from '@server/modules/user/enum/role.enum';
 import { MailerService } from '@nest-modules/mailer';
 import { SignupType } from '@common/enum/signupType';
 import { Status } from '@common/enum/userStatus';
+import { ValidationException } from '@server/common/exception/validation.exception';
 import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { UserEntity } from '../user/user.entity';
@@ -37,7 +38,7 @@ export class AuthService {
         return;
       }
     }
-    throw new BadGatewayException('verified error');
+    throw new BadGatewayException('verified_error');
   }
 
   public async emailSignup(data: CreateUserDto) {
@@ -56,7 +57,7 @@ export class AuthService {
   public async resetMail(user: UserEntity) {
     const userInfo = await this.userService.getUser(user.id, null, [Role.ADMIN]);
     if (!userInfo) {
-      throw new BadGatewayException('no user');
+      throw new BadGatewayException('no_user');
     }
     if (userInfo.isVerified()) {
       throw new BadGatewayException('verified');
@@ -71,13 +72,13 @@ export class AuthService {
       await this.userService.updateUser(user, newPasswordData);
       await this.accessTokenService.clearUserTokenAll(user.id);
     } else {
-      throw new ForbiddenException('password error');
+      throw new ValidationException('password', 'password_error');
     }
   }
 
   public async newPassword(user: UserEntity, { newPassword }: NewPasswordDto) {
     if (user.isPassword) {
-      throw new ForbiddenException('no password');
+      throw new ForbiddenException('no_password');
     }
     const newPasswordData = await this.userService.getPassword(newPassword);
     await this.userService.updateUser(user, newPasswordData);

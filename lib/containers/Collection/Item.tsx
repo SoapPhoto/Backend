@@ -64,7 +64,7 @@ export const CollectionItem: React.FC<IProps> = ({
                 placement="top"
                 theme="dark"
                 openDelay={100}
-                content={<span>{t('private_xx', t('collection'))}</span>}
+                content={<span>{t('private_xx', t('label.collection'))}</span>}
               >
                 <Lock
                   style={{

@@ -1,8 +1,12 @@
 {
-  "delete_collection": "删除此收藏夹",
-  "collection_name": "名称",
-  "collection_bio": "简介",
-  "collection_edit": {
-    "title": "编辑收藏夹"
+  "collection": {
+    "label": {
+      "name": "名称",
+      "bio": "简介"
+    },
+    "delete": "删除此收藏夹",
+    "edit": {
+      "title": "编辑收藏夹"
+    }
   }
 }

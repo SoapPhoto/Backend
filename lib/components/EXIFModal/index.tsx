@@ -42,39 +42,39 @@ export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) 
       boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
       <Background background={background} />
-      <Title>{t('picture_info.title')}</Title>
+      <Title>{t('picture.info.title')}</Title>
       <Info>
         <EXIFBox columns="repeat(auto-fit, minmax(150px, 1fr))">
           <Cell>
-            <EXIFTitle>{t('picture_info.make')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.make')}</EXIFTitle>
             <EXIFInfo>{isNull(make) ? '--' : make}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.model')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.model')}</EXIFTitle>
             <EXIFInfo>{isNull(model) ? '--' : model}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.focalLength')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.focalLength')}</EXIFTitle>
             <EXIFInfo>{isNull(focalLength) ? '--' : `${focalLength}mm`}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.aperture')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.aperture')}</EXIFTitle>
             <EXIFInfo>{isNull(aperture) ? '--' : `f/${aperture}`}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.exposureTime')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.exposureTime')}</EXIFTitle>
             <EXIFInfo>{isNull(exposureTime) ? '--' : `${exposureTime}s`}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.ISO')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.ISO')}</EXIFTitle>
             <EXIFInfo>{isNull(ISO) ? '--' : ISO}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.dimensions')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.dimensions')}</EXIFTitle>
             <EXIFInfo>{`${width} x ${height}`}</EXIFInfo>
           </Cell>
           <Cell>
-            <EXIFTitle>{t('picture_info.size')}</EXIFTitle>
+            <EXIFTitle>{t('picture.info.size')}</EXIFTitle>
             <EXIFInfo>{bytes(size)}</EXIFInfo>
           </Cell>
         </EXIFBox>

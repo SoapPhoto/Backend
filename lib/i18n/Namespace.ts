@@ -5,5 +5,7 @@ export enum I18nNamespace {
   Message = 'message',
   Auth = 'auth',
   Setting = 'setting',
+  Validation = 'validation',
+  Backend = 'backend',
   Collection = 'collection'
 }

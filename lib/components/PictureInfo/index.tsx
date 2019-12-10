@@ -142,7 +142,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
         columns="auto"
         justifyContent="right"
       >
-        <IconButton popover={t('picture_info')} onClick={openEXIF}>
+        <IconButton popover={t('picture.info')} onClick={openEXIF}>
           <Info
             color={colors.secondary}
           />
@@ -171,7 +171,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
         }
         {
           isOwner && (
-            <IconButton popover={t('picture_edit.title')} onClick={openEdit}>
+            <IconButton popover={t('picture.edit.title')} onClick={openEdit}>
               <Settings
                 color={colors.secondary}
               />

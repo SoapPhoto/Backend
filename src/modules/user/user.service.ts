@@ -83,13 +83,13 @@ export class UserService {
     ]);
     if (nameData) {
       if (err) {
-        throw new ValidationException('username', 'username already exists');
+        throw new ValidationException('username', 'username_exists');
       }
       return 'username';
     }
     if (userData) {
       if (err) {
-        throw new ValidationException('email', 'email already exists');
+        throw new ValidationException('email', 'email_exists');
       }
       return 'email';
     }
@@ -112,7 +112,7 @@ export class UserService {
         await this.emailService.sendSignupEmail(info.identifier!, info.verificationToken!, userInfo);
       } catch (err) {
         this.logger.error(err);
-        throw new BadRequestException('Email failed to send');
+        throw new BadRequestException('activation_email_failed');
       }
     }
     return {

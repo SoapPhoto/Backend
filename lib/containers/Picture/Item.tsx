@@ -52,7 +52,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
             trigger="hover"
             placement="top"
             theme="dark"
-            content={<span>{t('private_xx', t('picture'))}</span>}
+            content={<span>{t('private_xx', t('label.picture'))}</span>}
           >
             <LockIcon>
               <Lock size={14} color="#fff" />

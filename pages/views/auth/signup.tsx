@@ -47,7 +47,7 @@ const SignUp = () => {
       setTimeout(() => {
         push();
       }, 400);
-      Toast.success(t('signup_success'));
+      Toast.success(t('auth.message.signup_success'));
     } catch (error) {
       console.error(error);
       Toast.error(t(error.message));
@@ -65,7 +65,7 @@ const SignUp = () => {
       <Header>
         <Title>
           <EmojiText
-            text={t('signup')}
+            text={t('auth.title.signup')}
           />
         </Title>
         <SubTitle>
@@ -89,17 +89,17 @@ const SignUp = () => {
           <form onSubmit={handleSubmit}>
             <FieldInput
               name="email"
-              label={t('email')}
+              label={t('label.email')}
             />
             <FieldInput
               name="username"
-              label={t('username')}
+              label={t('label.username')}
               style={{ marginTop: rem(24) }}
             />
             <FieldInput
               type="password"
               name="password"
-              label={t('password')}
+              label={t('label.password')}
               style={{ marginTop: rem(24) }}
             />
             <Button
@@ -111,7 +111,7 @@ const SignUp = () => {
               type="submit"
               disabled={isSubmitting}
             >
-              {t('signup_btn')}
+              {t('auth.btn.signup')}
             </Button>
           </form>
         )}

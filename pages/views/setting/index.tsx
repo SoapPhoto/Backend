@@ -34,19 +34,19 @@ const Setting = () => {
   const menu = [
     {
       value: 'profile',
-      name: t('setting_menu.profile'),
+      name: t('setting.menu.profile'),
       path: '/setting/profile',
       icon: User,
     },
     {
       value: 'account',
-      name: t('setting_menu.account'),
+      name: t('setting.menu.account'),
       path: '/setting/account',
       icon: AtSign,
     },
     {
       value: 'resetPassword',
-      name: t('setting_menu.resetPassword'),
+      name: t('setting.menu.resetPassword'),
       path: '/setting/resetPassword',
       icon: Lock,
     },

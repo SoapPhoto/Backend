@@ -19,7 +19,7 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   return (
     <div>
       <SEO
-        title={getTitle('home', t)}
+        title={getTitle('title.home', t)}
         description="有趣的方式来和小伙伴分享你生活的照片。"
       />
       <PictureList noMore={isNoMore} onPage={getPageList} like={like} data={list} />

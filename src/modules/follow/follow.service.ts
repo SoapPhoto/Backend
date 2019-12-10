@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { Injectable, Inject, forwardRef, BadGatewayException } from '@nestjs/common';
+import {
+  Injectable, Inject, forwardRef, BadGatewayException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FollowEntity } from './follow.entity';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
-import { FollowUserDto, FollowUsersDto } from './dto/follow.dto';
+import { FollowUsersDto } from './dto/follow.dto';
 
 @Injectable()
 export class FollowService {
@@ -19,7 +21,7 @@ export class FollowService {
   public async create(userId: ID, followedId: ID) {
     const user = await this.userService.getBaseUser(followedId);
     if (!user) {
-      throw new BadGatewayException('no user');
+      throw new BadGatewayException('no_user');
     }
     return this.followRepository.save(
       this.followRepository.create({

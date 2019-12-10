@@ -65,7 +65,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
         setTimeout(async () => {
           push();
         }, 400);
-        Toast.success(t('login_successful'));
+        Toast.success(t('auth.message.login_successful'));
       } catch (error) {
         setSubmitting(false);
         Toast.error(t(error.message));
@@ -83,7 +83,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
         setTimeout(() => {
           push();
         }, 400);
-        Toast.success(t('login_successful'));
+        Toast.success(t('auth.message.login_successful'));
       }
     } catch (error) {
       Toast.error(t(error.message));
@@ -109,7 +109,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
       <Header>
         <Title>
           <EmojiText
-            text={t('login')}
+            text={t('auth.title.login')}
           />
         </Title>
         <SubTitle>
@@ -132,12 +132,12 @@ const Login: React.FC<IBaseScreenProps> = () => {
           <form onSubmit={handleSubmit}>
             <FieldInput
               name="username"
-              label={t('username')}
+              label={t('label.username')}
             />
             <FieldInput
               type="password"
               name="password"
-              label={t('password')}
+              label={t('label.password')}
               style={{ marginTop: rem(24) }}
             />
             <Button
@@ -146,7 +146,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
               type="submit"
               disabled={isSubmitting}
             >
-              {t('login_btn')}
+              {t('auth.btn.login')}
             </Button>
             <Handle>
               <Popover

@@ -1,5 +1,5 @@
-import { flatten } from 'lodash';
 import React, { Component, ComponentType } from 'react';
+import { flatten, uniq } from 'lodash';
 
 
 import { ICustomNextContext } from '@lib/common/interfaces/global';
@@ -9,9 +9,10 @@ export const pageWithTranslation = (namespaces?: I18nNamespace | I18nNamespace[]
   // eslint-disable-next-line arrow-parens
   Page: ComponentType<P>,
 ) => {
-  let namespacesRequired = [I18nNamespace.Common];
+  const defaultNamespaces = [I18nNamespace.Common, I18nNamespace.Backend, I18nNamespace.Validation];
+  let namespacesRequired = [...defaultNamespaces];
   if (namespaces) {
-    namespacesRequired = [...flatten([namespaces]), I18nNamespace.Common];
+    namespacesRequired = uniq([...flatten([namespaces]), ...defaultNamespaces]);
   }
 
   return class PageWithTranslation extends Component<P> {
