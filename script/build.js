@@ -154,7 +154,7 @@ const migrate = async () => {
       });
   });
   const spRun = async () => new Promise((resolve, reject) => {
-    const result = spawn('npm', ['run', 'typeorm:migrate', name], { stdio: 'inherit' });
+    const result = spawn('npm', ['run', 'typeorm:run', name], { stdio: 'inherit' });
     result
       .on('close', (code) => {
         if (code === 0) {
