@@ -89,7 +89,7 @@ class Error extends React.Component<IErrorProps> {
                 )
               }
               <A href="/">
-                <span>{t('btn.go_home')}</span>
+                <span>{t('message.go_home')}</span>
                 <ArrowRight
                   style={{ marginRight: rem(4) }}
                   size={14}

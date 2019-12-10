@@ -102,6 +102,13 @@ export class PictureUserActivityService {
     return data ? data.like : false;
   }
 
+  public userLikesCount = async (userId: ID) => {
+    const data = await this.activityRepository.createQueryBuilder('activity')
+      .where('activity.userId=:userId AND activity.like=1', { userId })
+      .getCount();
+    return data;
+  }
+
   public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => entityManager
     .createQueryBuilder()
     .delete()

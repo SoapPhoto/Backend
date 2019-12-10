@@ -200,6 +200,10 @@ export class UserService {
     return q.getOne();
   }
 
+  public async userLikesCount(id: ID) {
+    return this.pictureService.userLikesCount(id);
+  }
+
   public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
     return this.pictureService.getUserPicture(idOrName, query, user);
   }

@@ -375,6 +375,8 @@ export class PictureService {
 
   public getUserIsLike = (id: ID, user: UserEntity) => this.activityService.isLike(id, user)
 
+  public userLikesCount = (id: ID) => this.activityService.userLikesCount(id)
+
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断
    *

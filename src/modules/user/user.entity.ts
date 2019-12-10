@@ -158,6 +158,11 @@ export class UserEntity extends BaseEntity {
   @Expose()
   public likedCount = 0;
 
+  /** 用户被喜欢的数量 */
+  @Type(() => Number)
+  @Expose()
+  public likesCount = 0;
+
   /** 用户的picture数量 */
   @Type(() => Number)
   @Expose()

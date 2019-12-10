@@ -21,6 +21,11 @@ import {
   Wrapper,
   HeaderGrid,
   AvatarBox,
+  Info,
+  InfoItem,
+  InfoItemCount,
+  InfoItemLabel,
+  InfoBox,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
@@ -85,6 +90,22 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
             <Bio>
               {user.bio}
             </Bio>
+            <InfoBox>
+              <Info>
+                <InfoItem>
+                  <InfoItemCount>{user.followerCount}</InfoItemCount>
+                  <InfoItemLabel>粉丝</InfoItemLabel>
+                </InfoItem>
+                <InfoItem>
+                  <InfoItemCount>{user.followedCount}</InfoItemCount>
+                  <InfoItemLabel>关注</InfoItemLabel>
+                </InfoItem>
+                <InfoItem>
+                  <InfoItemCount>{user.likesCount}</InfoItemCount>
+                  <InfoItemLabel>喜欢</InfoItemLabel>
+                </InfoItem>
+              </Info>
+            </InfoBox>
           </Cell>
         </HeaderGrid>
       </UserHeader>

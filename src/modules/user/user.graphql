@@ -96,6 +96,9 @@ type User implements BaseNode {
   "喜欢的picture数量"
   likedCount: Float
 
+  "用户被喜欢的数量"
+  likesCount: Float
+
   "用户的picture数量"
   pictureCount: Float
 

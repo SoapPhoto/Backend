@@ -28,13 +28,16 @@ export class UserScreenStore extends BaseStore {
   }
 
   @action public getUserInfo = async (username: string) => {
+    let error = null;
     await queryToMobxObservable(this.client.watchQuery<IUserGqlReq>({
       query: UserInfo,
       variables: { username },
       fetchPolicy: 'cache-and-network',
     }), (data) => {
+      if (!data.user) error = { statusCode: 404, message: 'no_user' };
       runInAction(() => this.user = data.user);
     });
+    if (error) throw error;
   }
 
   @action public getCache = async (username: string) => {

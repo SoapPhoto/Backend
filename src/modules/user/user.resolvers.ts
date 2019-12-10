@@ -95,6 +95,13 @@ export class UserResolver {
     return this.userService.updateUserProfile(user, data);
   }
 
+  @ResolveProperty('likesCount')
+  public async likesCount(
+    @Parent() parent: UserEntity,
+  ) {
+    return this.userService.userLikesCount(parent.id);
+  }
+
   @ResolveProperty('followerCount')
   public async followerCount(
     @Parent() parent: UserEntity,

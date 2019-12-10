@@ -158,6 +158,9 @@ fragment UserFragment on User {
 
 fragment UserDetailFragment on User {
   ...UserFragment
+  likesCount
+  followerCount
+  followedCount
   isEmailVerified
   isPassword
   signupType
