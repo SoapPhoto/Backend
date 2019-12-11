@@ -10,7 +10,7 @@ enum NotificationType {
   SYSTEM
 }
 
-union NotificationMedia = Picture | Comment | Collection
+union NotificationMedia = Picture | Comment | Collection | User
 
 type Query {
   userNotification: [Notification]
@@ -54,4 +54,6 @@ type Notification implements BaseNode {
   picture: Picture
 
   comment: Comment
+
+  user: User
 }

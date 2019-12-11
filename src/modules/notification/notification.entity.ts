@@ -39,7 +39,7 @@ export class NotificationEntity extends BaseEntity {
   public readonly subscribers!: NotificationSubscribersUserEntity[];
 
   @Expose()
-  public media?: PictureEntity | CommentEntity | CollectionEntity;
+  public media?: PictureEntity | CommentEntity | CollectionEntity | UserEntity;
 
   @Expose()
   get comment(): CommentEntity | undefined {
@@ -53,6 +53,14 @@ export class NotificationEntity extends BaseEntity {
   get picture(): PictureEntity | undefined {
     if (this.category === NotificationCategory.LIKED) {
       return this.media as PictureEntity;
+    }
+    return undefined;
+  }
+
+  @Expose()
+  get user(): UserEntity | undefined {
+    if (this.category === NotificationCategory.FOLLOW) {
+      return this.media as UserEntity;
     }
     return undefined;
   }

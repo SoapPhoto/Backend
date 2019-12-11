@@ -111,6 +111,9 @@ type User implements BaseNode {
   "是否私人"
   isPrivate: Boolean
 
+  "是否关注"
+  isFollowing: Float
+
   "是否有设置密码"
   isPassword: Boolean
 

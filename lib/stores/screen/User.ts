@@ -3,6 +3,8 @@ import { action, observable, runInAction } from 'mobx';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { UserInfo } from '@lib/schemas/query';
+import Fragments from '@lib/schemas/fragments';
+import { merge } from 'lodash';
 import { BaseStore } from '../base/BaseStore';
 
 interface IUserGqlReq {
@@ -52,8 +54,17 @@ export class UserScreenStore extends BaseStore {
         runInAction(() => this.user = data.user);
       }
     } catch (err) {
-      console.log(err);
+      if (err?.name !== 'Invariant Violation') {
+        console.dir(err);
+      }
       await this.getUserInfo(username);
     }
+  }
+
+  @action public setUserInfo = (user: Partial<UserEntity>) => {
+    // eslint-disable-next-line no-restricted-syntax
+    Object.keys(user).forEach((key) => {
+      (this.user as any)[key] = (user as any)[key] as any;
+    });
   }
 }

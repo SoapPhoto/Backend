@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback } from 'react';
 import { NotificationEntity } from '@lib/common/interfaces/notification';
 import styled, { css } from 'styled-components';
 import { NotificationCategory } from '@common/enum/notification';
@@ -13,6 +13,7 @@ import { EmojiText } from '../EmojiText';
 import { Image } from '../Image';
 import { A } from '../A';
 import { Popover } from '../Popover';
+import { FollowButton } from '../Button/FollowButton';
 
 interface IProps {
   data: NotificationEntity;
@@ -82,6 +83,8 @@ export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
           return `回复了：${data.comment.content}`;
         }
         return '';
+      case NotificationCategory.FOLLOW:
+        return '关注了你';
       default:
         return '';
     }
@@ -110,8 +113,19 @@ export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
         <div>此图片已删除</div>
       );
     }
+    if (data.category === NotificationCategory.FOLLOW) {
+      if (data.user) {
+        const { isFollowing } = data.user;
+        return (
+          <FollowButton
+            size="small"
+            isFollowing={isFollowing}
+          />
+        );
+      }
+    }
     return null;
-  }, [data.category, data.comment, data.picture]);
+  }, [data.category, data.comment, data.picture, data.user]);
   return (
     <Item read={data.read ? 1 : 0}>
       <User>

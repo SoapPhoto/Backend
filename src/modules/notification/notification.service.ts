@@ -12,6 +12,7 @@ import { NotificationSubscribersUserEntity } from './subscribers-user/subscriber
 import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 import { CommentService } from '../comment/comment.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class NotificationService {
@@ -27,6 +28,8 @@ export class NotificationService {
     private readonly pictureService: PictureService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
     @Inject(forwardRef(() => SubscribersUserService))
     private readonly subscribersService: SubscribersUserService,
   ) {}
@@ -74,6 +77,7 @@ export class NotificationService {
         ),
       )
       .orderBy('notification.createTime', 'DESC')
+      .limit(20)
       .getMany();
     return Promise.all(
       data.map(async notify => classToPlain(plainToClass(NotificationEntity, {
@@ -92,6 +96,9 @@ export class NotificationService {
     if (notify.category === NotificationCategory.REPLY
       || notify.category === NotificationCategory.COMMENT) {
       return this.commentService.getRawOne(notify.mediaId!);
+    }
+    if (notify.category === NotificationCategory.FOLLOW) {
+      return this.userService.getUser(notify.mediaId!, null);
     }
     return undefined;
   }

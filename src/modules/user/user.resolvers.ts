@@ -102,6 +102,15 @@ export class UserResolver {
     return this.userService.userLikesCount(parent.id);
   }
 
+  @ResolveProperty('isFollowing')
+  public async isFollowing(
+    @Context('user') user: Maybe<UserEntity>,
+    @Parent() parent: UserEntity,
+  ) {
+    if (!user) return 0;
+    return this.followService.isFollowing(user, parent.id);
+  }
+
   @ResolveProperty('followerCount')
   public async followerCount(
     @Parent() parent: UserEntity,

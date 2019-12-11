@@ -48,8 +48,14 @@ mutation UpdateProfile($data: UpdateProfileInput!) {
   }
 }
 
-mutation AddComment($id: ID!, $commentId: ID, $data: AddCommentInput!) {
-  addComment(id: $id, commentId: $commentId, data: $data) {
-    ...CommentChildFragment
+mutation FollowUser($input: FollowUserInput!) {
+  followUser(input: $input) {
+    done
+  }
+}
+
+mutation UnFollowUser($input: FollowUserInput!) {
+  unFollowUser(input: $input) {
+    done
   }
 }

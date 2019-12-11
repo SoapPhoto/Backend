@@ -26,6 +26,12 @@ query UserInfo($username: String) {
   }
 }
 
+query UserIsFollowing($username: String) {
+  user(username: $username) {
+    ...UserFollowInfoFragment
+  }
+}
+
 query Whoami {
   whoami {
     ...UserDetailFragment

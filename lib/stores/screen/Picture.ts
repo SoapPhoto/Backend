@@ -221,7 +221,9 @@ export class PictureScreenStore extends BaseStore {
         id: `Picture:${this.info.id}`,
       });
     } catch (err) {
-      console.error(err);
+      if (err?.name !== 'Invariant Violation') {
+        console.dir(err);
+      }
       return null;
     }
   }

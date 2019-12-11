@@ -4,10 +4,12 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotificationType, NotificationCategory } from '@common/enum/notification';
 import { FollowEntity } from './follow.entity';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { FollowUsersDto } from './dto/follow.dto';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class FollowService {
@@ -16,18 +18,29 @@ export class FollowService {
     private followRepository: Repository<FollowEntity>,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => NotificationService))
+    private readonly notificationService: NotificationService,
   ) {}
 
-  public async create(userId: ID, followedId: ID) {
-    const user = await this.userService.getBaseUser(followedId);
-    if (!user) {
+  public async create(user: UserEntity, followedId: ID) {
+    const followUser = await this.userService.getBaseUser(followedId);
+    if (!followUser) {
       throw new BadGatewayException('no_user');
     }
-    return this.followRepository.save(
+    await this.followRepository.save(
       this.followRepository.create({
         followed_user_id: followedId,
-        follower_user_id: userId,
+        follower_user_id: user.id,
       }),
+    );
+    this.notificationService.publishNotification(
+      user,
+      followUser,
+      {
+        type: NotificationType.USER,
+        category: NotificationCategory.FOLLOW,
+        mediaId: user.id.toString(),
+      },
     );
   }
 
@@ -81,6 +94,15 @@ export class FollowService {
         follower_user_id: user.id,
       },
     });
-    return Boolean(follow);
+    if (follow) {
+      const mutual = await this.followRepository.findOne({
+        where: {
+          followed_user_id: user.id,
+          follower_user_id: followedId,
+        },
+      });
+      return mutual ? 2 : 1;
+    }
+    return follow ? 1 : 0;
   }
 }

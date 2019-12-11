@@ -74,7 +74,7 @@ export const StyleButton = styled.button.attrs<IBtnIProp, IBtnAttr>(
   display: inline-block;
   line-height: ${_ => rem(_.height + 2)};
   font-weight: 400;
-  border: 1px solid transparent;
+  border: 0px solid transparent;
   outline: none!important;
   background-image: none;
   cursor: pointer;

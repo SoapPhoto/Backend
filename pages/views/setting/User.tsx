@@ -109,7 +109,7 @@ const User: React.FC = () => {
                   <Cell width={1} middle>
                     <div>
                       <Upload onFileChange={handleAvatarChange}>
-                        <Button>{t('setting.upload_avatar')}</Button>
+                        <Button type="button">{t('setting.upload_avatar')}</Button>
                       </Upload>
                     </div>
                   </Cell>

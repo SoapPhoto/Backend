@@ -153,6 +153,11 @@ export class UserEntity extends BaseEntity {
   @Expose({ groups: [Role.OWNER, Role.ADMIN] })
   public isEmailVerified!: boolean;
 
+  /** 是否关注0:未关注1:已关注2:互相关注 */
+  @Type(() => Number)
+  @Expose()
+  public isFollowing = 0;
+
   /** 喜欢的picture数量 */
   @Type(() => Number)
   @Expose()

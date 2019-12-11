@@ -42,6 +42,7 @@ declare module '*/query.graphql' {
   export const UnreadNotificationCount: DocumentNode;
   export const Comments: DocumentNode;
   export const ChildComments: DocumentNode;
+  export const UserIsFollowing: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';
@@ -55,6 +56,8 @@ declare module '*/mutations.graphql' {
   export const DeleteCollection: DocumentNode;
   export const UpdateProfile: DocumentNode;
   export const AddComment: DocumentNode;
+  export const FollowUser: DocumentNode;
+  export const UnFollowUser: DocumentNode;
 }
 declare module '*/subscription.graphql' {
   import { DocumentNode } from 'graphql';

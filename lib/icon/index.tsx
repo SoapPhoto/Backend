@@ -4,3 +4,4 @@ export * from './GitHubLogo';
 export * from './StrutAlign';
 export * from './Star';
 export * from './Bell';
+export * from './ArrowHorizontal';

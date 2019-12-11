@@ -78,6 +78,7 @@ export class Popover extends React.Component<IPopoverProps> {
   public popper?: PopperJS;
 
   public componentDidMount() {
+    this.isMini = isMobile();
     window.addEventListener('resize', this.handleResize);
   }
 

@@ -13,6 +13,7 @@ import { SubscribersUserModule } from './subscribers-user/subscribers-user.modul
 import { PictureModule } from '../picture/picture.module';
 import { NotificationResolver, NotificationMediaResolver } from './notification.resolvers';
 import { CommentModule } from '../comment/comment.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   providers: [NotificationService, NotificationResolver, NotificationMediaResolver],
@@ -23,6 +24,7 @@ import { CommentModule } from '../comment/comment.module';
     EventsModule,
     forwardRef(() => PictureModule),
     forwardRef(() => CommentModule),
+    forwardRef(() => UserModule),
   ],
   exports: [NotificationService],
 })

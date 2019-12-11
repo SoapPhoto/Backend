@@ -48,7 +48,7 @@ export class FollowResolver {
     if (await this.followService.isFollowing(user, input.userId)) {
       throw new BadGatewayException('followed');
     }
-    await this.followService.create(user.id, input.userId);
+    await this.followService.create(user, input.userId);
     return { done: true };
   }
 

@@ -158,6 +158,7 @@ fragment UserFragment on User {
 
 fragment UserDetailFragment on User {
   ...UserFragment
+  isFollowing
   likesCount
   followerCount
   followedCount
@@ -168,6 +169,13 @@ fragment UserDetailFragment on User {
   pictures(limit: 3) {
     ...PicturePreviewFragment
   }
+}
+
+fragment UserFollowInfoFragment on User {
+  id
+  isFollowing
+  followerCount
+  followedCount
 }
 
 # -------------------- Tag
@@ -202,6 +210,9 @@ fragment NotificationFragment on Notification {
   }
   comment {
     ...CommentNotificationFragment
+  }
+  user {
+    ...UserDetailFragment
   }
 }
 

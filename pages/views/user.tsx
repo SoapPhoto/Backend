@@ -1,6 +1,10 @@
+import { useApolloClient } from 'react-apollo';
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import parse from 'url-parse';
+import { rem } from 'polished';
+import { withRouter } from 'next/router';
+import { Cell } from 'styled-css-grid';
 
 import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle } from '@lib/common/utils';
@@ -28,8 +32,6 @@ import {
   InfoBox,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
-import { withRouter } from 'next/router';
-import { Cell } from 'styled-css-grid';
 import { A } from '@lib/components/A';
 import { CollectionList } from '@lib/containers/Collection/List';
 import { UserType } from '@common/enum/router';
@@ -37,6 +39,11 @@ import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { FollowButton } from '@lib/components/Button/FollowButton';
+import { FollowUser, UnFollowUser } from '@lib/schemas/mutations';
+import { UserIsFollowing } from '@lib/schemas/query';
+import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
+import { throttle } from 'lodash';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -45,12 +52,49 @@ interface IProps extends IBaseScreenProps, WithRouterProps {
 
 const server = !!(typeof window === 'undefined');
 
+
 const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
+  const [followLoading, setFollowLoading] = useState(false);
+  const { mutate } = useApolloClient();
+  const [query] = useWatchQuery<{user: {isFollowing: number}}>(UserIsFollowing, { fetchPolicy: 'network-only' });
   const { screen } = useStores();
   const { isLogin, userInfo } = useAccountStore();
   const { t } = useTranslation();
   const { userStore, userCollectionStore, userPictureStore } = screen;
-  const { user } = userStore;
+  const { user, setUserInfo } = userStore;
+  const follow = useCallback(throttle(async () => {
+    let mutation = FollowUser;
+    if (user.isFollowing > 0) mutation = UnFollowUser;
+    if (followLoading) return;
+    setFollowLoading(true);
+    try {
+      await mutate<{done: boolean}>({
+        mutation,
+        variables: {
+          input: {
+            userId: user.id,
+          },
+        },
+      });
+      await query(({ user: newUserInfo }) => {
+        setUserInfo(newUserInfo);
+        setFollowLoading(false);
+      }, {
+        username: user.username,
+      });
+    } catch (error) {
+      if (error?.graphQLErrors[0]?.message.message === 'followed') {
+        await query(({ user: newUserInfo }) => {
+          setUserInfo(newUserInfo);
+          setFollowLoading(false);
+        }, {
+          username: user.username,
+        });
+      } else {
+        setFollowLoading(false);
+      }
+    }
+  }, 1000), [mutate, query, setUserInfo, user.id, user.isFollowing, user.username]);
   return (
     <Wrapper>
       <SEO
@@ -74,6 +118,13 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
                   </A>
                 )
               }
+              <FollowButton
+                disabled={followLoading}
+                style={{ marginLeft: rem(24), marginRight: rem(24) }}
+                size="small"
+                isFollowing={user.isFollowing}
+                onClick={follow}
+              />
             </UserName>
             <Profile>
               {

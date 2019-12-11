@@ -15,6 +15,7 @@ import { PictureService } from './picture.service';
 import { PictureUserActivityModule } from './user-activity/user-activity.module';
 import { FileModule } from '../file/file.module';
 import { CollectionModule } from '../collection/collection.module';
+import { PictureScheduleService } from './picture.schedule';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { CollectionModule } from '../collection/collection.module';
     forwardRef(() => FileModule),
     forwardRef(() => CollectionModule),
   ],
-  providers: [PictureService, PictureResolver],
+  providers: [PictureService, PictureResolver, PictureScheduleService],
   controllers: [PictureController],
   exports: [PictureService],
 })
