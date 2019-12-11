@@ -118,13 +118,17 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
                   </A>
                 )
               }
-              <FollowButton
-                disabled={followLoading}
-                style={{ marginLeft: rem(24), marginRight: rem(24) }}
-                size="small"
-                isFollowing={user.isFollowing}
-                onClick={follow}
-              />
+              {
+                userInfo?.username !== user.username && (
+                  <FollowButton
+                    disabled={followLoading}
+                    style={{ marginLeft: rem(24), marginRight: rem(24) }}
+                    size="small"
+                    isFollowing={user.isFollowing}
+                    onClick={follow}
+                  />
+                )
+              }
             </UserName>
             <Profile>
               {
