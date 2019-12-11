@@ -19,6 +19,6 @@ const A = styled.a`
 export const Footer = () => (
   <Wrapper>
     <div style={{ marginRight: rem(24) }}>©2019 All Rights Reserved</div>
-    <div><A target="__blank" href="http://www.miitbeian.gov.cn/">闽ICP备18021344号-1</A></div>
+    <div><A target="__blank" href="http://www.beian.miit.gov.cn/">闽ICP备18021344号-1</A></div>
   </Wrapper>
 );
