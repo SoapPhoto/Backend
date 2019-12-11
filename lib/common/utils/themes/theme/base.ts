@@ -16,6 +16,7 @@ const colors = {
 };
 
 const theme: DefaultTheme = {
+  isMobile: false,
   name: 'BASE',
   colors,
   fontSizes: [
