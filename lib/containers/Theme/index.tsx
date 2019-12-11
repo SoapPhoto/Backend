@@ -3,6 +3,7 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 
 import { ThemeStore } from '@lib/stores/ThemeStore';
+import { useIsMobile } from '@lib/common/utils/isMobile';
 import { GlobalStyle } from './GlobalStyle';
 
 interface IProps {
@@ -11,13 +12,16 @@ interface IProps {
 
 export const ThemeWrapper = inject('themeStore')(
   observer<React.FC<IProps>>(
-    ({ children, themeStore }) => (
-      <ThemeProvider theme={themeStore!.themeData}>
-        <>
-          {children}
-          <GlobalStyle />
-        </>
-      </ThemeProvider>
-    ),
+    ({ children, themeStore }) => {
+      const isMobile = useIsMobile();
+      return (
+        <ThemeProvider theme={{ ...themeStore!.themeData, isMobile }}>
+          <>
+            {children}
+            <GlobalStyle />
+          </>
+        </ThemeProvider>
+      );
+    },
   ),
 );

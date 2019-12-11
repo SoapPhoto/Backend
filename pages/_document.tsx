@@ -34,7 +34,7 @@ export default class MyDocument extends Document {
 
   public render() {
     return (
-      <html lang="zh-CN" {...{ 'xmlns:wb': 'http://open.weibo.com/wb' } as any}>
+      <html lang="zh-CN">
         <Head>
           <meta charSet="utf-8" />
           <meta name="renderer" content="webkit" />

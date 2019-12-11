@@ -5,7 +5,7 @@ import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture'
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
 import {
-  Bookmark, Info, Settings,
+  Bookmark, Info, Settings, Star1,
 } from '@lib/icon';
 import {
   BaseInfoHandleBox, PictureBaseInfo,
@@ -128,13 +128,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
   };
   return (
     <PictureBaseInfo>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: `
-            <wb:like appkey="3ssHeA" type="simple"></wb:like>
-          `,
-        }}
-      />
+      <div />
       {/* //TODO */}
       <span style={{ display: 'none' }}>{params.type}</span>
       <BaseInfoHandleBox
@@ -160,7 +154,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
         {
           isLogin && (
             <IconButton popover={t('add_collection')} onClick={openCollection}>
-              <Bookmark
+              <Star1
                 style={{
                   stroke: isCollected ? colors.baseGreen : colors.secondary,
                   fill: isCollected ? colors.baseGreen : 'transparent',

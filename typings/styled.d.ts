@@ -4,6 +4,7 @@ import { } from 'styled-components';
 declare module 'styled-components' {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface DefaultTheme {
+    isMobile: boolean;
     name: string;
     fontSizes: number[];
     lineHeights: {[key: string]: number};

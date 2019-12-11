@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash';
+import { isFunction, debounce } from 'lodash';
 import React, { Children } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PopperJS, { Data, Placement } from 'popper.js';
@@ -7,7 +7,7 @@ import { observable, action } from 'mobx';
 
 import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
-import { customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { isMobile } from '@lib/common/utils/isMobile';
 import { Popper } from '../Popper';
 import { Arrow, Content } from './styles';
 
@@ -78,22 +78,21 @@ export class Popover extends React.Component<IPopoverProps> {
   public popper?: PopperJS;
 
   public componentDidMount() {
-    this._media = window.matchMedia(`(max-width: ${customBreakpoints.medium})`);
-    this._media.addListener(this.handleMedia);
-    this.isMini = this._media.matches;
+    window.addEventListener('resize', this.handleResize);
   }
 
   public componentWillUnmount() {
-    if (this._media) this._media.removeListener(this.handleMedia);
+    window.removeEventListener('resize', this.handleResize);
   }
 
   @action public setVisible = (value: boolean) => {
     this.visible = value;
   };
 
-  public handleMedia = () => {
-    this.isMini = this._media!.matches;
-  }
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public handleResize = debounce(() => {
+    this.isMini = isMobile();
+  }, 1000)
 
   public arrowRef = (ref: HTMLDivElement) => {
     if (ref) {

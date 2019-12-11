@@ -95,9 +95,12 @@ export const ItemWrapper = styled.div<{private: number}>`
 const handleHover = css`
   opacity: 0;
   transition: .2s opacity ease-in-out;
-  ${customMedia.lessThan('medium')`
+  ${customMedia.lessThan('mobile')`
     opacity: 1;
   `}
+  ${_ => (_.theme.isMobile ? css`
+    opacity: 1;
+  ` : css``)}
   ${ItemWrapper}:hover & {
     opacity: 1;
   }
