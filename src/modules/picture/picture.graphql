@@ -5,6 +5,11 @@ type Query {
   ): Picture
 
   "获取图片列表"
+  hotPictures(
+    query: PicturesQueryInput!
+  ): Pictures
+
+  "获取图片列表"
   pictures(
     query: PicturesQueryInput!
   ): Pictures
