@@ -70,8 +70,9 @@ export const InfoItem = styled.div`
 `;
 
 export const InfoItemCount = styled.span`
-  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
-  margin-right: ${rem('4px')};
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
+  margin-right: ${rem(8)};
+  font-weight: 700;
   font-family: Rubik;
 `;
 

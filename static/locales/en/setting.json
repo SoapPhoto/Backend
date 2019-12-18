@@ -6,22 +6,22 @@
       "account": "Account"
     },
     "label": {
-      "username": "Username (login name)",
-      "name": "name (name displayed)",
+      "username": "Username",
+      "name": "name",
       "website": "Website",
       "bio": "Bio"
     },
     "upload_avatar": "Upload avatar",
-    "update": "Update settings",
+    "update": "Update",
     "account": {
       "btn": {
         "authorize": "Bind",
-        "modify": "modify"
+        "modify": "Modify"
       },
       "label": {
         "no_verify": "Unverified",
         "revoke": "Untie",
-        "signup_type": "way to register"
+        "signup_type": "register"
       },
       "message": {
         "authorize_success": "Bind successfully!",
@@ -35,9 +35,9 @@
       }
     },
     "reset_password": {
-      "again_new_password": "Enter the new password again",
+      "again_new_password": "new password again",
       "btn": {
-        "confirm": "change the password"
+        "confirm": "Confirm"
       },
       "message": {
         "password_inconsistent": "Please make sure you enter the password twice.",

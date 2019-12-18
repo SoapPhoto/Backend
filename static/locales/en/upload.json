@@ -11,7 +11,7 @@
       "bio": "Everyone can see where your picture was taken",
       "label": "Share location"
     },
-    "title": "upload image",
+    "title": "Upload image",
     "message": {
       "error_upload": "Image upload failed!",
       "image_format_error": "Picture format error",

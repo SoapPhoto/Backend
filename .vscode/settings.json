@@ -93,6 +93,6 @@
     "lib/i18n",
     "static/locales"
   ],
-  "i18n-ally.sourceLanguage": "zh-CN",
+  "i18n-ally.sourceLanguage": "en",
   "i18n-ally.keystyle": "nested"
 }

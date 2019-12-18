@@ -399,21 +399,21 @@ export class PictureService {
    */
   // eslint-disable-next-line arrow-parens
   public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
-    // q.leftJoinAndSelect('picture.user', value)
-    //   .loadRelationCountAndMap(
-    //     'picture.likedCount', 'picture.activities', 'activity',
-    //     qb => qb.andWhere('activity.like=:like', { like: true }),
-    //   );
+    q.leftJoinAndSelect('picture.user', value)
+      .loadRelationCountAndMap(
+        'picture.likedCount', 'picture.activities', 'activity',
+        qb => qb.andWhere('activity.like=:like', { like: true }),
+      );
     // this.userService.selectInfo(q, value);
     if (user) {
-      // q
-      //   .loadRelationCountAndMap(
-      //     'picture.isLike', 'picture.activities', 'activity',
-      //     qb => qb.andWhere(
-      //       'activity.userId=:userId AND activity.like=:like',
-      //       { userId: user.id, like: true },
-      //     ),
-      //   );
+      q
+        .loadRelationCountAndMap(
+          'picture.isLike', 'picture.activities', 'activity',
+          qb => qb.andWhere(
+            'activity.userId=:userId AND activity.like=:like',
+            { userId: user.id, like: true },
+          ),
+        );
       // .leftJoinAndMapMany(
       //   'picture.info',
       //   CollectionPictureEntity,

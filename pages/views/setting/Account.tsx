@@ -28,7 +28,7 @@ interface IInfo {
 }
 
 const Title = styled.h2`
-  font-weight: 400;
+  font-weight: 700;
   margin-bottom: ${rem(24)};
 `;
 
@@ -55,6 +55,7 @@ const InfoTitle = styled.h3`
 const InfoTip = styled.span`
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   font-weight: 400;
+  margin-left: ${rem(12)};
   color: ${theme('colors.secondary')};
 `;
 
@@ -220,7 +221,7 @@ const Account = observer(() => {
               {
                 userInfo!.signupType === SignupType.EMAIL && (
                   <InfoTip>
-                    {`(${t('setting.account.label.signup_type')})`}
+                    {` (${t('setting.account.label.signup_type')})`}
                   </InfoTip>
                 )
               }
@@ -246,12 +247,12 @@ const Account = observer(() => {
                     }
                   </InfoName>
                   <Button disabled shape="round" danger size="small">
-                    {`(${t('setting.account.btn.modify')})`}
+                    {`${t('setting.account.btn.modify')}`}
                   </Button>
                 </CrInfo>
               ) : (
                 <Button disabled shape="round" size="small">
-                  {`(${t('setting.account.btn.authorize')})`}
+                  {`${t('setting.account.btn.authorize')}`}
                 </Button>
               )
             }

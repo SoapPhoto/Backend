@@ -6,9 +6,9 @@
       "collection": "Collections"
     },
     "label": {
-      "followed": "attention",
-      "followers": "Fan",
-      "likes": "like"
+      "followed": "Followed",
+      "followers": "Followers",
+      "likes": "Likes"
     }
   }
 }
