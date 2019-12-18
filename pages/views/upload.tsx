@@ -39,6 +39,7 @@ import { rem } from 'polished';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { validator } from '@common/validator';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -60,6 +61,7 @@ const initUploadData = {
 };
 
 const Upload: ICustomNextPage<IProps, any> = () => {
+  const { t } = useTranslation();
   const imageRef = React.useRef<File>();
   const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
   const [imageUrl, setImageUrl] = React.useState('');
@@ -112,7 +114,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
 
   const addPicture = useCallback(async () => {
     if (validator.isEmpty(data.title)) {
-      setTitleError('请输入标题！');
+      setTitleError(t('validation.yup_required', t('label.picture_title')));
       return;
     }
     setUploadLoading(true);
@@ -131,18 +133,18 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       try {
         await request.post('/api/picture', addData);
         setDisabled(true);
-        Toast.success('上传成功！');
+        Toast.success(t('upload.message.success_upload'));
         setTimeout(() => {
           window.location = '/' as any;
         }, 100);
       } catch (err) {
-        Toast.error('图片上传失败!');
+        Toast.error(t('upload.message.error_upload'));
       } finally {
         setUploadLoading(false);
         setPercentComplete(0);
       }
     }
-  }, [onUploadProgress, imageInfo, isLocation, data]);
+  }, [data, t, onUploadProgress, imageInfo, isLocation]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);
@@ -155,7 +157,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       setImageUrl(url);
       setImageInfo(info);
     } else {
-      Toast.warning('图片格式错误');
+      Toast.warning(t('upload.message.image_format_error'));
     }
   };
   const resetData = useCallback(() => {
@@ -167,7 +169,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   return (
     <Wrapper>
       <Head>
-        <title>{getTitle('上传')}</title>
+        <title>{getTitle('upload.title', t)}</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
       </Head>
@@ -189,13 +191,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                   <Cell>
                     <Input
                       isTitle
-                      placeholder="标题"
+                      placeholder={t('label.picture_title')}
                       value={data.title}
                       onChange={e => setData('title', e.target.value)}
                       error={titleError}
                     />
                     <TextArea
-                      placeholder="简介"
+                      placeholder={t('label.picture_bio')}
                       value={data.bio}
                       onChange={e => setData('bio', e.target.value)}
                     />
@@ -204,8 +206,8 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                     style={{ marginBottom: rem(24) }}
                   >
                     <Switch
-                      label="私人"
-                      bio="仅自己可见"
+                      label={t('private')}
+                      bio={t('message.visible_yourself', t('label.picture'))}
                       checked={data.isPrivate}
                       onChange={checked => setData('isPrivate', checked)}
                     />
@@ -216,15 +218,19 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                         style={{ marginBottom: rem(24) }}
                       >
                         <Switch
-                          label="分享位置信息"
-                          bio="所有人都可以看到你图片拍摄的位置信息"
+                          label={t('upload.share_location.label')}
+                          bio={t('upload.share_location.bio')}
                           checked={isLocation}
                           onChange={checked => setIsLocation(checked)}
                         />
                       </Cell>
                     )
                   }
-                  <FieldItem onClick={() => setEXIFVisible(true)} label="修改EXIF信息" bio="照片的属性信息和拍摄数据">
+                  <FieldItem
+                    onClick={() => setEXIFVisible(true)}
+                    label={t('upload.edit_exif.label')}
+                    bio={t('upload.edit_exif.bio')}
+                  >
                     <Edit size={20} css={css`color: ${theme('colors.primary')};` as any} />
                   </FieldItem>
                   <FormTag>
@@ -241,7 +247,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                       loading={uploadLoading}
                       disabled={disabled}
                     >
-                      <span>上传</span>
+                      <span>{t('upload.btn.upload')}</span>
                     </Button>
                   </Cell>
                 </Grid>

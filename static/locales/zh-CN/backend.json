@@ -6,9 +6,9 @@
     "password_error": "密码错误",
     "no_exist_picture": "图片不存在",
     "no_exist_collection": "收藏夹不存在",
+    "no_exist_comment": "评论失败",
     "collected": "已收藏",
     "no_collect": "为收藏",
-    "no_exist_comment": "评论失败",
 
     "code_credentials_invalid": "代码凭证无效",
     "client_credentials_invalid": "客户凭证无效",

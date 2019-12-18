@@ -3,8 +3,6 @@
   // "editor.fontFamily": " 'Dank Mono', 'FiraCode-Retina',  'Fira Code Retina', 'Iosevka Term', Consolas, 'M+ 1m', 'Courier New', monospace, 微软雅黑",
   "editor.tabSize": 2,
   "debug.node.autoAttach": "off",
-  "eslint.enable": true,
-  "eslint.autoFixOnSave": true,
   "vsicons.presets.nestjs": true,
   "cSpell.words": [
     "Autosize",
@@ -89,5 +87,12 @@
     "xml",
     "yaml",
     "yml"
-  ]
+  ],
+  "i18n-ally.enabledFrameworks": "react",
+  "i18n-ally.localesPaths": [
+    "lib/i18n",
+    "static/locales"
+  ],
+  "i18n-ally.sourceLanguage": "zh-CN",
+  "i18n-ally.keystyle": "nested"
 }

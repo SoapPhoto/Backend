@@ -10,6 +10,7 @@ import { CommentList } from './List';
 import { Wrapper } from './styles';
 import { Empty } from '..';
 import { CommentModal } from './Modal';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
   id: ID;
@@ -27,6 +28,7 @@ export const Comment = observer(({
   onConfirm,
   loading,
 }) => {
+  const { t } = useTranslation();
   const { isLogin } = useAccountStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalState, setStateModal] = useState<CommentEntity>();
@@ -52,7 +54,7 @@ export const Comment = observer(({
       />
       {
         (loading || (!loading && comment.length === 0)) && (
-          <Empty emptyText="暂无评论！" loading={loading} />
+          <Empty emptyText={t('comment.empty')} loading={loading} />
         )
       }
       <CommentModal

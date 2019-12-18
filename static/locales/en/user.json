@@ -4,6 +4,11 @@
       "picture": "Pictures",
       "like": "Likes",
       "collection": "Collections"
+    },
+    "label": {
+      "followed": "attention",
+      "followers": "Fan",
+      "likes": "like"
     }
   }
 }

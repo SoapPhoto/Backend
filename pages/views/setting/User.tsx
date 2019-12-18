@@ -60,7 +60,7 @@ const User: React.FC = () => {
             ...response.data.updateProfile,
           } as UserEntity);
         }
-        Toast.success('修改成功');
+        Toast.success(t('message.success_modify'));
       } finally {
         setBtnLoading(false);
         setSubmitting(false);
@@ -89,7 +89,7 @@ const User: React.FC = () => {
         validate={(value) => {
           if (validator.isNotEmpty(value.website) && !validator.isURL(value.website)) {
             return {
-              website: '请输入正确的网址!',
+              website: t('validation.yup_format', t('label.url')),
             };
           }
           return {};

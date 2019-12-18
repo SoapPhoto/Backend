@@ -12,6 +12,39 @@
       "bio": "Bio"
     },
     "upload_avatar": "Upload avatar",
-    "update": "Update settings"
+    "update": "Update settings",
+    "account": {
+      "btn": {
+        "authorize": "Bind",
+        "modify": "modify"
+      },
+      "label": {
+        "no_verify": "Unverified",
+        "revoke": "Untie",
+        "signup_type": "way to register"
+      },
+      "message": {
+        "authorize_success": "Bind successfully!",
+        "google_disabled": "Google is temporarily unavailable!",
+        "require_one_login_type": "You must reserve a login method, please bind another account or set a password and try again!",
+        "revoke_error": "Unbinding failed",
+        "revoke_success": "Unbundled successfully!"
+      },
+      "revoke_confirm": {
+        "title": "Are you sure you want to unbind?"
+      }
+    },
+    "reset_password": {
+      "again_new_password": "Enter the new password again",
+      "btn": {
+        "confirm": "change the password"
+      },
+      "message": {
+        "password_inconsistent": "Please make sure you enter the password twice.",
+        "success": "Successful modification, please log in again!"
+      },
+      "new_password": "new password",
+      "password": "old password"
+    }
   }
 }

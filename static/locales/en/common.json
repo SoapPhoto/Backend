@@ -8,6 +8,7 @@
     "upload": "Upload",
     "setting": "Setting",
     "signup": "Sign Up",
+    "signout": "Sign Out",
     "dark": "Dark Mode",
     "light": "Light Mode"
   },
@@ -18,7 +19,8 @@
     "password": "Password",
     "picture_title": "Title",
     "picture_bio": "Bio",
-    "email": "Email"
+    "email": "Email",
+    "url": "URL"
   },
   "btn": {
     "delete": "Delete",
@@ -30,7 +32,8 @@
     "no_more": "No more content!",
     "go_home": "Go Home",
     "update_success": "Update Sccuess!",
-    "visible_yourself": "This {0} is only visible to yourself."
+    "visible_yourself": "This {0} is only visible to yourself.",
+    "success_modify": "Successfully modified!"
   },
   "picture_info": "Picture Info",
   "add_collection": "Add Collection",
@@ -42,7 +45,16 @@
   "delete_confirm": "Are you sure you want to delete this {0}? It will not be recoverable after deletion.",
   "comment": {
     "placeholder": "Input comment",
-    "send": "Comment"
+    "send": "Comment",
+    "empty": "No Comment!",
+    "author": "Author",
+    "reply": "Reply",
+    "close_reply": "Cloes reply",
+    "open_reply": "Expand {0} replies",
+    "open_all_comment": "See all reviews",
+    "all_comment": {
+      "title": "Comments · {0} comments"
+    }
   },
   "error_message": {
     "404": "We couldn’t find this page.",

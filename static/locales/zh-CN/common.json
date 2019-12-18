@@ -7,6 +7,7 @@
   "menu": {
     "upload": "上传",
     "setting": "设置",
+    "signup": "注册",
     "signout": "退出登录",
     "dark": "暗色模式",
     "light": "亮色模式"
@@ -18,7 +19,8 @@
     "password": "密码",
     "picture_title": "标题",
     "picture_bio": "说明",
-    "email": "邮箱"
+    "email": "邮箱",
+    "url": "网址"
   },
   "btn": {
     "delete": "删除",
@@ -30,7 +32,8 @@
     "no_more": "没有更多内容啦！",
     "go_home": "前往首页",
     "update_success": "修改成功！",
-    "visible_yourself": "这个{0}仅自己可见"
+    "visible_yourself": "这个{0}仅自己可见",
+    "success_modify": "修改成功！"
   },
   "picture_info": "图片信息",
   "add_collection": "添加收藏",
@@ -42,7 +45,16 @@
   "delete_confirm": "确认要删除此{0}吗？删除后将不可恢复。",
   "comment": {
     "placeholder": "输入评论",
-    "send": "评论"
+    "send": "评论",
+    "empty": "暂无评论！",
+    "author": "作者",
+    "reply": "回复",
+    "close_reply": "收起回复",
+    "open_reply": "展开 {0} 条回复",
+    "open_all_comment": "查看所有评论",
+    "all_comment": {
+      "title": "评论 · {0}条评论"
+    }
   },
   "error_message": {
     "404": "不存在的页面。",

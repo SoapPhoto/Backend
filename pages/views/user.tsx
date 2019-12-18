@@ -149,15 +149,15 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
               <Info>
                 <InfoItem>
                   <InfoItemCount>{user.followerCount}</InfoItemCount>
-                  <InfoItemLabel>粉丝</InfoItemLabel>
+                  <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
                 </InfoItem>
                 <InfoItem>
                   <InfoItemCount>{user.followedCount}</InfoItemCount>
-                  <InfoItemLabel>关注</InfoItemLabel>
+                  <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
                 </InfoItem>
                 <InfoItem>
                   <InfoItemCount>{user.likesCount}</InfoItemCount>
-                  <InfoItemLabel>喜欢</InfoItemLabel>
+                  <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
                 </InfoItem>
               </Info>
             </InfoBox>

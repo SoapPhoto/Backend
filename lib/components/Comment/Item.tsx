@@ -16,6 +16,7 @@ import {
   ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel, ChildComment, Dot, MoreChildComment, MoreChildCommentBtn,
 } from './styles/list';
 import { CommentList } from './List';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface ICommentItem {
   visibleChild?: boolean;
@@ -34,6 +35,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
   onConfirm,
   openModal,
 }) => {
+  const { t } = useTranslation()
   const { isLogin } = useAccountStore();
   const [isComment, setComment] = useState(false);
   const [visibleComment, setVisibleComment] = useState(true);
@@ -79,13 +81,13 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
             </A>
             {
               author.username === user.username && (
-                <UserLabel>(作者)</UserLabel>
+                <UserLabel>({t('comment.author')})</UserLabel>
               )
             }
             {
               !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
-                  <span>回复 </span>
+                  <span>{t('comment.reply')} </span>
                   <UserPopper username={replyUser.username}>
                     <A
                       route={`/@${replyUser.username}`}
@@ -126,7 +128,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
                 <ConfirmText
                   onClick={handleChildComment}
                 >
-                  {visibleComment ? '收起回复' : `展开 ${comment.subCount} 条回复`}
+                  {visibleComment ? t('comment.close_reply') : t('comment.open_reply', comment.subCount.toString())}
                 </ConfirmText>
               </>
             )
@@ -138,7 +140,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
                 <ConfirmText
                   onClick={openComment}
                 >
-                回复
+                  {t('comment.reply')}
                 </ConfirmText>
               </>
             )
@@ -150,7 +152,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
               <CommentEditor
                 child
                 onConfirm={addComment}
-                placeholder={`回复@${user.fullName}：`}
+                placeholder={`${t('comment.reply')}@${user.fullName}：`}
                 onClose={() => setComment(false)}
               />
             </div>
@@ -169,7 +171,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
               {
                 openModal && comment.subCount > 3 && (
                   <MoreChildComment>
-                    <MoreChildCommentBtn onClick={openItemModal}>查看所有评论</MoreChildCommentBtn>
+                    <MoreChildCommentBtn onClick={openItemModal}>{t('comment.open_all_comment')}</MoreChildCommentBtn>
                   </MoreChildComment>
                 )
               }
