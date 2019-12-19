@@ -136,4 +136,13 @@ export class CommentService {
       .getCount();
     return data;
   }
+
+  public async getPicturesCommentCount(ids: ID[]) {
+    const data = await this.commentRepository.createQueryBuilder('comment')
+      .select('COUNT(DISTINCT(`comment`.`id`)) as count, comment.pictureId')
+      .where('comment.pictureId IN (:...ids)', { ids })
+      .groupBy('comment.pictureId')
+      .getRawMany();
+    return data;
+  }
 }

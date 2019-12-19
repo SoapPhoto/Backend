@@ -6,12 +6,45 @@
       "account": "Account"
     },
     "label": {
-      "username": "Username (login name)",
-      "name": "name (name displayed)",
+      "username": "Username",
+      "name": "name",
       "website": "Website",
       "bio": "Bio"
     },
     "upload_avatar": "Upload avatar",
-    "update": "Update settings"
+    "update": "Update",
+    "account": {
+      "btn": {
+        "authorize": "Bind",
+        "modify": "Modify"
+      },
+      "label": {
+        "no_verify": "Unverified",
+        "revoke": "Untie",
+        "signup_type": "register"
+      },
+      "message": {
+        "authorize_success": "Bind successfully!",
+        "google_disabled": "Google is temporarily unavailable!",
+        "require_one_login_type": "You must reserve a login method, please bind another account or set a password and try again!",
+        "revoke_error": "Unbinding failed",
+        "revoke_success": "Unbundled successfully!"
+      },
+      "revoke_confirm": {
+        "title": "Are you sure you want to unbind?"
+      }
+    },
+    "reset_password": {
+      "again_new_password": "new password again",
+      "btn": {
+        "confirm": "Confirm"
+      },
+      "message": {
+        "password_inconsistent": "Please make sure you enter the password twice.",
+        "success": "Successful modification, please log in again!"
+      },
+      "new_password": "new password",
+      "password": "old password"
+    }
   }
 }

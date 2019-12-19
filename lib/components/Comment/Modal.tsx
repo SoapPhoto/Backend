@@ -17,6 +17,7 @@ import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
 import { Empty } from '../Empty';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
   id: ID;
@@ -80,6 +81,7 @@ export const CommentModal: React.FC<IProps> = ({
   onClose,
   comment,
 }) => {
+  const { t } = useTranslation()
   const { mutate } = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState<CommentEntity[]>();
@@ -133,7 +135,7 @@ export const CommentModal: React.FC<IProps> = ({
         ) : (
           <Wrapper>
             <Header>
-              <Title>{`评论 · ${count}条评论`}</Title>
+              <Title>{t('comment.all_comment.title', count.toString())}</Title>
               <IconButton onClick={onClose}>
                 <XButton />
               </IconButton>

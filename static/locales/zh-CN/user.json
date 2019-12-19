@@ -1,9 +1,14 @@
 {
-  "user":  {
+  "user": {
     "menu": {
       "picture": "照片",
       "like": "喜欢",
       "collection": "收藏夹"
+    },
+    "label": {
+      "followers": "粉丝",
+      "followed": "关注",
+      "likes": "喜欢"
     }
   }
 }

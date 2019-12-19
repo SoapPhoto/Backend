@@ -136,7 +136,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
         columns="auto"
         justifyContent="right"
       >
-        <IconButton popover={t('picture.info')} onClick={openEXIF}>
+        <IconButton popover={t('picture.info.title')} onClick={openEXIF}>
           <Info
             color={colors.secondary}
           />

@@ -88,6 +88,12 @@ export class PictureUserActivityService {
     );
   }
 
+  public getPicturesLikeCount = async (ids: ID[]) => this.activityRepository.createQueryBuilder('activity')
+    .select('COUNT(DISTINCT(`activity`.`id`)) as count, activity.pictureId')
+    .where('activity.pictureId IN (:...ids) AND activity.like=1', { ids })
+    .groupBy('activity.pictureId')
+    .getRawMany()
+
   public getLikes = async (id: ID) => this.activityRepository.createQueryBuilder('activity')
     .where('activity.pictureId=:id AND activity.like=1', { id })
     .getCount()

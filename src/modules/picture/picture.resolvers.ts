@@ -35,6 +35,14 @@ export class PictureResolver {
   }
 
   @Query()
+  public async hotPictures(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('query') query: GetPictureListDto,
+  ) {
+    return this.pictureService.getPictureHotInfoList(user, query);
+  }
+
+  @Query()
   public async newPictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args('query') query: GetNewPictureListDto,

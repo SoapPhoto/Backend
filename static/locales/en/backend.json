@@ -3,6 +3,7 @@
     "verified": "Verified",
     "verified_error": "Verification info is invalid",
     "no_user": "User does not exist",
+    "password_error": "password error",
     "no_exist_picture": "picture not exist",
     "no_exist_collection": "Collection not exist",
     "no_exist_comment": "Comments failed",

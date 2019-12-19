@@ -21,6 +21,8 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
+import { RedisService } from 'nestjs-redis';
+import dayjs from 'dayjs';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
@@ -34,6 +36,7 @@ export class PictureController {
     private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
     private readonly fileService: FileService,
+    private readonly redisService: RedisService,
   ) {}
 
   @Post()
@@ -126,6 +129,14 @@ export class PictureController {
     @Query() query: GetPictureCommentListDto,
   ) {
     return this.commentService.getPictureList(id, query, user);
+  }
+
+  @Get('test')
+  public async createPictureComment() {
+    const redisClient = this.redisService.getClient();
+    // const data = await this.pictureService.getHotPictures();
+    const ids = await redisClient.zrevrange('picture_hot', 0, 30);
+    return ids;
   }
 
   // @Post(':id([0-9]+)/comment')

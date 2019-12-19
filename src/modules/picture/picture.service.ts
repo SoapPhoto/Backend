@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import dayjs from 'dayjs';
+import { RedisService } from 'nestjs-redis';
 
 import { listRequest } from '@server/common/utils/request';
 import { validator } from '@common/validator';
@@ -23,6 +25,7 @@ import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 import { Role } from '../user/enum/role.enum';
 import { CollectionService } from '../collection/collection.service';
+import { CommentService } from '../comment/comment.service';
 
 @Injectable()
 export class PictureService {
@@ -34,8 +37,11 @@ export class PictureService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => CollectionService))
     private readonly collectionService: CollectionService,
+    @Inject(forwardRef(() => CommentService))
+    private readonly commentService: CommentService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
+    private readonly redisService: RedisService,
   ) {}
 
   public async create(data: Partial<PictureEntity>) {
@@ -326,6 +332,55 @@ export class PictureService {
       await this.collectionService.getCurrentCollections(id, user),
       { groups: [Role.OWNER] },
     );
+  }
+
+  public getPictureHotInfoList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
+    const client = this.redisService.getClient();
+    const limit = (query.page - 1) * query.pageSize;
+    const [ids, count] = await Promise.all([
+      client.zrevrange('picture_hot', limit, limit + query.pageSize),
+      client.zcount('picture_hot', -1000000, 1000000),
+    ]);
+    console.time('1111');
+    const q = this.pictureRepository.createQueryBuilder('picture');
+    this.selectInfo(q, user);
+    // const data = await Promise.all(ids.map(v => this.getOnePicture(v, user)));
+    q.where(`picture.id IN (${ids.toString()})`)
+      .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
+      .cache(1000);
+    const data = await q.getMany();
+    console.timeEnd('1111');
+    return listRequest(query, classToPlain(data), count as number);
+  }
+
+  public async getHotPictures() {
+    const data = await this.pictureRepository.createQueryBuilder('picture')
+      .where('picture.isPrivate=:isPrivate', { isPrivate: false })
+      .select('picture.id, picture.views, picture.createTime')
+      .limit(1000)
+      .getRawMany();
+    const ids = data.map(v => v.id);
+    const [likes, comments] = await Promise.all([
+      this.activityService.getPicturesLikeCount(ids),
+      this.commentService.getPicturesCommentCount(ids),
+    ]);
+    const zData: any[] = [];
+    data.forEach((item) => {
+      let count = 0;
+      const likeItem = likes.find(v => v.pictureId === item.id);
+      const commentItem = comments.find(v => v.pictureId === item.id);
+      item.likedCount = Number(likeItem?.count ?? 0);
+      item.commentCount = Number(commentItem?.count ?? 0);
+      count += item.views;
+      count += item.likedCount * 5;
+      count += item.commentCount * 10;
+      item.count = count;
+      const crTime = dayjs(item.createTime).valueOf();
+      const nowTime = dayjs().valueOf();
+      item.count /= ((nowTime - crTime) / 10000000000);
+      zData.push(item.count, item.id);
+    });
+    return zData;
   }
 
   /**

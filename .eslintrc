@@ -9,6 +9,7 @@
     // "no-unused-locals": 1,
     "no-plusplus": "off",
     "max-len": ["error", 160],
-    "no-const-assign": "off"
+    "no-const-assign": "off",
+    "import/extensions": [2, "never"]
   }
 }

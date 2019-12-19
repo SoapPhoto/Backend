@@ -28,7 +28,7 @@ interface IInfo {
 }
 
 const Title = styled.h2`
-  font-weight: 400;
+  font-weight: 700;
   margin-bottom: ${rem(24)};
 `;
 
@@ -55,6 +55,7 @@ const InfoTitle = styled.h3`
 const InfoTip = styled.span`
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   font-weight: 400;
+  margin-left: ${rem(12)};
   color: ${theme('colors.secondary')};
 `;
 
@@ -130,14 +131,14 @@ const Account = observer(() => {
     setConfirmDisabled(true);
     try {
       await accountRevoke(currentId);
-      Toast.success('解绑成功!');
+      Toast.success(t('setting.account.message.revoke_success'));
       setConfirmVisible(false);
       getCredentials();
     } catch (err) {
       if (err?.response?.data?.message === 'reserved login type') {
-        Toast.error('必须预留一种登录方式，请绑定其他账号或者设置密码后重试！');
+        Toast.error(t('setting.account.message.require_one_login_type'));
       } else {
-        Toast.error('解绑失败');
+        Toast.error(t('setting.account.message.revoke_error'));
       }
       getCredentials();
     } finally {
@@ -149,25 +150,25 @@ const Account = observer(() => {
         setConfirmDisabled(false);
       }, 1000);
     }
-  }, [currentId, getCredentials]);
+  }, [currentId, getCredentials, t]);
   const accountService = useCallback(async (data: IOauthSuccessData) => {
     await accountAuthorize({
       code: data.code!,
     });
     getCredentials();
-    Toast.success('绑定成功！');
-  }, [getCredentials]);
+    Toast.success(t('setting.account.message.authorize_success'));
+  }, [getCredentials, t]);
   const messageCb = useCallback(async (e: MessageEvent) => {
     oauthSuccess(e, accountService, () => window.removeEventListener('message', messageCb));
   }, [accountService]);
   const authorize = useCallback((type: OauthType) => {
     if (type === OauthType.GOOGLE) {
-      Toast.warning('Google 暂不可用!');
+      Toast.warning(t('setting.account.message.google_disabled'));
       return;
     }
     oauthOpen(getOauthUrl(type, OauthStateType.authorize));
     window.addEventListener('message', messageCb);
-  }, [messageCb]);
+  }, [messageCb, t]);
   return (
     <div>
       <Title>{t('setting.menu.account')}</Title>
@@ -183,7 +184,9 @@ const Account = observer(() => {
                     {data.title}
                     {
                       userInfo!.signupType === type as any && (
-                        <InfoTip>（注册方式）</InfoTip>
+                        <InfoTip>
+                          {`(${t('setting.account.label.signup_type')})`}
+                        </InfoTip>
                       )
                     }
                   </InfoTitle>
@@ -202,7 +205,7 @@ const Account = observer(() => {
                       </CrInfo>
                     ) : (
                       <Button disabled={type === OauthType.GOOGLE} shape="round" size="small" onClick={() => authorize(type)}>
-                        绑定
+                        {t('setting.account.btn.authorize')}
                       </Button>
                     )
                   }
@@ -214,10 +217,12 @@ const Account = observer(() => {
         <Item>
           <ItemInfo>
             <InfoTitle>
-              邮箱
+              {t('label.email')}
               {
                 userInfo!.signupType === SignupType.EMAIL && (
-                  <InfoTip>（注册方式）</InfoTip>
+                  <InfoTip>
+                    {` (${t('setting.account.label.signup_type')})`}
+                  </InfoTip>
                 )
               }
             </InfoTitle>
@@ -236,18 +241,18 @@ const Account = observer(() => {
                           color: ${theme('colors.danger')};
                         `}
                         >
-                          (未验证)
+                          {`(${t('setting.account.label.no_verify')})`}
                         </span>
                       )
                     }
                   </InfoName>
                   <Button disabled shape="round" danger size="small">
-                    修改
+                    {`${t('setting.account.btn.modify')}`}
                   </Button>
                 </CrInfo>
               ) : (
                 <Button disabled shape="round" size="small">
-                  绑定
+                  {`${t('setting.account.btn.authorize')}`}
                 </Button>
               )
             }
@@ -255,9 +260,9 @@ const Account = observer(() => {
         </Item>
       </List>
       <Confirm
-        title="确定解绑吗？"
+        title={t('setting.account.revoke_confirm.title')}
         visible={confirmVisible}
-        confirmText="解绑"
+        confirmText={t('setting.account.label.revoke')}
         confirmProps={{
           disabled: confirmDisabled,
           danger: true,

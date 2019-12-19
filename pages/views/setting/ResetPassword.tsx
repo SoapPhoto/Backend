@@ -9,6 +9,7 @@ import { resetPassword, newPassword as newPass } from '@lib/services/auth';
 import Toast from '@lib/components/Toast';
 import { rem } from 'polished';
 import { useAccountStore } from '@lib/stores/hooks';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 
 const initForm = {
@@ -18,6 +19,7 @@ const initForm = {
 };
 
 const Reset = () => {
+  const { t } = useTranslation();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { userInfo } = useAccountStore();
   const handleOk = async (
@@ -28,7 +30,7 @@ const Reset = () => {
     setSubmitting(false);
     try {
       if (newPassword !== repeatPassword) {
-        Toast.warning('请确保两次密码输入一致。');
+        Toast.warning(t('setting.reset_password.message.password_inconsistent'));
       }
       if (userInfo!.isPassword) {
         await resetPassword({ password, newPassword });
@@ -36,7 +38,7 @@ const Reset = () => {
         await newPass({ newPassword });
       }
       setSubmitting(true);
-      Toast.success('修改成功，请重新登录！');
+      Toast.success(t('setting.reset_password.message.success'));
       setTimeout(() => window.location.href = '/login', 300);
     } catch (error) {
       setSubmitting(false);
@@ -47,7 +49,7 @@ const Reset = () => {
   };
   return (
     <Wrapper>
-      <Title>重置密码</Title>
+      <Title>{t('setting.menu.resetPassword')}</Title>
       <Formik
         initialValues={initForm}
         onSubmit={(values, { setSubmitting }) => {
@@ -65,20 +67,20 @@ const Reset = () => {
                 <FieldInput
                   type="password"
                   name="password"
-                  label="旧密码"
+                  label={t('setting.reset_password.password')}
                 />
               )
             }
             <FieldInput
               type="password"
               name="newPassword"
-              label="新密码"
+              label={t('setting.reset_password.new_password')}
               style={{ marginTop: rem(24) }}
             />
             <FieldInput
               type="password"
               name="repeatPassword"
-              label="再次输入新密码"
+              label={t('setting.reset_password.again_new_password')}
               style={{ marginTop: rem(24) }}
             />
             <div
@@ -90,7 +92,7 @@ const Reset = () => {
                 type="submit"
                 disabled={isSubmitting}
               >
-                更改密码
+                {t('setting.reset_password.btn.confirm')}
               </Button>
             </div>
           </form>
