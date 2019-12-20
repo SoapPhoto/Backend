@@ -26,6 +26,6 @@ export class TagScreenPictureList extends PictureListStore<ICollectionPictureQue
   }
 
   @action public setName = (name: string) => {
-    this.restQuery.name = name;
+    this.restQuery.name = decodeURI(name);
   }
 }
