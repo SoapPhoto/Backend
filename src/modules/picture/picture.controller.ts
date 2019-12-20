@@ -10,10 +10,11 @@ import {
   Query,
   UseFilters,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import { CommentService } from '@server/modules/comment/comment.service';
-import { CreatePictureCommentDot, GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
+import { GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
@@ -131,12 +132,17 @@ export class PictureController {
     return this.commentService.getPictureList(id, query, user);
   }
 
-  @Get('test')
-  public async createPictureComment() {
+  @Get('getHot')
+  @Roles(Role.USER)
+  public async createPictureComment(
+    @User() user: UserEntity,
+  ) {
+    if (user.username !== 'yiiu') throw new ForbiddenException();
     const redisClient = this.redisService.getClient();
-    // const data = await this.pictureService.getHotPictures();
-    const ids = await redisClient.zrevrange('picture_hot', 0, 30);
-    return ids;
+    const data = await this.pictureService.getHotPictures();
+    await redisClient.zadd('picture_hot', ...data);
+    console.log(dayjs().format(), 'picture hot OK!!!!!!!!');
+    return { message: 'ok' };
   }
 
   // @Post(':id([0-9]+)/comment')

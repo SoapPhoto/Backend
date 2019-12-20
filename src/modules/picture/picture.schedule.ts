@@ -16,7 +16,7 @@ export class PictureScheduleService extends NestSchedule {
     super();
   }
 
-  @Cron('0 */3 * * *', { key: 'picture-hot' })
+  @Cron('0 */1 * * *', { key: 'picture-hot' })
   public async cron() {
     const redisClient = this.redisService.getClient();
     const data = await this.pictureService.getHotPictures();
