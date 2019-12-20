@@ -19,6 +19,10 @@ export class UserScreenStore extends BaseStore {
 
   @observable public activated = false;
 
+  constructor() {
+    super();
+  }
+
   @action
   public getInit = async (username: string, type?: string) => {
     runInAction(() => {
@@ -63,6 +67,18 @@ export class UserScreenStore extends BaseStore {
     // eslint-disable-next-line no-restricted-syntax
     Object.keys(user).forEach((key) => {
       (this.user as any)[key] = (user as any)[key] as any;
+    });
+  }
+
+  @action public watch = () => {
+    queryToMobxObservable(this.client.watchQuery<IUserGqlReq>({
+      query: UserInfo,
+      variables: { username: this.username },
+      fetchPolicy: 'cache-only',
+    }), (data) => {
+      runInAction(() => this.user = data.user);
+    }, {
+      observable: true,
     });
   }
 }

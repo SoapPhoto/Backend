@@ -7,6 +7,8 @@ import { UserNotification, UnreadNotificationCount } from '@lib/schemas/query';
 import { NewNotification } from '@lib/schemas/subscription';
 import { MarkNotificationReadAll } from '@lib/schemas/mutations';
 import Toast from '@lib/components/Toast';
+import { UserEntity } from '@lib/common/interfaces/user';
+import Fragments from '@lib/schemas/fragments';
 
 export class NotificationStore {
   public io?: SocketIOClient.Socket;
@@ -57,6 +59,8 @@ export class NotificationStore {
         this.setLoading(false);
         this.setList(data.userNotification);
         this.pushWaitQueue();
+      }, {
+        observable: true,
       },
     );
   }
@@ -115,4 +119,24 @@ export class NotificationStore {
 
   @action
   public setUnRead = (num: number) => this.unread = num;
+
+  @action
+  public setUser = (user: Partial<UserEntity>) => {
+    const cacheData = this.client.readFragment<UserEntity>({
+      fragment: Fragments,
+      fragmentName: 'UserDetailFragment',
+      id: `User:${user.id!}`,
+    });
+    if (cacheData) {
+      this.client.writeFragment<UserEntity>({
+        fragment: Fragments,
+        fragmentName: 'UserDetailFragment',
+        id: `User:${user.id!}`,
+        data: {
+          ...cacheData,
+          ...user,
+        } as UserEntity,
+      });
+    }
+  }
 }

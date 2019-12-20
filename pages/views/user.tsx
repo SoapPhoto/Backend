@@ -1,6 +1,6 @@
 import { useApolloClient } from 'react-apollo';
 import { observer } from 'mobx-react';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import parse from 'url-parse';
 import { rem } from 'polished';
 import { withRouter } from 'next/router';
@@ -99,7 +99,10 @@ const UserInfo = observer(() => {
   const [query] = useWatchQuery<{user: {isFollowing: number}}>(UserIsFollowing, { fetchPolicy: 'network-only' });
   const { isLogin, userInfo } = useAccountStore();
   const { userStore } = screen;
-  const { user, setUserInfo } = userStore;
+  const { user, setUserInfo, watch } = userStore;
+  useEffect(() => {
+    watch();
+  }, []);
   const follow = useCallback(throttle(async () => {
     let mutation = FollowUser;
     if (user.isFollowing > 0) mutation = UnFollowUser;
@@ -204,7 +207,6 @@ const Picture = observer(() => {
   const { screen } = useStores();
   const { userPictureStore } = screen;
   const { type: PictureType, list } = userPictureStore;
-  console.log(PictureType);
   return (
     <PictureList
       noMore={list[PictureType].isNoMore}

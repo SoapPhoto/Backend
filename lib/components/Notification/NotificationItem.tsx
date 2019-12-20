@@ -1,13 +1,20 @@
-import React, { useCallback } from 'react';
-import { NotificationEntity } from '@lib/common/interfaces/notification';
+import React, { useCallback, useState } from 'react';
 import styled, { css } from 'styled-components';
+import { rem } from 'polished';
+import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
+import { throttle } from 'lodash';
+import { useApolloClient } from 'react-apollo';
+
+import { NotificationEntity } from '@lib/common/interfaces/notification';
 import { NotificationCategory } from '@common/enum/notification';
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import { getPictureUrl } from '@lib/common/utils/image';
-import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
-import dayjs from 'dayjs';
-import { observer } from 'mobx-react';
+import { FollowUser, UnFollowUser } from '@lib/schemas/mutations';
+import { UserEntity } from '@lib/common/interfaces/user';
+import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
+import { UserIsFollowing } from '@lib/schemas/query';
 import { Avatar } from '..';
 import { EmojiText } from '../EmojiText';
 import { Image } from '../Image';
@@ -69,6 +76,40 @@ const Date = styled.span`
 `;
 
 export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
+  const { mutate } = useApolloClient();
+  const [query] = useWatchQuery<{user: {isFollowing: number}}>(UserIsFollowing, { fetchPolicy: 'network-only' });
+  const [followLoading, setFollowLoading] = useState(false);
+  const follow = useCallback(throttle(async (user: UserEntity) => {
+    let mutation = FollowUser;
+    if (user.isFollowing > 0) mutation = UnFollowUser;
+    if (followLoading) return;
+    setFollowLoading(true);
+    try {
+      await mutate<{done: boolean}>({
+        mutation,
+        variables: {
+          input: {
+            userId: user.id,
+          },
+        },
+      });
+      await query(() => {
+        setFollowLoading(false);
+      }, {
+        username: user.username,
+      });
+    } catch (error) {
+      if (error?.graphQLErrors[0]?.message.message === 'followed') {
+        await query(() => {
+          setFollowLoading(false);
+        }, {
+          username: user.username,
+        });
+      } else {
+        setFollowLoading(false);
+      }
+    }
+  }, 1000), []);
   const content = useCallback(() => {
     switch (data.category) {
       case NotificationCategory.LIKED:
@@ -118,14 +159,16 @@ export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
         const { isFollowing } = data.user;
         return (
           <FollowButton
+            disabled={followLoading}
             size="small"
             isFollowing={isFollowing}
+            onClick={() => follow(data.user!)}
           />
         );
       }
     }
     return null;
-  }, [data.category, data.comment, data.picture, data.user]);
+  }, [data.category, data.comment, data.picture, data.user, follow, followLoading]);
   return (
     <Item read={data.read ? 1 : 0}>
       <User>
