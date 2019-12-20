@@ -3,8 +3,7 @@ import { action, observable, runInAction } from 'mobx';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { UserInfo } from '@lib/schemas/query';
-import Fragments from '@lib/schemas/fragments';
-import { merge } from 'lodash';
+import { apolloErrorLog } from '@lib/common/utils/error';
 import { BaseStore } from '../base/BaseStore';
 
 interface IUserGqlReq {
@@ -31,6 +30,7 @@ export class UserScreenStore extends BaseStore {
 
   @action public getUserInfo = async (username: string) => {
     let error = null;
+    if (username === this.user?.username) return;
     await queryToMobxObservable(this.client.watchQuery<IUserGqlReq>({
       query: UserInfo,
       variables: { username },
@@ -54,9 +54,7 @@ export class UserScreenStore extends BaseStore {
         runInAction(() => this.user = data.user);
       }
     } catch (err) {
-      if (err?.name !== 'Invariant Violation') {
-        console.dir(err);
-      }
+      apolloErrorLog(err);
       await this.getUserInfo(username);
     }
   }

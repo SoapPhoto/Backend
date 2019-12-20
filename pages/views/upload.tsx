@@ -278,5 +278,5 @@ const Upload: ICustomNextPage<IProps, any> = () => {
 };
 
 export default withAuth('user-verified')(
-  pageWithTranslation(I18nNamespace.Picture)(Upload),
+  pageWithTranslation([I18nNamespace.Picture, I18nNamespace.Upload])(Upload),
 );

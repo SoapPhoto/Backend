@@ -135,7 +135,7 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
     info, updateCollection,
   } = collectionStore;
   const {
-    list, like,
+    list, like, isNoMore, getPageList,
   } = collectionPictureStore;
   const {
     name, user, pictureCount, isPrivate, bio,
@@ -206,7 +206,8 @@ const Collection: ICustomNextPage<IProps, {}> = () => {
       <PictureList
         data={list}
         like={like}
-        noMore
+        noMore={isNoMore}
+        onPage={getPageList}
       />
     </div>
   );
@@ -219,15 +220,16 @@ Collection.getInitialProps = async (ctx) => {
   const { collectionStore, collectionPictureStore } = screen;
   const { location } = appStore;
   const isPop = location && location.action === 'POP' && !server;
+  collectionPictureStore.setId(id!);
   if (isPop) {
     await Promise.all([
       collectionStore.getCache(id!),
-      collectionPictureStore.getCache(id!),
+      collectionPictureStore.getListCache(),
     ]);
   } else {
     await Promise.all([
       collectionStore.getInfo(id!),
-      collectionPictureStore.getList(id!),
+      collectionPictureStore.getList(false),
     ]);
   }
   return {};

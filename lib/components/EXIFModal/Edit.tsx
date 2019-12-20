@@ -104,7 +104,7 @@ const Form: React.FC<IFormProps> = ({ initialValues, onClose, onOk }) => {
                 <FieldInput
                   key={value}
                   name={value}
-                  label={t(`picture_info.${value}`)}
+                  label={t(`picture.info.${value}`)}
                 />
               ))
             }

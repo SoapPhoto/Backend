@@ -3,7 +3,7 @@ import {
   WatchQueryOptions, OperationVariables, ApolloQueryResult, ObservableQuery,
 } from 'apollo-client';
 import { fromResource } from 'mobx-utils';
-import { observable, reaction } from 'mobx';
+import { observable, reaction, toJS } from 'mobx';
 
 export const watchQuery = <T = any, TVariables = OperationVariables>(
   client: ApolloClient<any>,
@@ -21,7 +21,7 @@ export const watchQuery = <T = any, TVariables = OperationVariables>(
   }));
 
 export const queryToMobxObservable = <T = any, TVariables = OperationVariables>(
-  queryObservable: ObservableQuery<T, TVariables>,
+  queryObservable: ObservableQuery<T, TVariables> & { observable?: boolean },
   cb: (data: T) => void,
 ): Promise<T> => new Promise((resolve, reject) => {
   let subscription: ZenObservable.Subscription;
@@ -41,10 +41,10 @@ export const queryToMobxObservable = <T = any, TVariables = OperationVariables>(
     () => subscription!.unsubscribe(),
   );
   const clear = reaction(() => sub.current(), (info) => {
-    if (info.networkStatus === 7) clear();
+    if (queryObservable && info.networkStatus === 7) clear();
     if (info.data) {
-      cb(info.data);
-      resolve(info.data);
+      cb(toJS(info.data));
+      resolve(toJS(info.data));
     }
   });
 });

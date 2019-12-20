@@ -77,10 +77,10 @@ export const PictureList: React.FC<IProps> = observer(({
         await onPage();
         setTimeout(() => {
           pageLock.current = false;
-        }, 200);
+        }, 800);
       }
     }
-  }, 50);
+  }, 100);
 
   const pictureList = () => {
     setClientList(() => listParse(data, col));

@@ -54,13 +54,51 @@ const server = !!(typeof window === 'undefined');
 
 
 const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
+  const { screen } = useStores();
+  const { t } = useTranslation();
+  const { userStore, userCollectionStore } = screen;
+  const { user } = userStore;
+  // const { type: PictureType, list } = userPictureStore;
+  return (
+    <Wrapper>
+      <SEO
+        title={getTitle(`${user.fullName} (@${user.username})`, t)}
+        description={`${user.bio ? `${user.bio}-` : ''}查看${user.name}的Soap照片。`}
+      />
+      <UserInfo />
+      <Nav>
+        <NavItem route={`/@${user.username}`}>
+          {t('user.menu.picture')}
+        </NavItem>
+        <NavItem route={`/@${user.username}/like`}>
+          {t('user.menu.like')}
+        </NavItem>
+        <NavItem route={`/@${user.username}/collections`}>
+          {t('user.menu.collection')}
+        </NavItem>
+      </Nav>
+      {
+        type === 'collections' ? (
+          <CollectionList
+            list={userCollectionStore.list}
+            noMore={userCollectionStore.isNoMore}
+          />
+        ) : (
+          <Picture />
+        )
+      }
+    </Wrapper>
+  );
+});
+
+const UserInfo = observer(() => {
+  const { t } = useTranslation();
   const [followLoading, setFollowLoading] = useState(false);
+  const { screen } = useStores();
   const { mutate } = useApolloClient();
   const [query] = useWatchQuery<{user: {isFollowing: number}}>(UserIsFollowing, { fetchPolicy: 'network-only' });
-  const { screen } = useStores();
   const { isLogin, userInfo } = useAccountStore();
-  const { t } = useTranslation();
-  const { userStore, userCollectionStore, userPictureStore } = screen;
+  const { userStore } = screen;
   const { user, setUserInfo } = userStore;
   const follow = useCallback(throttle(async () => {
     let mutation = FollowUser;
@@ -96,101 +134,83 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
     }
   }, 1000), [mutate, query, setUserInfo, user.id, user.isFollowing, user.username]);
   return (
-    <Wrapper>
-      <SEO
-        title={getTitle(`${user.fullName} (@${user.username})`, t)}
-        description={`${user.bio ? `${user.bio}-` : ''}查看${user.name}的Soap照片。`}
-      />
-      <UserHeader>
-        <HeaderGrid columns="140px auto" gap="32px">
-          <AvatarBox>
-            <Avatar src={user.avatar} size={140} />
-          </AvatarBox>
-          <Cell>
-            <UserName>
-              <EmojiText
-                text={user.fullName}
-              />
-              {
-                isLogin && userInfo?.username === user.username && (
-                  <A route="/setting/profile">
-                    <EditIcon size={18} />
-                  </A>
-                )
-              }
-              {
-                userInfo?.username !== user.username && (
-                  <FollowButton
-                    disabled={followLoading}
-                    style={{ marginLeft: rem(24), marginRight: rem(24) }}
-                    size="small"
-                    isFollowing={user.isFollowing}
-                    onClick={follow}
-                  />
-                )
-              }
-            </UserName>
-            <Profile>
-              {
-                user.website && (
-                  <ProfileItem>
-                    <ProfileItemLink href={user.website} target="__blank">
-                      <LinkIcon size={14} />
-                      {parse(user.website).hostname}
-                    </ProfileItemLink>
-                  </ProfileItem>
-                )
-              }
-            </Profile>
-            <Bio>
-              {user.bio}
-            </Bio>
-            <InfoBox>
-              <Info>
-                <InfoItem>
-                  <InfoItemCount>{user.followerCount}</InfoItemCount>
-                  <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
-                </InfoItem>
-                <InfoItem>
-                  <InfoItemCount>{user.followedCount}</InfoItemCount>
-                  <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
-                </InfoItem>
-                <InfoItem>
-                  <InfoItemCount>{user.likesCount}</InfoItemCount>
-                  <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
-                </InfoItem>
-              </Info>
-            </InfoBox>
-          </Cell>
-        </HeaderGrid>
-      </UserHeader>
-      <Nav>
-        <NavItem route={`/@${user.username}`}>
-          {t('user.menu.picture')}
-        </NavItem>
-        <NavItem route={`/@${user.username}/like`}>
-          {t('user.menu.like')}
-        </NavItem>
-        <NavItem route={`/@${user.username}/collections`}>
-          {t('user.menu.collection')}
-        </NavItem>
-      </Nav>
-      {
-        type === 'collections' ? (
-          <CollectionList
-            list={userCollectionStore.list}
-            noMore={userCollectionStore.isNoMore}
-          />
-        ) : (
-          <PictureList
-            noMore={userPictureStore.isNoMore}
-            data={userPictureStore.list}
-            like={userPictureStore.like}
-            onPage={userPictureStore.getPageList}
-          />
-        )
-      }
-    </Wrapper>
+    <UserHeader>
+      <HeaderGrid columns="140px auto" gap="32px">
+        <AvatarBox>
+          <Avatar src={user.avatar} size={140} />
+        </AvatarBox>
+        <Cell>
+          <UserName>
+            <EmojiText
+              text={user.fullName}
+            />
+            {
+              isLogin && userInfo?.username === user.username && (
+                <A route="/setting/profile">
+                  <EditIcon size={18} />
+                </A>
+              )
+            }
+            {
+              userInfo?.username !== user.username && (
+                <FollowButton
+                  disabled={followLoading}
+                  style={{ marginLeft: rem(24), marginRight: rem(24) }}
+                  size="small"
+                  isFollowing={user.isFollowing}
+                  onClick={follow}
+                />
+              )
+            }
+          </UserName>
+          <Profile>
+            {
+              user.website && (
+                <ProfileItem>
+                  <ProfileItemLink href={user.website} target="__blank">
+                    <LinkIcon size={14} />
+                    {parse(user.website).hostname}
+                  </ProfileItemLink>
+                </ProfileItem>
+              )
+            }
+          </Profile>
+          <Bio>
+            {user.bio}
+          </Bio>
+          <InfoBox>
+            <Info>
+              <InfoItem>
+                <InfoItemCount>{user.followerCount}</InfoItemCount>
+                <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
+              </InfoItem>
+              <InfoItem>
+                <InfoItemCount>{user.followedCount}</InfoItemCount>
+                <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
+              </InfoItem>
+              <InfoItem>
+                <InfoItemCount>{user.likesCount}</InfoItemCount>
+                <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
+              </InfoItem>
+            </Info>
+          </InfoBox>
+        </Cell>
+      </HeaderGrid>
+    </UserHeader>
+  );
+});
+
+const Picture = observer(() => {
+  const { screen } = useStores();
+  const { userPictureStore } = screen;
+  const { type: PictureType, list } = userPictureStore;
+  return (
+    <PictureList
+      noMore={list[PictureType].isNoMore}
+      data={list[PictureType].list}
+      like={list[PictureType].like}
+      onPage={list[PictureType].getPageList}
+    />
   );
 });
 
@@ -205,6 +225,7 @@ User.getInitialProps = async ({
   const all = [];
   const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
+  userCollectionStore.setUsername(username!);
   if (isPop) {
     all.push(userStore.getCache(username));
   } else {
@@ -213,7 +234,7 @@ User.getInitialProps = async ({
   switch (type!) {
     case UserType.collections:
       all.push(
-        userCollectionStore.getList(username!),
+        userCollectionStore.getList(false),
       );
       break;
     default:

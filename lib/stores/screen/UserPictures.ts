@@ -1,77 +1,70 @@
-import { action, observable } from 'mobx';
+import { observable } from 'mobx';
 
-import { IPictureListRequest, PictureEntity } from '@lib/common/interfaces/picture';
-import { UserType } from '@common/enum/router';
 import { UserPictures } from '@lib/schemas/query';
-import { IBaseQuery } from '@lib/common/interfaces/global';
-import { ListStore } from '../base/ListStore';
+import { IPictureListRequest } from '@lib/common/interfaces/picture';
+import { ApolloClient } from 'apollo-boost';
+import { UserPictureType } from '@server/modules/user/enum/picture.type.enum';
+import { UserType } from '@common/enum/router';
+import { PictureListStore } from '../base/PictureListStore';
 
 interface IUserPicturesGqlReq {
   userPicturesByName: IPictureListRequest;
 }
 
+interface IUserPictureQuery {
+  username: string;
+  type: UserPictureType;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 
-export class UserScreenPictureList extends ListStore<PictureEntity, IUserPicturesGqlReq, {}, UserType> {
-  public listInit = false
+export class UserScreenPictureList {
+  @observable public type: UserPictureType = UserPictureType.MY;
 
-  public query = UserPictures
+  @observable public list!: Record<UserPictureType, PictureListStore<IUserPictureQuery>>;
 
-  @observable public username = '';
-
-  public getType = () => (this.type === 'like' ? 'LIKED' : 'MY');
-
-  public getList = async (username: string, type: UserType, query?: Partial<IBaseQuery>, noCache?: boolean, plus?: boolean) => {
-    this.type = type;
-    this.username = username;
-    await this.baseGetList(username, {
-      username,
-      type: this.getType(),
-      query: {
-        ...query,
-      },
-    }, {
-      success: data => this.setData(data.userPicturesByName, plus),
-      cache: () => this.getCache(username, type),
-    }, noCache, plus);
+  constructor() {
+    this.list = {
+      LIKED: new PictureListStore<IUserPictureQuery>({
+        query: UserPictures,
+        label: 'userPicturesByName',
+        restQuery: {
+          username: '',
+          type: UserPictureType.LIKED,
+        },
+      }),
+      MY: new PictureListStore<IUserPictureQuery>({
+        query: UserPictures,
+        label: 'userPicturesByName',
+        restQuery: {
+          username: '',
+          type: UserPictureType.MY,
+        },
+      }),
+    };
   }
 
-  public getPageList = async () => {
-    const page = this.listQuery.page + 1;
-    if (page > this.maxPage) {
-      return;
-    }
-    await this.getList(this.username, this.type, { page }, false, true);
+  public getList = async (username: string, type?: UserType) => {
+    this.list[this.getType(type)].restQuery.username = username;
+    await this.list[this.getType(type)].getList(false);
+    this.setType(type);
   }
 
-  @action public getCache = async (username: string, type: UserType) => {
-    this.username = username;
-    this.type = type;
-    await this.baseGetCache(username, {
-      username,
-      type: this.getType(),
-      query: {
-        ...this.listQuery,
-      },
-    }, {
-      getList: async () => this.getList(username, type, {}, true),
-      setData: ({ userPicturesByName }) => this.setData(userPicturesByName),
-    });
+  public getCache = async (username: string, type?: UserType) => {
+    this.list[this.getType(type)].restQuery.username = username;
+    await this.list[this.getType(type)].getListCache();
+    this.setType(type);
   }
 
-  @action public setData = (data: IPictureListRequest, plus = false) => {
-    if (plus) {
-      this.list = this.list.concat(data.data);
-      this.setPlusListCache(UserPictures, 'userPicturesByName', data, {
-        type: this.getType(),
-        username: this.username,
-      });
-    } else {
-      this.list = data.data;
-    }
-    this.count = data.count;
-    this.listQuery.page = data.page;
-    this.listQuery.pageSize = data.pageSize;
-    this.listQuery.timestamp = data.timestamp;
+  public getType = (type?: UserType) => (type === UserType.like ? UserPictureType.LIKED : UserPictureType.MY)
+
+  public setType = (type?: UserType) => {
+    this.type = type === UserType.like ? UserPictureType.LIKED : UserPictureType.MY;
+  }
+
+  public update = (store?: Partial<this>, apollo?: ApolloClient<any>) => {
+    this.list.LIKED.update(store?.list?.LIKED, apollo);
+    this.list.MY.update(store?.list?.MY, apollo);
+    this.type = store?.type ?? UserPictureType.MY;
   }
 }

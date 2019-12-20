@@ -1,48 +1,44 @@
-import {
-  computed, observable, runInAction, action,
-} from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { DocumentNode } from 'graphql';
 
-import { IBaseQuery } from '@lib/common/interfaces/global';
-import { IPictureLikeRequest, PictureEntity, IPictureListRequest } from '@lib/common/interfaces/picture';
-import { LikePicture, UnLikePicture } from '@lib/schemas/mutations';
-import Fragments from '@lib/schemas/fragments';
+import { IPaginationList, IBaseQuery } from '@lib/common/interfaces/global';
 import { queryToMobxObservable } from '@lib/common/apollo';
 import { server } from '@lib/common/utils';
-import { omit } from 'lodash';
+import { apolloErrorLog } from '@lib/common/utils/error';
 import { BaseStore } from './BaseStore';
 
-export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> extends BaseStore {
+export interface IListStoreData<Query> {
+  query: DocumentNode;
+  label: string;
+  restQuery?: Query;
+}
+
+/**
+ * 通用的列表类
+ *
+ * @export
+ * @class ListStore
+ */
+export class ListStore<List, Query = any> extends BaseStore {
   @observable public init = false;
 
-  @observable public list: L[] = [];
+  @observable public list: List[] = [];
 
-  @observable public listQuery!: Q & IBaseQuery;
+  // 一些可变查询
+  @observable public restQuery: Query = {} as Query;
+
+  @observable public listQuery!: IBaseQuery;
+
+  @observable public listQueryCache: Record<string, IBaseQuery> = {};
 
   @observable public count = 0;
 
-  // 主要是识别列表的type，做查询的cache
-  @observable public type!: TYPE;
-
-  @observable public listQueryCache: Record<string, Q & IBaseQuery> = {}
-
-  // 一些可变查询
-  public restQuery: Q = {} as Q;
-
-  public query!: DocumentNode;
-
-  public listInit = false
-
-  @action public initQuery = (id: string) => {
-    this.listQuery = {
-      page: 1,
-      pageSize: Number(process.env.LIST_PAGE_SIZE),
-      timestamp: Number(Date.parse(new Date().toISOString())),
-      ...this.restQuery,
-    };
-    if (id) {
-      this.listQueryCache[`${id}:${this.type}`] = observable(this.listQuery);
+  @computed get id() {
+    const values = Object.values(this.restQuery);
+    if (values.length === 0) {
+      return '';
     }
+    return values.filter(v => !!v).join(':');
   }
 
   @computed get maxPage() {
@@ -54,153 +50,159 @@ export class ListStore<L, V = any, Q = Record<string, any>, TYPE = string> exten
     return this.count <= this.list.length;
   }
 
-  public like = async (picture: PictureEntity) => {
-    try {
-      let req: IPictureLikeRequest;
-      if (!picture.isLike) {
-        const { data } = await this.client.mutate<{likePicture: IPictureLikeRequest}>({
-          mutation: LikePicture,
-          variables: {
-            id: picture.id,
-          },
-        });
-        req = data!.likePicture;
-      } else {
-        const { data } = await this.client.mutate<{unlikePicture: IPictureLikeRequest}>({
-          mutation: UnLikePicture,
-          variables: {
-            id: picture.id,
-          },
-        });
-        req = data!.unlikePicture;
-      }
-      const cacheData = this.client.readFragment<PictureEntity>({
-        fragment: Fragments,
-        fragmentName: 'PictureFragment',
-        id: `Picture:${picture.id}`,
-      });
-      if (cacheData) {
-        this.client.writeFragment<PictureEntity>({
-          fragment: Fragments,
-          fragmentName: 'PictureFragment',
-          id: `Picture:${picture.id}`,
-          data: {
-            ...cacheData,
-            isLike: req.isLike,
-            likedCount: req.count,
-          } as PictureEntity,
-        });
-      }
-      runInAction(() => {
-        picture.isLike = req.isLike;
-        picture.likedCount = req.count;
-      });
-    // tslint:disable-next-line: no-empty
-    } catch (err) {
-      console.dir(err);
+  public readonly label!: string;
+
+  public readonly query!: DocumentNode;
+
+  constructor({
+    label,
+    query,
+    restQuery,
+  }: IListStoreData<Query>) {
+    super();
+    this.label = label;
+    this.query = query;
+    if (restQuery) this.restQuery = restQuery;
+  }
+
+  /**
+   * 获取初始化查询
+   *
+   * @memberof ListStore
+   */
+  @action public initQuery = () => {
+    this.listQuery = {
+      page: 1,
+      pageSize: Number(process.env.LIST_PAGE_SIZE),
+      timestamp: Number(Date.parse(new Date().toISOString())),
+    };
+    if (this.id) {
+      this.listQueryCache[this.id] = this.listQuery;
     }
   }
 
-  public setPlusListCache = (query: DocumentNode, label: string, data: IPictureListRequest, variables: Record<string, any> = {}) => {
+  @action public setListQuery = () => {
+    const data = this.listQueryCache[this.id];
+    if (data) {
+      this.listQuery = data;
+      return true;
+    }
+    this.initQuery();
+    return false;
+  }
+
+  /**
+   * 默认的获取数据
+   *
+   * @memberof PictureListStore
+   */
+  public getList = async (plus: boolean, noCache = false) => {
+    if (!this.init || plus || server || noCache) {
+      if (!plus) {
+        this.setListQuery();
+      }
+      await queryToMobxObservable(this.client.watchQuery({
+        variables: {
+          ...this.restQuery,
+          query: {
+            ...this.listQuery,
+            ...(plus ? { page: this.listQuery.page + 1 } : {}),
+          },
+        },
+        query: this.query,
+        fetchPolicy: 'cache-and-network',
+      }), (data: any) => {
+        this.init = true;
+        this.setData(data[this.label], plus);
+      });
+    } else {
+      await this.getListCache();
+    }
+  }
+
+  public getPageList = async () => {
+    const page = this.listQuery.page + 1;
+    if (page > this.maxPage) {
+      return;
+    }
+    await this.getList(true);
+  }
+
+  // eslint-disable-next-line arrow-parens
+  /**
+   * 设置列表数据
+   *
+   * @memberof ListStore
+   */
+  @action public setData = (data: IPaginationList<List>, plus: boolean) => {
+    if (plus) {
+      this.list = this.list.concat(data.data);
+      this.setPlusListCache(data);
+    } else {
+      this.list = data.data;
+    }
+    this.listQuery.page = data.page;
+    this.listQuery.pageSize = data.pageSize;
+    this.listQuery.timestamp = data.timestamp;
+    this.count = data.count;
+  }
+
+  /**
+   * 修改翻页后的列表缓存，把所有数据缓存到page=1
+   *
+   * @memberof ListStore
+   */
+  @action public setPlusListCache = (data: IPaginationList<List>) => {
     try {
       const newVar = {
         query: {
           ...this.listQuery,
           page: 1,
         },
-        ...omit(variables, ['query']),
+        ...this.restQuery,
       };
       const cacheData = this.client.readQuery({
-        query,
+        query: this.query,
         variables: newVar,
       });
+      // 以防万一
       if (cacheData) {
-        cacheData[label].data = cacheData[label].data.concat(data.data);
-        cacheData[label].page = data.page;
-        cacheData[label].pageSize = data.pageSize;
+        cacheData[this.label].data = cacheData[this.label].data.concat(data.data);
+        cacheData[this.label].page = data.page;
+        cacheData[this.label].pageSize = data.pageSize;
         this.client.writeQuery({
-          query,
+          query: this.query,
           variables: newVar,
           data: cacheData,
         });
       }
     } catch (err) {
-      console.error(err);
+      apolloErrorLog(err);
     }
   }
 
-  public setListQuery = (id: string) => {
-    const label = `${id}:${this.type}`;
-    const data = this.listQueryCache[label];
-    if (data) {
-      this.listQuery = observable(data);
-      return true;
-    }
-    this.initQuery(id);
-    return false;
-  }
-
-  public baseGetList = async (
-    id: string,
-    variables: Record<string, any>,
-    options: {
-      success: (data: V) => void;
-      cache: () => Promise<void>;
-    },
-    noCache = false,
-    plus?: boolean,
-  ) => {
-    this.setListQuery(id);
+  public getListCache = async () => {
+    this.setListQuery();
     const query = {
+      ...this.restQuery,
       query: {
         ...this.listQuery,
-        ...(variables.query || {}),
-      },
-      ...omit(variables, ['query']),
-    };
-    if (!this.listInit || plus || server || noCache) {
-      await queryToMobxObservable(this.client.watchQuery<V>({
-        variables: query,
-        query: this.query,
-        fetchPolicy: 'cache-and-network',
-      }), (data: any) => {
-        this.listInit = true;
-        options.success(data);
-      });
-    } else {
-      await options.cache();
-    }
-  }
-
-  public baseGetCache = async (
-    id: string,
-    variables: Record<string, any>,
-    options: {
-      getList: () => Promise<void>;
-      setData: (data: V) => void;
-    },
-  ) => {
-    this.setListQuery(id);
-    const query = {
-      query: {
-        ...this.listQuery,
-        ...(variables.query || {}),
         page: 1,
       },
-      ...omit(variables, ['query']),
     };
     try {
-      const data = this.client.readQuery<V>({
+      const data = this.client.readQuery({
         query: this.query,
         variables: query,
       });
       if (!data) {
-        await options.getList();
+        await this.getList(false, true);
       } else {
-        options.setData(data);
+        this.setData(data[this.label], false);
       }
     } catch (err) {
-      await options.getList();
+      await this.getList(false, true);
+      apolloErrorLog(err);
     }
   }
 }

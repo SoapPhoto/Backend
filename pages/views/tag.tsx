@@ -81,12 +81,17 @@ TagDetail.getInitialProps = async (ctx: ICustomNextContext) => {
   const { tagStore, tagPictureList } = screen;
   const { location } = appStore;
   const isPop = location && location.action === 'POP' && !server;
+  tagPictureList.setName(params.name!);
   if (isPop) {
-    await tagStore.getCache(params.name!);
-    await tagPictureList.getCache(params.name!);
+    await Promise.all([
+      tagStore.getCache(params.name!),
+      tagPictureList.getListCache(),
+    ]);
   } else {
-    await tagStore.getInfo(params.name!);
-    await tagPictureList.getList(params.name!);
+    await Promise.all([
+      tagStore.getInfo(params.name!),
+      tagPictureList.getList(false),
+    ]);
   }
 
   return {};

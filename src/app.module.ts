@@ -1,13 +1,12 @@
 
 import {
-  MiddlewareConsumer, Module, NestModule, RequestMethod, CacheModule,
+  MiddlewareConsumer, Module, NestModule, RequestMethod,
 } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nest-modules/mailer';
-import redisStore from 'cache-manager-redis-store';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';

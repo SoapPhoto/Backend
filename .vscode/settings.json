@@ -48,7 +48,8 @@
     "unpkg",
     "validatoremail",
     "websockets",
-    "whoami"
+    "whoami",
+    "yiiu"
   ],
   "cSpell.enabledLanguageIds": [
     "Log",

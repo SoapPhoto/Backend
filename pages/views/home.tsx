@@ -33,9 +33,9 @@ Index.getInitialProps = async ({ mobxStore }: ICustomNextContext) => {
   const { location } = appStore;
   const isPop = location && location.action === 'POP' && !server;
   if (isPop) {
-    await homeStore.getCache();
+    await homeStore.getListCache();
   } else {
-    await homeStore.getList();
+    await homeStore.getList(false);
   }
   // eslint-disable-next-line no-throw-literal
   return {};

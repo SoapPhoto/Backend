@@ -8,8 +8,12 @@
     "no-undef": 0,
     // "no-unused-locals": 1,
     "no-plusplus": "off",
-    "max-len": ["error", 160],
-    "no-const-assign": "off",
-    "import/extensions": [2, "never"]
+    "max-len": [
+      "error",
+      160
+    ],
+    "@typescript-eslint/indent": ["error", 2],
+    "import/extensions": "off",
+    "no-const-assign": "off"
   }
 }
