@@ -1,9 +1,9 @@
 import {
   SettingTypeValues, UserTypeValues, PictureTypeValues, CollectionTypeValues, OauthTypeValues,
 } from '@common/enum/router';
+import { PicturesTypeValues } from './enum/picture';
 
 export const routeObject: Record<string, string> = {
-  '/': 'views/home',
   '/login': 'views/auth/login',
   '/signup': 'views/auth/signup',
   '/validatoremail': 'views/auth/validatoremail',
@@ -13,6 +13,7 @@ export const routeObject: Record<string, string> = {
   '/signupMessage': 'views/auth/signupMessage',
   '/auth/verify': 'views/auth/verify',
   '/auth/complete': 'views/auth/complete',
+  [`/:type(${PicturesTypeValues.join('|')})?`]: 'views/home',
   [`/picture/:id([0-9]+)/:type(${PictureTypeValues.join('|')})?`]: 'views/picture',
   [`/setting/:type(${SettingTypeValues.join('|')})`]: 'views/setting',
   [`/@:username/:type(${UserTypeValues.join('|')})?`]: 'views/user',

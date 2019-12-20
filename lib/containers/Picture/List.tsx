@@ -29,6 +29,8 @@ interface IProps {
   onPage?: () => Promise<void>;
 
   noMore: boolean;
+
+  style?: React.CSSProperties;
 }
 
 const mediaArr = [
@@ -58,6 +60,7 @@ export const PictureList: React.FC<IProps> = observer(({
   data,
   like,
   onPage,
+  style,
   noMore = false,
 }) => {
   let serverList: PictureEntity[][][] = [];
@@ -117,7 +120,7 @@ export const PictureList: React.FC<IProps> = observer(({
     serverList = colArr.map(_col => listParse(data, _col));
   }
   return (
-    <Wrapper>
+    <Wrapper style={style}>
       <NoSSR key="server" server={false}>
         <PictureContent>
           {

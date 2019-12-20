@@ -59,5 +59,11 @@
   "error_message": {
     "404": "We couldn’t find this page.",
     "500": "Internal server error."
+  },
+  "home": {
+    "nav": {
+      "new": "Recent",
+      "hot": "Popular"
+    }
   }
 }

@@ -7,11 +7,11 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { classToPlain } from 'class-transformer';
+import { UserPictureType } from '@common/enum/picture';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
-import { UserPictureType } from './enum/picture.type.enum';
 import { UpdateProfileSettingDto } from './dto/user.dto';
 import { FollowService } from '../follow/follow.service';
 

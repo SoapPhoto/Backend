@@ -44,12 +44,12 @@ export const ItemLink = styled(A)<{ active: number }>`
 
 export const Wrapper = styled.section`
   ${WrapperBox()}
-  padding-bottom: 12px;
+  /* padding-bottom: ${rem(12)}; */
   display: flex;
   flex-wrap: wrap;
-  ${customMedia.lessThan('mobile')`
+  /* ${customMedia.lessThan('mobile')`
     justify-content: space-between;
-  `}
+  `} */
   & :last-child {
     font-size: 42px;
   }

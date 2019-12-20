@@ -6,8 +6,8 @@ query Picture($id: ID!) {
   }
 }
 
-query Pictures($query: PicturesQueryInput!) {
-  pictures(query: $query) {
+query Pictures($query: PicturesQueryInput!, $type: PicturesType) {
+  pictures(query: $query, type: $type) {
     ...PictureListFragment
   }
 }

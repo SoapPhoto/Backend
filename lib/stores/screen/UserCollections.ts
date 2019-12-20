@@ -20,7 +20,6 @@ export class UserScreenCollectionList extends ListStore<CollectionEntity, {usern
   }
 
   @action public setUsername = (username: string) => {
-    console.log(username);
     this.restQuery.username = username;
   }
 }

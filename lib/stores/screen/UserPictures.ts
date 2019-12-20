@@ -3,8 +3,8 @@ import { observable } from 'mobx';
 import { UserPictures } from '@lib/schemas/query';
 import { IPictureListRequest } from '@lib/common/interfaces/picture';
 import { ApolloClient } from 'apollo-boost';
-import { UserPictureType } from '@server/modules/user/enum/picture.type.enum';
 import { UserType } from '@common/enum/router';
+import { UserPictureType } from '@common/enum/picture';
 import { PictureListStore } from '../base/PictureListStore';
 
 interface IUserPicturesGqlReq {
@@ -19,6 +19,8 @@ interface IUserPictureQuery {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 
 export class UserScreenPictureList {
+  public isInit = false;
+
   @observable public type: UserPictureType = UserPictureType.MY;
 
   @observable public list!: Record<UserPictureType, PictureListStore<IUserPictureQuery>>;
@@ -63,6 +65,10 @@ export class UserScreenPictureList {
   }
 
   public update = (store?: Partial<this>, apollo?: ApolloClient<any>) => {
+    if (this.isInit) {
+      return;
+    }
+    this.isInit = true;
     this.list.LIKED.update(store?.list?.LIKED, apollo);
     this.list.MY.update(store?.list?.MY, apollo);
     this.type = store?.type ?? UserPictureType.MY;

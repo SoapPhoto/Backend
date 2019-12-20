@@ -204,6 +204,7 @@ const Picture = observer(() => {
   const { screen } = useStores();
   const { userPictureStore } = screen;
   const { type: PictureType, list } = userPictureStore;
+  console.log(PictureType);
   return (
     <PictureList
       noMore={list[PictureType].isNoMore}

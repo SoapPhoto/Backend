@@ -341,7 +341,6 @@ export class PictureService {
       client.zrevrange('picture_hot', limit, limit + query.pageSize),
       client.zcount('picture_hot', -1000000, 1000000),
     ]);
-    console.time('1111');
     const q = this.pictureRepository.createQueryBuilder('picture');
     this.selectInfo(q, user);
     // const data = await Promise.all(ids.map(v => this.getOnePicture(v, user)));
@@ -349,7 +348,6 @@ export class PictureService {
       .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
       .cache(1000);
     const data = await q.getMany();
-    console.timeEnd('1111');
     return listRequest(query, classToPlain(data), count as number);
   }
 

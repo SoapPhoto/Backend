@@ -1,3 +1,8 @@
+enum PicturesType {
+  NEW
+  HOT
+}
+
 type Query {
   "获取单个图片"
   picture(
@@ -11,6 +16,8 @@ type Query {
 
   "获取图片列表"
   pictures(
+    "图片列表类型"
+    type: PicturesType
     query: PicturesQueryInput!
   ): Pictures
 
