@@ -29,14 +29,16 @@ const ListBox = styled.div`
 
 export const NotificationPopover = observer(() => {
   const {
-    getList, list, loading, listInit, unReadAll,
+    getList, list, loading, listInit, unReadAll, watch,
   } = useNotification();
   const [init, setInit] = useState(false);
   useEffect(() => {
     if (!listInit) getList();
     setInit(true);
+    const clear = watch();
     return () => {
       unReadAll();
+      clear();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

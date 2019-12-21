@@ -1,9 +1,10 @@
 import { action, observable, runInAction } from 'mobx';
 
-import { queryToMobxObservable } from '@lib/common/apollo';
+import { queryToMobxObservable, watchQueryCacheObservable } from '@lib/common/apollo';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { UserInfo } from '@lib/schemas/query';
 import { apolloErrorLog } from '@lib/common/utils/error';
+import { merge } from 'lodash';
 import { BaseStore } from '../base/BaseStore';
 
 interface IUserGqlReq {
@@ -70,15 +71,13 @@ export class UserScreenStore extends BaseStore {
     });
   }
 
-  @action public watch = () => {
-    queryToMobxObservable(this.client.watchQuery<IUserGqlReq>({
-      query: UserInfo,
-      variables: { username: this.username },
-      fetchPolicy: 'cache-only',
-    }), (data) => {
-      runInAction(() => this.user = data.user);
-    }, {
-      observable: true,
-    });
-  }
+  @action public watch = () => watchQueryCacheObservable(this.client.watchQuery<IUserGqlReq>({
+    query: UserInfo,
+    variables: { username: this.username },
+    fetchPolicy: 'cache-only',
+  }), (data) => {
+    runInAction(() => merge(this.user, data.user));
+  }, {
+    observable: true,
+  });
 }

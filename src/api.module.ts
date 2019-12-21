@@ -11,6 +11,7 @@ import { OptionModule } from './modules/option/option.module';
 import { FileModule } from './modules/file/file.module';
 import { CredentialsModule } from './modules/credentials/credentials.module';
 import { FollowModule } from './modules/follow/follow.module';
+import { BadgeModule } from './modules/badge/badge.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FollowModule } from './modules/follow/follow.module';
     FileModule,
     CredentialsModule,
     FollowModule,
+    BadgeModule,
   ],
   exports: [
     ClientModule,

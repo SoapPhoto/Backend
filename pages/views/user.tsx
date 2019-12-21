@@ -44,6 +44,7 @@ import { FollowUser, UnFollowUser } from '@lib/schemas/mutations';
 import { UserIsFollowing } from '@lib/schemas/query';
 import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
 import { throttle } from 'lodash';
+import { useFollower } from '@lib/common/hooks/useFollower';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -92,50 +93,18 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 });
 
 const UserInfo = observer(() => {
+  const [follow, followLoading] = useFollower();
   const { t } = useTranslation();
-  const [followLoading, setFollowLoading] = useState(false);
   const { screen } = useStores();
-  const { mutate } = useApolloClient();
-  const [query] = useWatchQuery<{user: {isFollowing: number}}>(UserIsFollowing, { fetchPolicy: 'network-only' });
   const { isLogin, userInfo } = useAccountStore();
   const { userStore } = screen;
   const { user, setUserInfo, watch } = userStore;
   useEffect(() => {
-    watch();
+    const clear = watch();
+    return () => clear();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const follow = useCallback(throttle(async () => {
-    let mutation = FollowUser;
-    if (user.isFollowing > 0) mutation = UnFollowUser;
-    if (followLoading) return;
-    setFollowLoading(true);
-    try {
-      await mutate<{done: boolean}>({
-        mutation,
-        variables: {
-          input: {
-            userId: user.id,
-          },
-        },
-      });
-      await query(({ user: newUserInfo }) => {
-        setUserInfo(newUserInfo);
-        setFollowLoading(false);
-      }, {
-        username: user.username,
-      });
-    } catch (error) {
-      if (error?.graphQLErrors[0]?.message.message === 'followed') {
-        await query(({ user: newUserInfo }) => {
-          setUserInfo(newUserInfo);
-          setFollowLoading(false);
-        }, {
-          username: user.username,
-        });
-      } else {
-        setFollowLoading(false);
-      }
-    }
-  }, 1000), [mutate, query, setUserInfo, user.id, user.isFollowing, user.username]);
+  const follower = useCallback(() => user && follow(user), [follow, user]);
   return (
     <UserHeader>
       <HeaderGrid columns="140px auto" gap="32px">
@@ -159,9 +128,8 @@ const UserInfo = observer(() => {
                 <FollowButton
                   disabled={followLoading}
                   style={{ marginLeft: rem(24), marginRight: rem(24) }}
-                  size="small"
                   isFollowing={user.isFollowing}
-                  onClick={follow}
+                  onClick={follower}
                 />
               )
             }

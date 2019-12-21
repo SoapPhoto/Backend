@@ -65,5 +65,13 @@
       "new": "最新",
       "hot": "热门"
     }
+  },
+  "follow": {
+    "btn": {
+      "mutual_following": "互相关注",
+      "following": "已关注",
+      "follow": "关注",
+      "un_follow": "取消关注"
+    }
   }
 }

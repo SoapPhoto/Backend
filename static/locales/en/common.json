@@ -65,5 +65,13 @@
       "new": "Recent",
       "hot": "Popular"
     }
+  },
+  "follow": {
+    "btn": {
+      "following": "Following",
+      "follow": "Follow",
+      "mutual_following": "Following",
+      "un_follow": "UnFollow"
+    }
   }
 }

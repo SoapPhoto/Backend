@@ -1,5 +1,5 @@
 import { rem } from 'polished';
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Grid } from 'styled-css-grid';
 
@@ -11,6 +11,9 @@ import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
+import { FollowButton } from '@lib/components/Button/FollowButton';
+import { useFollower } from '@lib/common/hooks/useFollower';
+import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -18,15 +21,18 @@ interface IProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Wrapper = styled(Grid)`
   width: ${rem('340px')};
-  padding: ${rem('14px')} ${rem('10px')};
+  padding: ${rem('20px')} ${rem('24px')};
+  padding-bottom: 0;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const UserBox = styled.div`
+  flex: 1;
   margin-left: ${rem('16px')};
 `;
 
@@ -70,11 +76,41 @@ const LoadingBox = styled.div`
   padding: ${rem('24px')};
 `;
 
+const UserInfo = styled.div`
+  border-top: 1px solid ${theme('colors.gray')};
+  padding: ${rem('14px')} ${rem('10px')};
+  margin-top: ${rem(16)};
+`;
+
+export const Info = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const InfoItem = styled.div`
+  padding: 0 ${rem(12)};
+`;
+
+export const InfoItemCount = styled.span`
+  margin-right: ${rem(8)};
+  font-weight: 700;
+  font-family: Rubik;
+`;
+
+export const InfoItemLabel = styled.span`
+  color: ${theme('colors.secondary')};
+`;
+
 const UserCard: React.FC<IProps> = ({
   user,
   ...restProps
 }) => {
+  const { t } = useTranslation();
+  const [follow, followLoading] = useFollower();
   const { colors } = useTheme();
+  const follower = useCallback(() => user && follow(user), [follow, user]);
   if (!user) {
     return (
       <LoadingBox>
@@ -103,6 +139,12 @@ const UserCard: React.FC<IProps> = ({
             </A>
             <Bio>{user.bio}</Bio>
           </UserBox>
+          <FollowButton
+            size="small"
+            disabled={followLoading}
+            isFollowing={user.isFollowing}
+            onClick={follower}
+          />
         </Header>
         <PicturePreview>
           {
@@ -128,6 +170,22 @@ const UserCard: React.FC<IProps> = ({
           }
         </PicturePreview>
       </Wrapper>
+      <UserInfo>
+        <Info>
+          <InfoItem>
+            <InfoItemCount>{user.followerCount}</InfoItemCount>
+            <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
+          </InfoItem>
+          <InfoItem>
+            <InfoItemCount>{user.followedCount}</InfoItemCount>
+            <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
+          </InfoItem>
+          <InfoItem>
+            <InfoItemCount>{user.likesCount}</InfoItemCount>
+            <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
+          </InfoItem>
+        </Info>
+      </UserInfo>
     </div>
   );
 };

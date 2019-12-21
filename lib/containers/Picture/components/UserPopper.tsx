@@ -25,6 +25,7 @@ export const UserPopper: React.FC<IProps> = ({
   };
   return (
     <Popover
+      contentStyle={{ padding: 0 }}
       openDelay={500}
       trigger="hover"
       onOpen={onOpen}
