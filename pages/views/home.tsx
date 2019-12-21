@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -7,7 +8,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { getTitle, server } from '@lib/common/utils';
 import { useScreenStores } from '@lib/stores/hooks';
-import { observer } from 'mobx-react';
+import { I18nNamespace } from '@lib/i18n/Namespace';
 import { SEO, Nav, NavItem } from '@lib/components';
 
 const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
@@ -57,4 +58,4 @@ Index.getInitialProps = async ({ mobxStore, route }: ICustomNextContext) => {
   return {};
 };
 
-export default pageWithTranslation()(withError(Index));
+export default pageWithTranslation(I18nNamespace.Picture)(withError(Index));
