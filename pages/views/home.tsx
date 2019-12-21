@@ -58,4 +58,4 @@ Index.getInitialProps = async ({ mobxStore, route }: ICustomNextContext) => {
   return {};
 };
 
-export default pageWithTranslation(I18nNamespace.Picture)(withError(Index));
+export default pageWithTranslation(I18nNamespace.User)(withError(Index));
