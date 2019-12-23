@@ -103,7 +103,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
   return (
     <Wrapper>
       <SEO
-        title={getTitle('login', t)}
+        title={getTitle('menu.login', t)}
         description="登录 Soap 分享创造你的生活给你的小伙伴。"
       />
       <Header>

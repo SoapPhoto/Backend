@@ -59,7 +59,7 @@ const SignUp = () => {
   return (
     <Wrapper>
       <SEO
-        title={getTitle('signup', t)}
+        title={getTitle('menu.signup', t)}
         description="注册 Soap 分享创造你的生活给你的小伙伴。"
       />
       <Header>
