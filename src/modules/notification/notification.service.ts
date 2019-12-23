@@ -57,11 +57,11 @@ export class NotificationService {
       );
     }
     notification.media = await this.setNotificationItemMedia(notification);
-    await this.pubSub.publish('newNotification', { newNotification: notification, subscribers });
-    this.wss.emitUserMessage(subscribers, 'message', {
-      event: 'message',
-      data: classToPlain(notification),
-    });
+    await this.pubSub.publish('newNotification', { newNotification: classToPlain(notification), subscribers });
+    // this.wss.emitUserMessage(subscribers, 'message', {
+    //   event: 'message',
+    //   data: classToPlain(notification),
+    // });
   }
 
   public async getList(user: UserEntity) {

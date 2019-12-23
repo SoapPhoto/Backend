@@ -4,7 +4,7 @@ import { CollectionPictures } from '@lib/schemas/query';
 import { PictureListStore } from '../base/PictureListStore';
 
 interface ICollectionPictureQuery {
-  id: string;
+  id: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -14,13 +14,13 @@ export class CollectionScreenPictureList extends PictureListStore<ICollectionPic
     super({
       query: CollectionPictures,
       label: 'collectionPictures',
-      restQuery: {
-        id: '',
-      },
+      // restQuery: {
+      //   id: '',
+      // },
     });
   }
 
-  @action public setId = (id: string) => {
+  @action public setId = (id: number) => {
     this.restQuery.id = id;
   }
 }

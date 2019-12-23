@@ -220,7 +220,7 @@ Collection.getInitialProps = async (ctx) => {
   const { collectionStore, collectionPictureStore } = screen;
   const { location } = appStore;
   const isPop = location && location.action === 'POP' && !server;
-  collectionPictureStore.setId(id!);
+  collectionPictureStore.setId(Number(id!));
   if (isPop) {
     await Promise.all([
       collectionStore.getCache(Number(id!)),
