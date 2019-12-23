@@ -159,7 +159,7 @@ export class UserService {
   /**
    * 获取用户的详细信息
    *
-   * @param {ID} query
+   * @param {number} query
    * @param {(Maybe<UserEntity> | boolean)} user
    * @param {string[]} [groups]
    * @returns {Promise<UserEntity>}
@@ -200,7 +200,7 @@ export class UserService {
     return q.getOne();
   }
 
-  public async userLikesCount(id: ID) {
+  public async userLikesCount(id: number) {
     return this.pictureService.userLikesCount(id);
   }
 

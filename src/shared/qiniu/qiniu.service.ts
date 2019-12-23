@@ -46,7 +46,7 @@ export class QiniuService {
     });
   }
 
-  public createToken(callbackData: Record<string, string> = {}) {
+  public createToken(callbackData: Record<string, string | number> = {}) {
     const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
     const putPolicy = new qiniu.rs.PutPolicy({
       ...this.config,

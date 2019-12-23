@@ -20,7 +20,7 @@ type Query {
 """
 type Tag implements BaseNode {
   "id"
-  id: ID!
+  id: Float!
 
   "标签名称"
   name: String

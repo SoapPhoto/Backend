@@ -14,7 +14,7 @@ import { CollectionPictureEntity } from './picture/collection-picture.entity';
 export class CollectionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Expose()
-  public readonly id!: string;
+  public readonly id!: number;
 
   /** 收藏夹名字 */
   @Column({

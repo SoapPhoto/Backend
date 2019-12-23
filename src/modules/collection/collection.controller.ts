@@ -31,7 +31,7 @@ export class CollectionController {
   @Delete('/:collectionId')
   @Roles(Role.USER)
   public async deleteCollection(
-    @Param('collectionId') collectionId: string,
+    @Param('collectionId') collectionId: number,
     @User() user: UserEntity,
   ) {
     return this.collectionService.deleteCollection(collectionId, user);
@@ -41,7 +41,7 @@ export class CollectionController {
   @Roles(Role.USER)
   public async updateCollection(
     @Body() body: UpdateCollectionDot,
-    @Param('collectionId') collectionId: string,
+    @Param('collectionId') collectionId: number,
     @User() user: UserEntity,
   ) {
     return this.collectionService.updateCollection(body, collectionId, user);
@@ -50,8 +50,8 @@ export class CollectionController {
   @Post('/:collectionId/:pictureId')
   @Roles(Role.USER)
   public async addPictureCollection(
-    @Param('pictureId') pictureId: string,
-    @Param('collectionId') collectionId: string,
+    @Param('pictureId') pictureId: number,
+    @Param('collectionId') collectionId: number,
     @User() user: UserEntity,
   ) {
     return this.collectionService.addPicture(collectionId, pictureId, user);
@@ -60,8 +60,8 @@ export class CollectionController {
   @Delete('/:collectionId/:pictureId')
   @Roles(Role.USER)
   public async removePictureCollection(
-    @Param('pictureId') pictureId: string,
-    @Param('collectionId') collectionId: string,
+    @Param('pictureId') pictureId: number,
+    @Param('collectionId') collectionId: number,
     @User() user: UserEntity,
   ) {
     return this.collectionService.removePicture(collectionId, pictureId, user);
@@ -69,7 +69,7 @@ export class CollectionController {
 
   @Get('/:collectionId')
   public async collectionDetail(
-    @Param('collectionId') collectionId: string,
+    @Param('collectionId') collectionId: number,
     @Query() query: GetCollectionPictureListDto,
     @User() user: Maybe<UserEntity>,
   ) {
@@ -78,7 +78,7 @@ export class CollectionController {
 
   @Get('/:collectionId/pictures')
   public async collectionPictureList(
-    @Param('collectionId') collectionId: string,
+    @Param('collectionId') collectionId: number,
     @Query() query: GetCollectionPictureListDto,
     @User() user: Maybe<UserEntity>,
   ) {

@@ -5,7 +5,7 @@ import {
 
 import { OauthType } from '@common/enum/router';
 import { UserEntity } from '../user/user.entity';
-import { IGithubUserInfo, IGoogleUserInfo, IOauthUserInfo } from '../user/user.interface';
+import { IOauthUserInfo } from '../user/user.interface';
 
 @Exclude()
 @Entity('user_credentials')

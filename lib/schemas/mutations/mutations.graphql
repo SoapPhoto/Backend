@@ -1,18 +1,18 @@
 #import "../fragments/fragments.graphql"
 
-mutation UpdatePicture($data: UpdatePictureInput!, $id: ID!) {
+mutation UpdatePicture($data: UpdatePictureInput!, $id: Float!) {
   updatePicture(data: $data, id: $id) {
     ...UpdatePictureFragment
   }
 }
 
-mutation LikePicture($id: ID!) {
+mutation LikePicture($id: Float!) {
   likePicture(id: $id) {
     ...PictureLikeFragment
   }
 }
 
-mutation UnLikePicture($id: ID!) {
+mutation UnLikePicture($id: Float!) {
   unlikePicture(id: $id) {
     ...PictureLikeFragment
   }
@@ -24,19 +24,19 @@ mutation MarkNotificationReadAll {
   }
 }
 
-mutation AddPictureCollection($id: ID!, $pictureId: ID!) {
+mutation AddPictureCollection($id: Float!, $pictureId: Float!) {
   addPictureCollection(id: $id, pictureId: $pictureId) {
     ...CollectionFragment
   }
 }
 
-mutation RemovePictureCollection($id: ID!, $pictureId: ID!) {
+mutation RemovePictureCollection($id: Float!, $pictureId: Float!) {
   removePictureCollection(id: $id, pictureId: $pictureId) {
     done
   }
 }
 
-mutation DeleteCollection($id: ID!) {
+mutation DeleteCollection($id: Float!) {
   deleteCollection(id: $id) {
     done
   }
@@ -57,5 +57,11 @@ mutation FollowUser($input: FollowUserInput!) {
 mutation UnFollowUser($input: FollowUserInput!) {
   unFollowUser(input: $input) {
     done
+  }
+}
+
+mutation AddComment($id: Float!, $commentId: Float, $data: AddCommentInput!) {
+  addComment(id: $id, commentId: $commentId, data: $data) {
+    ...CommentChildFragment
   }
 }

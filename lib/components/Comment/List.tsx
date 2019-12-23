@@ -12,7 +12,7 @@ interface IProps {
   author: UserEntity;
   accountStore?: AccountStore;
   comment: CommentEntity[];
-  onConfirm: (value: string, commentId?: string) => Promise<void>;
+  onConfirm: (value: string, commentId?: number) => Promise<void>;
   openModal?: (data: CommentEntity) => void;
 }
 

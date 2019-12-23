@@ -10,7 +10,7 @@ import { CollectionEntity } from '../collection.entity';
 @Entity('collection_picture')
 export class CollectionPictureEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public readonly id!: string;
+  public readonly id!: number;
 
   /* 收藏 */
   @ManyToOne(() => CollectionEntity, { onDelete: 'CASCADE', cascade: true })

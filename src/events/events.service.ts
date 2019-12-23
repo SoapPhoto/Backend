@@ -50,7 +50,7 @@ export class EventsService {
     redisClient.del(...keys);
   }
 
-  public async getClientId(userId: string) {
+  public async getClientId(userId: number) {
     const redisClient = this.redisService.getClient();
     const data = await redisClient.keys(`socket.login.${userId}.*`);
     const arr = await Promise.all<string>(

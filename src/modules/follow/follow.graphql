@@ -1,9 +1,9 @@
 
 type Query {
   "关注的用户"
-  followedUsers(limit: Float, offset: Float, id: ID): [User]
+  followedUsers(limit: Float, offset: Float, id: Float): [User]
   "粉丝"
-  followerUsers(limit: Float, offset: Float, id: ID): [User]
+  followerUsers(limit: Float, offset: Float, id: Float): [User]
 }
 
 type Mutation {
@@ -12,7 +12,7 @@ type Mutation {
 }
 
 input FollowUserInput {
-  userId: ID!
+  userId: Float!
 }
 
 type Follow {

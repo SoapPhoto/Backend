@@ -30,7 +30,7 @@ export class CommentResolver {
   @Query('childComments')
   public async childCommentList(
     @Context('user') user: Maybe<UserEntity>,
-    @Args('id') id: string,
+    @Args('id') id: number,
     @Args('query') query: GetPictureCommentListDto,
   ) {
     return this.commentService.childComments(id, user, undefined, query);
@@ -40,8 +40,8 @@ export class CommentResolver {
   @Roles(Role.USER)
   public async addComment(
     @Context('user') user: UserEntity,
-    @Args('id') id: ID,
-    @Args('commentId') commentId: ID,
+    @Args('id') id: number,
+    @Args('commentId') commentId: number,
     @Args('data') data: CreatePictureCommentDot,
   ) {
     return this.commentService.create(user, data, id, commentId);

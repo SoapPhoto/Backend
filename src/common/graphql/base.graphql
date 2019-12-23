@@ -1,7 +1,7 @@
 scalar DateTime
 
 interface BaseNode {
-  id: ID!
+  id: Float!
   createTime: DateTime
   updateTime: DateTime
 }

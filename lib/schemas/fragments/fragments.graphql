@@ -60,6 +60,9 @@ fragment PictureDetailFragment on Picture {
     exif {
       ...EXIFFragment
     }
+    badge {
+      ...BadgeFragment
+    }
 }
 
 fragment PictureListFragment on Pictures {
@@ -296,4 +299,12 @@ fragment CommentListFragment on Comments {
     data {
       ...CommentFragment
     }
+}
+
+
+fragment BadgeFragment on Badge {
+  id
+  type
+  name
+  rate
 }

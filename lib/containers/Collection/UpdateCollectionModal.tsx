@@ -22,7 +22,7 @@ import { Trash2 } from '@lib/icon';
 import { useApolloClient } from 'react-apollo';
 
 interface IProps<T> {
-  id: ID;
+  id: number;
   visible: boolean;
   onClose: () => void;
   onUpdate: (value: T) => Promise<void>;

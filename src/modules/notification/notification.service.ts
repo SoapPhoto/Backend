@@ -5,7 +5,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationCategory } from '@common/enum/notification';
-import { plainToClass, classToPlain } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { pubSub } from '@server/common/pubSub';
 import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
@@ -80,10 +80,10 @@ export class NotificationService {
       .limit(20)
       .getMany();
     return Promise.all(
-      data.map(async notify => classToPlain(plainToClass(NotificationEntity, {
-        ...notify,
-        media: await this.setNotificationItemMedia(notify),
-      }))),
+      data.map(async (notify) => {
+        notify.media = await this.setNotificationItemMedia(notify);
+        return classToPlain(notify);
+      }),
     );
   }
 

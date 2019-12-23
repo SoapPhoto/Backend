@@ -8,6 +8,7 @@ import { CommentEntity } from '@lib/common/interfaces/comment';
 import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { useAccountStore } from '@lib/stores/hooks';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { A } from '../A';
 import { Avatar, EmojiText } from '..';
 import { Popover } from '../Popover';
@@ -16,14 +17,13 @@ import {
   ContentBox, InfoBox, ItemBox, MainBox, UserName, ReplyLabel, ContentItem, ConfirmText, UserLabel, ChildComment, Dot, MoreChildComment, MoreChildCommentBtn,
 } from './styles/list';
 import { CommentList } from './List';
-import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface ICommentItem {
   visibleChild?: boolean;
   parent?: CommentEntity;
   author: UserEntity;
   comment: CommentEntity;
-  onConfirm: (value: string, commentId?: string) => Promise<void>;
+  onConfirm: (value: string, commentId?: number) => Promise<void>;
   openModal?: (data: CommentEntity) => void;
 }
 
@@ -35,7 +35,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
   onConfirm,
   openModal,
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const { isLogin } = useAccountStore();
   const [isComment, setComment] = useState(false);
   const [visibleComment, setVisibleComment] = useState(true);
@@ -81,13 +81,18 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
             </A>
             {
               author.username === user.username && (
-                <UserLabel>({t('comment.author')})</UserLabel>
+                <UserLabel>
+                  {`(${t('comment.author')})`}
+                </UserLabel>
               )
             }
             {
               !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
-                  <span>{t('comment.reply')} </span>
+                  <span>
+                    {t('comment.reply')}
+                    {' '}
+                  </span>
                   <UserPopper username={replyUser.username}>
                     <A
                       route={`/@${replyUser.username}`}

@@ -28,7 +28,7 @@ export class NotificationEntity extends BaseEntity {
 
   @Column({ nullable: true })
   @Expose({ groups: [Role.ADMIN] })
-  public mediaId?: string;
+  public mediaId?: number;
 
   @Column({ type: 'enum', enum: NotificationType, default: `${NotificationType.USER}` })
   @Expose()

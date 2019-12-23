@@ -22,7 +22,7 @@ export class FollowResolver {
 
   @Query()
   public async followerUsers(
-    @Args('id') id: ID,
+    @Args('id') id: number,
     @Args() input: FollowUsersDto,
   ) {
     return this.followService.followUsers(id, input);
@@ -30,7 +30,7 @@ export class FollowResolver {
 
   @Query()
   public async followedUsers(
-    @Args('id') id: ID,
+    @Args('id') id: number,
     @Args() input: FollowUsersDto,
   ) {
     return this.followService.followUsers(id, input, 'followed');

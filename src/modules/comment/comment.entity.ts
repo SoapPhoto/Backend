@@ -12,7 +12,7 @@ import { UserEntity } from '@server/modules/user/user.entity';
 export class CommentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Expose()
-  public readonly id!: string;
+  public readonly id!: number;
 
   @Column({
     collation: 'utf8mb4_unicode_ci',

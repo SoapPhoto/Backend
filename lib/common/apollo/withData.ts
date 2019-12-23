@@ -32,7 +32,7 @@ function createClient({ headers, initialState }: any) {
   const errorLink = onError(
     ({ graphQLErrors, networkError }) => {
       if (graphQLErrors) {
-        graphQLErrors.map(err => console.log(`[GraphQL error]: Message: ${err.message}`));
+        graphQLErrors.map(err => console.error(`[GraphQL error]: Message: ${(err.message as any)?.error?.toString()}`));
       }
       if (networkError) console.log(`[Network error]: ${networkError}`);
     },

@@ -38,7 +38,7 @@ export class CommentService {
     return listRequest(query, classToPlain(data), count);
   }
 
-  public async getRawOne(id: ID) {
+  public async getRawOne(id: number) {
     return this.commentRepository.createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
@@ -49,7 +49,7 @@ export class CommentService {
       .getOne();
   }
 
-  public async getOne(id: ID) {
+  public async getOne(id: number) {
     return this.commentRepository.createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
@@ -57,7 +57,7 @@ export class CommentService {
       .getOne();
   }
 
-  public async create(user: UserEntity, data: CreatePictureCommentDot, id: ID, commentId?: ID) {
+  public async create(user: UserEntity, data: CreatePictureCommentDot, id: number, commentId?: number) {
     const picture = await this.pictureService.getOne(id);
     if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
       throw new BadGatewayException('no_exist_picture');
@@ -94,14 +94,14 @@ export class CommentService {
         {
           type: NotificationType.USER,
           category: commentId ? NotificationCategory.REPLY : NotificationCategory.COMMENT,
-          mediaId: comment.id.toString(),
+          mediaId: comment.id,
         },
       );
     }
     return classToPlain(comment);
   }
 
-  public async childComments(id: ID, user: Maybe<UserEntity>, limit?: number, query?: GetPictureCommentListDto) {
+  public async childComments(id: number, user: Maybe<UserEntity>, limit?: number, query?: GetPictureCommentListDto) {
     const q = this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
@@ -123,21 +123,21 @@ export class CommentService {
     return classToPlain(await q.getMany());
   }
 
-  public async getSubCount(id: ID) {
+  public async getSubCount(id: number) {
     const data = await this.commentRepository.createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .getCount();
     return data;
   }
 
-  public async getPictureCommentCount(pictureId: ID) {
+  public async getPictureCommentCount(pictureId: number) {
     const data = await this.commentRepository.createQueryBuilder('comment')
       .where('comment.pictureId=:pictureId', { pictureId })
       .getCount();
     return data;
   }
 
-  public async getPicturesCommentCount(ids: ID[]) {
+  public async getPicturesCommentCount(ids: number[]) {
     const data = await this.commentRepository.createQueryBuilder('comment')
       .select('COUNT(DISTINCT(`comment`.`id`)) as count, comment.pictureId')
       .where('comment.pictureId IN (:...ids)', { ids })

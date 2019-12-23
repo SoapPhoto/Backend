@@ -1,6 +1,6 @@
 #import "../fragments/fragments.graphql"
 
-query Picture($id: ID!) {
+query Picture($id: Float!) {
   picture(id: $id) {
     ...PictureDetailFragment
   }
@@ -57,14 +57,14 @@ query UserCollectionsByName(
   }
 }
 
-query Collection($id: ID!) {
+query Collection($id: Float!) {
   collection(id: $id) {
     ...CollectionDetailFragment
   }
 }
 
 
-query CollectionPictures($id: ID!, $query: PicturesQueryInput!) {
+query CollectionPictures($id: Float!, $query: PicturesQueryInput!) {
   collectionPictures(id: $id, query: $query) {
     ...PictureListFragment
   }
@@ -94,13 +94,13 @@ query UnreadNotificationCount {
   }
 }
 
-query Comments($id: ID!, $query: CommentsQueryInput) {
+query Comments($id: Float!, $query: CommentsQueryInput) {
   comments(id: $id, query: $query) {
     ...CommentListFragment
   }
 }
 
-query ChildComments($id: ID!, $query: CommentsQueryInput) {
+query ChildComments($id: Float!, $query: CommentsQueryInput) {
   childComments(id: $id, query: $query) {
     ...ChildCommentListFragment
   }

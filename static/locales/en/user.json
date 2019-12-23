@@ -1,14 +1,2 @@
 {
-  "user": {
-    "menu": {
-      "picture": "Pictures",
-      "like": "Likes",
-      "collection": "Collections"
-    },
-    "label": {
-      "followed": "Followed",
-      "followers": "Followers",
-      "likes": "Likes"
-    }
-  }
 }

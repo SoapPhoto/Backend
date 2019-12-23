@@ -10,7 +10,7 @@ import { Expose, Type } from 'class-transformer';
 @Entity('tag')
 export class TagEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public readonly id!: string;
+  public readonly id!: number;
 
   /** tag名称 */
   @Column({

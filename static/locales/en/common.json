@@ -20,7 +20,8 @@
     "picture_title": "Title",
     "picture_bio": "Bio",
     "email": "Email",
-    "url": "URL"
+    "url": "URL",
+    "choice": "Choice"
   },
   "btn": {
     "delete": "Delete",
@@ -72,6 +73,18 @@
       "follow": "Follow",
       "mutual_following": "Following",
       "un_follow": "UnFollow"
+    }
+  },
+  "user": {
+    "menu": {
+      "picture": "Pictures",
+      "like": "Likes",
+      "collection": "Collections"
+    },
+    "label": {
+      "followed": "Followed",
+      "followers": "Followers",
+      "likes": "Likes"
     }
   }
 }

@@ -33,7 +33,7 @@ type Query {
 
   "获取用户的收藏夹列表"
   userCollectionsById(
-    id: ID!
+    id: Float!
     query: CollectionsQueryInput!
   ): Collections
 
@@ -48,7 +48,7 @@ type Query {
     "类型"
     type: UserPictureType = MY
     "id"
-    id: ID!
+    id: Float!
     query: PicturesQueryInput
   ): Pictures
 }
@@ -71,7 +71,7 @@ input UpdateProfileInput {
 """
 type User implements BaseNode {
   "id"
-  id: ID!
+  id: Float!
 
   "用户名"
   username: String

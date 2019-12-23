@@ -23,7 +23,7 @@ import { CredentialsEntity } from '../credentials/credentials.entity';
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Expose()
-  public readonly id!: string;
+  public readonly id!: number;
 
   /** 用户名 */
   @Expose()

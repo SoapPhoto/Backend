@@ -12,11 +12,11 @@ import { Role } from '../user/enum/role.enum';
 export class FollowEntity extends BaseEntity {
   @Expose({ groups: [Role.ADMIN] })
   @PrimaryColumn({ type: 'int' })
-  public readonly followed_user_id!: ID;
+  public readonly followed_user_id!: number;
 
   @Expose({ groups: [Role.ADMIN] })
   @PrimaryColumn({ type: 'int' })
-  public readonly follower_user_id!: ID;
+  public readonly follower_user_id!: number;
 
   @Type(() => UserEntity)
   @Expose()

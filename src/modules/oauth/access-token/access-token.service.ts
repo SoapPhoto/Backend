@@ -44,7 +44,7 @@ export class AccessTokenService {
     return q.getOne();
   }
 
-  public async clearUserTokenAll(userId: ID) {
+  public async clearUserTokenAll(userId: number) {
     return this.accessTokenRepository.createQueryBuilder('token')
       .delete()
       .where('accessToken.userId=:userId', { userId })

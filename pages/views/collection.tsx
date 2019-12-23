@@ -223,12 +223,12 @@ Collection.getInitialProps = async (ctx) => {
   collectionPictureStore.setId(id!);
   if (isPop) {
     await Promise.all([
-      collectionStore.getCache(id!),
+      collectionStore.getCache(Number(id!)),
       collectionPictureStore.getListCache(),
     ]);
   } else {
     await Promise.all([
-      collectionStore.getInfo(id!),
+      collectionStore.getInfo(Number(id!)),
       collectionPictureStore.getList(false),
     ]);
   }

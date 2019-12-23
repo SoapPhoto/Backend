@@ -1,40 +1,40 @@
 type Query {
   "获取收藏夹详情"
   collection(
-    id: ID!
+    id: Float!
   ): Collection
 
   "获取收藏夹图片列表"
   collectionPictures(
     "收藏夹id"
-    id: ID!
+    id: Float!
     query: PicturesQueryInput
   ): Pictures
 }
 
 input AddPictureCollectionInput {
   "图片id"
-  pictureId: ID!
+  pictureId: Float!
 }
 
 type Mutation {
   "添加图片到收藏夹"
   addPictureCollection(
     "收藏夹id"
-    id: ID!
+    id: Float!
     "图片id"
-    pictureId: ID!
+    pictureId: Float!
   ): Collection
   "从收藏夹删除图片"
   removePictureCollection(
     "收藏夹id"
-    id: ID!
+    id: Float!
     "图片id"
-    pictureId: ID!
+    pictureId: Float!
   ): Status
   deleteCollection(
     "收藏夹id"
-    id: ID!
+    id: Float!
   ): Status
 }
 
@@ -48,7 +48,7 @@ type Collections implements BaseList {
 
 type Collection implements BaseNode {
   "id"
-  id: ID!
+  id: Float!
 
   "名字"
   name: String

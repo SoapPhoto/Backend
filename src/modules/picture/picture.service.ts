@@ -26,6 +26,7 @@ import { PictureUserActivityService } from './user-activity/user-activity.servic
 import { Role } from '../user/enum/role.enum';
 import { CollectionService } from '../collection/collection.service';
 import { CommentService } from '../comment/comment.service';
+import { BadgeService } from '../badge/badge.service';
 
 @Injectable()
 export class PictureService {
@@ -39,6 +40,8 @@ export class PictureService {
     private readonly collectionService: CollectionService,
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
+    @Inject(forwardRef(() => BadgeService))
+    private readonly badgeService: BadgeService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
     private readonly redisService: RedisService,
@@ -54,7 +57,7 @@ export class PictureService {
     ), { groups: [Role.OWNER] });
   }
 
-  public async update(id: ID, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
+  public async update(id: number, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
     const picture = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.id=:id', { id })
       .leftJoinAndSelect('picture.user', 'user')
@@ -135,7 +138,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public async getOnePicture(
-    id: ID,
+    id: number,
     user: Maybe<UserEntity>,
     view?: boolean,
   ) {
@@ -185,7 +188,7 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public likePicture = async (id: string, user: UserEntity, data: boolean) => {
+  public likePicture = async (id: number, user: UserEntity, data: boolean) => {
     const picture = await this.getOne(id);
     if (!picture) {
       throw new BadRequestException('no_exist_picture');
@@ -202,7 +205,7 @@ export class PictureService {
     const q = this.selectList(user, query);
     let isOwner = false;
     if (validator.isNumberString(idOrName)) {
-      if (user && user.id === idOrName) isOwner = true;
+      if (user && user.id.toString() === idOrName) isOwner = true;
       q.andWhere('picture.userId=:id', { id: idOrName });
     } else {
       if (user && user.username === idOrName) isOwner = true;
@@ -252,7 +255,7 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public delete = async (id: ID, user: UserEntity) => {
+  public delete = async (id: number, user: UserEntity) => {
     const data = await this.getOne(id);
     if (!data) {
       throw new BadRequestException();
@@ -322,12 +325,12 @@ export class PictureService {
   /**
    * 获取用户对某个图片收藏的收藏夹
    *
-   * @param {ID} id
+   * @param {number} id
    * @param {UserEntity} user
    * @returns
    * @memberof PictureService
    */
-  public async getCurrentCollections(id: ID, user: UserEntity) {
+  public async getCurrentCollections(id: number, user: UserEntity) {
     return classToPlain(
       await this.collectionService.getCurrentCollections(id, user),
       { groups: [Role.OWNER] },
@@ -355,6 +358,12 @@ export class PictureService {
     const data = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.isPrivate=:isPrivate', { isPrivate: false })
       .select('picture.id, picture.views, picture.createTime')
+      .leftJoinAndMapOne(
+        'picture.badge',
+        this.badgeService.pictureActivityMetadata.tableName,
+        'pictureBadge',
+        'pictureBadge.pictureId=picture.id AND pictureBadge.badgeId=1',
+      )
       .limit(1000)
       .getRawMany();
     const ids = data.map(v => v.id);
@@ -372,6 +381,9 @@ export class PictureService {
       count += item.views;
       count += item.likedCount * 5;
       count += item.commentCount * 10;
+      if (item.pictureBadge_badgeId === 1) {
+        count += 100;
+      }
       item.count = count;
       const crTime = dayjs(item.createTime).valueOf();
       const nowTime = dayjs().valueOf();
@@ -386,7 +398,7 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getRawOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
+  public getRawOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
     .where('picture.id=:id', { id })
     .getOne()
 
@@ -424,11 +436,11 @@ export class PictureService {
     }
   }
 
-  public getPictureLikes = (id: ID) => this.activityService.getLikes(id)
+  public getPictureLikes = (id: number) => this.activityService.getLikes(id)
 
-  public getUserIsLike = (id: ID, user: UserEntity) => this.activityService.isLike(id, user)
+  public getUserIsLike = (id: number, user: UserEntity) => this.activityService.isLike(id, user)
 
-  public userLikesCount = (id: ID) => this.activityService.userLikesCount(id)
+  public userLikesCount = (id: number) => this.activityService.userLikesCount(id)
 
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断
@@ -436,7 +448,7 @@ export class PictureService {
    * @public
    * @memberof PictureService
    */
-  public getOne = async (id: ID) => this.pictureRepository.createQueryBuilder('picture')
+  public getOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
     .where('picture.id=:id', { id })
     .leftJoinAndSelect('picture.user', 'user')
     .getOne()

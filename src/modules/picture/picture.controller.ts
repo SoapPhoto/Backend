@@ -101,7 +101,7 @@ export class PictureController {
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.getOnePicture(id, user, true);
+    return this.pictureService.getOnePicture(Number(id), user, true);
   }
 
   @Put('like/:id([0-9]+)')
@@ -110,7 +110,7 @@ export class PictureController {
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.likePicture(id, user, true);
+    return this.pictureService.likePicture(Number(id), user, true);
   }
 
 
@@ -120,7 +120,7 @@ export class PictureController {
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.likePicture(id, user, false);
+    return this.pictureService.likePicture(Number(id), user, false);
   }
 
   @Get(':id([0-9]+)/comments')

@@ -160,7 +160,7 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   const { mutate } = useApolloClient();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
-  const [current, setCurrent] = useState<Map<string, CollectionEntity>>(new Map());
+  const [current, setCurrent] = useState<Map<number, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
   const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);

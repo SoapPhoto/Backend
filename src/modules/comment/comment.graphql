@@ -1,10 +1,10 @@
 type Query {
   comments(
-    id:ID!
+    id: Float!
     query: CommentsQueryInput
   ): Comments
   childComments(
-    id:ID!
+    id: Float!
     query: CommentsQueryInput
   ): Comments
 }
@@ -12,8 +12,8 @@ type Query {
 type Mutation {
   addComment(
     "图片id"
-    id: ID!
-    commentId: ID
+    id: Float!
+    commentId: Float
     data: AddCommentInput!
   ): Comment
 }
@@ -33,7 +33,7 @@ type Comments implements BaseList {
 }
 
 type Comment implements BaseNode {
-  id: ID!
+  id: Float!
   content: String
 
   "评论作者"

@@ -116,7 +116,7 @@ export class OauthService {
     return null;
   }
 
-  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: ID, data: IOauthUserInfo): Promise<{code: string; action: OauthActionType} | null> {
+  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: number, data: IOauthUserInfo): Promise<{code: string; action: OauthActionType} | null> {
     const redisClient = this.redisService.getClient();
     if (state === OauthStateType.login) {
       // 这边验证oauth账户，有存在的话就返回，不存在就创建并返回创建的数据
@@ -151,7 +151,7 @@ export class OauthService {
     return null;
   }
 
-  public async verifyUser(type: OauthType, id: ID, data: IOauthUserInfo): Promise<CredentialsEntity> {
+  public async verifyUser(type: OauthType, id: number, data: IOauthUserInfo): Promise<CredentialsEntity> {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
     if (cr) {
       return cr;

@@ -13,14 +13,14 @@ import { AddComment } from '@lib/schemas/mutations';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
 import { Empty } from '../Empty';
-import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
-  id: ID;
+  id: number;
   author: UserEntity;
   visible: boolean;
   onClose: () => void;
@@ -81,7 +81,7 @@ export const CommentModal: React.FC<IProps> = ({
   onClose,
   comment,
 }) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const { mutate } = useApolloClient();
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState<CommentEntity[]>();
@@ -106,7 +106,7 @@ export const CommentModal: React.FC<IProps> = ({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, visible]);
-  const addComment = useCallback(async (content: string, commentId?: string) => {
+  const addComment = useCallback(async (content: string, commentId?: number) => {
     const { data } = await mutate<{addComment: CommentEntity}>({
       mutation: AddComment,
       variables: {

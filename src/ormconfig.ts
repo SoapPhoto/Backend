@@ -20,6 +20,8 @@ import { CommentEntity } from './modules/comment/comment.entity';
 import { FileEntity } from './modules/file/file.entity';
 import { CredentialsEntity } from './modules/credentials/credentials.entity';
 import { FollowEntity } from './modules/follow/follow.entity';
+import { BadgeEntity } from './modules/badge/badge.entity';
+import { PictureBadgeActivityEntity } from './modules/badge/picture-badge-activity/picture-badge-activity.entity';
 
 const ormconfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -48,6 +50,8 @@ const ormconfig: TypeOrmModuleOptions = {
     FileEntity,
     CredentialsEntity,
     FollowEntity,
+    BadgeEntity,
+    PictureBadgeActivityEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
   cli: {

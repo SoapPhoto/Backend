@@ -31,7 +31,7 @@ type Count {
 }
 
 type Notification implements BaseNode {
-  id: ID!
+  id: Float!
 
   "创建时间"
   createTime: DateTime

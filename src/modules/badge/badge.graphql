@@ -1,0 +1,18 @@
+enum BadgeType {
+  USER
+  PICTURE
+}
+type Query {
+  getBadges(type: BadgeType!, targetId: Float!): [Badge]
+}
+
+type Mutation {
+  addBadge(type: BadgeType!, badgeId: Float!, targetId: Float!): Status
+}
+
+type Badge {
+  id: Float
+  type: BadgeType
+  name: String
+  rate: String
+}

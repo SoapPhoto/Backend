@@ -5,15 +5,15 @@ import { observer } from 'mobx-react';
 import { CommentEntity } from '@lib/common/interfaces/comment';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { UserEntity } from '@lib/common/interfaces/user';
+import { useTranslation } from '@lib/i18n/useTranslation';
 import { CommentEditor } from './Editor';
 import { CommentList } from './List';
 import { Wrapper } from './styles';
 import { Empty } from '..';
 import { CommentModal } from './Modal';
-import { useTranslation } from '@lib/i18n/useTranslation';
 
 interface IProps {
-  id: ID;
+  id: number;
   author: UserEntity;
   accountStore?: AccountStore;
   comment: CommentEntity[];

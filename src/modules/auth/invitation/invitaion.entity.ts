@@ -6,7 +6,7 @@ import { UserEntity } from '@server/modules/user/user.entity';
 @Entity('auth_invitation_code')
 export class AuthInvitationCodeEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public readonly id!: string;
+  public readonly id!: number;
 
   @ManyToOne(() => UserEntity, user => user.collections, { eager: true })
   public creator!: UserEntity;

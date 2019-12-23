@@ -1,5 +1,5 @@
 import {
-  BadRequestException, ForbiddenException, Injectable, NotFoundException, Inject, forwardRef,
+  ForbiddenException, Injectable, NotFoundException, Inject, forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
@@ -50,7 +50,7 @@ export class CollectionService {
     });
   }
 
-  public async updateCollection(body: UpdateCollectionDot, id: ID, user: UserEntity) {
+  public async updateCollection(body: UpdateCollectionDot, id: number, user: UserEntity) {
     const collection = await this.collectionEntity.createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user')
@@ -74,7 +74,7 @@ export class CollectionService {
    * @param {UserEntity} user
    * @memberof CollectionService
    */
-  public async addPicture(id: string, pictureId: string, user: UserEntity) {
+  public async addPicture(id: number, pictureId: number, user: UserEntity) {
     const [picture, collection] = await Promise.all([
       this.pictureService.getRawOne(pictureId),
       this.collectionEntity.findOne(id),
@@ -103,7 +103,7 @@ export class CollectionService {
     );
   }
 
-  public async removePicture(id: string, pictureId: string, _user: UserEntity) {
+  public async removePicture(id: number, pictureId: number, _user: UserEntity) {
     const data = await this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .andWhere('cp.pictureId=:pictureId', { pictureId })
@@ -148,12 +148,12 @@ export class CollectionService {
   /**
    * 获取收藏夹详情
    *
-   * @param {ID} id
+   * @param {number} id
    * @param {Maybe<UserEntity>} user
    * @returns
    * @memberof CollectionService
    */
-  public async getCollectionDetail(id: ID, user: Maybe<UserEntity>) {
+  public async getCollectionDetail(id: number, user: Maybe<UserEntity>) {
     let sql = '';
     const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
     if (user) {
@@ -193,14 +193,14 @@ export class CollectionService {
   /**
    * 获取收藏夹图片列表
    *
-   * @param {ID} id
+   * @param {number} id
    * @param {GetCollectionPictureListDto} query
    * @param {Maybe<UserEntity>} user
    * @returns
    * @memberof CollectionService
    */
   public async getCollectionPictureList(
-    id: ID,
+    id: number,
     query: GetCollectionPictureListDto,
     user: Maybe<UserEntity>,
   ) {
@@ -237,7 +237,7 @@ export class CollectionService {
       return listRequest(query, [], count.count as number);
     }
     const q = this.pictureService.selectList(user);
-    q.andWhere('picture.id IN (:...ids)', { ids: list.map((d: {pictureId: string}) => d.pictureId) });
+    q.andWhere('picture.id IN (:...ids)', { ids: list.map((d: {pictureId: number}) => d.pictureId) });
     const pictureList = await q.getMany();
     return listRequest(query, classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }), count.count as number);
   }
@@ -247,7 +247,7 @@ export class CollectionService {
     const q = this.collectionEntity.createQueryBuilder('collection');
     let userValue;
     if (validator.isNumberString(idOrName)) {
-      if (user && user.id === idOrName) isOwner = true;
+      if (user && user.id.toString() === idOrName) isOwner = true;
       userValue = 'userId';
     } else {
       if (user && user.username === idOrName) isOwner = true;
@@ -300,7 +300,7 @@ export class CollectionService {
     }), count);
   }
 
-  public async deleteCollection(id: ID, user: UserEntity) {
+  public async deleteCollection(id: number, user: UserEntity) {
     const collection = await this.collectionEntity.findOne(id);
     const isOwner = !!(collection && (user.id === collection.user.id));
     if (!isOwner) {
@@ -312,7 +312,7 @@ export class CollectionService {
       .execute();
   }
 
-  public async pictureRelatedCollection(pictureId: ID, limit = 3) {
+  public async pictureRelatedCollection(pictureId: number, limit = 3) {
     const q = this.collectionEntity.createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId', { pictureId })
@@ -333,7 +333,7 @@ export class CollectionService {
     };
   }
 
-  public async getCurrentCollections(pictureId: ID, user: UserEntity) {
+  public async getCurrentCollections(pictureId: number, user: UserEntity) {
     const q = this.collectionEntity.createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId AND ct_info.userId=:userId', {
@@ -347,7 +347,7 @@ export class CollectionService {
    *
    * @memberof CollectionService
    */
-  public async isCollected(id: ID, pictureId: ID) {
+  public async isCollected(id: number, pictureId: number) {
     const data = await this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.pictureId=:pictureId', { pictureId })
       .andWhere('cp.collectionId=:id', { id })

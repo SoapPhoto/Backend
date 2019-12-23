@@ -20,7 +20,8 @@
     "picture_title": "标题",
     "picture_bio": "说明",
     "email": "邮箱",
-    "url": "网址"
+    "url": "网址",
+    "choice": "精选"
   },
   "btn": {
     "delete": "删除",
@@ -72,6 +73,18 @@
       "following": "已关注",
       "follow": "关注",
       "un_follow": "取消关注"
+    }
+  },
+  "user": {
+    "menu": {
+      "picture": "照片",
+      "like": "喜欢",
+      "collection": "收藏夹"
+    },
+    "label": {
+      "followers": "粉丝",
+      "followed": "关注",
+      "likes": "喜欢"
     }
   }
 }

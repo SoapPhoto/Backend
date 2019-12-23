@@ -6,7 +6,7 @@ enum PicturesType {
 type Query {
   "获取单个图片"
   picture(
-    id: ID!
+    id: Float!
   ): Picture
 
   "获取图片列表"
@@ -28,13 +28,13 @@ type Query {
 
   "获取图片相关收藏夹"
   pictureRelatedCollection(
-    id: ID!
+    id: Float!
   ): PictureRelatedCollectionReq
 
   "获取用户的图片"
   userPictures(
     "用户id"
-    id: ID!
+    id: Float!
     "用户名"
     username: String
     query: PicturesQueryInput!
@@ -44,18 +44,18 @@ type Query {
 type Mutation {
   "喜欢图片"
   likePicture(
-    id: ID!
+    id: Float!
   ): LikePictureReq
   "取消喜欢图片"
   unlikePicture(
-    id: ID!
+    id: Float!
   ): LikePictureReq
   updatePicture(
-    id: ID!
+    id: Float!
     data: UpdatePictureInput!
   ): Picture
   deletePicture(
-    id: ID!
+    id: Float!
   ): Status
 }
 
@@ -108,7 +108,7 @@ type EXIF {
 """
 type Picture implements BaseNode {
   "id"
-  id: ID!
+  id: Float!
 
   "七牛的key"
   key: String
@@ -182,4 +182,7 @@ type Picture implements BaseNode {
 
   "当前用户收藏了此图片的收藏夹列表"
   relatedCollections(limit: Float): PictureRelatedCollectionReq
+
+  "徽章"
+  badge: [Badge]
 }

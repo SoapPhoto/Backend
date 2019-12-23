@@ -19,7 +19,7 @@ export class CollectionResolver {
   @Query()
   public async collection(
     @Context('user') user: Maybe<UserEntity>,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.collectionService.getCollectionDetail(id, user);
   }
@@ -28,7 +28,7 @@ export class CollectionResolver {
   public async collectionPictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args('query') query: GetCollectionPictureListDto,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.collectionService.getCollectionPictureList(id, query, user);
   }
@@ -37,8 +37,8 @@ export class CollectionResolver {
   @Roles(Role.USER)
   public async addPictureCollection(
     @Context('user') user: UserEntity,
-    @Args('id') id: string,
-    @Args('pictureId') pictureId: string,
+    @Args('id') id: number,
+    @Args('pictureId') pictureId: number,
   ) {
     return this.collectionService.addPicture(id, pictureId, user);
   }
@@ -47,8 +47,8 @@ export class CollectionResolver {
   @Roles(Role.USER)
   public async removePictureCollection(
     @Context('user') user: UserEntity,
-    @Args('id') id: string,
-    @Args('pictureId') pictureId: string,
+    @Args('id') id: number,
+    @Args('pictureId') pictureId: number,
   ) {
     await this.collectionService.removePicture(id, pictureId, user);
     return {
@@ -60,7 +60,7 @@ export class CollectionResolver {
   @Roles(Role.USER)
   public async deleteCollection(
     @Context('user') user: UserEntity,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     await this.collectionService.deleteCollection(id, user);
     return {

@@ -17,6 +17,7 @@ import { CollectionPictureEntity } from '@server/modules/collection/picture/coll
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 import { Role } from '../user/enum/role.enum';
 import { CollectionEntity } from '../collection/collection.entity';
+import { BadgeEntity } from '../badge/badge.entity';
 
 export interface IRelatedCollections {
   count: number;
@@ -157,6 +158,9 @@ export class PictureEntity extends BaseEntity {
   @JoinTable({ name: 'picture_tags' })
   @Expose()
   public tags!: TagEntity[];
+
+  @Expose()
+  public badge!: BadgeEntity[];
 
   public info!: CollectionPictureEntity[];
 

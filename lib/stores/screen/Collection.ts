@@ -18,7 +18,7 @@ export class CollectionScreenStore extends BaseStore {
 
   public _pictureListCache: Record<string, IPictureListRequest> = {}
 
-  @observable public id = '';
+  @observable public id!: number;
 
   @observable public info?: CollectionEntity;
 
@@ -26,7 +26,7 @@ export class CollectionScreenStore extends BaseStore {
     await updateCollection(this.id, value);
   }
 
-  public getInfo = async (id: string) => {
+  public getInfo = async (id: number) => {
     this.id = id;
     await queryToMobxObservable(this.client.watchQuery<ICollectionInfoGqlReq>({
       query: Collection,
@@ -43,7 +43,7 @@ export class CollectionScreenStore extends BaseStore {
     this.info = data;
   }
 
-  @action public getCache = async (id: string) => {
+  @action public getCache = async (id: number) => {
     try {
       const data = this.client.readQuery<ICollectionInfoGqlReq>({
         query: Collection,

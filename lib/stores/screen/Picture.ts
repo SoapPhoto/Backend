@@ -45,7 +45,7 @@ export class PictureScreenStore extends BaseStore {
     return !!(this.info && this.info.currentCollections.length > 0);
   }
 
-  public getPictureInfo = async (id: ID) => {
+  public getPictureInfo = async (id: number) => {
     await queryToMobxObservable(this.client.watchQuery<{picture: PictureEntity}>({
       query: Picture,
       variables: { id },
@@ -66,7 +66,7 @@ export class PictureScreenStore extends BaseStore {
     // // const { data } = await getPictureComment(this.id);
   }
 
-  public addComment = async (content: string, commentId?: ID) => {
+  public addComment = async (content: string, commentId?: number) => {
     const { data } = await this.client.mutate<{addComment: CommentEntity}>({
       mutation: AddComment,
       variables: {
@@ -84,7 +84,7 @@ export class PictureScreenStore extends BaseStore {
     await deletePicture(this.id);
   }
 
-  @action public pushComment = (comment: CommentEntity, commentId?: ID) => {
+  @action public pushComment = (comment: CommentEntity, commentId?: number) => {
     const func = (child: CommentEntity[]) => child.forEach((item) => {
       if (item.id === commentId) {
         if (item.parentComment) {
@@ -163,7 +163,7 @@ export class PictureScreenStore extends BaseStore {
     }
   }
 
-  public getCache = async (id: ID) => {
+  public getCache = async (id: number) => {
     try {
       const data = this.client.readQuery<IPictureGqlReq>({
         query: Picture,

@@ -13,9 +13,9 @@ export class CreateFileDot implements Partial<FileEntity> {
   @Expose()
   public hash!: string;
 
-  @Type(() => String)
+  @Type(() => Number)
   @Expose()
-  public userId!: ID;
+  public userId!: number;
 
   @Expose()
   public type!: FileType;

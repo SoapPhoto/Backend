@@ -8,6 +8,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
+import { BadgeType } from '@common/enum/badge';
 import {
   GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
 } from './dto/picture.dto';
@@ -15,6 +16,7 @@ import { PictureService } from './picture.service';
 import { CollectionService } from '../collection/collection.service';
 import { PictureEntity } from './picture.entity';
 import { CommentService } from '../comment/comment.service';
+import { BadgeService } from '../badge/badge.service';
 
 @Resolver('Picture')
 @UseGuards(AuthGuard)
@@ -25,6 +27,8 @@ export class PictureResolver {
     @Inject(forwardRef(() => CommentService))
     private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
+    @Inject(forwardRef(() => BadgeService))
+    private readonly badgeService: BadgeService,
   ) {}
 
   @Query()
@@ -69,14 +73,14 @@ export class PictureResolver {
   public async picture(
     @Context('user') user: Maybe<UserEntity>,
     @Context() context: any,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.pictureService.getOnePicture(id, user, true);
   }
 
   @Query()
   public async pictureRelatedCollection(
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.collectionService.pictureRelatedCollection(id);
   }
@@ -85,7 +89,7 @@ export class PictureResolver {
   @Roles(Role.USER)
   public async likePicture(
     @Context('user') user: UserEntity,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, true);
   }
@@ -94,7 +98,7 @@ export class PictureResolver {
   @Roles(Role.USER)
   public async unlikePicture(
     @Context('user') user: UserEntity,
-    @Args('id') id: string,
+    @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, false);
   }
@@ -103,7 +107,7 @@ export class PictureResolver {
   @Roles(Role.USER)
   public async updatePicture(
     @Context('user') user: UserEntity,
-    @Args('id') id: ID,
+    @Args('id') id: number,
     @Args('data') data: UpdatePictureDot,
   ) {
     return this.pictureService.update(id, data, user);
@@ -113,7 +117,7 @@ export class PictureResolver {
   @Roles(Role.USER)
   public async deletePicture(
     @Context('user') user: UserEntity,
-    @Args('id') id: ID,
+    @Args('id') id: number,
   ) {
     return this.pictureService.delete(id, user);
   }
@@ -132,6 +136,13 @@ export class PictureResolver {
   ) {
     if (!user) return [];
     return this.pictureService.getCurrentCollections(parent.id, user);
+  }
+
+  @ResolveProperty('badge')
+  public async badge(
+    @Parent() parent: PictureEntity,
+  ) {
+    return this.badgeService.getBadges(BadgeType.PICTURE, parent.id);
   }
 
   // @ResolveProperty('isLike')

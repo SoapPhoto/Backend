@@ -13,7 +13,7 @@ import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import {
-  Heart, MessageSquare, Target,
+  Heart, MessageSquare, Target, Award, StrutAlign,
 } from '@lib/icon';
 import {
   BaseInfoItem,
@@ -73,7 +73,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   }, [info.id]);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
-  const onConfirm = async (value: string, commentId?: ID) => {
+  const onConfirm = async (value: string, commentId?: number) => {
     await addComment(value, commentId);
   };
   const onOk = useCallback((picture: PictureEntity) => {
@@ -195,6 +195,21 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       </PictureBox>
       <Content>
         <Title>
+          {
+            info.badge?.findIndex(v => v.name === 'choice') >= 0 && (
+              <StrutAlign>
+                <Popover
+                  openDelay={100}
+                  trigger="hover"
+                  placement="top"
+                  theme="dark"
+                  content={<span>{t('label.choice')}</span>}
+                >
+                  <Award color="#ff9500" style={{ strokeWidth: '2.5px' }} size={34} />
+                </Popover>
+              </StrutAlign>
+            )
+          }
           <EmojiText
             text={info.title}
           />
@@ -297,10 +312,10 @@ Picture.getInitialProps = async ({
   }
   if (isChild) return {};
   if (isPop) {
-    await mobxStore.screen.pictureStore.getCache(params.id!);
+    await mobxStore.screen.pictureStore.getCache(Number(params.id!));
     return {};
   }
-  await mobxStore.screen.pictureStore.getPictureInfo(params.id!);
+  await mobxStore.screen.pictureStore.getPictureInfo(Number(params.id!));
   return {};
 };
 

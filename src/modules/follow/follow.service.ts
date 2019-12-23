@@ -22,7 +22,7 @@ export class FollowService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  public async create(user: UserEntity, followedId: ID) {
+  public async create(user: UserEntity, followedId: number) {
     const followUser = await this.userService.getBaseUser(followedId);
     if (!followUser) {
       throw new BadGatewayException('no_user');
@@ -39,19 +39,19 @@ export class FollowService {
       {
         type: NotificationType.USER,
         category: NotificationCategory.FOLLOW,
-        mediaId: user.id.toString(),
+        mediaId: user.id,
       },
     );
   }
 
-  public async remove(userId: ID, followedId: ID) {
+  public async remove(userId: number, followedId: number) {
     return this.followRepository.delete({
       followed_user_id: followedId,
       follower_user_id: userId,
     });
   }
 
-  public async followUsers(id: ID, input: FollowUsersDto, type = 'follower') {
+  public async followUsers(id: number, input: FollowUsersDto, type = 'follower') {
     let queryId = 'follower_user_id';
     let getId = 'followed_user_id';
     if (type === 'follower') {
@@ -73,21 +73,21 @@ export class FollowService {
     return data;
   }
 
-  public async followerCount(userId: ID) {
+  public async followerCount(userId: number) {
     return this.followRepository.createQueryBuilder('follow')
       .where('follow.followed_user_id=:userId', { userId })
       .cache(5000)
       .getCount();
   }
 
-  public async followedCount(userId: ID) {
+  public async followedCount(userId: number) {
     return this.followRepository.createQueryBuilder('follow')
       .where('follow.follower_user_id=:userId', { userId })
       .cache(5000)
       .getCount();
   }
 
-  public async isFollowing(user: UserEntity, followedId: ID) {
+  public async isFollowing(user: UserEntity, followedId: number) {
     const follow = await this.followRepository.findOne({
       where: {
         followed_user_id: followedId,
