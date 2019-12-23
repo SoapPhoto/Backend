@@ -29,6 +29,11 @@ export const SEO: React.FC<IProps> = ({ itemprop, ...rest }) => {
       <Head>
         {meta}
         <meta
+          key="meta-description"
+          name="description"
+          content={rest.description}
+        />
+        <meta
           key="name"
           itemProp="name"
           content={rest.title}
