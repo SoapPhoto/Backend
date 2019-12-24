@@ -6,6 +6,7 @@ import { PicturesTypeValues } from './enum/picture';
 export const routeObject: Record<string, string> = {
   '/login': 'views/auth/login',
   '/signup': 'views/auth/signup',
+  '/search': 'views/search',
   '/validatoremail': 'views/auth/validatoremail',
   '/upload': 'views/upload',
   '/tag/:name': 'views/tag',
