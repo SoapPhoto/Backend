@@ -2,12 +2,13 @@
   "title": {
     "name": "Soap",
     "home": "Home",
-    "setting": "Setting"
+    "setting": "Setting",
+    "login": "Login",
+    "signup": "Sign Up"
   },
   "menu": {
     "upload": "Upload",
     "setting": "Setting",
-    "signup": "Sign Up",
     "signout": "Sign Out",
     "dark": "Dark Mode",
     "light": "Light Mode"

@@ -2,12 +2,13 @@
   "title": {
     "name": "肥皂",
     "home": "首页",
-    "setting": "设置"
+    "setting": "设置",
+    "login": "登录",
+    "signup": "注册"
   },
   "menu": {
     "upload": "上传",
     "setting": "设置",
-    "signup": "注册",
     "signout": "退出登录",
     "dark": "暗色模式",
     "light": "亮色模式"
