@@ -12,6 +12,7 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
+import nodejieba from 'nodejieba';
 
 import { CommentService } from '@server/modules/comment/comment.service';
 import { GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
@@ -133,7 +134,7 @@ export class PictureController {
   }
 
   @Get('getHot')
-  @Roles(Role.USER)
+  @Roles(Role.OWNER)
   public async createPictureComment(
     @User() user: UserEntity,
   ) {
@@ -142,6 +143,33 @@ export class PictureController {
     const data = await this.pictureService.getHotPictures();
     await redisClient.zadd('picture_hot', ...data);
     console.log(dayjs().format(), 'picture hot OK!!!!!!!!');
+    return { message: 'ok' };
+  }
+
+  @Get('all/keywords')
+  @Roles(Role.OWNER)
+  public async setKeywords(
+    @User() user: UserEntity,
+  ) {
+    const list = await this.pictureService.getRawList();
+    await Promise.all(
+      list.map(async (item) => {
+        const tags = nodejieba.tag(item.title);
+        const extract = nodejieba.extract(item.title, 20);
+        const tag = new Set();
+        tags.forEach((t: any) => {
+          if (t.word === ' ' || t.word === '') return;
+          if (t.tag === 'uj' || t.tag === 'uj') return;
+          tag.add(t.word);
+        });
+        extract.forEach((t: any) => {
+          tag.add(t.word);
+        });
+        return this.pictureService.updateRaw(item, {
+          keywords: [...tag].join('|'),
+        });
+      }),
+    );
     return { message: 'ok' };
   }
 

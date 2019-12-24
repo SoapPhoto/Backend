@@ -12,6 +12,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import dayjs from 'dayjs';
+import nodejieba from 'nodejieba';
 import { RedisService } from 'nestjs-redis';
 
 import { listRequest } from '@server/common/utils/request';
@@ -20,6 +21,7 @@ import { GetTagPictureListDto } from '@server/modules/tag/dto/tag.dto';
 import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
+import { keyword } from '@server/common/utils/keyword';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -66,6 +68,7 @@ export class PictureService {
       throw new ForbiddenException();
     }
     const updateData: Partial<PictureEntity> = data;
+    const keywords = keyword([updateData.title, updateData.bio]);
     if (tags.length > 0) {
       const newTags = await Promise.all(
         (tags as string[]).map((tag: string) => this.tagService.createTag({ name: tag })),
@@ -74,6 +77,8 @@ export class PictureService {
     } else {
       updateData.tags = [];
     }
+    keywords.unshift(...updateData.tags.map(tag => tag.name));
+    updateData.keywords = [...new Set(keywords)].join('|');
     return classToPlain(
       await this.pictureRepository.save(
         this.pictureRepository.merge(
@@ -83,6 +88,20 @@ export class PictureService {
       ),
       { groups: [Role.OWNER] },
     );
+  }
+
+  public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+    const splicedWords: string[] = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const whiteSpaceSpliced of words.split(/\s+/)) {
+      splicedWords.push(...nodejieba.tag(whiteSpaceSpliced).map((v: any) => v.word));
+    }
+    const q = this.selectList(user, query);
+    q.andWhere(splicedWords.map(v => `picture.keywords LIKE "%${v}%"`).join(' OR '));
+    const [data, count] = await q.andWhere('picture.isPrivate=:private', { private: false })
+      .cache(3000)
+      .getManyAndCount();
+    return listRequest(query, data, count);
   }
 
   /**
@@ -435,6 +454,16 @@ export class PictureService {
       // .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
   }
+
+  public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
+    .getMany()
+
+  public updateRaw = async (picture: PictureEntity, updateData: Partial<PictureEntity>) => this.pictureRepository.save(
+    this.pictureRepository.merge(
+      picture,
+      updateData,
+    ),
+  )
 
   public getPictureLikes = (id: number) => this.activityService.getLikes(id)
 
