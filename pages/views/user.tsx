@@ -1,6 +1,5 @@
-import { useApolloClient } from 'react-apollo';
 import { observer } from 'mobx-react';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import parse from 'url-parse';
 import { rem } from 'polished';
 import { withRouter } from 'next/router';
@@ -30,6 +29,8 @@ import {
   InfoItemCount,
   InfoItemLabel,
   InfoBox,
+  Christmas,
+  AvatarContent,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { A } from '@lib/components/A';
@@ -40,10 +41,6 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { FollowButton } from '@lib/components/Button/FollowButton';
-import { FollowUser, UnFollowUser } from '@lib/schemas/mutations';
-import { UserIsFollowing } from '@lib/schemas/query';
-import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
-import { throttle } from 'lodash';
 import { useFollower } from '@lib/common/hooks/useFollower';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
@@ -98,7 +95,7 @@ const UserInfo = observer(() => {
   const { screen } = useStores();
   const { isLogin, userInfo } = useAccountStore();
   const { userStore } = screen;
-  const { user, setUserInfo, watch } = userStore;
+  const { user, watch } = userStore;
   useEffect(() => {
     const clear = watch();
     return () => clear();
@@ -108,9 +105,12 @@ const UserInfo = observer(() => {
   return (
     <UserHeader>
       <HeaderGrid columns="140px auto" gap="32px">
-        <AvatarBox>
+        <AvatarContent>
+          <AvatarBox>
+            <Christmas size={64} />
+          </AvatarBox>
           <Avatar src={user.avatar} size={140} />
-        </AvatarBox>
+        </AvatarContent>
         <Cell>
           <UserName>
             <EmojiText

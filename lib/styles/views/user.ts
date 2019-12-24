@@ -6,6 +6,7 @@ import { href } from '@lib/common/utils/themes/common';
 import { Settings } from '@lib/icon';
 import { theme } from '@lib/common/utils/themes';
 import { customMedia } from '@lib/common/utils/mediaQuery';
+import { ChristmasHat } from '@lib/icon/ChristmasHat';
 
 export const Wrapper = styled.div``;
 
@@ -26,11 +27,15 @@ export const HeaderGrid = styled(Grid)`
   `}
 `;
 
-export const AvatarBox = styled(Cell)`
+export const AvatarContent = styled(Cell)`
   display: flex;
   ${customMedia.lessThan('small')`
     justify-content: center;
   `}
+`;
+
+export const AvatarBox = styled(Cell)`
+  position: relative;
 `;
 
 export const UserName = styled.h2`
@@ -119,4 +124,11 @@ export const Bio = styled.p`
 export const EditIcon = styled(Settings)`
   margin-left: ${rem('24px')};
   stroke: ${theme('colors.secondary')};
+`;
+
+export const Christmas = styled(ChristmasHat)`
+  position: absolute;
+  top: -29px;
+  left: -3px;
+  transform: rotate(-41deg);
 `;

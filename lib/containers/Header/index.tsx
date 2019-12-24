@@ -17,7 +17,7 @@ import Toast from '@lib/components/Toast';
 import { BtnGroup } from './BtnGroup';
 import { Icon } from './Icon';
 import {
-  Logo, MenuWrapper, Wrapper, VerifyMessage, Again, Close, verifyHeight,
+  Logo, MenuWrapper, Wrapper, VerifyMessage, Again, Close, verifyHeight, Christmas,
 } from './styles';
 
 interface IProps extends WithRouterProps {
@@ -65,6 +65,7 @@ export const Header = memo(() => {
         }}
       >
         <Logo>
+          <Christmas size={16} />
           <A style={{ fontSize: 0 }} route="/">
             <Icon
               color={layout.header.logo}

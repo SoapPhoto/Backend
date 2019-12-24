@@ -6,6 +6,7 @@ import { rem, rgba } from 'polished';
 import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 import { IconButton } from '@lib/components/Button';
+import { ChristmasHat } from '@lib/icon/ChristmasHat';
 
 export const verifyHeight = 35;
 
@@ -34,10 +35,18 @@ export const Wrapper = styled.header<{login: boolean}>`
 `;
 
 export const Logo = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   margin-left: ${rem('22px')};
   font-size: ${_ => rem(_.theme.fontSizes[5])};
+`;
+
+export const Christmas = styled(ChristmasHat)`
+  position: absolute;
+  top: -6px;
+  left: -2px;
+  transform:rotate(-40deg);
 `;
 
 export const MenuWrapper = styled.nav`
