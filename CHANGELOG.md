@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/Yiiu/Soap/compare/v0.1.7...v0.1.8) (2019-12-24)
+
+
+### Bug Fixes
+
+* bug ([115ab14](https://github.com/Yiiu/Soap/commit/115ab14))
+* bug ([b6a18c3](https://github.com/Yiiu/Soap/commit/b6a18c3))
+* bug ([1a994f8](https://github.com/Yiiu/Soap/commit/1a994f8))
+* bug ([ea17d28](https://github.com/Yiiu/Soap/commit/ea17d28))
+* bug ([2653709](https://github.com/Yiiu/Soap/commit/2653709))
+* build bug ([b3ff7be](https://github.com/Yiiu/Soap/commit/b3ff7be))
+* Build script bug ([e2890e2](https://github.com/Yiiu/Soap/commit/e2890e2))
+* Comment bug ([2002ff9](https://github.com/Yiiu/Soap/commit/2002ff9))
+* i18n ([f9dbc64](https://github.com/Yiiu/Soap/commit/f9dbc64))
+* i18n ([6aeff40](https://github.com/Yiiu/Soap/commit/6aeff40))
+* i18n bug ([5bb3734](https://github.com/Yiiu/Soap/commit/5bb3734))
+* i18n bug ([71fcb59](https://github.com/Yiiu/Soap/commit/71fcb59))
+* seo ([fb156b6](https://github.com/Yiiu/Soap/commit/fb156b6))
+* tag name bug ([a11e29a](https://github.com/Yiiu/Soap/commit/a11e29a))
+* Type bug ([5bbb55a](https://github.com/Yiiu/Soap/commit/5bbb55a))
+
+
+### Features
+
+* add badge ([be57fd2](https://github.com/Yiiu/Soap/commit/be57fd2))
+* Add follow ([a58a8f3](https://github.com/Yiiu/Soap/commit/a58a8f3))
+* add hot ([7e44193](https://github.com/Yiiu/Soap/commit/7e44193)), closes [#17](https://github.com/Yiiu/Soap/issues/17)
+* Add user follow ([9ed6627](https://github.com/Yiiu/Soap/commit/9ed6627))
+
 ### [0.1.7](https://github.com/Yiiu/Soap/compare/v0.1.6...v0.1.7) (2019-12-04)
 
 
