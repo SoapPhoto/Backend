@@ -48,13 +48,13 @@ export class LoggingService implements LoggerService {
       //   options: LOGGER_COMMON_CONFIG,
       //   format: LOGGER_COMMON_FORMAT,
       // }),
-      // new WinstonDailyRotate({
-      //   level: 'info',
-      //   filename: '%DATE%.log',
-      //   dirname: `${this.logDir}/normal/`,
-      //   options: LOGGER_COMMON_CONFIG,
-      //   format: LOGGER_COMMON_FORMAT,
-      // }),
+      new WinstonDailyRotate({
+        level: 'warn',
+        filename: '%DATE%.log',
+        dirname: `${this.logDir}/debug/`,
+        options: LOGGER_COMMON_CONFIG,
+        format: LOGGER_COMMON_FORMAT,
+      }),
       new winston.transports.Console({
         level: 'debug',
         handleExceptions: true,

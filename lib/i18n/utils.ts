@@ -21,7 +21,7 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
   try {
     const url = server ? `http://127.0.0.1:${process.env.PAGE_PORT}` : process.env.URL;
     const dataArr = await Promise.all(
-      name.map(n => request.get(`${url}/static/locales/${locale}/${n}.json?v=0.1.8.5`)),
+      name.map(n => request.get(`${url}/static/locales/${locale}/${n}.json?v=0.1.8.6`)),
     );
     const test: Record<I18nNamespace, any> = {} as any;
     dataArr.forEach(({ data }, i) => {

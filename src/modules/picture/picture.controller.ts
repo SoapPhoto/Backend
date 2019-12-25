@@ -25,6 +25,7 @@ import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { RedisService } from 'nestjs-redis';
 import dayjs from 'dayjs';
+import { keyword } from '@server/common/utils/keyword';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
@@ -154,19 +155,11 @@ export class PictureController {
     const list = await this.pictureService.getRawList();
     await Promise.all(
       list.map(async (item) => {
-        const tags = nodejieba.tag(item.title);
-        const extract = nodejieba.extract(item.title, 20);
-        const tag = new Set();
-        tags.forEach((t: any) => {
-          if (t.word === ' ' || t.word === '') return;
-          if (t.tag === 'uj' || t.tag === 'uj') return;
-          tag.add(t.word);
-        });
-        extract.forEach((t: any) => {
-          tag.add(t.word);
-        });
+        const keywords = keyword([item.title, item.bio]);
+        keywords.unshift(...item.tags.map(tag => tag.name));
+        item.keywords = [...new Set(keywords)].join('|');
         return this.pictureService.updateRaw(item, {
-          keywords: [...tag].join('|'),
+          keywords: [...new Set(keywords)].join('|'),
         });
       }),
     );

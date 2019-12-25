@@ -2,10 +2,12 @@ import React, { useCallback, useEffect } from 'react';
 import { css } from 'styled-components';
 import { rem } from 'polished';
 
+import { theme as getThemePath } from '@lib/common/utils/themes';
+
 import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import {
-  Upload, User, Moon, Sun,
+  Upload, User, Moon, Sun, Search,
 } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -116,6 +118,12 @@ export const BtnGroup = observer(() => {
   }
   return (
     <RightWrapper>
+      <Href
+        css={css`margin-right: ${rem(22)}; font-size: 0;` as any}
+        route="/search"
+      >
+        <Search css={css`color: ${getThemePath('colors.text')};` as any} />
+      </Href>
       {
         theme === 'base' ? (
           <Moon

@@ -40,10 +40,6 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { FollowButton } from '@lib/components/Button/FollowButton';
-import { FollowUser, UnFollowUser } from '@lib/schemas/mutations';
-import { UserIsFollowing } from '@lib/schemas/query';
-import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
-import { throttle } from 'lodash';
 import { useFollower } from '@lib/common/hooks/useFollower';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
@@ -98,7 +94,7 @@ const UserInfo = observer(() => {
   const { screen } = useStores();
   const { isLogin, userInfo } = useAccountStore();
   const { userStore } = screen;
-  const { user, setUserInfo, watch } = userStore;
+  const { user, watch } = userStore;
   useEffect(() => {
     const clear = watch();
     return () => clear();

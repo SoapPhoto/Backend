@@ -22,6 +22,7 @@ import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { keyword } from '@server/common/utils/keyword';
+import { LoggingService } from '@server/shared/logging/logging.service';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -33,6 +34,7 @@ import { BadgeService } from '../badge/badge.service';
 @Injectable()
 export class PictureService {
   constructor(
+    private readonly logger: LoggingService,
     private readonly activityService: PictureUserActivityService,
     @Inject(forwardRef(() => TagService))
     private readonly tagService: TagService,
@@ -51,9 +53,12 @@ export class PictureService {
 
   public async create(data: Partial<PictureEntity>) {
     const newData = { ...data };
+    const keywords = keyword([newData.title, newData.bio]);
     if (Array.isArray(data.tags)) {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
+      keywords.unshift(...newData.tags.map(tag => tag.name));
     }
+    newData.keywords = [...new Set(keywords)].join('|');
     return classToPlain(await this.pictureRepository.save(
       this.pictureRepository.create(newData),
     ), { groups: [Role.OWNER] });
@@ -91,13 +96,21 @@ export class PictureService {
   }
 
   public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
-    const splicedWords: string[] = [];
+    const { length } = words;
+    const splicedWords: string[] = nodejieba.extract(words, 20).map((v: any) => v.word);
     // eslint-disable-next-line no-restricted-syntax
-    for (const whiteSpaceSpliced of words.split(/\s+/)) {
-      splicedWords.push(...nodejieba.tag(whiteSpaceSpliced).map((v: any) => v.word));
-    }
+    // for (const whiteSpaceSpliced of words.split(/\s+/)) {
+    //   splicedWords.push(...nodejieba.tag(whiteSpaceSpliced).map((v: any) => v.word));
+    // }
     const q = this.selectList(user, query);
-    q.andWhere(splicedWords.map(v => `picture.keywords LIKE "%${v}%"`).join(' OR '));
+    this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
+    if (length > 1 && splicedWords.length > 1) {
+      q.andWhere(`MATCH(keywords) AGAINST('+${splicedWords.map(v => `${v}*`).join(' ~')}' IN boolean MODE)`);
+    } else if (length > 1) {
+      q.andWhere(`MATCH(keywords) AGAINST('+${splicedWords[0]}*' IN boolean MODE)`);
+    } else {
+      q.andWhere(`keywords like '%${words}%'`);
+    }
     const [data, count] = await q.andWhere('picture.isPrivate=:private', { private: false })
       .cache(3000)
       .getManyAndCount();
@@ -421,6 +434,10 @@ export class PictureService {
     .where('picture.id=:id', { id })
     .getOne()
 
+  public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
+    .leftJoinAndSelect('picture.tags', 'tag')
+    .getMany()
+
   /**
    * 获取图片的一些基础信息的查询，如：`likedCount`,`isLike`
    *
@@ -454,9 +471,6 @@ export class PictureService {
       // .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
     }
   }
-
-  public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
-    .getMany()
 
   public updateRaw = async (picture: PictureEntity, updateData: Partial<PictureEntity>) => this.pictureRepository.save(
     this.pictureRepository.merge(

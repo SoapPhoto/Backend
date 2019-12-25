@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { css } from 'styled-components';
 import { rem } from 'polished';
@@ -65,14 +65,14 @@ export const Input: Component = ({
   required = false,
   ...restProps
 }) => {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13 && onPressEnter) {
       onPressEnter(e);
     }
     if (onKeyDown) {
       onKeyDown(e);
     }
-  };
+  }, [onKeyDown, onPressEnter]);
   return (
     <LabelBox style={style} className={className}>
       {

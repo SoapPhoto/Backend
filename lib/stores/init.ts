@@ -54,5 +54,6 @@ export const initStore = (initialState: IInitialStore, apollo?: ApolloClient<any
   store.screen.collectionStore.update(initialState.screen.collectionStore, apollo);
   store.screen.collectionPictureStore.update(initialState.screen.collectionPictureStore, apollo);
   store.screen.tagPictureList.update(initialState.screen.tagPictureList, apollo);
+  store.screen.searchPictures.update(initialState.screen.searchPictures, apollo);
   return store;
 };
