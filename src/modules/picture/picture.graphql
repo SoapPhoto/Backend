@@ -5,6 +5,12 @@ enum PicturesType {
 
 type Query {
   "获取单个图片"
+  searchPictures(
+    words: String!
+    query: PicturesQueryInput!
+  ): Pictures
+
+  "获取单个图片"
   picture(
     id: Float!
   ): Picture

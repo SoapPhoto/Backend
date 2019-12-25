@@ -30,6 +30,7 @@
     "mjml",
     "mobx",
     "nestjs",
+    "nodejieba",
     "noindex",
     "nowrap",
     "nprogress",

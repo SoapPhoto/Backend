@@ -7,6 +7,9 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Index,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 import { CommentEntity } from '@server/modules/comment/comment.entity';
@@ -14,6 +17,7 @@ import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/modules/tag/tag.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
+import { keyword } from '@server/common/utils/keyword';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 import { Role } from '../user/enum/role.enum';
 import { CollectionEntity } from '../collection/collection.entity';
@@ -159,6 +163,10 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
+  @Index({ fulltext: true })
+  @Column('text')
+  public keywords!: string;
+
   @Expose()
   public badge!: BadgeEntity[];
 
@@ -172,5 +180,15 @@ export class PictureEntity extends BaseEntity {
       return this.info.map(item => item.collection);
     }
     return [];
+  }
+
+  @BeforeInsert()
+  private insertKeyword() {
+    const tags = keyword([this.title, this.bio]);
+    this.keywords = keyword([this.title, this.bio]).join('|');
+    if (this.tags.length > 0) {
+      tags.unshift(...this.tags.map(tag => tag.name));
+    }
+    this.keywords = tags.join('|');
   }
 }

@@ -32,6 +32,16 @@ export class PictureResolver {
   ) {}
 
   @Query()
+  public async searchPictures(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('query') query: GetPictureListDto,
+    @Args('words') words: string,
+  ) {
+    return this.pictureService.search(words, query, user);
+  }
+
+
+  @Query()
   public async pictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
