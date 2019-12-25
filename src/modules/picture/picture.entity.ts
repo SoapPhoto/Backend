@@ -164,7 +164,7 @@ export class PictureEntity extends BaseEntity {
   public tags!: TagEntity[];
 
   @Index({ fulltext: true })
-  @Column('text')
+  @Column()
   public keywords!: string;
 
   @Expose()
@@ -182,13 +182,13 @@ export class PictureEntity extends BaseEntity {
     return [];
   }
 
-  @BeforeInsert()
-  private insertKeyword() {
-    const tags = keyword([this.title, this.bio]);
-    this.keywords = keyword([this.title, this.bio]).join('|');
-    if (this.tags.length > 0) {
-      tags.unshift(...this.tags.map(tag => tag.name));
-    }
-    this.keywords = tags.join('|');
-  }
+  // @BeforeInsert()
+  // private insertKeyword() {
+  //   const tags = keyword([this.title, this.bio]);
+  //   this.keywords = keyword([this.title, this.bio]).join('|');
+  //   if (this.tags.length > 0) {
+  //     tags.unshift(...this.tags.map(tag => tag.name));
+  //   }
+  //   this.keywords = tags.join('|');
+  // }
 }

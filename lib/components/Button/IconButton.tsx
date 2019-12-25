@@ -6,6 +6,7 @@ import { Popover } from '@lib/components/Popover';
 
 interface IProps {
   popover?: string;
+  disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
@@ -16,6 +17,10 @@ export const IconButtonStyled = styled(motion.button)`
   border: none;
   cursor: pointer;
   pointer-events: all;
+  :disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 `;
 
 const template = ({ scale }: any) => `translate(0, 0) scale(${scale})`;
@@ -29,8 +34,8 @@ export const IconButton: React.FC<IProps> = ({
   const content = (
     <IconButtonStyled
       transformTemplate={template}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: props.disabled ? 1 : 1.1 }}
+      whileTap={{ scale: props.disabled ? 1 : 0.9 }}
       onClick={onClick}
       {...props}
     >

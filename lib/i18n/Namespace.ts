@@ -8,5 +8,6 @@ export enum I18nNamespace {
   Validation = 'validation',
   Backend = 'backend',
   Collection = 'collection',
-  Upload = 'upload'
+  Upload = 'upload',
+  Search = 'search'
 }

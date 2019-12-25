@@ -6,6 +6,12 @@ query Picture($id: Float!) {
   }
 }
 
+query SearchPictures($words: String!, $query: PicturesQueryInput!) {
+  searchPictures(words: $words, query: $query) {
+    ...PictureListFragment
+  }
+}
+
 query Pictures($query: PicturesQueryInput!, $type: PicturesType) {
   pictures(query: $query, type: $type) {
     ...PictureListFragment
