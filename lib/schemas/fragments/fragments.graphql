@@ -153,14 +153,14 @@ fragment UserFragment on User {
   avatar
   bio
   website
-  likedCount
-  pictureCount
   createTime
   updateTime
 }
 
 fragment UserDetailFragment on User {
   ...UserFragment
+  likedCount
+  pictureCount
   isFollowing
   likesCount
   followerCount

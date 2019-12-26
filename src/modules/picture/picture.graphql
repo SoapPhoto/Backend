@@ -148,6 +148,7 @@ type Picture implements BaseNode {
 
   "picture喜欢的数量"
   likedCount: Float
+
   "图片的主色调"
   color: String
 

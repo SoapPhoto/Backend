@@ -109,12 +109,13 @@ export class PictureUserActivityService {
         userId: user.id,
       })
       .getOne();
-    return data ? data.like : false;
+    return Boolean(data);
   }
 
   public userLikesCount = async (userId: number) => {
     const data = await this.activityRepository.createQueryBuilder('activity')
-      .where('activity.userId=:userId AND activity.like=1', { userId })
+      .leftJoin('activity.picture', 'picture')
+      .where('picture.userId=:userId AND activity.like=1', { userId })
       .getCount();
     return data;
   }
@@ -172,5 +173,19 @@ export class PictureUserActivityService {
       getQ().getRawMany(),
     ]);
     return [count.count, data.map((activity: {id: string}) => activity.id)];
+  }
+
+  public getPictureLikedCount = async (pictureId: number) => {
+    const data = await this.activityRepository.createQueryBuilder('activity')
+      .where('activity.pictureId=:pictureId AND activity.like=1', { pictureId })
+      .getCount();
+    return data;
+  }
+
+  public getUserLikedCount = async (userId: number) => {
+    const data = await this.activityRepository.createQueryBuilder('activity')
+      .where('activity.userId=:userId AND activity.like=1', { userId })
+      .getCount();
+    return data;
   }
 }

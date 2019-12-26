@@ -155,14 +155,21 @@ export class PictureResolver {
     return this.badgeService.getBadges(BadgeType.PICTURE, parent.id);
   }
 
-  // @ResolveProperty('isLike')
-  // public async isLike(
-  //   @Context() content: any,
-  // ) {
-  //   if (!content) {
-  //     return false;
-  //   }
-  //   return false;
-  //   // return this.pictureService.getUserIsLike(parent.id, user);
-  // }
+  @ResolveProperty('likedCount')
+  public async likedCount(
+    @Parent() parent: PictureEntity,
+  ) {
+    return this.pictureService.getPictureLikedCount(parent.id);
+  }
+
+  @ResolveProperty('isLike')
+  public async isLike(
+    @Parent() parent: PictureEntity,
+    @Context('user') user?: UserEntity,
+  ) {
+    if (!user) {
+      return false;
+    }
+    return this.pictureService.getUserIsLike(parent.id, user);
+  }
 }

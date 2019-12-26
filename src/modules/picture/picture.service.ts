@@ -123,14 +123,9 @@ export class PictureService {
    * @memberof PictureService
    */
   public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const [data, count] = await Promise.all([
-      this.selectList(user, query)
-        .andWhere('picture.isPrivate=:private', { private: false })
-        .getMany(),
-      this.pictureRepository.createQueryBuilder('picture')
-        .andWhere('picture.isPrivate=:private', { private: false })
-        .getCount(),
-    ]);
+    const [data, count] = await this.selectList(user, query)
+      .andWhere('picture.isPrivate=:private', { private: false })
+      .getManyAndCount();
     return listRequest(query, data, count);
   }
 
@@ -139,10 +134,7 @@ export class PictureService {
       .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.createTime > :after', { after: query.lastTime })
       .andWhere('picture.createTime <= :before', { before: query.time });
-    const [data, count] = await Promise.all([
-      q.getMany(),
-      q.getCount(),
-    ]);
+    const [data, count] = await q.getManyAndCount();
     return listRequest(query, data, count);
   }
 
@@ -312,10 +304,6 @@ export class PictureService {
    */
   public select = (user: Maybe<UserEntity>) => {
     const q = this.pictureRepository.createQueryBuilder('picture');
-    // .loadRelationCountAndMap(
-    //   'picture.likedCount', 'picture.activities', 'activity',
-    //   qb => qb.andWhere('activity.like=:like', { like: true }),
-    // );
     this.selectInfo(q, user);
     q.orderBy('picture.createTime', 'DESC');
     return q;
@@ -445,21 +433,21 @@ export class PictureService {
    */
   // eslint-disable-next-line arrow-parens
   public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
-    q.leftJoinAndSelect('picture.user', value)
-      .loadRelationCountAndMap(
-        'picture.likedCount', 'picture.activities', 'activity',
-        qb => qb.andWhere('activity.like=:like', { like: true }),
-      );
+    q.leftJoinAndSelect('picture.user', value);
+    // .loadRelationCountAndMap(
+    //   'picture.likedCount', 'picture.activities', 'activity',
+    //   qb => qb.andWhere('activity.like=:like', { like: true }),
+    // );
     // this.userService.selectInfo(q, value);
     if (user) {
-      q
-        .loadRelationCountAndMap(
-          'picture.isLike', 'picture.activities', 'activity',
-          qb => qb.andWhere(
-            'activity.userId=:userId AND activity.like=:like',
-            { userId: user.id, like: true },
-          ),
-        );
+      // q
+      //   .loadRelationCountAndMap(
+      //     'picture.isLike', 'picture.activities', 'activity',
+      //     qb => qb.andWhere(
+      //       'activity.userId=:userId AND activity.like=:like',
+      //       { userId: user.id, like: true },
+      //     ),
+      //   );
       // .leftJoinAndMapMany(
       //   'picture.info',
       //   CollectionPictureEntity,
@@ -484,6 +472,10 @@ export class PictureService {
   public getUserIsLike = (id: number, user: UserEntity) => this.activityService.isLike(id, user)
 
   public userLikesCount = (id: number) => this.activityService.userLikesCount(id)
+
+  public getPictureLikedCount = (id: number) => this.activityService.getPictureLikedCount(id)
+
+  public getUserLikedCount = (id: number) => this.activityService.getUserLikedCount(id)
 
   /**
    * 获取图片基本信息，大多用于操作的时候查询做判断

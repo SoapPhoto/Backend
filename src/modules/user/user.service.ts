@@ -130,13 +130,13 @@ export class UserService {
   public selectInfo<E>(q: SelectQueryBuilder<E>, value = 'user') {
     return q.loadRelationCountAndMap(
       `${value}.pictureCount`, `${value}.pictures`,
-    )
-      .loadRelationCountAndMap(
-        `${value}.likedCount`, `${value}.pictureActivities`, 'activity',
-        qb => qb.andWhere(
-          'activity.like=TRUE',
-        ),
-      );
+    );
+    // .loadRelationCountAndMap(
+    //   `${value}.likedCount`, `${value}.pictureActivities`, 'activity',
+    //   qb => qb.andWhere(
+    //     'activity.like=TRUE',
+    //   ),
+    // );
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
@@ -214,6 +214,10 @@ export class UserService {
 
   public async getUserPreviewPictures(username: string, limit: number) {
     return this.pictureService.getUserPreviewPictures(username, limit);
+  }
+
+  public async getUserLikedCount(id: number) {
+    return this.pictureService.getUserLikedCount(id);
   }
 
   public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {
