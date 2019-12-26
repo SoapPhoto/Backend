@@ -9,9 +9,13 @@ import { NotificationPopover } from '@lib/components/Notification';
 import { Popover } from '@lib/components/Popover';
 import { useRouter } from '@lib/router';
 
-const Button = styled(IconButton)`
-  margin-right: 24px;
+const ButtonBox = styled.div`
   position: relative;
+  margin-right: 24px;
+  font-size: 0;
+`;
+
+const Button = styled(IconButton)`
   color: ${theme('colors.text')};
 `;
 
@@ -33,8 +37,10 @@ export const Notify: React.FC = observer(() => {
         <NotificationPopover />
       )}
     >
-      <Button>
-        <Bell />
+      <ButtonBox>
+        <Button>
+          <Bell />
+        </Button>
         {
           unread > 0 && (
             <div
@@ -50,7 +56,7 @@ export const Notify: React.FC = observer(() => {
             />
           )
         }
-      </Button>
+      </ButtonBox>
     </Popover>
   );
 });

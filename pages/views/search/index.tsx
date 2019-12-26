@@ -16,6 +16,7 @@ import { PictureList } from '@lib/containers/Picture/List';
 import { Loading } from '@lib/components/Loading';
 import { SEO } from '@lib/components';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { withError } from '@lib/components/withError';
 
 interface IProps {}
 
@@ -166,4 +167,4 @@ SearchScreen.getInitialProps = async ({
   return {};
 };
 
-export default pageWithTranslation(I18nNamespace.Search)(SearchScreen);
+export default pageWithTranslation(I18nNamespace.Search)(withError(SearchScreen));

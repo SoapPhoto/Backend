@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { pick } from 'lodash';
+import { observer } from 'mobx-react';
+import { useMutation } from 'react-apollo';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { EXIFModal } from '@lib/components/EXIFModal';
@@ -17,8 +19,6 @@ import { useRouter } from '@lib/router/useRouter';
 import { Histore } from '@lib/common/utils';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { observer } from 'mobx-react';
-import { useMutation } from '@apollo/react-hooks';
 import { UpdatePicture } from '@lib/schemas/mutations';
 
 interface IProps {

@@ -2,12 +2,10 @@ import React, { useCallback, useEffect } from 'react';
 import { css } from 'styled-components';
 import { rem } from 'polished';
 
-import { theme as getThemePath } from '@lib/common/utils/themes';
-
 import { Avatar, EmojiText } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import {
-  Upload, User, Moon, Sun, Search,
+  Upload, User, Moon, Sun,
 } from '@lib/icon';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { ThemeStore } from '@lib/stores/ThemeStore';
@@ -17,7 +15,7 @@ import { useRouter } from '@lib/router';
 import { observer } from 'mobx-react';
 import { Menu, MenuItem, MenuItemLink } from './Menu';
 import {
-  Href, MenuProfile, RightWrapper, UserName,
+  Href, MenuProfile, RightWrapper, UserName, SearchIcon,
 } from './styles';
 import { Notify } from './Notify';
 
@@ -122,7 +120,7 @@ export const BtnGroup = observer(() => {
         css={css`margin-right: ${rem(22)}; font-size: 0;` as any}
         route="/search"
       >
-        <Search css={css`color: ${getThemePath('colors.text')};` as any} />
+        <SearchIcon />
       </Href>
       {
         theme === 'base' ? (

@@ -2,6 +2,7 @@ import { rem } from 'polished';
 import React from 'react';
 import styled from 'styled-components';
 import { getPictureUrl } from '@lib/common/utils/image';
+import LazyLoad from 'react-lazyload';
 import { Image } from '../Image';
 
 export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -19,6 +20,14 @@ export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
    * @memberof IAvatarProps
    */
   size?: number;
+
+  /**
+   * 是否懒加载
+   *
+   * @type {boolean}
+   * @memberof IAvatarProps
+   */
+  lazyload?: boolean;
 }
 
 const Box = styled.span<{size: number; isClick: boolean}>`
@@ -45,9 +54,19 @@ export const Avatar: React.FC<IAvatarProps> = ({
   src,
   size = 40,
   onClick,
+  lazyload = false,
   ...restProps
 }) => (
   <Box size={size} onClick={onClick} isClick={!!onClick} {...restProps}>
-    <Img src={getPictureUrl(src, 'thumb')} />
+    {
+      lazyload ? (
+        <LazyLoad resize offset={400}>
+          <Img src={getPictureUrl(src, 'thumb')} />
+        </LazyLoad>
+
+      ) : (
+        <Img src={getPictureUrl(src, 'thumb')} />
+      )
+    }
   </Box>
 );

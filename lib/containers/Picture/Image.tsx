@@ -29,7 +29,7 @@ export const PictureImage: React.FC<IPictureImage> = ({
     <ImageBox height={height} background={detail.color}>
       {
         lazyload ? (
-          <LazyLoad resize height="100%" offset={100}>
+          <LazyLoad resize height="100%" offset={400}>
             {imgRender}
           </LazyLoad>
         ) : (

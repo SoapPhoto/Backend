@@ -80,7 +80,7 @@ export const PictureItem: React.FC<IPictureItemProps> = observer(({
               <A
                 route={`/@${detail.user.username}`}
               >
-                <Avatar src={detail.user.avatar} size={32} />
+                <Avatar lazyload src={detail.user.avatar} size={32} />
               </A>
             </div>
           </UserPopper>

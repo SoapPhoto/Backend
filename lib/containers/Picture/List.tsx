@@ -54,7 +54,7 @@ const mediaArr = [
 
 const colArr = mediaArr.map(media => media.col);
 
-const OFFSET = 700;
+const OFFSET = 1000;
 
 export const PictureList: React.FC<IProps> = observer(({
   data,
@@ -74,6 +74,7 @@ export const PictureList: React.FC<IProps> = observer(({
 
   const scrollEvent = debounce(async () => {
     const offset = getScrollHeight() - (getScrollTop() + getWindowHeight());
+
     if (offset <= OFFSET && !pageLock.current && !noMore) {
       if (onPage) {
         pageLock.current = true;

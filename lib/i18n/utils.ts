@@ -13,8 +13,12 @@ import { TFunction } from './interface';
 
 let globalValue: RecordPartial<I18nNamespace, any> = {};
 
-const currentNamespace: Set<I18nNamespace> = new Set([]);
+const defaultNamespace = [I18nNamespace.Common, I18nNamespace.Backend, I18nNamespace.Validation];
 
+let currentNamespace: Set<I18nNamespace> = new Set([]);
+
+
+// 获取i18n数据
 export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I18nNamespace[]) => {
   if (!namespace) return {};
   const name = Array.isArray(namespace) ? namespace : [namespace];
@@ -34,6 +38,7 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
   }
 };
 
+// 服务器初始化
 export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?: Request): Promise<II18nValue> => {
   let locale = LocaleType['zh-CN'];
   if (server && req) {
@@ -47,13 +52,13 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
   } else if (cookie.get('locale') && LocaleTypeValues.includes(cookie.get('locale') as LocaleType)) {
     locale = cookie.get('locale') as LocaleType;
   }
-  const required = [I18nNamespace.Common, ...namespacesRequired];
-  const noFetch = required.filter((v) => {
-    if (!currentNamespace.has(v)) {
-      currentNamespace.add(v);
-      return true;
+  const required = new Set([...defaultNamespace, ...namespacesRequired]);
+  const noFetch: I18nNamespace[] = [];
+  required.forEach((value) => {
+    if (!currentNamespace.has(value)) {
+      currentNamespace.add(value);
+      noFetch.push(value);
     }
-    return false;
   });
   const data = await fetchI18n(locale, noFetch);
   const value = {
@@ -65,11 +70,15 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
     namespacesRequired: required,
     locale,
     value,
-    currentNamespace: [...currentNamespace],
+    currentNamespace,
   };
 };
 
+// 服务器端数据同步客户端
 export const initI18n = (value: II18nValue) => {
+  currentNamespace = new Set(value.currentNamespace);
+  value.currentNamespace = currentNamespace;
+  value.namespacesRequired = new Set(value.namespacesRequired);
   Object.keys(value.value).map(v => globalValue[v as I18nNamespace] = (value.value as any)[v]);
   value.namespacesRequired.forEach(v => currentNamespace.add(v));
   return value;
@@ -95,6 +104,6 @@ export const getT = (
 };
 
 export const t: TFunction = (...arg) => getT(
-  { namespacesRequired: [...currentNamespace], value: globalValue },
+  { namespacesRequired: currentNamespace, value: globalValue },
   ...arg,
 );

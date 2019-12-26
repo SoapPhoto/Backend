@@ -8,8 +8,8 @@ import { getT } from './utils';
 export interface II18nValue {
   locale: LocaleType;
   value: RecordPartial<I18nNamespace, any>;
-  namespacesRequired: I18nNamespace[];
-  currentNamespace: I18nNamespace[];
+  namespacesRequired: Set<I18nNamespace>;
+  currentNamespace: Set<I18nNamespace>;
 }
 
 interface IProps {

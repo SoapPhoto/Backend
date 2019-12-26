@@ -7,6 +7,7 @@ import { A } from '@lib/components/A';
 import { theme } from '@lib/common/utils/themes';
 import { IconButton } from '@lib/components/Button';
 import { ChristmasHat } from '@lib/icon/ChristmasHat';
+import { Search } from 'react-feather';
 
 export const verifyHeight = 35;
 
@@ -113,4 +114,8 @@ export const Close = styled(IconButton)`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const SearchIcon = styled(Search)`
+  color: ${theme('colors.text')};
 `;

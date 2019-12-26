@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from 'react-apollo';
 
 import { Popover } from '@lib/components/Popover';
 import { UserEntity } from '@lib/common/interfaces/user';

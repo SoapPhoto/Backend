@@ -2,7 +2,6 @@ import { observer } from 'mobx-react';
 import React, { useCallback, useEffect } from 'react';
 import parse from 'url-parse';
 import { rem } from 'polished';
-import { withRouter } from 'next/router';
 import { Cell } from 'styled-css-grid';
 
 import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
@@ -218,4 +217,4 @@ User.getInitialProps = async ({
   };
 };
 
-export default withRouter(withError(pageWithTranslation([I18nNamespace.User, I18nNamespace.Collection])(User)));
+export default withError(pageWithTranslation([I18nNamespace.User, I18nNamespace.Collection])(User));
