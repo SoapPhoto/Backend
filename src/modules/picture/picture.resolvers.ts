@@ -50,6 +50,9 @@ export class PictureResolver {
     if (type === PicturesType.NEW) {
       return this.pictureService.getList(user, query);
     }
+    if (type === PicturesType.CHOICE) {
+      return this.pictureService.choicePictureList(user, query);
+    }
     return this.pictureService.getPictureHotInfoList(user, query);
   }
 
@@ -155,21 +158,21 @@ export class PictureResolver {
     return this.badgeService.getBadges(BadgeType.PICTURE, parent.id);
   }
 
-  @ResolveProperty('likedCount')
-  public async likedCount(
-    @Parent() parent: PictureEntity,
-  ) {
-    return this.pictureService.getPictureLikedCount(parent.id);
-  }
+  // @ResolveProperty('likedCount')
+  // public async likedCount(
+  //   @Parent() parent: PictureEntity,
+  // ) {
+  //   return this.pictureService.getPictureLikedCount(parent.id);
+  // }
 
-  @ResolveProperty('isLike')
-  public async isLike(
-    @Parent() parent: PictureEntity,
-    @Context('user') user?: UserEntity,
-  ) {
-    if (!user) {
-      return false;
-    }
-    return this.pictureService.getUserIsLike(parent.id, user);
-  }
+  // @ResolveProperty('isLike')
+  // public async isLike(
+  //   @Parent() parent: PictureEntity,
+  //   @Context('user') user?: UserEntity,
+  // ) {
+  //   if (!user) {
+  //     return false;
+  //   }
+  //   return this.pictureService.getUserIsLike(parent.id, user);
+  // }
 }

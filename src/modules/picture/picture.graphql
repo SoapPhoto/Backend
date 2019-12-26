@@ -1,6 +1,7 @@
 enum PicturesType {
   NEW
   HOT
+  CHOICE
 }
 
 type Query {

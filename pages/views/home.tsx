@@ -15,12 +15,12 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   const { t } = useTranslation();
   const { homeStore } = useScreenStores();
   const {
-    list, like, getPageList, isNoMore,
+    list, like, getPageList, isNoMore, restQuery,
   } = homeStore;
   return (
     <div>
       <SEO
-        title={getTitle('title.home', t)}
+        title={getTitle(`home.nav.${restQuery.type.toLocaleLowerCase()}`, t)}
         description="有趣的方式来和小伙伴分享你生活的照片。"
       />
       <Nav>
@@ -29,6 +29,9 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
         </NavItem>
         <NavItem route="/new">
           {t('home.nav.new')}
+        </NavItem>
+        <NavItem route="/choice">
+          {t('home.nav.choice')}
         </NavItem>
       </Nav>
       <PictureList

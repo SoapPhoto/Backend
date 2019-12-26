@@ -4,6 +4,12 @@ import { Pictures } from '@lib/schemas/query';
 import { PicturesType } from '@common/enum/picture';
 import { PictureListStore } from '../base/PictureListStore';
 
+const typeObj: Record<string, PicturesType> = {
+  new: PicturesType.NEW,
+  hot: PicturesType.HOT,
+  choice: PicturesType.CHOICE,
+};
+
 export class HomeScreenStore extends PictureListStore<{type: PicturesType}> {
   constructor() {
     super({
@@ -16,6 +22,6 @@ export class HomeScreenStore extends PictureListStore<{type: PicturesType}> {
   }
 
   @action public setType = (type: string) => {
-    this.restQuery.type = type === 'new' ? PicturesType.NEW : PicturesType.HOT;
+    this.restQuery.type = type ? typeObj[type] : PicturesType.HOT;
   }
 }

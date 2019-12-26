@@ -95,6 +95,14 @@ export class PictureService {
     );
   }
 
+  public choicePictureList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
+    const [data, count] = await this.selectList(user, query)
+      .leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
+      .andWhere('picture.isPrivate=:private AND badgeActivity.pictureId=picture.id', { private: false })
+      .getManyAndCount();
+    return listRequest(query, data, count);
+  }
+
   public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const { length } = words;
     const splicedWords: string[] = nodejieba.extract(words, 20).map((v: any) => v.word);
@@ -156,6 +164,18 @@ export class PictureService {
       .execute();
   }
 
+
+  /**
+   * 获取图片基本信息，大多用于操作的时候查询做判断
+   *
+   * @public
+   * @memberof PictureService
+   */
+  public getOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
+    .where('picture.id=:id', { id })
+    .leftJoinAndSelect('picture.user', 'user')
+    .getOne()
+
   /**
    * 获取单个图片的信息
    *
@@ -175,30 +195,6 @@ export class PictureService {
       data.views += 1;
     }
     const isOwner = data && data.user.id === (user ? user.id : null);
-    if (!data || (data && data.isPrivate && !isOwner)) {
-      throw new NotFoundException();
-    }
-    return classToPlain(data, {
-      groups: isOwner ? [Role.OWNER] : [],
-    });
-  }
-
-  public async getPicture(
-    id: string,
-    user: Maybe<UserEntity>,
-    view?: boolean,
-  ) {
-    const q = this.pictureRepository.createQueryBuilder('picture')
-      .andWhere('picture.id=:id', { id })
-      .leftJoinAndSelect('picture.tags', 'tag')
-      .leftJoinAndSelect('picture.user', 'user')
-      .orderBy('picture.createTime', 'DESC');
-    const data = await q.cache(100).getOne();
-    const isOwner = data && data.user.id === (user ? user.id : null);
-    if (view && data) {
-      this.addViewCount(data.id);
-      data.views += 1;
-    }
     if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
@@ -298,34 +294,6 @@ export class PictureService {
   }
 
   /**
-   * 图片的初始查询条件
-   *
-   * @memberof PictureService
-   */
-  public select = (user: Maybe<UserEntity>) => {
-    const q = this.pictureRepository.createQueryBuilder('picture');
-    this.selectInfo(q, user);
-    q.orderBy('picture.createTime', 'DESC');
-    return q;
-  }
-
-  /**
-   * 图片列表的初始查询条件
-   *
-   * @memberof PictureService
-   */
-  public selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
-    const q = this.select(user);
-    if (query) {
-      if (query.timestamp) {
-        q.where('picture.createTime <= :time', { time: query.time });
-      }
-      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
-    }
-    return q;
-  }
-
-  /**
    * 获取用户的预览图片
    *
    * @param {string} username
@@ -374,6 +342,12 @@ export class PictureService {
     return listRequest(query, classToPlain(data), count as number);
   }
 
+  /**
+   * 计算热门图片
+   *
+   * @returns
+   * @memberof PictureService
+   */
   public async getHotPictures() {
     const data = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.isPrivate=:isPrivate', { isPrivate: false })
@@ -414,6 +388,59 @@ export class PictureService {
   }
 
   /**
+   * 图片的初始查询条件
+   *
+   * @memberof PictureService
+   */
+  public select = (user: Maybe<UserEntity>) => {
+    const q = this.pictureRepository.createQueryBuilder('picture');
+    this.selectInfo(q, user);
+    q.orderBy('picture.createTime', 'DESC');
+    return q;
+  }
+
+  /**
+   * 图片列表的初始查询条件
+   *
+   * @memberof PictureService
+   */
+  public selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
+    const q = this.select(user);
+    if (query) {
+      if (query.timestamp) {
+        q.where('picture.createTime <= :time', { time: query.time });
+      }
+      q.skip((query.page - 1) * query.pageSize).take(query.pageSize);
+    }
+    return q;
+  }
+
+  /**
+   * 获取图片的一些基础信息的查询，如：`likedCount`,`isLike`
+   *
+   * @memberof PictureService
+   */
+  // eslint-disable-next-line arrow-parens
+  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
+    q.leftJoinAndSelect('picture.user', value)
+      .loadRelationCountAndMap(
+        'picture.likedCount', 'picture.activities', 'activity',
+        qb => qb.andWhere('activity.like=:like', { like: true }),
+      );
+    if (user) {
+      q
+        .loadRelationCountAndMap(
+          'picture.isLike', 'picture.activities', 'activity',
+          qb => qb.andWhere(
+            'activity.userId=:userId AND activity.like=:like',
+            { userId: user.id, like: true },
+          ),
+        );
+    }
+  }
+
+
+  /**
    * 没有任何关联的查询图片信息
    *
    * @memberof PictureService
@@ -425,40 +452,6 @@ export class PictureService {
   public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
     .leftJoinAndSelect('picture.tags', 'tag')
     .getMany()
-
-  /**
-   * 获取图片的一些基础信息的查询，如：`likedCount`,`isLike`
-   *
-   * @memberof PictureService
-   */
-  // eslint-disable-next-line arrow-parens
-  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
-    q.leftJoinAndSelect('picture.user', value);
-    // .loadRelationCountAndMap(
-    //   'picture.likedCount', 'picture.activities', 'activity',
-    //   qb => qb.andWhere('activity.like=:like', { like: true }),
-    // );
-    // this.userService.selectInfo(q, value);
-    if (user) {
-      // q
-      //   .loadRelationCountAndMap(
-      //     'picture.isLike', 'picture.activities', 'activity',
-      //     qb => qb.andWhere(
-      //       'activity.userId=:userId AND activity.like=:like',
-      //       { userId: user.id, like: true },
-      //     ),
-      //   );
-      // .leftJoinAndMapMany(
-      //   'picture.info',
-      //   CollectionPictureEntity,
-      //   'picture_collection_info',
-      //   'picture_collection_info.pictureId = picture.id AND picture_collection_info.userId=:userId', {
-      //     userId: user.id,
-      //   },
-      // )
-      // .leftJoinAndSelect('picture_collection_info.collection', 'picture_collection');
-    }
-  }
 
   public updateRaw = async (picture: PictureEntity, updateData: Partial<PictureEntity>) => this.pictureRepository.save(
     this.pictureRepository.merge(
@@ -476,15 +469,4 @@ export class PictureService {
   public getPictureLikedCount = (id: number) => this.activityService.getPictureLikedCount(id)
 
   public getUserLikedCount = (id: number) => this.activityService.getUserLikedCount(id)
-
-  /**
-   * 获取图片基本信息，大多用于操作的时候查询做判断
-   *
-   * @public
-   * @memberof PictureService
-   */
-  public getOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
-    .where('picture.id=:id', { id })
-    .leftJoinAndSelect('picture.user', 'user')
-    .getOne()
 }

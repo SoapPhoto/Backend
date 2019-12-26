@@ -9,6 +9,7 @@ export enum UserPictureType {
 export enum PicturesType {
   HOT = 'HOT',
   NEW = 'NEW',
+  CHOICE = 'CHOICE',
 }
 
 export const UserPictureTypeValues = $enum(UserPictureType).map(key => UserPictureType[key]);
