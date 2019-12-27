@@ -22,6 +22,7 @@ import { CredentialsEntity } from './modules/credentials/credentials.entity';
 import { FollowEntity } from './modules/follow/follow.entity';
 import { BadgeEntity } from './modules/badge/badge.entity';
 import { PictureBadgeActivityEntity } from './modules/badge/picture-badge-activity/picture-badge-activity.entity';
+import { UserBadgeActivityEntity } from './modules/badge/user-badge-activity/user-badge-activity.entity';
 
 const ormconfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -52,6 +53,7 @@ const ormconfig: TypeOrmModuleOptions = {
     FollowEntity,
     BadgeEntity,
     PictureBadgeActivityEntity,
+    UserBadgeActivityEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
   cli: {

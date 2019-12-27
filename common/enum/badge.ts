@@ -7,7 +7,8 @@ export enum BadgeType {
 
 export enum BadgeRate {
   ordinary = 'ordinary',
-  bronze = 'bronze'
+  bronze = 'bronze',
+  cert = 'cert'
 }
 
 export const BadgeTypeValues = $enum(BadgeType).map(key => BadgeType[key]);

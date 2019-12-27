@@ -17,6 +17,7 @@ import { SignupType } from '@common/enum/signupType';
 import { Status } from '@common/enum/userStatus';
 import { Role } from './enum/role.enum';
 import { CredentialsEntity } from '../credentials/credentials.entity';
+import { BadgeEntity } from '../badge/badge.entity';
 
 @Exclude()
 @Entity('user')
@@ -148,6 +149,9 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
   public readonly pictureActivities!: PictureUserActivityEntity[];
 
+  @Expose()
+  public badge: BadgeEntity[] = [];
+
   @Type(() => Boolean)
   @Column({ type: 'boolean', default: false })
   @Expose({ groups: [Role.OWNER, Role.ADMIN] })
@@ -196,7 +200,6 @@ export class UserEntity extends BaseEntity {
     return this.name || this.username;
   }
 
-  @Expose()
   @Expose({ groups: [Role.OWNER] })
   get isPassword() {
     return !!(this.salt && this.hash);

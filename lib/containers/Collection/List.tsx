@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import { CollectionEntity } from '@lib/common/interfaces/collection';
 import { Empty } from '@lib/components/Empty';
@@ -10,7 +11,7 @@ export interface ICollectionListProps {
   noMore: boolean;
 }
 
-export const CollectionList: React.FC<ICollectionListProps> = ({
+export const CollectionList = observer<React.FC<ICollectionListProps>>(({
   list,
   noMore,
 }) => (
@@ -24,4 +25,4 @@ export const CollectionList: React.FC<ICollectionListProps> = ({
     </List>
     <Empty loading={!noMore} />
   </Wrapper>
-);
+));

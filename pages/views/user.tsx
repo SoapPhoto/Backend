@@ -11,7 +11,8 @@ import {
 } from '@lib/components';
 import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
-import { Link as LinkIcon } from '@lib/icon';
+import { Link as LinkIcon, BadgeCert, StrutAlign } from '@lib/icon';
+import { Popover } from '@lib/components/Popover';
 import {
   Bio,
   EditIcon,
@@ -115,6 +116,21 @@ const UserInfo = observer(() => {
             <EmojiText
               text={user.fullName}
             />
+            {
+              user.badge.find(v => v.name === 'user-cert') && (
+                <StrutAlign>
+                  <Popover
+                    openDelay={100}
+                    trigger="hover"
+                    placement="top"
+                    theme="dark"
+                    content={<span>认证用户</span>}
+                  >
+                    <BadgeCert size={32} style={{ marginLeft: rem(6) }} />
+                  </Popover>
+                </StrutAlign>
+              )
+            }
             {
               isLogin && userInfo?.username === user.username && (
                 <A route="/setting/profile">

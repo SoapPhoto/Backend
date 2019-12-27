@@ -23,6 +23,8 @@ import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
 import { FileService } from '../file/file.service';
+import { BadgeEntity } from '../badge/badge.entity';
+import { BadgeService } from '../badge/badge.service';
 
 @Injectable()
 export class UserService {
@@ -35,6 +37,8 @@ export class UserService {
     private readonly userEntity: Repository<UserEntity>,
     @Inject(forwardRef(() => FileService))
     private readonly fileService: FileService,
+    @Inject(forwardRef(() => BadgeService))
+    private readonly badgeService: BadgeService,
   ) {}
 
   public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
@@ -121,22 +125,18 @@ export class UserService {
   }
 
   /**
-   * 查询出用户的一些必要数据： `pictureCount`, `likedCount`
+   * 查询用户徽章
    *
-   * @param {SelectQueryBuilder<UserEntity>} q
+   * @template E
+   * @param {SelectQueryBuilder<E>} q
+   * @param {string} [value='user']
    * @returns
    * @memberof UserService
    */
-  public selectInfo<E>(q: SelectQueryBuilder<E>, value = 'user') {
-    return q.loadRelationCountAndMap(
-      `${value}.pictureCount`, `${value}.pictures`,
-    );
-    // .loadRelationCountAndMap(
-    //   `${value}.likedCount`, `${value}.pictureActivities`, 'activity',
-    //   qb => qb.andWhere(
-    //     'activity.like=TRUE',
-    //   ),
-    // );
+  public selectBadge<E>(q: SelectQueryBuilder<E>, value = 'user') {
+    return q
+      .leftJoin(this.badgeService.userActivityMetadata.tableName, 'userBadgeActivity', `userBadgeActivity.userId=${value}.id`)
+      .leftJoinAndMapMany(`${value}.badge`, BadgeEntity, 'userBadge', 'userBadgeActivity.badgeId=userBadge.id');
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
@@ -167,13 +167,13 @@ export class UserService {
    */
   public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]) {
     const q = this.userEntity.createQueryBuilder('user');
-    this.selectInfo<UserEntity>(q);
     const isId = validator.isNumber(query) || validator.isNumberString(query as string);
     if (isId) {
       q.where('user.id=:id', { id: query });
     } else {
       q.where('user.username=:username', { username: query });
     }
+    this.selectBadge(q);
     const data = await q.getOne();
     return data;
   }

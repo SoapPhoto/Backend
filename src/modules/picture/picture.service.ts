@@ -334,12 +334,20 @@ export class PictureService {
     ]);
     const q = this.pictureRepository.createQueryBuilder('picture');
     this.selectInfo(q, user);
-    // const data = await Promise.all(ids.map(v => this.getOnePicture(v, user)));
     q.where(`picture.id IN (${ids.toString()})`)
       .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
       .cache(1000);
     const data = await q.getMany();
     return listRequest(query, classToPlain(data), count as number);
+  }
+
+  public getCollectionPictureListQuery = (id: number, user: Maybe<UserEntity>) => {
+    const q = this.pictureRepository.createQueryBuilder('picture')
+      .leftJoin(this.collectionService.activityMetadata.tableName, 'collectionActivity', 'collectionActivity.pictureId=picture.id')
+      .leftJoin(this.collectionService.metadata.tableName, 'collection', 'collection.id=collectionActivity.collectionId')
+      .where('collection.id=:id', { id });
+    this.selectInfo(q, user);
+    return q;
   }
 
   /**
@@ -427,6 +435,7 @@ export class PictureService {
         'picture.likedCount', 'picture.activities', 'activity',
         qb => qb.andWhere('activity.like=:like', { like: true }),
       );
+    this.userService.selectBadge(q);
     if (user) {
       q
         .loadRelationCountAndMap(
@@ -438,7 +447,6 @@ export class PictureService {
         );
     }
   }
-
 
   /**
    * 没有任何关联的查询图片信息

@@ -12,6 +12,7 @@ import { UserResolver } from './user.resolvers';
 import { UserService } from './user.service';
 import { FileModule } from '../file/file.module';
 import { FollowModule } from '../follow/follow.module';
+import { BadgeModule } from '../badge/badge.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FollowModule } from '../follow/follow.module';
     forwardRef(() => CollectionModule),
     forwardRef(() => FileModule),
     forwardRef(() => FollowModule),
+    forwardRef(() => BadgeModule),
   ],
   providers: [UserService, UserResolver],
   exports: [UserService],

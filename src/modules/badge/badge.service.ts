@@ -6,12 +6,15 @@ import { BadgeType } from '@common/enum/badge';
 import { PictureBadgeActivityService } from './picture-badge-activity/picture-badge-activity.service';
 import { UserEntity } from '../user/user.entity';
 import { BadgeEntity } from './badge.entity';
+import { UserBadgeActivityService } from './user-badge-activity/user-badge-activity.service';
 
 @Injectable()
 export class BadgeService {
   constructor(
     @Inject(forwardRef(() => PictureBadgeActivityService))
     private readonly pictureBadgeActivityService: PictureBadgeActivityService,
+    @Inject(forwardRef(() => UserBadgeActivityService))
+    private readonly userBadgeActivityService: UserBadgeActivityService,
     @InjectRepository(BadgeEntity)
     private badgeRepository: Repository<BadgeEntity>,
   ) {}
@@ -20,6 +23,9 @@ export class BadgeService {
     return this.pictureBadgeActivityService.metadata;
   }
 
+  get userActivityMetadata() {
+    return this.userBadgeActivityService.metadata;
+  }
 
   public addBadge(
     user: UserEntity,
@@ -38,7 +44,7 @@ export class BadgeService {
     targetId: number,
   ) {
     return this.badgeRepository.createQueryBuilder('badge')
-      .innerJoin(this.pictureBadgeActivityService.metadata.tableName, 'badgeActivity')
+      .leftJoin(this.pictureBadgeActivityService.metadata.tableName, 'badgeActivity', 'badgeActivity.badgeId=badge.id')
       .where('badgeActivity.pictureId=:targetId', { targetId })
       .getMany();
   }

@@ -129,5 +129,8 @@ type User implements BaseNode {
   updateTime: DateTime
 
   pictures(limit: Float): [Picture]
+
+  "徽章"
+  badge: [Badge]
 }
 

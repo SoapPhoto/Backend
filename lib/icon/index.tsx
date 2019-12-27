@@ -5,3 +5,4 @@ export * from './StrutAlign';
 export * from './Star';
 export * from './Bell';
 export * from './ArrowHorizontal';
+export * from './BadgeCert';

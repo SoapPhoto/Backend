@@ -1,10 +1,9 @@
-import React, { Component, ComponentType, useEffect } from 'react';
+import React, { ComponentType } from 'react';
 import { flatten, uniq } from 'lodash';
 
 
 import { ICustomNextContext, ICustomNextPage } from '@lib/common/interfaces/global';
 import { I18nNamespace } from './Namespace';
-import { useTranslation } from './useTranslation';
 
 export const pageWithTranslation = (namespaces?: I18nNamespace | I18nNamespace[]) => <P extends {}>(
   // eslint-disable-next-line arrow-parens
@@ -15,7 +14,7 @@ export const pageWithTranslation = (namespaces?: I18nNamespace | I18nNamespace[]
     namespacesRequired = uniq([...flatten([namespaces])]);
   }
 
-  const PageScreen: ICustomNextPage<any> = (...props) => (
+  const PageScreen: ICustomNextPage<any> = props => (
     <Page {...props as any} />
   );
 

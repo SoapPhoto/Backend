@@ -33,7 +33,6 @@ export class CommentService {
       .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', { id })
       .orderBy('comment.createTime', 'ASC')
       .leftJoinAndSelect('comment.user', 'user');
-    // this.userService.selectInfo(q);
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, classToPlain(data), count);
   }

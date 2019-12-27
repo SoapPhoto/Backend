@@ -12,7 +12,6 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import nodejieba from 'nodejieba';
 
 import { CommentService } from '@server/modules/comment/comment.service';
 import { GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
@@ -165,14 +164,4 @@ export class PictureController {
     );
     return { message: 'ok' };
   }
-
-  // @Post(':id([0-9]+)/comment')
-  // @Roles(Role.USER)
-  // public async createPictureComment(
-  //   @Body() data: CreatePictureCommentDot,
-  //   @Param('id') id: string,
-  //   @User() user: UserEntity,
-  // ) {
-  //   return this.commentService.create(data, id, user);
-  // }
 }

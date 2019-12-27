@@ -14,6 +14,8 @@ import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { FollowButton } from '@lib/components/Button/FollowButton';
 import { useFollower } from '@lib/common/hooks/useFollower';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { BadgeCert, StrutAlign } from '@lib/icon';
+import { Popover } from '@lib/components/Popover';
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   user?: UserEntity;
@@ -135,6 +137,21 @@ const UserCard: React.FC<IProps> = ({
                 <EmojiText
                   text={user.fullName}
                 />
+                {
+                  user.badge.find(v => v.name === 'user-cert') && (
+                    <StrutAlign>
+                      <Popover
+                        openDelay={100}
+                        trigger="hover"
+                        placement="top"
+                        theme="dark"
+                        content={<span>认证用户</span>}
+                      >
+                        <BadgeCert style={{ marginLeft: rem(4) }} />
+                      </Popover>
+                    </StrutAlign>
+                  )
+                }
               </UserName>
             </A>
             <Bio>{user.bio}</Bio>

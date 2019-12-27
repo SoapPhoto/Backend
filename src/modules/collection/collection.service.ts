@@ -30,6 +30,14 @@ export class CollectionService {
     private userService: UserService,
   ) {}
 
+  get metadata() {
+    return this.collectionEntity.metadata;
+  }
+
+  get activityMetadata() {
+    return this.collectionPictureEntity.metadata;
+  }
+
   /**
    * 创建收藏夹
    *
@@ -179,7 +187,6 @@ export class CollectionService {
       .limit(3);
 
     this.selectInfo(q, user);
-    this.userService.selectInfo(q);
     const collection = await q.getOne();
     const owner = user && collection && user.id === collection.user.id;
     if (!collection || (collection.isPrivate && !owner)) {
@@ -220,26 +227,15 @@ export class CollectionService {
     if (!owner) {
       countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
-    const dataQuery = this.collectionPictureEntity.createQueryBuilder('cp')
-      .where('cp.collectionId=:id', { id })
-      .select('DISTINCT pictureId')
-      .leftJoin('cp.picture', 'picture')
+    const dataQuery = this.pictureService.getCollectionPictureListQuery(id, user);
+    dataQuery
       .limit(query.pageSize)
       .offset((query.page - 1) * query.pageSize);
     if (!owner) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
-    const [count, list] = await Promise.all([
-      countQuery.getRawOne(),
-      dataQuery.getRawMany(),
-    ]);
-    if (list.length === 0) {
-      return listRequest(query, [], count.count as number);
-    }
-    const q = this.pictureService.selectList(user);
-    q.andWhere('picture.id IN (:...ids)', { ids: list.map((d: {pictureId: number}) => d.pictureId) });
-    const pictureList = await q.getMany();
-    return listRequest(query, classToPlain(pictureList, { groups: owner ? [Role.OWNER] : [] }), count.count as number);
+    const [list, count] = await dataQuery.getManyAndCount();
+    return listRequest(query, classToPlain(list, { groups: owner ? [Role.OWNER] : [] }), count);
   }
 
   public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
@@ -263,7 +259,7 @@ export class CollectionService {
       .orderBy('collection.createTime', 'DESC')
       .take(query.pageSize);
 
-    this.userService.selectInfo(q);
+    this.userService.selectBadge(q);
     this.selectInfo(q, user);
     const [data, count] = await q.cache(500).getManyAndCount();
     if (data.length === 0) {
