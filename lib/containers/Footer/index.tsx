@@ -7,7 +7,9 @@ import { href } from '@lib/common/utils/themes/common';
 
 const Wrapper = styled.footer`
   display: flex;
-  padding: ${rem(14)} ${rem(24)};
+  height: ${_ => rem(theme('height.footer')(_))};
+  line-height: ${_ => rem(theme('height.footer')(_))};
+  padding: 0 ${rem(24)};
   font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.secondary')};
 `;

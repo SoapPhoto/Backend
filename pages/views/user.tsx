@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import parse from 'url-parse';
 import { rem } from 'polished';
 import { Cell } from 'styled-css-grid';
 
 import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
-import { getTitle } from '@lib/common/utils';
+import { getTitle, Histore } from '@lib/common/utils';
 import {
   Avatar, Nav, NavItem, EmojiText, SEO,
 } from '@lib/components';
@@ -13,6 +13,7 @@ import { withError } from '@lib/components/withError';
 import { PictureList } from '@lib/containers/Picture/List';
 import { Link as LinkIcon, BadgeCert, StrutAlign } from '@lib/icon';
 import { Popover } from '@lib/components/Popover';
+import { UserFollowModal } from '@lib/components/UserFollowModal';
 import {
   Bio,
   EditIcon,
@@ -42,21 +43,24 @@ import { useAccountStore, useStores } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { FollowButton } from '@lib/components/Button/FollowButton';
 import { useFollower } from '@lib/common/hooks/useFollower';
+import { useRouter } from '@lib/router';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
   type: UserType;
 }
 
-const server = !!(typeof window === 'undefined');
+interface IUserInfoProps {
+  openModal: (type: string) => void;
+}
 
+const server = !!(typeof window === 'undefined');
 
 const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
   const { screen } = useStores();
   const { t } = useTranslation();
   const { userStore, userCollectionStore } = screen;
   const { user } = userStore;
-  // const { type: PictureType, list } = userPictureStore;
   return (
     <Wrapper>
       <SEO
@@ -90,6 +94,11 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 });
 
 const UserInfo = observer(() => {
+  const {
+    query, back, pushRoute, replaceRoute, pathname,
+  } = useRouter();
+  const [followType, setFollowType] = useState();
+  const [followModalVisible, setFollowModalVisible] = useState();
   const [follow, followLoading] = useFollower();
   const { t } = useTranslation();
   const { screen } = useStores();
@@ -101,6 +110,43 @@ const UserInfo = observer(() => {
     return () => clear();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (query.modal) {
+      setFollowModalVisible(true);
+    } else {
+      setFollowModalVisible(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query.modal]);
+  const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
+    let func = pushRoute;
+    if (replace) func = replaceRoute;
+    if (value) {
+      func(`${pathname}?modal=${label}`, {}, {
+        shallow: true,
+        state: {
+          modal: `child-${label}`,
+        },
+      });
+    } else {
+      const child = Histore!.get('modal');
+      if (/^child/g.test(child)) {
+        back();
+        Histore.set('modal', `child-${label}-back`);
+      } else {
+        func(pathname, {}, {
+          shallow: true,
+        });
+      }
+    }
+  }, [back, pathname, pushRoute, replaceRoute]);
+  const openModal = useCallback((type: string) => {
+    setFollowType(type);
+    push(type, true);
+  }, [push]);
+  const closeModal = useCallback(() => {
+    push(followType, false);
+  }, [followType, push]);
   const follower = useCallback(() => user && follow(user), [follow, user]);
   return (
     <UserHeader>
@@ -166,11 +212,11 @@ const UserInfo = observer(() => {
           </Bio>
           <InfoBox>
             <Info>
-              <InfoItem>
+              <InfoItem onClick={() => openModal('follower')}>
                 <InfoItemCount>{user.followerCount}</InfoItemCount>
                 <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
               </InfoItem>
-              <InfoItem>
+              <InfoItem onClick={() => openModal('followed')}>
                 <InfoItemCount>{user.followedCount}</InfoItemCount>
                 <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
               </InfoItem>
@@ -182,6 +228,7 @@ const UserInfo = observer(() => {
           </InfoBox>
         </Cell>
       </HeaderGrid>
+      <UserFollowModal visible={followModalVisible} onClose={closeModal} />
     </UserHeader>
   );
 });
@@ -211,6 +258,17 @@ User.getInitialProps = async ({
   const all = [];
   const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
+  if (appStore.location) {
+    const data = Histore!.get('modal');
+    if (
+      /^child/g.test(data)
+    ) {
+      return {
+        type,
+        username: params.username,
+      };
+    }
+  }
   userCollectionStore.setUsername(username!);
   if (isPop) {
     all.push(userStore.getCache(username));

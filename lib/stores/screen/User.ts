@@ -76,6 +76,7 @@ export class UserScreenStore extends BaseStore {
     variables: { username: this.username },
     fetchPolicy: 'cache-only',
   }), (data) => {
+    console.log(111111);
     runInAction(() => merge(this.user, data.user));
   }, {
     observable: true,

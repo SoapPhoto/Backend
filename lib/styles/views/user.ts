@@ -7,6 +7,7 @@ import { Settings } from '@lib/icon';
 import { theme } from '@lib/common/utils/themes';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 import { ChristmasHat } from '@lib/icon/ChristmasHat';
+import { A } from '@lib/components/A';
 
 export const Wrapper = styled.div``;
 
