@@ -23,6 +23,10 @@ declare module 'styled-components' {
     width: {
       wrapper: number;
     };
+    height: {
+      header: number;
+      footer: number;
+    };
     styles: {
       nprogress: string;
       link: {

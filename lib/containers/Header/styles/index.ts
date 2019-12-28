@@ -15,7 +15,7 @@ export const Wrapper = styled.header<{login: boolean}>`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: ${rem('70px')};
+  height: ${_ => rem(theme('height.header')(_))};
   align-items: center;
   background: ${_ => (_.login ? 'transparent' : _.theme.layout.header.background)};
   border-bottom-color: ${theme('layout.header.borderColor')};
@@ -118,4 +118,9 @@ export const Close = styled(IconButton)`
 
 export const SearchIcon = styled(Search)`
   color: ${theme('colors.text')};
+`;
+
+export const Block = styled.div<{isVerifyMessage: number}>`
+  height: ${_ => rem(theme('height.header')(_) + (_.isVerifyMessage ? verifyHeight : 0))};
+  transition: 0.3s height ease;
 `;

@@ -44,6 +44,8 @@ declare module '*/query.graphql' {
   export const ChildComments: DocumentNode;
   export const UserIsFollowing: DocumentNode;
   export const SearchPictures: DocumentNode;
+  export const FollowedUsers: DocumentNode;
+  export const FollowerUsers: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';

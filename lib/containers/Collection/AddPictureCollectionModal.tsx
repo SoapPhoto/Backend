@@ -126,7 +126,7 @@ const ItemInfoBox = styled.div<{isCollected: boolean; isPreview: boolean}>`
 const ItemInfoTitle = styled.p`
   color: ${theme('styles.collection.addPicture.color')};
   font-size: ${_ => rem(theme('fontSizes[3]')(_))};
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: ${rem(6)};
   display: flex;
   align-items: center;

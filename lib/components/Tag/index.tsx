@@ -21,7 +21,7 @@ export const Tag = styled.span<{close?: boolean;edit?: boolean}>`
   position: relative;
   box-sizing: border-box;
   color: ${theme('colors.text')};
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid ${theme('colors.gray')};
   border-radius: ${rem('20px')};
   font-size: ${_ => rem(_.theme.fontSizes[0])};
