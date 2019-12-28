@@ -24,7 +24,7 @@ export const ItemLink = styled(A)<{ active: number }>`
   white-space: nowrap;
   ${_ => (_.active ? css`
     background-color: ${theme('colors.gray')};
-    font-weight: 700;
+    font-weight: 600;
   ` : css``)}
   /* &:before {
     background: ${theme('colors.primary')};

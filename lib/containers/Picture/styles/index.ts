@@ -151,7 +151,7 @@ export const UserBox = styled.div`
 export const UserName = styled(A)`
   text-decoration: none;
   margin-left: ${rem('12px')};
-  font-weight: 700;
+  font-weight: 600;
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   color: #fff;
   text-shadow: 0 0.0625rem 0.0625rem rgba(0,0,0,.3);
@@ -208,7 +208,7 @@ export const LikeContent = styled(motion.button)`
   border: none;
   border-radius: 20px;
   line-height: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: ${theme('colors.text')};
   ${handleHover}
 `;
@@ -230,4 +230,5 @@ export const Shadow = styled.div`
   background-position-y: 100%;
   filter: blur(10px);
   z-index: 0;
+  opacity: .2;
 `;

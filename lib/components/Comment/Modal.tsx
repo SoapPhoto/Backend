@@ -62,8 +62,8 @@ const XButton = styled(X)`
 
 const ModalContent = styled(Modal)`
   padding: 0 !important;
-  max-width: rem(600) !important;
-  height: calc(100vh - ${rem(24 * 2)}) !important;
+  max-width: ${rem(600)} !important;
+  height: ${rem(600)} !important;
   margin: ${rem(24)} auto !important;
   ${customMedia.lessThan('mobile')`
     height: 80vh !important;

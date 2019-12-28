@@ -12,12 +12,11 @@ import { useAccountStore } from '@lib/stores/hooks';
 import { Status } from '@common/enum/userStatus';
 import { AnimatePresence } from 'framer-motion';
 import { X } from '@lib/icon';
-import { css } from 'styled-components';
 import Toast from '@lib/components/Toast';
 import { BtnGroup } from './BtnGroup';
 import { Icon } from './Icon';
 import {
-  Logo, MenuWrapper, Wrapper, VerifyMessage, Again, Close, verifyHeight, Christmas,
+  Logo, MenuWrapper, Wrapper, VerifyMessage, Again, Close, verifyHeight, Christmas, Block,
 } from './styles';
 
 interface IProps extends WithRouterProps {
@@ -82,11 +81,7 @@ export const Header = memo(() => {
       </Wrapper>
       {
         !isLog && (
-          <div css={css`
-            height: ${rem(70 + (isVerifyMessage ? verifyHeight : 0))};
-            transition: 0.3s height ease;
-          `}
-          />
+          <Block isVerifyMessage={isVerifyMessage ? 1 : 0} />
         )
       }
     </>

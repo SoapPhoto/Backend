@@ -40,7 +40,7 @@ const User = styled.div`
 `;
 
 const UserName = styled(EmojiText)`
-  font-weight: 700;
+  font-weight: 600;
   font-size: ${_ => rem(theme('fontSizes[1]')(_))};
   margin-left: ${rem(8)};
   color: ${theme('colors.text')};

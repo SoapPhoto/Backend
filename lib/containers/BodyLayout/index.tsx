@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { StateTreeModal } from '@lib/components/StateTreeModal';
 import Head from 'next/head';
 import { Header } from '../Header';
-import { Wrapper } from './styles';
+import { Wrapper, Content } from './styles';
 import { Footer } from '../Footer';
 
 interface IProps {
@@ -37,7 +37,15 @@ export const BodyLayout: React.FC<IProps> = ({ children, header = true }) => {
           ? <Header />
           : <div />
       }
-      {children}
+      {
+        header
+          ? (
+            <Content>
+              {children}
+            </Content>
+          )
+          : children
+      }
       {
         header
           ? <Footer />

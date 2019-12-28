@@ -181,6 +181,7 @@ export class UserService {
   public async getRawIdsList(ids: string[], user: Maybe<UserEntity>) {
     const q = this.userEntity.createQueryBuilder('user')
       .where('user.id IN (:...ids)', { ids });
+    this.selectBadge(q);
     return q.getMany();
   }
 

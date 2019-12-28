@@ -116,8 +116,11 @@ export class NotificationStore {
 
   public watch = () => watchQueryCacheObservable(this.client.watchQuery<{userNotification: NotificationEntity[]}>({
     query: UserNotification,
+    fetchPolicy: 'cache-only',
   }), (data) => {
-    this.setList(data.userNotification);
+    if (data.userNotification) {
+      this.setList(data.userNotification);
+    }
   }, {
     observable: true,
   })

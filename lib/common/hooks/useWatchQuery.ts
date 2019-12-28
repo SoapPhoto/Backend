@@ -3,9 +3,10 @@ import { DocumentNode } from 'graphql';
 
 import { useCallback } from 'react';
 import { WatchQueryOptions } from 'apollo-boost';
-import { queryToMobxObservable } from '../apollo';
+import { queryToMobxObservable, watchQueryCacheObservable } from '../apollo';
 
 type ReturnType<T> = [(callback: (data: T) => void, variables?: Record<string, any> | undefined) => void]
+
 
 export function useWatchQuery<T>(query: DocumentNode, options?: Partial<WatchQueryOptions<OperationVariables>>): ReturnType<T> {
   const { watchQuery } = useApolloClient();
@@ -15,7 +16,17 @@ export function useWatchQuery<T>(query: DocumentNode, options?: Partial<WatchQue
       fetchPolicy: 'cache-and-network',
       variables,
       ...options,
-    }), callback);
+    }), (data) => {
+      callback(data);
+    });
+    return (watchCallback: (data: T) => void) => watchQueryCacheObservable(watchQuery<T>({
+      query,
+      variables,
+      fetchPolicy: 'cache-only',
+      ...options,
+    }), watchCallback, {
+      observable: true,
+    });
   }, [options, query, watchQuery]);
   return [target];
 }

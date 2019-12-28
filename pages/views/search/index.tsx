@@ -21,9 +21,10 @@ import { withError } from '@lib/components/withError';
 interface IProps {}
 
 const Wrapper = styled.div`
-  min-height: calc(100vh - ${rem(70)} - ${rem(46)});
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 100%;
 `;
 
 const SearchHeader = styled.div`

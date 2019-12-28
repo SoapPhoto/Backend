@@ -111,3 +111,15 @@ query ChildComments($id: Float!, $query: CommentsQueryInput) {
     ...ChildCommentListFragment
   }
 }
+
+query FollowedUsers($id: Float!, $limit: Float!, $offset: Float!) {
+  followedUsers(id: $id, limit: $limit, offset: $offset) {
+    ...UserDetailFragment
+  }
+}
+
+query FollowerUsers($id: Float!, $limit: Float!, $offset: Float!) {
+  followerUsers(id: $id, limit: $limit, offset: $offset) {
+    ...UserDetailFragment
+  }
+}

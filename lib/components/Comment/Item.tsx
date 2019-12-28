@@ -9,6 +9,7 @@ import { UserPopper } from '@lib/containers/Picture/components/UserPopper';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { StrutAlign, ChevronsRight } from '@lib/icon';
 import { A } from '../A';
 import { Avatar, EmojiText } from '..';
 import { Popover } from '../Popover';
@@ -82,27 +83,26 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
             {
               author.username === user.username && (
                 <UserLabel>
-                  {`(${t('comment.author')})`}
+                  {t('comment.author')}
                 </UserLabel>
               )
             }
             {
               !!(replyComment && replyUser) && !!(parent?.id !== comment.replyComment.id) && (
                 <ReplyLabel>
-                  <span>
-                    {t('comment.reply')}
-                    {' '}
-                  </span>
+                  <StrutAlign>
+                    <ChevronsRight size={18} />
+                  </StrutAlign>
                   <UserPopper username={replyUser.username}>
                     <A
                       route={`/@${replyUser.username}`}
-                      css={css`text-decoration: none;display: inline-block;` as any}
+                      css={css`text-decoration: none;display: inline-block; margin-left: ${rem(4)};` as any}
                     >
-                      <span>
+                      <UserName>
                         <EmojiText
                           text={replyUser.fullName}
                         />
-                      </span>
+                      </UserName>
                     </A>
                   </UserPopper>
                   <span>：</span>

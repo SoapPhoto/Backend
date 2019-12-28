@@ -29,6 +29,10 @@ const theme: DefaultTheme = {
   width: {
     wrapper: 2120,
   },
+  height: {
+    header: 70,
+    footer: 55,
+  },
   styles: {
     nprogress: colors.primary,
     link: {
