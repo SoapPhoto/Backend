@@ -1,10 +1,9 @@
-import { WithRouterProps } from 'next/dist/client/with-router';
-import { withRouter } from 'next/router';
 import React from 'react';
 
+import { useRouter } from '@lib/router';
 import { Item, ItemLink, Wrapper } from './styles';
 
-export interface INavItemProps extends WithRouterProps {
+export interface INavItemProps {
   route: string;
 }
 
@@ -16,12 +15,12 @@ export const Nav: React.FC = ({
   </Wrapper>
 );
 
-export const NavItem = withRouter<INavItemProps>(({
+export const NavItem: React.FC<INavItemProps> = (({
   children,
   route,
-  router,
 }) => {
-  const active = router!.asPath === route;
+  const { pathname } = useRouter();
+  const active = pathname === route;
   return (
     <Item>
       <ItemLink active={active ? 1 : 0} route={route}>

@@ -21,6 +21,7 @@ import {
 import { DefaultSeo } from 'next-seo';
 import { withMobx } from '@lib/stores/withMobx';
 import { withAppTranslation } from '@lib/i18n/withAppTranslation';
+import { observer } from 'mobx-react';
 
 interface IProps extends WithApolloProps<any> {
   pageProps: IPageProps;
@@ -57,6 +58,7 @@ Router.events.on('routeChangeError', () => {
   store.appStore.setLoading(false);
 });
 
+@observer
 class MyApp extends App<IProps> {
   // 初始化页面数据
   public static async getInitialProps(data: any) {

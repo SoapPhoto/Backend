@@ -1,5 +1,5 @@
 import { rem } from 'polished';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Grid, Cell } from 'styled-css-grid';
 
 import { href } from '@lib/common/utils/themes/common';
@@ -66,8 +66,11 @@ export const Info = styled.div`
   `}
 `;
 
-export const InfoItem = styled.div`
+export const InfoItem = styled.div<{click?: number}>`
   padding: 0 ${rem(12)};
+  ${_ => (_.click ? css`
+    cursor: pointer;
+  ` : css``)}
   ${customMedia.lessThan('small')`
     display: flex;
     flex-direction: column;
@@ -78,7 +81,7 @@ export const InfoItem = styled.div`
 export const InfoItemCount = styled.span`
   font-size: ${_ => rem(theme('fontSizes[3]')(_))};
   margin-right: ${rem(8)};
-  font-weight: 700;
+  font-weight: 600;
   font-family: Rubik;
 `;
 

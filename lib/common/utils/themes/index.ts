@@ -16,7 +16,7 @@ export const getCurrentTheme = (data?: any) => {
   return cookies.theme;
 };
 
-export const theme = (path: string) => <P, T>(context: ThemedStyledProps<P, T>): string => (
+export const theme = (path: string) => <P, T>(context: ThemedStyledProps<P, T>): any => (
   _.get(context, `theme.${path}`)
 );
 

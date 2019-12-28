@@ -40,7 +40,7 @@ const UserBox = styled.div`
 
 const UserName = styled.p`
   font-size: ${_ => rem(_.theme.fontSizes[3])};
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: ${rem('2px')};
   color: ${theme('colors.text')};
   text-decoration-color: ${theme('colors.primary')};
@@ -97,7 +97,7 @@ export const InfoItem = styled.div`
 
 export const InfoItemCount = styled.span`
   margin-right: ${rem(8)};
-  font-weight: 700;
+  font-weight: 600;
   font-family: Rubik;
 `;
 

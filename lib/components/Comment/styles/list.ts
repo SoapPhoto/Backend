@@ -11,19 +11,23 @@ export const Wrapper = styled.div`
 export const ItemBox = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-gap: ${rem('8px')};
+  grid-gap: ${rem('16px')};
 `;
 
 export const UserName = styled.p`
-  font-weight: 700;
+  font-weight: 600;
   color: ${theme('colors.text')};
-  font-size: ${_ => rem(theme('fontSizes[2]')(_))};
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
 `;
 
 export const UserLabel = styled.span`
-  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
-  color: ${theme('colors.secondary')};
+  display: inline-block;
+  font-size: ${_ => rem(theme('fontSizes[0]')(_) as number - 2)};
+  color: #fff;
+  background-color: ${theme('colors.baseGreen')};
   margin-left: ${rem(6)};
+  border-radius: 4px;
+  padding: 1px 4px;
 `;
 
 export const MainBox = styled.div`
@@ -48,6 +52,8 @@ export const ReplyLabel = styled.span`
 `;
 
 export const ContentItem = styled.div`
+  display: flex;
+  align-items: center;
   margin-bottom: ${rem(4)};
 `;
 
@@ -75,7 +81,7 @@ export const ChildComment = styled.div`
 
 export const Dot = styled.span`
   font-family: monospace;
-  margin: ${rem(4)} 0;
+  margin: 0 ${rem(4)};
 `;
 
 export const MoreChildComment = styled.div`

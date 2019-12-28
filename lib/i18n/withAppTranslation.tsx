@@ -3,6 +3,7 @@ import React from 'react';
 import { ICustomNextAppContext } from '@lib/common/interfaces/global';
 import { getDisplayName } from 'next/dist/next-server/lib/utils';
 import { server } from '@lib/common/utils';
+import { observer } from 'mobx-react';
 import { initLocale, initI18n } from './utils';
 import { I18nProvider, II18nValue } from './I18nProvider';
 
@@ -12,7 +13,7 @@ interface IProps {
 
 export function withAppTranslation(WrappedComponent: typeof App) {
   const withDisplayName = `WithAppTranslation(${getDisplayName(WrappedComponent)})`;
-  class WithAppTranslation extends React.Component<IProps> {
+  class WithAppTranslation extends React.PureComponent<IProps> {
     public static displayName = withDisplayName;
 
     public static async getInitialProps(data: ICustomNextAppContext) {

@@ -30,12 +30,12 @@ const Box = styled.div`
 `;
 
 const Status = styled.h2`
-  font-weight: 700;
+  font-weight: 600;
   font-size: calc(4vw + 4vh + .5vmin);
 `;
 
 const Message = styled.p`
-  font-weight: 700;
+  font-weight: 600;
   font-size: calc(1vw + 1vh + .5vmin);
   margin-bottom: ${rem(12)};
 `;

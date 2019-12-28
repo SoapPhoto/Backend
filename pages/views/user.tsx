@@ -97,7 +97,7 @@ const UserInfo = observer(() => {
   const {
     query, back, pushRoute, replaceRoute, pathname,
   } = useRouter();
-  const [followType, setFollowType] = useState();
+  const [followType, setFollowType] = useState(query.modal || '');
   const [followModalVisible, setFollowModalVisible] = useState();
   const [follow, followLoading] = useFollower();
   const { t } = useTranslation();
@@ -212,11 +212,11 @@ const UserInfo = observer(() => {
           </Bio>
           <InfoBox>
             <Info>
-              <InfoItem onClick={() => openModal('follower')}>
+              <InfoItem click={1} onClick={() => openModal('follower')}>
                 <InfoItemCount>{user.followerCount}</InfoItemCount>
                 <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
               </InfoItem>
-              <InfoItem onClick={() => openModal('followed')}>
+              <InfoItem click={1} onClick={() => openModal('followed')}>
                 <InfoItemCount>{user.followedCount}</InfoItemCount>
                 <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
               </InfoItem>
@@ -228,7 +228,12 @@ const UserInfo = observer(() => {
           </InfoBox>
         </Cell>
       </HeaderGrid>
-      <UserFollowModal visible={followModalVisible} onClose={closeModal} />
+      <UserFollowModal
+        type={followType}
+        userId={user.id}
+        visible={followModalVisible}
+        onClose={closeModal}
+      />
     </UserHeader>
   );
 });
@@ -248,9 +253,9 @@ const Picture = observer(() => {
 });
 
 User.getInitialProps = async ({
-  mobxStore, route,
+  mobxStore, route, res,
 }: ICustomNextContext) => {
-  const { params } = route;
+  const { params, query, pathname } = route;
   const { username, type } = params as { username: string; type: UserType };
   const { appStore, screen } = mobxStore;
   const { userCollectionStore, userPictureStore, userStore } = screen;
@@ -258,16 +263,8 @@ User.getInitialProps = async ({
   const all = [];
   const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
-  if (appStore.location) {
-    const data = Histore!.get('modal');
-    if (
-      /^child/g.test(data)
-    ) {
-      return {
-        type,
-        username: params.username,
-      };
-    }
+  if (query.modal) {
+    if (query.modal !== 'follower' && query.modal !== 'followed') res?.redirect(pathname);
   }
   userCollectionStore.setUsername(username!);
   if (isPop) {
