@@ -95,7 +95,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 
 const UserInfo = observer(() => {
   const {
-    query, back, pushRoute, replaceRoute, pathname,
+    query, back, pushRoute, replaceRoute, pathname, params,
   } = useRouter();
   const [followType, setFollowType] = useState(query.modal || '');
   const [followModalVisible, setFollowModalVisible] = useState();
@@ -109,7 +109,7 @@ const UserInfo = observer(() => {
     const clear = watch();
     return () => clear();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [params.username]);
   useEffect(() => {
     if (query.modal) {
       setFollowModalVisible(true);
