@@ -59,7 +59,7 @@ Index.getInitialProps = async ({ mobxStore, route, res }: ICustomNextContext) =>
   const { homeStore } = screen;
   const { location } = appStore;
   const isPop = location && location.action === 'POP' && !server;
-  let newType = type.toLocaleLowerCase();
+  let newType = (type || '').toLocaleLowerCase();
   if (!newType) {
     newType = accountStore.isLogin ? 'feed' : 'hot';
   }
