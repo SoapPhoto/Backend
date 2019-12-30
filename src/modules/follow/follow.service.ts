@@ -61,13 +61,13 @@ export class FollowService {
    * @returns
    * @memberof FollowService
    */
-  public async followUsers(id: number, input: FollowUsersDto, type: string, onlyId: boolean): Promise<string[]>
+  public async followUsers(input: FollowUsersDto, type: string, onlyId: boolean): Promise<string[]>
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers(id: number, input: FollowUsersDto, type?: string): Promise<UserEntity[]>
+  public async followUsers(input: FollowUsersDto, type?: string): Promise<UserEntity[]>
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers(id: number, input: FollowUsersDto, type = 'follower', onlyId?: boolean) {
+  public async followUsers({ id, limit, offset }: FollowUsersDto, type = 'follower', onlyId?: boolean) {
     let queryId = 'follower_user_id';
     let getId = 'followed_user_id';
     if (type === 'follower') {
@@ -80,8 +80,8 @@ export class FollowService {
     const [ids] = await Promise.all([
       q
         .select(`\`follow\`.\`${getId}\``)
-        .limit(input.limit)
-        .offset(input.offset)
+        .limit(limit)
+        .offset(offset)
         .getRawMany(),
     ]);
     if (ids.length === 0) return [];

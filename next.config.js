@@ -1,6 +1,6 @@
 
 const composePlugins = require('next-compose-plugins');
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const withBundleAnalyzer = require('@next/bundle-analyzer');
 const withOffline = require('next-offline');
 const withGraphql = require('next-plugin-graphql');
 
@@ -15,22 +15,13 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
   crossOrigin: 'anonymous',
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
   assetPrefix: isProd ? `https:${process.env.CDN_URL}` : '',
+  // experimental: {
+  //   granularChunks: true,
+  // },
   // assetPrefix: `https:${process.env.CDN_URL}`,
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: './bundles/server.html',
-    },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: './bundles/client.html',
-    },
-  },
   useFileSystemPublicRoutes: false,
-  webpack(config) {
+  webpack(config, options) {
     // config.plugins.push(
     //   new SWPrecacheWebpackPlugin({
     //     navigateFallback: '/index',
@@ -47,7 +38,15 @@ const nextConfig = {
     //     ],
     //   })
     // )
-
+    // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+    // config.plugins.push(
+    //   new BundleAnalyzerPlugin({
+    //     analyzerMode: 'static',
+    //     reportFilename: options.isServer
+    //       ? '../analyze/server.html'
+    //       : './analyze/client.html',
+    //   }),
+    // );
     config.plugins.push(
       new Dotenv({
         path: path.join(__dirname, '.env'),
@@ -63,6 +62,7 @@ const nextConfig = {
           '@lib': path.resolve(__dirname, 'lib'),
           '@common': path.resolve(__dirname, 'common'),
           '@pages': path.resolve(__dirname, 'pages'),
+          'google-libphonenumber': path.resolve(__dirname, './src/libphonenumber-stub.js'),
         },
       },
     };
@@ -73,7 +73,7 @@ const nextConfig = {
 module.exports = composePlugins(
   [
     [withOffline],
-    withBundleAnalyzer,
+    // [withBundleAnalyzer, { enabled: true }],
     withGraphql,
   ],
   nextConfig,

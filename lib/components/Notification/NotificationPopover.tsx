@@ -45,7 +45,7 @@ export const NotificationPopover = observer(() => {
   return (
     <Wrapper>
       <List
-        options={{ scrollbars: { autoHide: 'leave' } }}
+        options={{ scrollbars: { autoHide: 'move' } }}
       >
         <ListBox>
           {

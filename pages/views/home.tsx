@@ -1,5 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import styled from 'styled-components';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureList } from '@lib/containers/Picture/List';

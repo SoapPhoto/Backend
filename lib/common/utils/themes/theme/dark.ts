@@ -4,7 +4,7 @@ import { darken, lighten } from 'polished';
 
 const colors = {
   shadowColor: 'transparent',
-  text: lighten(0.1, '#fff'),
+  text: lighten(0.23, '#fff'),
   primary: '#05f',
   secondary: '#666',
   danger: '#ff4d4f',
@@ -68,6 +68,11 @@ const theme: DefaultTheme = {
       read: {
         background: '#0c0c0c',
       },
+    },
+    scrollbar: {
+      background: 'rgba(0,0,0,.45)',
+      hover: 'rgba(0,0,0,.55)',
+      active: 'rgba(0,0,0,.7)',
     },
   },
   layout: {

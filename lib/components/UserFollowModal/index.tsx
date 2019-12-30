@@ -154,7 +154,7 @@ export const UserFollowModal = observer<React.FC<IProps>>(({
           </IconButton>
         </Header>
         <Content
-          options={{ scrollbars: { autoHide: 'leave' }, sizeAutoCapable: false }}
+          options={{ scrollbars: { autoHide: 'move' }, sizeAutoCapable: false }}
         >
           {
             loading ? (

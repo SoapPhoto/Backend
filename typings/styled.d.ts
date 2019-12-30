@@ -63,6 +63,11 @@ declare module 'styled-components' {
           background: string;
         };
       };
+      scrollbar: {
+        background: string;
+        hover: string;
+        active: string;
+      };
     };
     layout: {
       header: {

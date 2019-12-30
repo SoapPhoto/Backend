@@ -69,6 +69,11 @@ const theme: DefaultTheme = {
         background: '#fffef1',
       },
     },
+    scrollbar: {
+      background: 'rgba(0,0,0,.45)',
+      hover: 'rgba(0,0,0,.55)',
+      active: 'rgba(0,0,0,.7)',
+    },
   },
   layout: {
     header: {

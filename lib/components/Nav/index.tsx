@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { useRouter } from '@lib/router';
-import { Item, ItemLink, Wrapper } from './styles';
+import {
+  Item, ItemLink, Wrapper, Box,
+} from './styles';
 
 export interface INavItemProps {
   route: string;
@@ -10,8 +12,12 @@ export interface INavItemProps {
 export const Nav: React.FC = ({
   children,
 }) => (
-  <Wrapper>
-    {children}
+  <Wrapper
+    options={{ scrollbars: { autoHide: 'move' } }}
+  >
+    <Box>
+      {children}
+    </Box>
   </Wrapper>
 );
 

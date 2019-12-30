@@ -251,7 +251,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public async getFeedPictures(user: UserEntity, query: GetPictureListDto) {
-    const ids = await this.followService.followUsers(user.id, { id: user.id, limit: 10000000000, offset: 0 }, 'follower', true);
+    const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
     if (ids.length === 0) return listRequest(query, [], 0);
     const q = this.selectList(user);
     q.where('picture.userId IN (:ids)', { ids });

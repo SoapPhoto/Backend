@@ -141,7 +141,7 @@ export const CommentModal: React.FC<IProps> = ({
               </IconButton>
             </Header>
             <Content
-              options={{ scrollbars: { autoHide: 'leave' }, sizeAutoCapable: false }}
+              options={{ sizeAutoCapable: false }}
             >
               <CommentListBox>
                 <CommentList

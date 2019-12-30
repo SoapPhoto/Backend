@@ -22,18 +22,16 @@ export class FollowResolver {
 
   @Query()
   public async followerUsers(
-    @Args('id') id: number,
     @Args() input: FollowUsersDto,
   ) {
-    return this.followService.followUsers(id, input);
+    return this.followService.followUsers(input);
   }
 
   @Query()
   public async followedUsers(
-    @Args('id') id: number,
     @Args() input: FollowUsersDto,
   ) {
-    return this.followService.followUsers(id, input, 'followed');
+    return this.followService.followUsers(input, 'followed');
   }
 
   @Mutation()
