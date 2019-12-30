@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useRouter } from '@lib/router';
 import {
-  Item, ItemLink, Wrapper, Box,
+  Item, ItemLink, Box, WrapperSsr,
 } from './styles';
 
 export interface INavItemProps {
@@ -12,13 +12,11 @@ export interface INavItemProps {
 export const Nav: React.FC = ({
   children,
 }) => (
-  <Wrapper
-    options={{ scrollbars: { autoHide: 'move' } }}
-  >
+  <WrapperSsr>
     <Box>
       {children}
     </Box>
-  </Wrapper>
+  </WrapperSsr>
 );
 
 export const NavItem: React.FC<INavItemProps> = (({

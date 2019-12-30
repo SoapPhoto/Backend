@@ -48,6 +48,24 @@ export const Box = styled.div`
   font-size: 0;
 `;
 
+export const WrapperSsr = styled.div`
+  ${WrapperBox()}
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-x: scroll; /* 1 */
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  -webkit-overflow-scrolling: touch; /* 2 */
+  text-align: justify; /* 3 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & :last-child {
+    font-size: 42px;
+  }
+`;
+
+
 export const Wrapper = styled(OverlayScrollbarsComponent)`
   ${WrapperBox()}
   white-space: nowrap;
