@@ -8,6 +8,7 @@ const typeObj: Record<string, PicturesType> = {
   new: PicturesType.NEW,
   hot: PicturesType.HOT,
   choice: PicturesType.CHOICE,
+  feed: PicturesType.FEED,
 };
 
 export class HomeScreenStore extends PictureListStore<{type: PicturesType}> {
@@ -22,6 +23,6 @@ export class HomeScreenStore extends PictureListStore<{type: PicturesType}> {
   }
 
   @action public setType = (type: string) => {
-    this.restQuery.type = type ? typeObj[type] : PicturesType.HOT;
+    this.restQuery.type = typeObj[type];
   }
 }

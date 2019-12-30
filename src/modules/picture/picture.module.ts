@@ -17,6 +17,7 @@ import { FileModule } from '../file/file.module';
 import { CollectionModule } from '../collection/collection.module';
 import { PictureScheduleService } from './picture.schedule';
 import { BadgeModule } from '../badge/badge.module';
+import { FollowModule } from '../follow/follow.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { BadgeModule } from '../badge/badge.module';
     forwardRef(() => FileModule),
     forwardRef(() => CollectionModule),
     forwardRef(() => BadgeModule),
+    forwardRef(() => FollowModule),
   ],
   providers: [PictureService, PictureResolver, PictureScheduleService],
   controllers: [PictureController],

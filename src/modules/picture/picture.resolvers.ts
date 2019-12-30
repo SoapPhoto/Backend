@@ -2,7 +2,7 @@ import {
   Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent,
 } from '@nestjs/graphql';
 
-import { UseGuards, Inject, forwardRef } from '@nestjs/common';
+import { UseGuards, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
@@ -52,6 +52,12 @@ export class PictureResolver {
     }
     if (type === PicturesType.CHOICE) {
       return this.pictureService.choicePictureList(user, query);
+    }
+    if (type === PicturesType.FEED) {
+      if (!user) {
+        throw new ForbiddenException();
+      }
+      return this.pictureService.getFeedPictures(user, query);
     }
     return this.pictureService.getPictureHotInfoList(user, query);
   }

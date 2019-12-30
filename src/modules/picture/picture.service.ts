@@ -30,6 +30,7 @@ import { Role } from '../user/enum/role.enum';
 import { CollectionService } from '../collection/collection.service';
 import { CommentService } from '../comment/comment.service';
 import { BadgeService } from '../badge/badge.service';
+import { FollowService } from '../follow/follow.service';
 
 @Injectable()
 export class PictureService {
@@ -46,6 +47,8 @@ export class PictureService {
     private readonly commentService: CommentService,
     @Inject(forwardRef(() => BadgeService))
     private readonly badgeService: BadgeService,
+    @Inject(forwardRef(() => FollowService))
+    private readonly followService: FollowService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
     private readonly redisService: RedisService,
@@ -238,6 +241,22 @@ export class PictureService {
     return listRequest(query, classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : undefined,
     }), count);
+  }
+
+  /**
+   * 获取用户订阅的图片列表（
+   *
+   * @param {UserEntity} user
+   * @param {GetPictureListDto} query
+   * @memberof PictureService
+   */
+  public async getFeedPictures(user: UserEntity, query: GetPictureListDto) {
+    const ids = await this.followService.followUsers(user.id, { id: user.id, limit: 10000000000, offset: 0 }, 'follower', true);
+    if (ids.length === 0) return listRequest(query, [], 0);
+    const q = this.selectList(user);
+    q.where('picture.userId IN (:ids)', { ids });
+    const [data, count] = await q.cache(5000).getManyAndCount();
+    return listRequest(query, classToPlain(data), count);
   }
 
   /**

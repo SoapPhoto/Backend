@@ -51,7 +51,23 @@ export class FollowService {
     });
   }
 
-  public async followUsers(id: number, input: FollowUsersDto, type = 'follower') {
+  /**
+   * 获取用户的关注或者粉丝列表
+   *
+   * @param {number} id
+   * @param {FollowUsersDto} input
+   * @param {string} [type='follower']
+   * @param {boolean} [onlyId]
+   * @returns
+   * @memberof FollowService
+   */
+  public async followUsers(id: number, input: FollowUsersDto, type: string, onlyId: boolean): Promise<string[]>
+
+  // eslint-disable-next-line no-dupe-class-members
+  public async followUsers(id: number, input: FollowUsersDto, type?: string): Promise<UserEntity[]>
+
+  // eslint-disable-next-line no-dupe-class-members
+  public async followUsers(id: number, input: FollowUsersDto, type = 'follower', onlyId?: boolean) {
     let queryId = 'follower_user_id';
     let getId = 'followed_user_id';
     if (type === 'follower') {
@@ -69,6 +85,7 @@ export class FollowService {
         .getRawMany(),
     ]);
     if (ids.length === 0) return [];
+    if (onlyId) return ids.map(v => v[getId]) as string[];
     const data = await this.userService.getRawIdsList(ids.map(v => v[getId]), null);
     return data;
   }

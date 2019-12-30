@@ -67,7 +67,8 @@
     "nav": {
       "new": "最新",
       "hot": "热门",
-      "choice": "精选"
+      "choice": "精选",
+      "feed": "关注"
     }
   },
   "follow": {

@@ -172,7 +172,7 @@ export class PictureUserActivityService {
       getQ(true).getRawOne(),
       getQ().getRawMany(),
     ]);
-    return [count.count, data.map((activity: {id: string}) => activity.id)];
+    return [count.count as number, data.map((activity: {id: string}) => activity.id)];
   }
 
   public getPictureLikedCount = async (pictureId: number) => {

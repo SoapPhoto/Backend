@@ -67,7 +67,8 @@
     "nav": {
       "new": "Recent",
       "hot": "Popular",
-      "choice": "Choice"
+      "choice": "Choice",
+      "feed": "Following"
     }
   },
   "follow": {
