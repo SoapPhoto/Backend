@@ -40,6 +40,7 @@ export class AccessTokenService {
       .where('token.accessToken=:accessToken', { accessToken })
       .leftJoinAndSelect('token.user', 'user')
       .leftJoinAndSelect('token.client', 'client');
+    this.userService.selectBadge(q);
     return q.getOne();
   }
 

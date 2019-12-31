@@ -64,7 +64,7 @@ export const CommentItem: React.FC<ICommentItem> = observer(({
         route={`/@${user.username}`}
       >
         <UserPopper username={user.username}>
-          <Avatar src={user.avatar} />
+          <Avatar badge={user.badge} src={user.avatar} />
         </UserPopper>
       </A>
       <MainBox>

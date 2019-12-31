@@ -9,7 +9,7 @@ import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
-import { classToPlain } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
@@ -33,27 +33,37 @@ export class CommentService {
       .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', { id })
       .orderBy('comment.createTime', 'ASC')
       .leftJoinAndSelect('comment.user', 'user');
+    this.userService.selectBadge(q);
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, classToPlain(data), count);
   }
 
+  /**
+   * 给通知是用的
+   *
+   * @param {number} id
+   * @returns
+   * @memberof CommentService
+   */
   public async getRawOne(id: number) {
-    return this.commentRepository.createQueryBuilder('comment')
+    const q = this.commentRepository.createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
       .leftJoinAndSelect('comment.replyUser', 'replyUser')
       .leftJoinAndSelect('comment.user', 'user')
-      .leftJoinAndSelect('comment.picture', 'picture')
-      .getOne();
+      .leftJoinAndSelect('comment.picture', 'picture');
+    // this.userService.selectBadge(q);
+    return q.getOne();
   }
 
   public async getOne(id: number) {
-    return this.commentRepository.createQueryBuilder('comment')
+    const q = this.commentRepository.createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
-      .leftJoinAndSelect('comment.user', 'user')
-      .getOne();
+      .leftJoinAndSelect('comment.user', 'user');
+    this.userService.selectBadge(q);
+    return q.getOne();
   }
 
   public async create(user: UserEntity, data: CreatePictureCommentDot, id: number, commentId?: number) {
@@ -97,7 +107,10 @@ export class CommentService {
         },
       );
     }
-    return classToPlain(comment);
+    return classToPlain(plainToClass(CommentEntity, {
+      ...comment,
+      user,
+    }));
   }
 
   public async childComments(id: number, user: Maybe<UserEntity>, limit?: number, query?: GetPictureCommentListDto) {
@@ -111,6 +124,7 @@ export class CommentService {
     if (limit) {
       q.limit(limit);
     }
+    this.userService.selectBadge(q);
     if (query) {
       if (query.timestamp) {
         q.where('comment.createTime <= :time', { time: query.time });

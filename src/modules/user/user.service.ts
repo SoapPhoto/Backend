@@ -140,9 +140,10 @@ export class UserService {
   }
 
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
-    const user = await this.userEntity.createQueryBuilder('user')
-      .where('user.username=:username', { username })
-      .getOne();
+    const q = this.userEntity.createQueryBuilder('user')
+      .where('user.username=:username', { username });
+    this.selectBadge(q);
+    const user = await q.getOne();
     if (user) {
       const hash = crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
       if (hash !== user.hash) {
@@ -198,6 +199,7 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: id });
     }
+    this.selectBadge(q);
     return q.getOne();
   }
 

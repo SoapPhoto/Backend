@@ -126,6 +126,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
             <Avatar
               style={{ marginRight: rem(14) }}
               src={user.avatar}
+              badge={user.badge}
               size={44}
             />
           </UserLink>

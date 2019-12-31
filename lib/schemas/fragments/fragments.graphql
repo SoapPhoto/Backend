@@ -52,7 +52,7 @@ fragment PictureDetailFragment on Picture {
     #   ...RelatedCollectionFragment
     # }
     user {
-      ...UserFragment
+      ...UserBaseFragment
     }
     tags {
       ...TagFragment
@@ -74,7 +74,7 @@ fragment PictureListFragment on Pictures {
       ...PictureFragment
       isPrivate
       user {
-        ...UserFragment
+        ...UserBaseFragment
         badge {
           ...BadgeFragment
         }
@@ -158,6 +158,13 @@ fragment UserFragment on User {
   website
   createTime
   updateTime
+}
+
+fragment UserBaseFragment on User {
+  ...UserFragment
+  badge {
+    ...BadgeFragment
+  }
 }
 
 fragment UserDetailFragment on User {
@@ -261,7 +268,7 @@ fragment CommentChildFragment on Comment {
     ...CommentBaseFragment
   }
   user {
-    ...UserFragment
+    ...UserBaseFragment
   }
   replyUser {
     ...UserFragment
@@ -280,7 +287,7 @@ fragment CommentFragment on Comment {
     ...CommentChildFragment
   }
   user {
-    ...UserFragment
+    ...UserBaseFragment
   }
   replyUser {
     ...UserFragment

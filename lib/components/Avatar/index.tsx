@@ -3,6 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { getPictureUrl } from '@lib/common/utils/image';
 import LazyLoad from 'react-lazyload';
+import { BadgeEntity } from '@lib/common/interfaces/badge';
+import { StrutAlign, BadgeCert } from '@lib/icon';
 import { Image } from '../Image';
 
 export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -28,9 +30,17 @@ export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
    * @memberof IAvatarProps
    */
   lazyload?: boolean;
+
+  badge?: BadgeEntity[];
 }
 
-const Box = styled.span<{size: number; isClick: boolean}>`
+const Wrapper = styled.div<{size: number}>`
+  position: relative;
+  width: ${props => rem(props.size)};
+  height: ${props => rem(props.size)};
+`;
+
+const Box = styled.span<{isClick: boolean}>`
   border-radius: 100%;
   display: inline-block;
   font-size: 0;
@@ -40,8 +50,6 @@ const Box = styled.span<{size: number; isClick: boolean}>`
   background: #fff;
   user-select: none;
   ${props => props.isClick && 'cursor: pointer;'}
-  width: ${props => rem(props.size)};
-  height: ${props => rem(props.size)};
 `;
 
 const Img = styled(Image)`
@@ -50,23 +58,39 @@ const Img = styled(Image)`
   object-fit: cover;
 `;
 
+const BadgeBox = styled.div`
+  position: absolute;
+`;
+
 export const Avatar: React.FC<IAvatarProps> = ({
   src,
   size = 40,
   onClick,
+  badge,
   lazyload = false,
   ...restProps
 }) => (
-  <Box size={size} onClick={onClick} isClick={!!onClick} {...restProps}>
-    {
-      lazyload ? (
-        <LazyLoad resize offset={400}>
-          <Img src={getPictureUrl(src, 'thumb')} />
-        </LazyLoad>
+  <Wrapper {...restProps} size={size}>
+    <Box onClick={onClick} isClick={!!onClick}>
+      {
+        lazyload ? (
+          <LazyLoad resize offset={400}>
+            <Img src={getPictureUrl(src, 'thumb')} />
+          </LazyLoad>
 
-      ) : (
-        <Img src={getPictureUrl(src, 'thumb')} />
+        ) : (
+          <Img src={getPictureUrl(src, 'thumb')} />
+        )
+      }
+    </Box>
+    {
+      badge && badge.find(v => v.name === 'user-cert') && (
+        <BadgeBox style={{ bottom: rem(-(size / 8)), right: rem(-(size / 8)) }}>
+          <StrutAlign>
+            <BadgeCert size={size / 2} />
+          </StrutAlign>
+        </BadgeBox>
       )
     }
-  </Box>
+  </Wrapper>
 );
