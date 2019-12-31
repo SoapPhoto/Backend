@@ -41,6 +41,8 @@ const Wrapper = styled.div<{size: number}>`
 `;
 
 const Box = styled.span<{isClick: boolean}>`
+  width: 100%;
+  height: 100%;
   border-radius: 100%;
   display: inline-block;
   font-size: 0;
