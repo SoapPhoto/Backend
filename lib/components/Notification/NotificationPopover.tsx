@@ -33,9 +33,11 @@ export const NotificationPopover = observer(() => {
   } = useNotification();
   const [init, setInit] = useState(false);
   useEffect(() => {
-    if (!listInit) getList();
-    setInit(true);
+    if (!listInit) {
+      getList();
+    }
     const clear = watch();
+    setInit(true);
     return () => {
       unReadAll();
       clear();

@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 import { ApolloClient } from 'apollo-boost';
 
 import { NotificationEntity } from '@lib/common/interfaces/notification';
@@ -7,6 +7,8 @@ import { UserNotification, UnreadNotificationCount } from '@lib/schemas/query';
 import { NewNotification } from '@lib/schemas/subscription';
 import { MarkNotificationReadAll } from '@lib/schemas/mutations';
 import Toast from '@lib/components/Toast';
+import { apolloErrorLog } from '@lib/common/utils/error';
+import { merge } from 'lodash';
 
 export class NotificationStore {
   public io?: SocketIOClient.Socket;
@@ -79,6 +81,7 @@ export class NotificationStore {
   public unReadList = () => {
     this.unread = 0;
     this.list.forEach(notify => notify.read = true);
+    this.setCache(this.list);
   }
 
   @action
@@ -93,8 +96,28 @@ export class NotificationStore {
     Toast.success('收到了新消息！');
     if (!this.loading) {
       this.list.unshift(data);
+      this.setCache(this.list);
     } else {
       this.waitQueue.push(data);
+    }
+  }
+
+  @action
+  public setCache = (data: NotificationEntity[]) => {
+    try {
+      const cacheData = this.client.readQuery<{userNotification: NotificationEntity[]}>({
+        query: UserNotification,
+      });
+      // 以防万一
+      if (cacheData) {
+        cacheData.userNotification = data;
+        this.client.writeQuery<{userNotification: NotificationEntity[]}>({
+          query: UserNotification,
+          data: cacheData,
+        });
+      }
+    } catch (err) {
+      apolloErrorLog(err);
     }
   }
 
@@ -119,7 +142,11 @@ export class NotificationStore {
     fetchPolicy: 'cache-only',
   }), (data) => {
     if (data.userNotification) {
-      this.setList(data.userNotification);
+      this.list.forEach((item) => {
+        const newData = data.userNotification.find(v => v.id === item.id);
+        runInAction(() => merge(item, newData));
+      });
+      // this.setList(data.userNotification);
     }
   }, {
     observable: true,

@@ -17,6 +17,8 @@ const defaultNamespace = [I18nNamespace.Common, I18nNamespace.Backend, I18nNames
 
 let currentNamespace: Set<I18nNamespace> = new Set([]);
 
+let currentLocale: LocaleType;
+
 
 // 获取i18n数据
 export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I18nNamespace[]) => {
@@ -40,17 +42,17 @@ export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I
 
 // 服务器初始化
 export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?: Request): Promise<II18nValue> => {
-  let locale = LocaleType['zh-CN'];
   if (server && req) {
+    currentLocale = LocaleType['zh-CN'];
     // server 需要重置一下
     globalValue = {};
     currentNamespace.clear();
-    locale = req.locale;
+    currentLocale = req.locale;
     if (LocaleTypeValues.includes(req.cookies.locale)) {
-      locale = req.cookies.locale;
+      currentLocale = req.cookies.locale;
     }
   } else if (cookie.get('locale') && LocaleTypeValues.includes(cookie.get('locale') as LocaleType)) {
-    locale = cookie.get('locale') as LocaleType;
+    currentLocale = cookie.get('locale') as LocaleType;
   }
   const required = new Set([...defaultNamespace, ...namespacesRequired]);
   const noFetch: I18nNamespace[] = [];
@@ -60,7 +62,7 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
       noFetch.push(value);
     }
   });
-  const data = await fetchI18n(locale, noFetch);
+  const data = await fetchI18n(currentLocale, noFetch);
   const value = {
     ...globalValue,
     ...data,
@@ -68,7 +70,7 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
   globalValue = value;
   return {
     namespacesRequired: required,
-    locale,
+    locale: currentLocale,
     value,
     currentNamespace,
   };
@@ -76,6 +78,7 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
 
 // 服务器端数据同步客户端
 export const initI18n = (value: II18nValue) => {
+  currentLocale = value.locale;
   currentNamespace = new Set(value.currentNamespace);
   value.currentNamespace = currentNamespace;
   value.namespacesRequired = new Set(value.namespacesRequired);
