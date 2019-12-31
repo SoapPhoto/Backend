@@ -2,12 +2,13 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { pick } from 'lodash';
 import { observer } from 'mobx-react';
 import { useMutation } from 'react-apollo';
+import { useRouter as useBaseRouter } from 'next/router';
 
 import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
 import { EXIFModal } from '@lib/components/EXIFModal';
 import { LikeButton, IconButton } from '@lib/components/Button';
 import {
-  Bookmark, Info, Settings, Star1,
+  Info, Settings, Star1,
 } from '@lib/icon';
 import {
   BaseInfoHandleBox, PictureBaseInfo,
@@ -41,8 +42,9 @@ export const PictureInfo: React.FC<IProps> = observer(({
   setPicture,
 }) => {
   const {
-    pushRoute, params, back, replaceRoute, pathname,
+    params, back, pathname, query,
   } = useRouter();
+  const { push, replace } = useBaseRouter();
   const { t } = useTranslation();
   const [EXIFVisible, setEXIFVisible] = useState(false);
   const [collectionVisible, setCollectionVisible] = useState(false);
@@ -50,44 +52,45 @@ export const PictureInfo: React.FC<IProps> = observer(({
   const { isLogin } = useAccountStore();
   const { colors } = useTheme();
   const [update] = useMutation<{updatePicture: PictureEntity}>(UpdatePicture);
-  const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
-    let func = pushRoute;
-    if (replace) func = replaceRoute;
+  const openWithRoute = useCallback((label: string, value?: boolean, isReplace?: boolean) => {
+    let func = push;
+    if (isReplace) func = replace;
     if (value) {
-      func(`/picture/${params.id}/${label}`, {}, {
+      func(`/views/picture?id=${params.id}`, `/picture/${params.id}?modal=${label}`, {
         shallow: true,
-        state: {
-          modal: `child-${label}`,
-        },
       });
+      Histore.set('modal', `child-${label}`);
     } else {
       const child = Histore!.get('modal');
       if (/^child/g.test(child)) {
         back();
         Histore.set('modal', `child-${label}-back`);
       } else {
-        func(`/picture/${params.id}`, {}, {
+        func(`/views/picture?id=${params.id}`, `/picture/${params.id}`, {
           shallow: true,
         });
       }
     }
-  }, [back, params.id, pushRoute, replaceRoute]);
+  }, [back, params.id, push, replace]);
 
   useEffect(() => {
-    if (params.type) {
-      switch (params.type) {
+    if (query.modal) {
+      switch (query.modal) {
         case 'info':
           setEXIFVisible(true);
           break;
         case 'setting':
           setEditVisible(isOwner);
-          if (!isOwner) push('setting', false, true);
+          if (!isOwner) openWithRoute('setting', false, true);
           break;
         case 'addCollection':
           setCollectionVisible(isLogin);
-          if (!isLogin) push('addCollection', false, true);
+          if (!isLogin) openWithRoute('addCollection', false, true);
           break;
         default:
+          setEXIFVisible(false);
+          setCollectionVisible(false);
+          setEditVisible(false);
           break;
       }
     } else {
@@ -96,26 +99,28 @@ export const PictureInfo: React.FC<IProps> = observer(({
       setEditVisible(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.type, pathname]);
+  }, [query.modal, pathname]);
+
+  console.log(query.modal);
 
   const closeEXIF = useCallback(() => {
-    push('info');
-  }, [push]);
+    openWithRoute('info');
+  }, [openWithRoute]);
   const closeCollection = useCallback(() => {
-    push('addCollection');
-  }, [push]);
+    openWithRoute('addCollection');
+  }, [openWithRoute]);
   const closeEdit = useCallback(() => {
-    push('setting');
-  }, [push]);
+    openWithRoute('setting');
+  }, [openWithRoute]);
   const openEXIF = useCallback(() => {
-    push('info', true);
-  }, [push]);
+    openWithRoute('info', true);
+  }, [openWithRoute]);
   const openCollection = useCallback(() => {
-    push('addCollection', true);
-  }, [push]);
+    openWithRoute('addCollection', true);
+  }, [openWithRoute]);
   const openEdit = useCallback(() => {
-    push('setting', true);
-  }, [push]);
+    openWithRoute('setting', true);
+  }, [openWithRoute]);
 
   const updatePicture = async (data: UpdatePictureDot) => {
     const req = await update({

@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { motion } from 'framer-motion';
 
-export const Box = styled.div`
+export const Box = styled(motion.div)`
   ${props => box(props.theme, '100%', true)}
   background-repeat: no-repeat;
   background-position: top;
@@ -66,7 +67,7 @@ export const Wrapper = styled.div<{fullscreen: number}>`
   }
 `;
 
-export const Mask = styled.div`
+export const Mask = styled(motion.div)`
   position: fixed;
   top: 0;
   right: 0;

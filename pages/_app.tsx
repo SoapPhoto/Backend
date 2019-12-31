@@ -89,13 +89,13 @@ class MyApp extends App<IProps> {
 
   public render() {
     const {
-      Component, pageProps, router, apollo,
+      Component, pageProps, apollo,
     } = this.props;
     const isError = (pageProps.error && pageProps.error.statusCode >= 400) || pageProps.statusCode >= 400;
     const noHeader = pageProps && pageProps.header === false;
     return (
       <ApolloProvider client={apollo}>
-        <RouterProvider route={router}>
+        <RouterProvider>
           <ThemeWrapper>
             <BodyLayout header={!isError && !noHeader}>
               <DefaultSeo

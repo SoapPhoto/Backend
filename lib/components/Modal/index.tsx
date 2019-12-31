@@ -2,8 +2,7 @@ import { observable, reaction, action } from 'mobx';
 import { observer } from 'mobx-react';
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
-import { Transition } from 'react-transition-group';
-import { TransitionStatus } from 'react-transition-group/Transition';
+import { AnimatePresence } from 'framer-motion';
 
 import {
   getScrollWidth, server, enableScroll, disableScroll,
@@ -25,24 +24,6 @@ export interface IModalProps {
   boxStyle?: React.CSSProperties;
   className?: string;
 }
-
-const transitionStyles: {
-  [key in TransitionStatus]?: CSSProperties
-} = {
-  entering: { opacity: 0, transform: 'scale(.98)' },
-  entered: { opacity: 1, transform: 'scale(1)' },
-  exiting: { opacity: 0, transform: 'scale(.98)' },
-  exited: { opacity: 1, transform: 'scale(1)' },
-};
-
-const maskTransitionStyles: {
-  [key in TransitionStatus]?: CSSProperties
-} = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 1 },
-};
 
 let _modalIndex = 0;
 @observer
@@ -72,6 +53,7 @@ export class Modal extends React.PureComponent<IModalProps> {
       if (vis) {
         this.isClose = false;
         this.setDestroy(false);
+        this.onEnter();
       }
     });
   }
@@ -147,52 +129,52 @@ export class Modal extends React.PureComponent<IModalProps> {
       <NoSSR>
         {
           !server && ReactDOM.createPortal(
-            (
-              <Transition
-                in={visible}
-                onExited={this.onDestroy}
-                onEntered={this.onEnter}
-                appear
-                timeout={{
-                  enter: 0,
-                  exit: 200,
-                }}
-              >
-                {
-                  state => (
-                    <div>
-                      <Mask
-                        style={{
-                          ...maskTransitionStyles[state],
-                          transition: '.2s all ease',
-                          zIndex: 1000 + _modalIndex,
-                        }}
-                      />
-                      <Wrapper fullscreen={fullscreen ? 1 : 0} style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
-                        <Content ref={this.contentRef}>
-                          <Box
-                            style={{
-                              ...transitionStyles[state],
-                              ...boxStyle || {},
-                            }}
-                            className={className}
-                            onMouseDown={this.handleContentOnMouseDown}
-                            onMouseUp={this.handleContentOnMouseUp}
-                            onClick={this.handleContentOnMouseUp}
-                          >
-                            {
-                              closeIcon && fullscreen
-                              && <XIcon onClick={this.onClose} />
-                            }
-                            {children}
-                          </Box>
-                        </Content>
-                      </Wrapper>
-                    </div>
-                  )
+            <AnimatePresence
+              onExitComplete={() => {
+                if (!visible) {
+                  this.onDestroy();
                 }
-              </Transition>
-            ),
+              }}
+            >
+              {visible && (
+                <div>
+                  <Mask
+                    positionTransition
+                    style={{
+                      zIndex: 1000 + _modalIndex,
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.1 }}
+                  />
+                  <Wrapper fullscreen={fullscreen ? 1 : 0} style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
+                    <Content ref={this.contentRef}>
+                      <Box
+                        positionTransition
+                        style={{
+                          ...boxStyle || {},
+                        }}
+                        initial={{ opacity: 0, transform: 'scale(0.98)' }}
+                        animate={{ opacity: 1, transform: 'scale(1)' }}
+                        exit={{ opacity: 0, transform: 'scale(0.98)' }}
+                        transition={{ duration: 0.1 }}
+                        className={className}
+                        onMouseDown={this.handleContentOnMouseDown}
+                        onMouseUp={this.handleContentOnMouseUp}
+                        onClick={this.handleContentOnMouseUp}
+                      >
+                        {
+                          closeIcon && fullscreen
+                          && <XIcon onClick={this.onClose} />
+                        }
+                        {children}
+                      </Box>
+                    </Content>
+                  </Wrapper>
+                </div>
+              )}
+            </AnimatePresence>,
             document.querySelector('body')!,
           )
         }

@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import parse from 'url-parse';
 import { rem } from 'polished';
 import { Cell } from 'styled-css-grid';
+import { useRouter as useBaseRouter } from 'next/router';
+import qs from 'querystring';
 
 import { IBaseScreenProps, ICustomNextPage, ICustomNextContext } from '@lib/common/interfaces/global';
 import { getTitle, Histore } from '@lib/common/utils';
@@ -95,10 +97,11 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 
 const UserInfo = observer(() => {
   const {
-    query, back, pushRoute, replaceRoute, pathname, params,
+    query, back, pathname, params,
   } = useRouter();
+  const { push, replace } = useBaseRouter();
   const [followType, setFollowType] = useState(query.modal || '');
-  const [followModalVisible, setFollowModalVisible] = useState();
+  const [followModalVisible, setFollowModalVisible] = useState(false);
   const [follow, followLoading] = useFollower();
   const { t } = useTranslation();
   const { screen } = useStores();
@@ -118,35 +121,33 @@ const UserInfo = observer(() => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.modal]);
-  const push = useCallback((label: string, value?: boolean, replace?: boolean) => {
-    let func = pushRoute;
-    if (replace) func = replaceRoute;
+  const pushModalQuery = useCallback((label: string, value?: boolean, isReplace?: boolean) => {
+    let func = push;
+    if (isReplace) func = replace;
     if (value) {
-      func(`${pathname}?modal=${label}`, {}, {
+      func(`/views/user?${qs.stringify(params)}`, `${pathname}?modal=${label}`, {
         shallow: true,
-        state: {
-          modal: `child-${label}`,
-        },
       });
+      Histore.set('modal', `child-${label}`);
     } else {
       const child = Histore!.get('modal');
       if (/^child/g.test(child)) {
         back();
         Histore.set('modal', `child-${label}-back`);
       } else {
-        func(pathname, {}, {
+        func(`/views/user?${qs.stringify(params)}`, pathname, {
           shallow: true,
         });
       }
     }
-  }, [back, pathname, pushRoute, replaceRoute]);
+  }, [back, params, pathname, push, replace]);
   const openModal = useCallback((type: string) => {
     setFollowType(type);
-    push(type, true);
-  }, [push]);
+    pushModalQuery(type, true);
+  }, [pushModalQuery]);
   const closeModal = useCallback(() => {
-    push(followType, false);
-  }, [followType, push]);
+    pushModalQuery(followType, false);
+  }, [followType, pushModalQuery]);
   const follower = useCallback(() => user && follow(user), [follow, user]);
   return (
     <UserHeader>

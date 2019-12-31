@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router as RouterProps } from 'next/router';
+import { NextRouter, withRouter } from 'next/router';
 
 import { parsePath, Histore } from '@lib/common/utils';
 import { Router as BaseRouter } from '@lib/routes';
@@ -7,11 +7,7 @@ import { store } from '@lib/stores/init';
 import { RouterAction } from '@lib/stores/AppStore';
 import { RouterContext, IRouter, RouterPush } from '.';
 
-interface IProps {
-  route: RouterProps;
-}
-
-const hybridRouter = (route: RouterProps): IRouter => {
+const hybridRouter = (route: NextRouter): IRouter => {
   const data = parsePath(route.asPath);
   // eslint-disable-next-line max-len
   const func: (fu: RouterPush, action: RouterAction) => RouterPush = (fu, action) => async (routes, params, options) => {
@@ -46,7 +42,7 @@ const hybridRouter = (route: RouterProps): IRouter => {
   };
 };
 
-export const Router: React.FC<IProps> = ({
+export const Router = withRouter(({
   children,
-  route,
-}) => <RouterContext.Provider value={hybridRouter(route)}>{children}</RouterContext.Provider>;
+  router,
+}) => <RouterContext.Provider value={hybridRouter(router)}>{children}</RouterContext.Provider>);
