@@ -101,8 +101,6 @@ export const PictureInfo: React.FC<IProps> = observer(({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.modal, pathname]);
 
-  console.log(query.modal);
-
   const closeEXIF = useCallback(() => {
     openWithRoute('info');
   }, [openWithRoute]);

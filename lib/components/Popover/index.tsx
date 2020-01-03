@@ -198,7 +198,7 @@ export class Popover extends React.Component<IPopoverProps> {
         this.selfEvents(contentChild, 'onMouseOut', e);
       },
     });
-    if (server || (!mobile && this.isMini)) {
+    if (!mobile && this.isMini) {
       return childrenRender;
     }
     return (

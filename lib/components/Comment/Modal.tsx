@@ -14,6 +14,7 @@ import { UserEntity } from '@lib/common/interfaces/user';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 import { useWatchQuery } from '@lib/common/hooks/useWatchQuery';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
 import { Modal } from '..';
 import { CommentList } from './List';
 import { IconButton } from '../Button';
@@ -62,7 +63,7 @@ const XButton = styled(X)`
 
 const ModalContent = styled(Modal)`
   padding: 0 !important;
-  max-width: ${rem(600)} !important;
+  max-width: ${rem(530)} !important;
   height: ${rem(600)} !important;
   margin: ${rem(24)} auto !important;
   ${customMedia.lessThan('mobile')`
@@ -87,7 +88,7 @@ export const CommentModal: React.FC<IProps> = ({
   const [list, setList] = useState<CommentEntity[]>();
   const [count, setCount] = useState(0);
   const [getChildComments] = useWatchQuery<{childComments: IPaginationList<CommentEntity>}>(ChildComments);
-  useEffect(() => {
+  useEnhancedEffect(() => {
     if (visible && comment) {
       (async () => {
         setLoading(true);

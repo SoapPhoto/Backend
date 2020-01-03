@@ -3,19 +3,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 
-import { server, isIn } from '@lib/common/utils';
+import { isIn } from '@lib/common/utils';
 import { observer } from 'mobx-react';
-import { NoSSR } from '../SSR';
+import { Portal } from '../Portal';
 
 interface IChildProps {
   visible: boolean;
   close(): void;
 }
 
+
 type ContentFuncType = (props: IChildProps) => React.ReactNode;
 
 type ContentType = React.ReactNode | ContentFuncType;
 
+interface INewPopperProps {
+  children: ContentType;
+}
 export interface IPopperProps {
   placement: Placement;
   visible: boolean;
@@ -126,9 +130,9 @@ export class Popper extends React.Component<IPopperProps> {
         });
       },
     };
-    let renders = null;
+    let renders = <></>;
     if (!visible && (!transition || exited)) {
-      renders = null;
+      renders = <></>;
     } else {
       renders = (
         <PopperWrapper ref={this.popperRef}>
@@ -138,15 +142,10 @@ export class Popper extends React.Component<IPopperProps> {
     }
     return (
       <>
-        <NoSSR server>
-          {children}
-        </NoSSR>
-        <NoSSR>
-          {!server && ReactDOM.createPortal(
-            renders,
-            getContainer || document.querySelector('body')!,
-          )}
-        </NoSSR>
+        {children}
+        <Portal container={getContainer}>
+          {renders}
+        </Portal>
       </>
     );
   }

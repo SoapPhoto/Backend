@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
-import { HelpCircle } from '@lib/icon';
+import { HelpCircle, StrutAlign } from '@lib/icon';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { customBreakpoints, customMedia } from '@lib/common/utils/mediaQuery';
 import { Modal, IModalProps } from '../Modal';
@@ -73,9 +73,14 @@ export const Confirm: React.FC<IConfirmProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Modal fullscreen={false} visible={visible} onClose={onClose} boxStyle={{ maxWidth: customBreakpoints.small }}>
+    <Modal
+      fullscreen={false}
+      visible={visible}
+      onClose={onClose}
+      boxStyle={{ maxWidth: rem(400) }}
+    >
       <Content>
-        <HelpIcon />
+        <HelpIcon color="#faad14" />
         <div>
           <Title>{title}</Title>
         </div>

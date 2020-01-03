@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useLazyQuery } from 'react-apollo';
 
 import { Popover } from '@lib/components/Popover';
@@ -16,13 +16,13 @@ export const UserPopper: React.FC<IProps> = ({
 }) => {
   const popperRef = useRef<Popover>(null);
   const [loadUser, { loading, data }] = useLazyQuery<{user: UserEntity}>(UserInfo);
-  const onOpen = () => {
+  const onOpen = useCallback(() => {
     loadUser({
       variables: {
         username,
       },
     });
-  };
+  }, [loadUser, username]);
   return (
     <Popover
       contentStyle={{ padding: 0 }}

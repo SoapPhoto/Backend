@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 import { useNotification } from '@lib/stores/hooks';
+import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
 import { NotificationItem } from './NotificationItem';
 import { Empty } from '../Empty';
 
@@ -32,7 +33,7 @@ export const NotificationPopover = observer(() => {
     getList, list, loading, listInit, unReadAll, watch,
   } = useNotification();
   const [init, setInit] = useState(false);
-  useEffect(() => {
+  useEnhancedEffect(() => {
     if (!listInit) {
       getList();
     }

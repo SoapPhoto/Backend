@@ -1,21 +1,21 @@
-import { observable, reaction, action } from 'mobx';
-import { observer } from 'mobx-react';
-import React, { CSSProperties } from 'react';
-import ReactDOM from 'react-dom';
+import React, {
+  CSSProperties, useRef, useCallback, memo,
+} from 'react';
 import { AnimatePresence } from 'framer-motion';
 
 import {
-  getScrollWidth, server, enableScroll, disableScroll,
+  enableScroll, disableScroll,
 } from '@lib/common/utils';
 import { isFunction } from 'lodash';
 import { DefaultTheme } from 'styled-components';
-import { NoSSR } from '../SSR';
+import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
 import {
   Box, Content, Mask, Wrapper, XIcon,
 } from './styles';
+import { Portal } from '../Portal';
 
 export interface IModalProps {
-  visible?: boolean;
+  visible: boolean;
   onClose?: () => void;
   afterClose?: () => void;
   closeIcon?: boolean;
@@ -26,159 +26,132 @@ export interface IModalProps {
 }
 
 let _modalIndex = 0;
-@observer
-export class Modal extends React.PureComponent<IModalProps> {
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-  static defaultProps = {
-    closeIcon: true,
-    fullscreen: true,
-  }
 
-  public shouldClose: null | boolean = null;
+export const Modal: React.FC<IModalProps> = memo(({
+  visible,
+  afterClose,
+  className,
+  boxStyle,
+  children,
+  onClose,
+  closeIcon = true,
+  fullscreen = true,
+}) => {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const isDestroy = useRef<boolean>(visible);
+  const shouldClose = useRef<boolean | null>(null);
+  const isClose = useRef<boolean>(false);
 
-  public contentRef = React.createRef<HTMLDivElement>();
-
-  public wrapperRef = React.createRef<HTMLDivElement>();
-
-  @observable public isDestroy = !this.props.visible;
-
-  public initStyle?: () => void;
-
-  private isClose = false;
-
-  constructor(props: IModalProps) {
-    super(props);
-    // eslint-disable-next-line react/destructuring-assignment
-    reaction(() => this.props.visible, (vis) => {
-      if (vis) {
-        this.isClose = false;
-        this.setDestroy(false);
-        this.onEnter();
-      }
-    });
-  }
-
-  public componentWillUnmount() {
-    this.onDestroy();
-  }
-
-  get scrollWidth() {
-    return getScrollWidth();
-  }
-
-  @action public setDestroy = (value: boolean) => this.isDestroy = value;
-
-
-  public handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (this.shouldClose === null) {
-      this.shouldClose = true;
-    }
-    if (this.shouldClose && (e.target === this.contentRef.current || e.target === this.wrapperRef.current)) {
-      this.onClose();
-    }
-    this.shouldClose = null;
-  }
-
-  public handleContentOnMouseUp = () => {
-    this.shouldClose = null;
-  };
-
-  public handleContentOnClick = () => {
-    this.shouldClose = false;
-  };
-
-  public handleContentOnMouseDown = () => {
-    this.shouldClose = false;
-  };
-
-  public onClose = () => {
-    if (this.isClose) return;
-    this.isClose = true;
-    if (isFunction(this.props.onClose)) {
-      this.props.onClose();
-    }
-  }
-
-  public onDestroy = () => {
-    if (this.isDestroy) return;
-    if (isFunction(this.props.afterClose)) {
-      this.props.afterClose();
+  const setDestroy = useCallback((value: boolean) => isDestroy.current = value, []);
+  const onDestroy = useCallback(() => {
+    if (isDestroy.current) return;
+    if (isFunction(afterClose)) {
+      afterClose();
     }
     _modalIndex--;
     if (_modalIndex === 0) {
       enableScroll();
     }
-
-    this.setDestroy(true);
-  }
-
-  public onEnter = () => {
+    setDestroy(true);
+  }, [afterClose, setDestroy]);
+  const onEnter = useCallback(() => {
     _modalIndex++;
     disableScroll();
-  }
-
-  public render() {
-    const {
-      visible, boxStyle, children, closeIcon, fullscreen, className,
-    } = this.props;
-    if (this.isDestroy) {
-      return null;
+  }, []);
+  const handleClose = useCallback(() => {
+    if (isClose.current) return;
+    isClose.current = true;
+    if (isFunction(onClose)) {
+      onClose();
     }
-    return (
-      <NoSSR>
-        {
-          !server && ReactDOM.createPortal(
-            <AnimatePresence
-              onExitComplete={() => {
-                if (!visible) {
-                  this.onDestroy();
-                }
+  }, [onClose]);
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (shouldClose.current === null) {
+      shouldClose.current = true;
+    }
+    if (shouldClose.current && (e.target === contentRef.current || e.target === wrapperRef.current)) {
+      handleClose();
+    }
+    shouldClose.current = null;
+  }, [handleClose]);
+
+  useEnhancedEffect(() => {
+    if (visible) {
+      isClose.current = false;
+      setDestroy(false);
+      onEnter();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // useEffect(() => () => onDestroy(), []);
+
+  const handleContentOnMouseUp = useCallback(() => {
+    shouldClose.current = null;
+  }, []);
+  // const handleContentOnClick = useCallback(() => {
+  //   shouldClose.current = false;
+  // }, []);
+  const handleContentOnMouseDown = useCallback(() => {
+    shouldClose.current = false;
+  }, []);
+
+  return (
+    <Portal>
+      <AnimatePresence
+        onExitComplete={() => {
+          if (!visible) {
+            onDestroy();
+          }
+        }}
+      >
+        {visible && (
+          <div>
+            <Mask
+              positionTransition
+              style={{
+                zIndex: 1000 + _modalIndex,
               }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+            />
+            <Wrapper
+              fullscreen={fullscreen ? 1 : 0}
+              style={{ zIndex: 1000 + _modalIndex }}
+              onClick={handleClick}
+              ref={wrapperRef}
             >
-              {visible && (
-                <div>
-                  <Mask
-                    positionTransition
-                    style={{
-                      zIndex: 1000 + _modalIndex,
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.1 }}
-                  />
-                  <Wrapper fullscreen={fullscreen ? 1 : 0} style={{ zIndex: 1000 + _modalIndex }} onClick={this.handleClick} ref={this.wrapperRef}>
-                    <Content ref={this.contentRef}>
-                      <Box
-                        positionTransition
-                        style={{
-                          ...boxStyle || {},
-                        }}
-                        initial={{ opacity: 0, transform: 'scale(0.98)' }}
-                        animate={{ opacity: 1, transform: 'scale(1)' }}
-                        exit={{ opacity: 0, transform: 'scale(0.98)' }}
-                        transition={{ duration: 0.1 }}
-                        className={className}
-                        onMouseDown={this.handleContentOnMouseDown}
-                        onMouseUp={this.handleContentOnMouseUp}
-                        onClick={this.handleContentOnMouseUp}
-                      >
-                        {
-                          closeIcon && fullscreen
-                          && <XIcon onClick={this.onClose} />
-                        }
-                        {children}
-                      </Box>
-                    </Content>
-                  </Wrapper>
-                </div>
-              )}
-            </AnimatePresence>,
-            document.querySelector('body')!,
-          )
-        }
-      </NoSSR>
-    );
-  }
-}
+              <Content ref={contentRef}>
+                <Box
+                  positionTransition
+                  style={{
+                    ...boxStyle || {},
+                  }}
+                  initial={{ opacity: 0, transform: 'scale(0.98)' }}
+                  animate={{ opacity: 1, transform: 'scale(1)' }}
+                  exit={{ opacity: 0, transform: 'scale(0.98)' }}
+                  transition={{ duration: 0.1 }}
+                  className={className}
+                  onMouseDown={handleContentOnMouseDown}
+                  onMouseUp={handleContentOnMouseUp}
+                  onClick={handleContentOnMouseUp}
+                >
+                  {
+                    closeIcon && fullscreen
+                        && <XIcon onClick={onClose} />
+                  }
+                  {children}
+                </Box>
+              </Content>
+            </Wrapper>
+          </div>
+        )}
+      </AnimatePresence>
+    </Portal>
+  );
+});

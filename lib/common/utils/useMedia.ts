@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { server } from '.';
+import { useEnhancedEffect } from '../hooks/useEnhancedEffect';
 
 export default function useMedia(queries: string[], values: any[], defaultValue: any) {
   let mediaQueryLists: MediaQueryList[] = [];
@@ -14,7 +15,7 @@ export default function useMedia(queries: string[], values: any[], defaultValue:
 
   const [value, setValue] = useState(getValue);
 
-  useEffect(
+  useEnhancedEffect(
     () => {
       const handler = () => setValue(getValue);
       mediaQueryLists.forEach(mql => mql.addListener(handler));
