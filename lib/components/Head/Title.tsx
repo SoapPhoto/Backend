@@ -10,6 +10,6 @@ export const Title: React.FC<IProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <title>{`${t(title)} - ${t('title')}`}</title>
+    <title>{`${t(title)} - ${t('title.name')}`}</title>
   );
 };
