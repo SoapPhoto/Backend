@@ -18,11 +18,6 @@ type Query {
   ): Picture
 
   "获取图片列表"
-  hotPictures(
-    query: PicturesQueryInput!
-  ): Pictures
-
-  "获取图片列表"
   pictures(
     "图片列表类型"
     type: PicturesType

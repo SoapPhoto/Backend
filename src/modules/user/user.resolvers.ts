@@ -1,6 +1,7 @@
 import {
-  Args, Context, Query, Resolver, ResolveProperty, Parent, Mutation,
+  Args, Context, Query, Resolver, ResolveProperty, Parent, Mutation, Info,
 } from '@nestjs/graphql';
+import { fieldsList } from 'graphql-fields-list';
 
 import { UseGuards } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -8,12 +9,15 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { classToPlain } from 'class-transformer';
 import { UserPictureType } from '@common/enum/picture';
+import { User } from '@server/common/decorator/user.graphql.decorator';
+import { GraphQLResolveInfo } from 'graphql';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { CollectionService } from '../collection/collection.service';
 import { UpdateProfileSettingDto } from './dto/user.dto';
 import { FollowService } from '../follow/follow.service';
+import { PictureService } from '../picture/picture.service';
 
 @Resolver('User')
 @UseGuards(AuthGuard)
@@ -22,56 +26,35 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
     private readonly followService: FollowService,
+    private readonly pictureService: PictureService,
   ) {}
 
   @Query()
   @Roles(Role.USER)
   public async whoami(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
+    @Info() info: GraphQLResolveInfo,
   ) {
-    return classToPlain(await this.userService.getUser(user.id, user), {
+    const fields = fieldsList(info);
+    return classToPlain(await this.userService.findOne(user.id, user, fields), {
       groups: [Role.OWNER],
     });
   }
 
   @Query()
   public async user(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
+    @Info() info: GraphQLResolveInfo,
     @Args('id') id: string,
     @Args('username') username: string,
   ) {
-    return this.userService.getUser(id || username, user);
-  }
-
-  @Query()
-  public async userPicturesByName(
-    @Context('user') user: Maybe<UserEntity>,
-    @Args('username') username: string,
-    @Args('type') type: UserPictureType,
-    @Args('query') query: GetPictureListDto,
-  ) {
-    if (type === UserPictureType.MY) {
-      return this.userService.getUserPicture(username, query, user);
-    }
-    return this.userService.getUserLikePicture(username, query, user);
-  }
-
-  @Query()
-  public async userPicturesById(
-    @Context('user') user: Maybe<UserEntity>,
-    @Args('id') id: string,
-    @Args('type') type: UserPictureType,
-    @Args('query') query: GetPictureListDto,
-  ) {
-    if (type === UserPictureType.MY) {
-      return this.userService.getUserPicture(id, query, user);
-    }
-    return this.userService.getUserLikePicture(id, query, user);
+    const fields = fieldsList(info);
+    return this.userService.findOne(id || username, user, fields);
   }
 
   @Query()
   public async userCollectionsByName(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('username') username: string,
     @Args('query') query: GetPictureListDto,
   ) {
@@ -80,7 +63,7 @@ export class UserResolver {
 
   @Query()
   public async userCollectionsById(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args('query') query: GetPictureListDto,
   ) {
@@ -89,7 +72,7 @@ export class UserResolver {
 
   @Mutation()
   public async updateProfile(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
     @Args('data') data: UpdateProfileSettingDto,
   ) {
     return this.userService.updateUserProfile(user, data);
@@ -99,19 +82,19 @@ export class UserResolver {
   public async likedCount(
     @Parent() parent: UserEntity,
   ) {
-    return this.userService.getUserLikedCount(parent.id);
+    return this.pictureService.getUserLikedCount(parent.id);
   }
 
   @ResolveProperty('likesCount')
   public async likesCount(
     @Parent() parent: UserEntity,
   ) {
-    return this.userService.userLikesCount(parent.id);
+    return this.pictureService.userLikesCount(parent.id);
   }
 
   @ResolveProperty('isFollowing')
   public async isFollowing(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Parent() parent: UserEntity,
   ) {
     if (!user) return 0;
@@ -137,6 +120,6 @@ export class UserResolver {
     @Parent() parent: UserEntity,
     @Args('limit') limit: number,
   ) {
-    return this.userService.getUserPreviewPictures(parent.username, limit);
+    return this.pictureService.getUserPreviewPictures(parent.username, limit);
   }
 }

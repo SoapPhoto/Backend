@@ -193,7 +193,7 @@ export class OauthService {
       }
       if (!createData) throw new BadRequestException('type_err');
       // 检查username是否被注册
-      if (await this.userService.getBaseUser(createData.username!)) {
+      if (await this.userService.findOne(createData.username!, null)) {
         throw new ValidationException('username', 'username already exists');
       }
       const user = await this.userService.createOauthUser({

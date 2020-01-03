@@ -84,7 +84,7 @@ export class CollectionService {
    */
   public async addPicture(id: number, pictureId: number, user: UserEntity) {
     const [picture, collection] = await Promise.all([
-      this.pictureService.getRawOne(pictureId),
+      this.pictureService.findOne(pictureId, user),
       this.collectionEntity.findOne(id),
     ]);
     if (!picture) {

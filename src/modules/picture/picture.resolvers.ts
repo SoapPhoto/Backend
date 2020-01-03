@@ -1,14 +1,18 @@
 import {
-  Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent,
+  Args, Mutation, Query, Resolver, ResolveProperty, Parent, Info,
 } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
-import { UseGuards, Inject, forwardRef, ForbiddenException } from '@nestjs/common';
+import {
+  UseGuards, Inject, forwardRef,
+} from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
 import { BadgeType } from '@common/enum/badge';
+import { User } from '@server/common/decorator/user.graphql.decorator';
 import {
   GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
 } from './dto/picture.dto';
@@ -33,7 +37,7 @@ export class PictureResolver {
 
   @Query()
   public async searchPictures(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Args('words') words: string,
   ) {
@@ -43,36 +47,20 @@ export class PictureResolver {
 
   @Query()
   public async pictures(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
+    @Info() info: GraphQLResolveInfo,
       @Args('type') type: PicturesType = PicturesType.HOT,
   ) {
-    if (type === PicturesType.NEW) {
-      return this.pictureService.getList(user, query);
+    if (type === PicturesType.HOT) {
+      return this.pictureService.getPictureHotInfoList(user, query, info);
     }
-    if (type === PicturesType.CHOICE) {
-      return this.pictureService.choicePictureList(user, query);
-    }
-    if (type === PicturesType.FEED) {
-      if (!user) {
-        throw new ForbiddenException();
-      }
-      return this.pictureService.getFeedPictures(user, query);
-    }
-    return this.pictureService.getPictureHotInfoList(user, query);
-  }
-
-  @Query()
-  public async hotPictures(
-    @Context('user') user: Maybe<UserEntity>,
-    @Args('query') query: GetPictureListDto,
-  ) {
-    return this.pictureService.getPictureHotInfoList(user, query);
+    return this.pictureService.find(user, type, query, info);
   }
 
   @Query()
   public async newPictures(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetNewPictureListDto,
   ) {
     return this.pictureService.getNewList(user, query);
@@ -80,21 +68,23 @@ export class PictureResolver {
 
   @Query()
   public async userPictures(
-    @Context('user') user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args('username') username: string,
     @Args('query') query: GetUserPictureListDto,
+    @Info() info: GraphQLResolveInfo,
   ) {
-    return this.pictureService.getUserPicture(id || username, query, user);
+    return this.pictureService.getUserPicture(id || username, query, user, info);
   }
 
   @Query()
   public async picture(
-    @Context('user') user: Maybe<UserEntity>,
-    @Context() context: any,
+    @User() user: Maybe<UserEntity>,
+    @Info() info: GraphQLResolveInfo,
     @Args('id') id: number,
   ) {
-    return this.pictureService.getOnePicture(id, user, true);
+    this.pictureService.addViewCount(id);
+    return this.pictureService.findOne(id, user, true, info);
   }
 
   @Query()
@@ -107,7 +97,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async likePicture(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, true);
@@ -116,7 +106,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async unlikePicture(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, false);
@@ -125,7 +115,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async updatePicture(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
     @Args('data') data: UpdatePictureDot,
   ) {
@@ -135,7 +125,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async deletePicture(
-    @Context('user') user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.delete(id, user);
@@ -151,34 +141,9 @@ export class PictureResolver {
   @ResolveProperty('currentCollections')
   public async currentCollections(
     @Parent() parent: PictureEntity,
-    @Context('user') user?: UserEntity,
+    @User() user?: UserEntity,
   ) {
     if (!user) return [];
     return this.pictureService.getCurrentCollections(parent.id, user);
   }
-
-  @ResolveProperty('badge')
-  public async badge(
-    @Parent() parent: PictureEntity,
-  ) {
-    return this.badgeService.getBadges(BadgeType.PICTURE, parent.id);
-  }
-
-  // @ResolveProperty('likedCount')
-  // public async likedCount(
-  //   @Parent() parent: PictureEntity,
-  // ) {
-  //   return this.pictureService.getPictureLikedCount(parent.id);
-  // }
-
-  // @ResolveProperty('isLike')
-  // public async isLike(
-  //   @Parent() parent: PictureEntity,
-  //   @Context('user') user?: UserEntity,
-  // ) {
-  //   if (!user) {
-  //     return false;
-  //   }
-  //   return this.pictureService.getUserIsLike(parent.id, user);
-  // }
 }

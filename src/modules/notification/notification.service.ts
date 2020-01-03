@@ -91,14 +91,14 @@ export class NotificationService {
     if (
       notify.category === NotificationCategory.LIKED
     ) {
-      return this.pictureService.getRawOne(notify.mediaId!);
+      return this.pictureService.findOne(notify.mediaId!, null);
     }
     if (notify.category === NotificationCategory.REPLY
       || notify.category === NotificationCategory.COMMENT) {
       return this.commentService.getRawOne(notify.mediaId!);
     }
     if (notify.category === NotificationCategory.FOLLOW) {
-      return this.userService.getUser(notify.mediaId!, null);
+      return this.userService.findOne(notify.mediaId!, null, ['badge']);
     }
     return undefined;
   }

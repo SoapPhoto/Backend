@@ -94,7 +94,7 @@ export class PictureController {
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
-    return this.pictureService.getList(user, query);
+    // return this.pictureService.find(user,  query);
   }
 
   @Get(':id([0-9]+)')
@@ -102,7 +102,7 @@ export class PictureController {
     @Param('id') id: string,
     @User() user: UserEntity,
   ) {
-    return this.pictureService.getOnePicture(Number(id), user, true);
+    return this.pictureService.findOne(Number(id), user, true);
   }
 
   @Put('like/:id([0-9]+)')
@@ -140,7 +140,7 @@ export class PictureController {
   ) {
     if (user.username !== 'yiiu') throw new ForbiddenException();
     const redisClient = this.redisService.getClient();
-    const data = await this.pictureService.getHotPictures();
+    const data = await this.pictureService.calculateHotPictures();
     await redisClient.zadd('picture_hot', ...data);
     console.log(dayjs().format(), 'picture hot OK!!!!!!!!');
     return { message: 'ok' };

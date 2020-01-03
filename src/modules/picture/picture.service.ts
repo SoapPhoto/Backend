@@ -14,6 +14,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import dayjs from 'dayjs';
 import nodejieba from 'nodejieba';
 import { RedisService } from 'nestjs-redis';
+import { fieldsProjection } from 'graphql-fields-list';
 
 import { listRequest } from '@server/common/utils/request';
 import { validator } from '@common/validator';
@@ -23,6 +24,9 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { keyword } from '@server/common/utils/keyword';
 import { LoggingService } from '@server/shared/logging/logging.service';
+import { isBoolean } from 'lodash';
+import { PicturesType } from '@common/enum/picture';
+import { GraphQLResolveInfo } from 'graphql';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -31,6 +35,8 @@ import { CollectionService } from '../collection/collection.service';
 import { CommentService } from '../comment/comment.service';
 import { BadgeService } from '../badge/badge.service';
 import { FollowService } from '../follow/follow.service';
+import { BadgeEntity } from '../badge/badge.entity';
+import { PictureBadgeActivityEntity } from '../badge/picture-badge-activity/picture-badge-activity.entity';
 
 @Injectable()
 export class PictureService {
@@ -98,14 +104,6 @@ export class PictureService {
     );
   }
 
-  public choicePictureList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const [data, count] = await this.selectList(user, query)
-      .leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
-      .andWhere('picture.isPrivate=:private AND badgeActivity.pictureId=picture.id', { private: false })
-      .getManyAndCount();
-    return listRequest(query, data, count);
-  }
-
   public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
     const { length } = words;
     const splicedWords: string[] = nodejieba.extract(words, 20).map((v: any) => v.word);
@@ -128,18 +126,6 @@ export class PictureService {
     return listRequest(query, data, count);
   }
 
-  /**
-   * 图片列表查询
-   *
-   * @memberof PictureService
-   */
-  public getList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
-    const [data, count] = await this.selectList(user, query)
-      .andWhere('picture.isPrivate=:private', { private: false })
-      .getManyAndCount();
-    return listRequest(query, data, count);
-  }
-
   public getNewList = async (user: Maybe<UserEntity>, query: GetNewPictureListDto) => {
     const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto)
       .andWhere('picture.isPrivate=:private', { private: false })
@@ -148,7 +134,6 @@ export class PictureService {
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, data, count);
   }
-
 
   /**
    * 增加阅读数量
@@ -167,43 +152,77 @@ export class PictureService {
       .execute();
   }
 
-
   /**
-   * 获取图片基本信息，大多用于操作的时候查询做判断
+   * 获取单个图片信息
    *
-   * @public
+   * @param {number} id
+   * @param {Maybe<UserEntity>} user
+   * @param {boolean} toPlain
+   * @param {GraphQLResolveInfo} [select]
+   * @returns {Promise<Record<string, any>>}
    * @memberof PictureService
    */
-  public getOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
-    .where('picture.id=:id', { id })
-    .leftJoinAndSelect('picture.user', 'user')
-    .getOne()
+  public async findOne(id: number, user: Maybe<UserEntity>, select?: GraphQLResolveInfo): Promise<PictureEntity>
 
   /**
-   * 获取单个图片的信息
+   * 获取单个图片信息
    *
+   * @param {number} id
+   * @param {Maybe<UserEntity>} user
+   * @param {boolean} toPlain
+   * @param {GraphQLResolveInfo} [select]
+   * @returns {Promise<Record<string, any>>}
    * @memberof PictureService
    */
-  public async getOnePicture(
-    id: number,
-    user: Maybe<UserEntity>,
-    view?: boolean,
-  ) {
-    const q = this.select(user)
+  // eslint-disable-next-line no-dupe-class-members
+  public async findOne(id: number, user: Maybe<UserEntity>, toPlain: boolean, info?: GraphQLResolveInfo): Promise<Record<string, any>>
+
+  /**
+   * 获取单个图片信息
+   *
+   * @param {number} id
+   * @param {Maybe<UserEntity>} user
+   * @param {(boolean | GraphQLResolveInfo)} [toPlain]
+   * @param {GraphQLResolveInfo} [select]
+   * @returns
+   * @memberof PictureService
+   */
+  // eslint-disable-next-line no-dupe-class-members
+  public async findOne(id: number, user: Maybe<UserEntity>, toPlain?: boolean | GraphQLResolveInfo, info?: GraphQLResolveInfo) {
+    const q = this.select(user, {
+      value: '',
+      info: isBoolean(toPlain) ? info : toPlain,
+    })
       .andWhere('picture.id=:id', { id })
       .leftJoinAndSelect('picture.tags', 'tag');
     const data = await q.cache(100).getOne();
-    if (view && data) {
-      this.addViewCount(data.id);
-      data.views += 1;
-    }
     const isOwner = data && data.user.id === (user ? user.id : null);
     if (!data || (data && data.isPrivate && !isOwner)) {
       throw new NotFoundException();
     }
-    return classToPlain(data, {
-      groups: isOwner ? [Role.OWNER] : [],
-    });
+    if (isBoolean(toPlain)) {
+      return classToPlain(data, {
+        groups: isOwner ? [Role.OWNER] : [],
+      });
+    }
+    return data;
+  }
+
+  public async find(user: Maybe<UserEntity>, type: PicturesType, query: GetNewPictureListDto, info: GraphQLResolveInfo) {
+    const q = this.selectList(user, query, { info, value: 'user', path: 'data' })
+      .andWhere('picture.isPrivate=:private', { private: false });
+    if (type === PicturesType.CHOICE) {
+      q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
+        .andWhere('badgeActivity.pictureId=picture.id', { private: false });
+    }
+    if (type === PicturesType.FEED) {
+      if (!user) throw new ForbiddenException();
+      const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
+      if (ids.length === 0) return listRequest(query, [], 0);
+      q.andWhere('picture.userId IN (:ids)', { ids });
+    }
+    const [data, count] = await q.getManyAndCount();
+    return listRequest(query, data, count);
   }
 
   /**
@@ -212,7 +231,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public likePicture = async (id: number, user: UserEntity, data: boolean) => {
-    const picture = await this.getOne(id);
+    const picture = await this.findOne(id, user);
     if (!picture) {
       throw new BadRequestException('no_exist_picture');
     }
@@ -224,8 +243,8 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
-    const q = this.selectList(user, query);
+  public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+    const q = this.selectList(user, query, { info, path: 'data' });
     let isOwner = false;
     if (validator.isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
@@ -253,7 +272,7 @@ export class PictureService {
   public async getFeedPictures(user: UserEntity, query: GetPictureListDto) {
     const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
     if (ids.length === 0) return listRequest(query, [], 0);
-    const q = this.selectList(user);
+    const q = this.selectList(user, query);
     q.where('picture.userId IN (:ids)', { ids });
     const [data, count] = await q.cache(5000).getManyAndCount();
     return listRequest(query, classToPlain(data), count);
@@ -269,7 +288,7 @@ export class PictureService {
     if (ids.length === 0) {
       return listRequest(query, [], count as number);
     }
-    const q = this.selectList(user);
+    const q = this.selectList(user, query);
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
     return listRequest(query, classToPlain(data), count as number);
@@ -281,7 +300,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) => {
-    const q = this.selectList(user);
+    const q = this.selectList(user, query);
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .andWhere('picture.isPrivate=:private', { private: false })
@@ -295,7 +314,7 @@ export class PictureService {
    * @memberof PictureService
    */
   public delete = async (id: number, user: UserEntity) => {
-    const data = await this.getOne(id);
+    const data = await this.findOne(id, user);
     if (!data) {
       throw new BadRequestException();
     }
@@ -344,7 +363,7 @@ export class PictureService {
     );
   }
 
-  public getPictureHotInfoList = async (user: Maybe<UserEntity>, query: GetPictureListDto) => {
+  public getPictureHotInfoList = async (user: Maybe<UserEntity>, query: GetPictureListDto, info: GraphQLResolveInfo) => {
     const client = this.redisService.getClient();
     const limit = (query.page - 1) * query.pageSize;
     const [ids, count] = await Promise.all([
@@ -352,7 +371,8 @@ export class PictureService {
       client.zcount('picture_hot', -1000000, 1000000),
     ]);
     const q = this.pictureRepository.createQueryBuilder('picture');
-    this.selectInfo(q, user);
+    this.selectInfo(q, user, { info, path: 'data' });
+    // q.whereInIds(ids)
     q.where(`picture.id IN (${ids.toString()})`)
       .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
       .cache(1000);
@@ -375,7 +395,7 @@ export class PictureService {
    * @returns
    * @memberof PictureService
    */
-  public async getHotPictures() {
+  public async calculateHotPictures() {
     const data = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.isPrivate=:isPrivate', { isPrivate: false })
       .select('picture.id, picture.views, picture.createTime')
@@ -419,10 +439,10 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public select = (user: Maybe<UserEntity>) => {
+  public select = (user: Maybe<UserEntity>, options?: ISelectOptions) => {
     const q = this.pictureRepository.createQueryBuilder('picture');
-    this.selectInfo(q, user);
     q.orderBy('picture.createTime', 'DESC');
+    this.selectInfo(q, user, options);
     return q;
   }
 
@@ -431,8 +451,8 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public selectList = (user: Maybe<UserEntity>, query?: GetPictureListDto) => {
-    const q = this.select(user);
+  public selectList = (user: Maybe<UserEntity>, query: GetPictureListDto, options?: ISelectOptions) => {
+    const q = this.select(user, options);
     if (query) {
       if (query.timestamp) {
         q.where('picture.createTime <= :time', { time: query.time });
@@ -448,33 +468,40 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, value = 'user') => {
-    q.leftJoinAndSelect('picture.user', value)
-      .loadRelationCountAndMap(
-        'picture.likedCount', 'picture.activities', 'activity',
-        qb => qb.andWhere('activity.like=:like', { like: true }),
-      );
-    this.userService.selectBadge(q);
-    if (user) {
-      q
-        .loadRelationCountAndMap(
+  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, options?: ISelectOptions) => {
+    q.leftJoinAndSelect('picture.user', options?.value || 'user');
+    if (options && options.info) {
+      const pictureSelect = fieldsProjection(options.info, { path: options?.path || '' });
+      const userSelect = fieldsProjection(options.info, { path: `${options?.path ? `${options?.path}.` : ''}user` });
+      if (userSelect.likedCount) {
+        q.loadRelationCountAndMap(
+          'picture.likedCount', 'picture.activities', 'activity',
+          qb => qb.andWhere('activity.like=:like', { like: true }),
+        );
+      }
+      if (userSelect['badge.id']) {
+        this.userService.selectBadge(q);
+      }
+      if (pictureSelect.isLike && user) {
+        q.loadRelationCountAndMap(
           'picture.isLike', 'picture.activities', 'activity',
           qb => qb.andWhere(
             'activity.userId=:userId AND activity.like=:like',
             { userId: user.id, like: true },
           ),
         );
+      }
+      if (pictureSelect['badge.id']) {
+        q.leftJoin(
+          sq => sq
+            .select()
+            .from(PictureBadgeActivityEntity, 'pictureBadgeActivity')
+            .take(2), 'pictureBadgeActivity', 'pictureBadgeActivity.pictureId=picture.id',
+        )
+          .leftJoinAndMapMany('picture.badge', BadgeEntity, 'pictureBadge', 'pictureBadgeActivity.badgeId=pictureBadge.id');
+      }
     }
   }
-
-  /**
-   * 没有任何关联的查询图片信息
-   *
-   * @memberof PictureService
-   */
-  public getRawOne = async (id: number) => this.pictureRepository.createQueryBuilder('picture')
-    .where('picture.id=:id', { id })
-    .getOne()
 
   public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
     .leftJoinAndSelect('picture.tags', 'tag')

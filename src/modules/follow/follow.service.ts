@@ -23,7 +23,7 @@ export class FollowService {
   ) {}
 
   public async create(user: UserEntity, followedId: number) {
-    const followUser = await this.userService.getBaseUser(followedId);
+    const followUser = await this.userService.findOne(followedId, null, ['badge']);
     if (!followUser) {
       throw new BadGatewayException('no_user');
     }
