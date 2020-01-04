@@ -36,7 +36,7 @@ export class UserController {
   public async getMyInfo(
     @User() user: UserEntity,
   ) {
-    return this.userService.getUser(user.id, user);
+    return this.userService.findOne(user.id, user);
   }
 
   @Get(':idOrName/picture')
@@ -45,7 +45,7 @@ export class UserController {
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
-    return this.userService.getUserPicture(idOrName, query, user);
+    // return this.userService.getUserPicture(idOrName, query, user);
   }
 
   @Get(':idOrName/picture/like')
@@ -54,7 +54,7 @@ export class UserController {
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
-    return this.userService.getUserLikePicture(idOrName, query, user);
+    // return this.userService.getUserLikePicture(idOrName, query, user);
   }
 
   @Post(':name/setting/profile')
@@ -75,7 +75,7 @@ export class UserController {
     @Param('id') id: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.userService.getUser(id, user);
+    return this.userService.findOne(id, user);
   }
 
   @Get(':name')
@@ -83,7 +83,7 @@ export class UserController {
     @Param('name') username: string,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.userService.getUser(username, user);
+    return this.userService.findOne(username, user);
   }
 
   @Get(':idOrName/collection')

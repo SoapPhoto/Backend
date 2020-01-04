@@ -60,7 +60,7 @@ export class OauthServerService {
     if (infoType !== type) {
       throw new UnauthorizedException();
     }
-    const userInfo = await this.userService.getBaseUser(user.id);
+    const userInfo = await this.userService.findOne(user.id, null, ['badge']);
     if (!userInfo) {
       throw new UnauthorizedException('user_credentials_invalid');
     }

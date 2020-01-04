@@ -3,28 +3,28 @@ import {
   forwardRef,
   Inject,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
-import { omit } from 'lodash';
+import { omit, isArray } from 'lodash';
+import { fieldsProjection } from 'graphql-fields-list';
 
 import { validator } from '@common/validator';
-import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { plainToClass, classToPlain } from 'class-transformer';
-import { ValidationError } from 'class-validator';
 import { ValidationException } from '@server/common/exception/validation.exception';
+import { GraphQLResolveInfo } from 'graphql';
 import { CreateUserDto, UpdateProfileSettingDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
 import { Role } from './enum/role.enum';
 import { FileService } from '../file/file.service';
 import { BadgeEntity } from '../badge/badge.entity';
 import { BadgeService } from '../badge/badge.service';
+import { GetPictureListDto } from '../picture/dto/picture.dto';
 
 @Injectable()
 export class UserService {
@@ -124,21 +124,6 @@ export class UserService {
     };
   }
 
-  /**
-   * 查询用户徽章
-   *
-   * @template E
-   * @param {SelectQueryBuilder<E>} q
-   * @param {string} [value='user']
-   * @returns
-   * @memberof UserService
-   */
-  public selectBadge<E>(q: SelectQueryBuilder<E>, value = 'user') {
-    return q
-      .leftJoin(this.badgeService.userActivityMetadata.tableName, 'userBadgeActivity', `userBadgeActivity.userId=${value}.id`)
-      .leftJoinAndMapMany(`${value}.badge`, BadgeEntity, 'userBadge', 'userBadgeActivity.badgeId=userBadge.id');
-  }
-
   public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
     const q = this.userEntity.createQueryBuilder('user')
       .where('user.username=:username', { username });
@@ -157,16 +142,7 @@ export class UserService {
     return undefined;
   }
 
-  /**
-   * 获取用户的详细信息
-   *
-   * @param {number} query
-   * @param {(Maybe<UserEntity> | boolean)} user
-   * @param {string[]} [groups]
-   * @returns {Promise<UserEntity>}
-   * @memberof UserService
-   */
-  public async getUser(query: ID, user: Maybe<UserEntity> | boolean, groups?: string[]) {
+  public async findOne(query: ID, _user: Maybe<UserEntity>, info?: GraphQLResolveInfo | string[]) {
     const q = this.userEntity.createQueryBuilder('user');
     const isId = validator.isNumber(query) || validator.isNumberString(query as string);
     if (isId) {
@@ -174,9 +150,47 @@ export class UserService {
     } else {
       q.where('user.username=:username', { username: query });
     }
-    this.selectBadge(q);
+    if (isArray(info)) {
+      this.selectInfo(q, {
+        select: info,
+        value: 'user',
+      });
+    } else {
+      this.selectInfo(q, {
+        info,
+        value: 'user',
+      });
+    }
     const data = await q.getOne();
     return data;
+  }
+
+  public selectInfo<E>(q: SelectQueryBuilder<E>, options?: ISelectOptions) {
+    if (options?.info) {
+      const select = fieldsProjection(options.info);
+      if (select['badge.id']) {
+        this.selectBadge(q, options.value);
+      }
+    }
+    if (options?.select && options?.select?.includes('badge')) {
+      this.selectBadge(q, options.value);
+    }
+    return q;
+  }
+
+  /**
+   * 查询用户徽章
+   *
+   * @template E
+   * @param {SelectQueryBuilder<E>} q
+   * @param {string} [value='user']
+   * @returns
+   * @memberof UserService
+   */
+  public selectBadge<E>(q: SelectQueryBuilder<E>, value = 'user') {
+    return q
+      .leftJoin(this.badgeService.userActivityMetadata.tableName, 'userBadgeActivity', `userBadgeActivity.userId=${value}.id`)
+      .leftJoinAndMapMany(`${value}.badge`, BadgeEntity, 'userBadge', 'userBadgeActivity.badgeId=userBadge.id');
   }
 
   public async getRawIdsList(ids: string[], user: Maybe<UserEntity>) {
@@ -184,43 +198,6 @@ export class UserService {
       .where('user.id IN (:...ids)', { ids });
     this.selectBadge(q);
     return q.getMany();
-  }
-
-  public async getEmailUser(email: string) {
-    return this.userEntity.createQueryBuilder('user')
-      .where('user.email=:email', { email })
-      .getOne();
-  }
-
-  public async getBaseUser(id: ID) {
-    const q = this.userEntity.createQueryBuilder('user');
-    if (this.isId(id)) {
-      q.where('user.id=:id', { id });
-    } else {
-      q.where('user.username=:username', { username: id });
-    }
-    this.selectBadge(q);
-    return q.getOne();
-  }
-
-  public async userLikesCount(id: number) {
-    return this.pictureService.userLikesCount(id);
-  }
-
-  public async getUserPicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
-    return this.pictureService.getUserPicture(idOrName, query, user);
-  }
-
-  public async getUserLikePicture(idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) {
-    return this.pictureService.getUserLikePicture(idOrName, query, user);
-  }
-
-  public async getUserPreviewPictures(username: string, limit: number) {
-    return this.pictureService.getUserPreviewPictures(username, limit);
-  }
-
-  public async getUserLikedCount(id: number) {
-    return this.pictureService.getUserLikedCount(id);
   }
 
   public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {

@@ -31,6 +31,6 @@ export class TagController {
     @User() user: UserEntity,
     @Query() query: GetTagPictureListDto,
   ) {
-    return this.tagService.getTagPicture(name, user, query);
+    // return this.tagService.getTagPicture(name, user, query);
   }
 }

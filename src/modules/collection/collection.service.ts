@@ -11,6 +11,7 @@ import { UserService } from '@server/modules/user/user.service';
 import { classToPlain } from 'class-transformer';
 import { validator } from '@common/validator';
 import { Role } from '@server/modules/user/enum/role.enum';
+import { GraphQLResolveInfo } from 'graphql';
 import { CollectionEntity } from './collection.entity';
 import {
   CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto, UpdateCollectionDot,
@@ -84,7 +85,7 @@ export class CollectionService {
    */
   public async addPicture(id: number, pictureId: number, user: UserEntity) {
     const [picture, collection] = await Promise.all([
-      this.pictureService.getRawOne(pictureId),
+      this.pictureService.findOne(pictureId, user),
       this.collectionEntity.findOne(id),
     ]);
     if (!picture) {
@@ -210,6 +211,7 @@ export class CollectionService {
     id: number,
     query: GetCollectionPictureListDto,
     user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo,
   ) {
     const collection = await this.collectionEntity.findOne(id);
     const owner = user && collection && user.id === collection.user.id;
@@ -227,7 +229,7 @@ export class CollectionService {
     if (!owner) {
       countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
-    const dataQuery = this.pictureService.getCollectionPictureListQuery(id, user);
+    const dataQuery = this.pictureService.getCollectionPictureListQuery(id, user, info);
     dataQuery
       .limit(query.pageSize)
       .offset((query.page - 1) * query.pageSize);

@@ -19,7 +19,7 @@ export class PictureScheduleService extends NestSchedule {
   @Cron('0 */1 * * *', { key: 'picture-hot' })
   public async cron() {
     const redisClient = this.redisService.getClient();
-    const data = await this.pictureService.getHotPictures();
+    const data = await this.pictureService.calculateHotPictures();
     await redisClient.zadd('picture_hot', ...data);
     console.log(dayjs().format(), 'picture hot OK!!!!!!!!');
   }

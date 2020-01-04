@@ -1,9 +1,10 @@
 import {
-  Args, Context, Query, Resolver, Mutation,
+  Args, Context, Query, Resolver, Mutation, Info,
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Roles } from '@server/common/decorator/roles.decorator';
+import { GraphQLResolveInfo } from 'graphql';
 import { CollectionService } from './collection.service';
 import { UserEntity } from '../user/user.entity';
 import { GetCollectionPictureListDto } from './dto/collection.dto';
@@ -29,8 +30,9 @@ export class CollectionResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args('query') query: GetCollectionPictureListDto,
     @Args('id') id: number,
+    @Info() info: GraphQLResolveInfo,
   ) {
-    return this.collectionService.getCollectionPictureList(id, query, user);
+    return this.collectionService.getCollectionPictureList(id, query, user, info);
   }
 
   @Mutation()

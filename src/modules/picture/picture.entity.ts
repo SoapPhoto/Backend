@@ -144,7 +144,7 @@ export class PictureEntity extends BaseEntity {
 
   /** 图片作者 */
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.pictures, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.pictures)
   @Expose()
   public readonly user!: UserEntity;
 
@@ -168,7 +168,7 @@ export class PictureEntity extends BaseEntity {
   public keywords!: string;
 
   @Expose()
-  public badge!: BadgeEntity[];
+  public badge: BadgeEntity[] = [];
 
   public info!: CollectionPictureEntity[];
 

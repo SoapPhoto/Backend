@@ -23,7 +23,7 @@ export class AuthService {
   public async validatorEmail(query: ValidatorEmailDto) {
     const { identifier, verificationToken } = query;
     const id = Buffer.from(`${query.id}=`, 'base64').toString('ascii');
-    const userInfo = await this.userService.getUser(id, null, [Role.ADMIN]);
+    const userInfo = await this.userService.findOne(id, null);
     if (userInfo) {
       if (userInfo.isVerified() || userInfo.signupType !== SignupType.EMAIL) {
         throw new BadGatewayException('verified');
@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   public async resetMail(user: UserEntity) {
-    const userInfo = await this.userService.getUser(user.id, null, [Role.ADMIN]);
+    const userInfo = await this.userService.findOne(user.id, null);
     if (!userInfo) {
       throw new BadGatewayException('no_user');
     }

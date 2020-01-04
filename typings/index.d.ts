@@ -10,6 +10,13 @@ type RecordPartial<K extends keyof any, T> = {
 
 type ID = string | number;
 
+interface ISelectOptions {
+  info?: import('graphql').GraphQLResolveInfo;
+  value?: string;
+  select?: string[];
+  [key: string]: any;
+}
+
 interface IEXIF {
   orientation?: number;
   meteringMode?: string;

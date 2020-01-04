@@ -67,7 +67,7 @@ export class CommentService {
   }
 
   public async create(user: UserEntity, data: CreatePictureCommentDot, id: number, commentId?: number) {
-    const picture = await this.pictureService.getOne(id);
+    const picture = await this.pictureService.findOne(id, user);
     if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
       throw new BadGatewayException('no_exist_picture');
     }
