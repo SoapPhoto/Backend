@@ -51,7 +51,6 @@ export class UserController {
     const list = await this.userService.findAllUsers();
     list.forEach(async (user) => {
       if (/githubusercontent.com/g.test(user.avatar)) {
-        console.log(user.avatar);
         const data = await this.qiniuService.fetch(user.avatar, `${Buffer.from('AVATAR').toString('base64')}-${uid()}`);
         if (!data) return { status: 'error' };
         await this.fileService.create({
@@ -60,8 +59,8 @@ export class UserController {
           userId: user.id,
           type: FileType.AVATAR,
           originalname: user.avatar,
-          size: data.size,
-          mimetype: data.mimetype,
+          size: data.fsize,
+          mimetype: data.mimeType,
         });
         this.userService.updateUser(user, { avatar: data.key });
         return {
