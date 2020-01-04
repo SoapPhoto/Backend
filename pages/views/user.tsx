@@ -32,7 +32,6 @@ import {
   InfoItemCount,
   InfoItemLabel,
   InfoBox,
-  Christmas,
   AvatarContent,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
@@ -154,7 +153,7 @@ const UserInfo = observer(() => {
       <HeaderGrid columns="140px auto" gap="32px">
         <AvatarContent>
           <AvatarBox>
-            <Christmas size={64} />
+            {/* <Christmas size={64} /> */}
           </AvatarBox>
           <Avatar src={user.avatar} size={140} />
         </AvatarContent>
