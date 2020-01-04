@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { GetTagPictureListDto } from './dto/tag.dto';
 import { TagEntity } from './tag.entity';
 
 @Injectable()
@@ -42,9 +41,5 @@ export class TagService {
           .where('picture.isPrivate = 0'),
       )
       .getOne();
-  }
-
-  public async getTagPicture(name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) {
-    return this.pictureService.getTagPictureList(name, user, query);
   }
 }

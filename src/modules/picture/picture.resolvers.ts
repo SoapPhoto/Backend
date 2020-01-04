@@ -11,8 +11,9 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
-import { BadgeType } from '@common/enum/badge';
 import { User } from '@server/common/decorator/user.graphql.decorator';
+import { Loader } from '@server/shared/graphql/loader/loader.decorator';
+import DataLoader from 'dataloader';
 import {
   GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
 } from './dto/picture.dto';
@@ -21,6 +22,8 @@ import { CollectionService } from '../collection/collection.service';
 import { PictureEntity } from './picture.entity';
 import { CommentService } from '../comment/comment.service';
 import { BadgeService } from '../badge/badge.service';
+import { BadgePictureLoader } from '../badge/badge.loader';
+import { BadgeEntity } from '../badge/badge.entity';
 
 @Resolver('Picture')
 @UseGuards(AuthGuard)
@@ -40,8 +43,9 @@ export class PictureResolver {
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Args('words') words: string,
+    @Info() info: GraphQLResolveInfo,
   ) {
-    return this.pictureService.search(words, query, user);
+    return this.pictureService.search(words, query, user, info);
   }
 
 
@@ -62,8 +66,9 @@ export class PictureResolver {
   public async newPictures(
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetNewPictureListDto,
+    @Info() info: GraphQLResolveInfo,
   ) {
-    return this.pictureService.getNewList(user, query);
+    return this.pictureService.getNewList(user, query, info);
   }
 
   @Query()
@@ -145,5 +150,13 @@ export class PictureResolver {
   ) {
     if (!user) return [];
     return this.pictureService.getCurrentCollections(parent.id, user);
+  }
+
+  @ResolveProperty('badge')
+  public async badge(
+    @Parent() parent: PictureEntity,
+    @Loader(BadgePictureLoader.name) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,
+  ) {
+    return badgeLoader.load(parent.id);
   }
 }

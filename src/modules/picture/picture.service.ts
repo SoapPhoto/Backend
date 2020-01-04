@@ -104,14 +104,14 @@ export class PictureService {
     );
   }
 
-  public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+  public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const { length } = words;
     const splicedWords: string[] = nodejieba.extract(words, 20).map((v: any) => v.word);
     // eslint-disable-next-line no-restricted-syntax
     // for (const whiteSpaceSpliced of words.split(/\s+/)) {
     //   splicedWords.push(...nodejieba.tag(whiteSpaceSpliced).map((v: any) => v.word));
     // }
-    const q = this.selectList(user, query);
+    const q = this.selectList(user, query, { info, path: 'data' });
     this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
     if (length > 1 && splicedWords.length > 1) {
       q.andWhere(`MATCH(keywords) AGAINST('+${splicedWords.map(v => `${v}*`).join(' ~')}' IN boolean MODE)`);
@@ -126,8 +126,8 @@ export class PictureService {
     return listRequest(query, data, count);
   }
 
-  public getNewList = async (user: Maybe<UserEntity>, query: GetNewPictureListDto) => {
-    const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto)
+  public getNewList = async (user: Maybe<UserEntity>, query: GetNewPictureListDto, info: GraphQLResolveInfo) => {
+    const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto, { info, path: 'data' })
       .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.createTime > :after', { after: query.lastTime })
       .andWhere('picture.createTime <= :before', { before: query.time });
@@ -269,10 +269,10 @@ export class PictureService {
    * @param {GetPictureListDto} query
    * @memberof PictureService
    */
-  public async getFeedPictures(user: UserEntity, query: GetPictureListDto) {
+  public async getFeedPictures(user: UserEntity, query: GetPictureListDto, info: GraphQLResolveInfo) {
     const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
     if (ids.length === 0) return listRequest(query, [], 0);
-    const q = this.selectList(user, query);
+    const q = this.selectList(user, query, { info, path: 'data' });
     q.where('picture.userId IN (:ids)', { ids });
     const [data, count] = await q.cache(5000).getManyAndCount();
     return listRequest(query, classToPlain(data), count);
@@ -283,12 +283,12 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+  public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const [count, ids] = await this.activityService.getLikeList(idOrName, query, user);
     if (ids.length === 0) {
       return listRequest(query, [], count as number);
     }
-    const q = this.selectList(user, query);
+    const q = this.selectList(user, query, { info, path: 'data' });
     q.andWhere('picture.id IN (:...ids)', { ids });
     const data = await q.getMany();
     return listRequest(query, classToPlain(data), count as number);
@@ -299,8 +299,8 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto) => {
-    const q = this.selectList(user, query);
+  public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto, info: GraphQLResolveInfo) => {
+    const q = this.selectList(user, query, { info, path: 'data' });
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
       .andWhere('picture.isPrivate=:private', { private: false })
@@ -380,12 +380,12 @@ export class PictureService {
     return listRequest(query, classToPlain(data), count as number);
   }
 
-  public getCollectionPictureListQuery = (id: number, user: Maybe<UserEntity>) => {
+  public getCollectionPictureListQuery = (id: number, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const q = this.pictureRepository.createQueryBuilder('picture')
       .leftJoin(this.collectionService.activityMetadata.tableName, 'collectionActivity', 'collectionActivity.pictureId=picture.id')
       .leftJoin(this.collectionService.metadata.tableName, 'collection', 'collection.id=collectionActivity.collectionId')
       .where('collection.id=:id', { id });
-    this.selectInfo(q, user);
+    this.selectInfo(q, user, { info, path: 'data' });
     return q;
   }
 
@@ -473,7 +473,7 @@ export class PictureService {
     if (options && options.info) {
       const pictureSelect = fieldsProjection(options.info, { path: options?.path || '' });
       const userSelect = fieldsProjection(options.info, { path: `${options?.path ? `${options?.path}.` : ''}user` });
-      if (userSelect.likedCount) {
+      if (pictureSelect.likedCount) {
         q.loadRelationCountAndMap(
           'picture.likedCount', 'picture.activities', 'activity',
           qb => qb.andWhere('activity.like=:like', { like: true }),
@@ -491,15 +491,15 @@ export class PictureService {
           ),
         );
       }
-      if (pictureSelect['badge.id']) {
-        q.leftJoin(
-          sq => sq
-            .select()
-            .from(PictureBadgeActivityEntity, 'pictureBadgeActivity')
-            .take(2), 'pictureBadgeActivity', 'pictureBadgeActivity.pictureId=picture.id',
-        )
-          .leftJoinAndMapMany('picture.badge', BadgeEntity, 'pictureBadge', 'pictureBadgeActivity.badgeId=pictureBadge.id');
-      }
+      // if (pictureSelect['badge.id']) {
+      //   q.leftJoin(
+      //     sq => sq
+      //       .select()
+      //       .from(PictureBadgeActivityEntity, 'pictureBadgeActivity')
+      //       .take(2), 'pictureBadgeActivity', 'pictureBadgeActivity.pictureId=picture.id',
+      //   )
+      //     .leftJoinAndMapMany('picture.badge', BadgeEntity, 'pictureBadge', 'pictureBadgeActivity.badgeId=pictureBadge.id');
+      // }
     }
   }
 

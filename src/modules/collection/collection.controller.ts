@@ -82,6 +82,6 @@ export class CollectionController {
     @Query() query: GetCollectionPictureListDto,
     @User() user: Maybe<UserEntity>,
   ) {
-    return this.collectionService.getCollectionPictureList(collectionId, query, user);
+    // return this.collectionService.getCollectionPictureList(collectionId, query, user);
   }
 }

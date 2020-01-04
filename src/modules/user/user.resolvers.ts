@@ -70,6 +70,35 @@ export class UserResolver {
     return this.collectionService.getUserCollectionList(id, query, user);
   }
 
+  @Query()
+  public async userPicturesByName(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('username') username: string,
+    @Args('type') type: UserPictureType,
+    @Args('query') query: GetPictureListDto,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    if (type === UserPictureType.MY) {
+      return this.pictureService.getUserPicture(username, query, user, info);
+    }
+    return this.pictureService.getUserLikePicture(username, query, user, info);
+  }
+
+  @Query()
+  public async userPicturesById(
+    @Context('user') user: Maybe<UserEntity>,
+    @Args('id') id: string,
+    @Args('type') type: UserPictureType,
+    @Args('query') query: GetPictureListDto,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    if (type === UserPictureType.MY) {
+      return this.pictureService.getUserPicture(id, query, user, info);
+    }
+    return this.pictureService.getUserLikePicture(id, query, user, info);
+  }
+
+
   @Mutation()
   public async updateProfile(
     @User() user: UserEntity,

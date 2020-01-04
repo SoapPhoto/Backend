@@ -37,20 +37,20 @@ type Query {
     query: CollectionsQueryInput!
   ): Collections
 
-  # userPicturesByName(
-  #   "类型"
-  #   type: UserPictureType = MY
-  #   "用户名"
-  #   username: String!
-  #   query: PicturesQueryInput!
-  # ): Pictures
-  # userPicturesById(
-  #   "类型"
-  #   type: UserPictureType = MY
-  #   "id"
-  #   id: Float!
-  #   query: PicturesQueryInput
-  # ): Pictures
+  userPicturesByName(
+    "类型"
+    type: UserPictureType = MY
+    "用户名"
+    username: String!
+    query: PicturesQueryInput!
+  ): Pictures
+  userPicturesById(
+    "类型"
+    type: UserPictureType = MY
+    "id"
+    id: Float!
+    query: PicturesQueryInput
+  ): Pictures
 }
 
 type Mutation {

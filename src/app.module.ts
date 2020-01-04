@@ -21,6 +21,7 @@ import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 import ormconfig from './ormconfig';
 import { GraphqlService } from './shared/graphql/graphql.service';
+import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -75,6 +76,10 @@ import { GraphqlService } from './shared/graphql/graphql.service';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DataLoaderInterceptor,
     },
   ],
 })
