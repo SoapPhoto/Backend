@@ -49,25 +49,26 @@ export class UserController {
   @Roles(Role.OWNER)
   public async githubAvatar() {
     const list = await this.userService.findAllUsers();
-    list.forEach(async (user) => {
+    await Promise.all(list.map(async (user) => {
       if (/githubusercontent.com/g.test(user.avatar)) {
         const data = await this.qiniuService.fetch(user.avatar, `${Buffer.from('AVATAR').toString('base64')}-${uid()}`);
-        if (!data) return { status: 'error' };
-        await this.fileService.create({
-          key: data.key,
-          hash: data.hash,
-          userId: user.id,
-          type: FileType.AVATAR,
-          originalname: user.avatar,
-          size: data.fsize,
-          mimetype: data.mimeType,
-        });
-        this.userService.updateUser(user, { avatar: data.key });
-        return {
-          status: 'done',
-        };
+        if (data) {
+          await this.fileService.create({
+            key: data.key,
+            hash: data.hash,
+            userId: user.id,
+            type: FileType.AVATAR,
+            originalname: user.avatar,
+            size: data.fsize,
+            mimetype: data.mimeType,
+          });
+          this.userService.updateUser(user, { avatar: data.key });
+        }
       }
-    });
+    }));
+    return {
+      status: 'done',
+    };
   }
 
   @Get(':idOrName/picture')
