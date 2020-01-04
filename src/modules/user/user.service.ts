@@ -212,6 +212,11 @@ export class UserService {
     });
   }
 
+  public async findAllUsers() {
+    return this.userEntity.createQueryBuilder('user')
+      .getMany();
+  }
+
   public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto) {
     const [, data] = await Promise.all([
       this.fileService.activated(body.key),

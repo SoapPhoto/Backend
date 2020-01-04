@@ -9,6 +9,7 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
+import uid from 'uniqid';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
@@ -17,10 +18,13 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { CollectionService } from '@server/modules/collection/collection.service';
 import { GetUserCollectionListDto } from '@server/modules/collection/dto/collection.dto';
+import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { UpdateProfileSettingDto } from './dto/user.dto';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import { FileService } from '../file/file.service';
+import { FileType } from '../file/enum/type.enum';
 
 @Controller('api/user')
 @UseGuards(AuthGuard)
@@ -29,6 +33,8 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
+    private readonly qiniuService: QiniuService,
+    private readonly fileService: FileService,
   ) {}
 
   @Get('whoami')
@@ -37,6 +43,32 @@ export class UserController {
     @User() user: UserEntity,
   ) {
     return this.userService.findOne(user.id, user);
+  }
+
+  @Get('githubAvatar')
+  @Roles(Role.OWNER)
+  public async githubAvatar() {
+    const list = await this.userService.findAllUsers();
+    list.forEach(async (user) => {
+      if (/githubusercontent.com/g.test(user.avatar)) {
+        console.log(user.avatar);
+        const data = await this.qiniuService.fetch(user.avatar, `${Buffer.from('AVATAR').toString('base64')}-${uid()}`);
+        if (!data) return { status: 'error' };
+        await this.fileService.create({
+          key: data.key,
+          hash: data.hash,
+          userId: user.id,
+          type: FileType.AVATAR,
+          originalname: user.avatar,
+          size: data.size,
+          mimetype: data.mimetype,
+        });
+        this.userService.updateUser(user, { avatar: data.key });
+        return {
+          status: 'done',
+        };
+      }
+    });
   }
 
   @Get(':idOrName/picture')

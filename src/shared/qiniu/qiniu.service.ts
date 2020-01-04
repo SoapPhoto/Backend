@@ -85,4 +85,22 @@ export class QiniuService {
     const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
     return qiniu.util.isQiniuCallback(mac, url, null, authorization);
   }
+
+  public async fetch(url: string, key: string): Promise<any> {
+    const bucketManager = this.createBucketManager();
+    return new Promise((resolve, reject) => {
+      bucketManager.fetch(url, this.config.scope!, key, (err, respBody, respInfo) => {
+        if (err) {
+          reject(err);
+          // throw err;
+        } else if (respInfo.statusCode === 200) {
+          resolve(respBody);
+        } else {
+          console.log(respInfo.statusCode);
+          console.log(respBody);
+          reject(respInfo);
+        }
+      });
+    });
+  }
 }
