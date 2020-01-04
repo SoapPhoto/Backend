@@ -230,5 +230,11 @@ export const Shadow = styled.div`
   background-position-y: 100%;
   filter: blur(10px);
   z-index: 0;
-  opacity: .2;
+  opacity: ${theme('styles.picture.shadow.opacity')};
+`;
+
+export const ImgBox = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 `;

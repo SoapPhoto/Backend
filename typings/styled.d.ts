@@ -68,6 +68,11 @@ declare module 'styled-components' {
         hover: string;
         active: string;
       };
+      picture: {
+        shadow: {
+          opacity: number;
+        };
+      };
     };
     layout: {
       header: {

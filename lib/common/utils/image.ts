@@ -70,6 +70,7 @@ export const pictureStyle = {
   thumb: '-pictureThumb',
   blur: '-pictureThumbBlur',
   itemprop: '-itemprop',
+  thumbSmall: '-pictureThumbSmall',
 };
 
 export type PictureStyle = keyof typeof pictureStyle;

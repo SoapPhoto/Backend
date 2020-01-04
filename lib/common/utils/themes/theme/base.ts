@@ -74,6 +74,11 @@ const theme: DefaultTheme = {
       hover: 'rgba(0,0,0,.55)',
       active: 'rgba(0,0,0,.7)',
     },
+    picture: {
+      shadow: {
+        opacity: 1,
+      },
+    },
   },
   layout: {
     header: {

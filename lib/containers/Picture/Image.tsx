@@ -3,7 +3,9 @@ import LazyLoad from 'react-lazyload';
 
 import { getPictureUrl } from '@lib/common/utils/image';
 import { IPictureItemProps } from './Item';
-import { ImageBox, ItemImage, Shadow } from './styles';
+import {
+  ImageBox, ItemImage, Shadow, ImgBox,
+} from './styles';
 
 interface IPictureImage extends IPictureItemProps {
   blur?: boolean;
@@ -18,24 +20,38 @@ export const PictureImage: React.FC<IPictureImage> = ({
 }) => {
   const height = (1 - (detail.width - detail.height) / detail.width) * 100 || 100;
   const imgRender = (
-    <>
-      <ItemImage
-        src={getPictureUrl(detail.key, size)}
+    <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
+      <ImgBox>
+        <ItemImage
+          src={getPictureUrl(detail.key, size)}
+        />
+      </ImgBox>
+      <Shadow
+        style={{
+          backgroundImage: `url(${getPictureUrl(detail.key, size)})`,
+          zIndex: -1,
+        }}
       />
-      <Shadow style={{ backgroundImage: `url(${getPictureUrl(detail.key, size)})` }} />
-    </>
+    </div>
   );
   return (
     <ImageBox height={height} background={detail.color}>
+      <ImgBox style={{ position: 'absolute' }}>
+        <img
+          style={{ filter: 'blur(20px)', width: '100%', borderRadius: '4px' }}
+          src={getPictureUrl(detail.key, 'thumbSmall')}
+          alt=""
+        />
+      </ImgBox>
       {
         lazyload ? (
           <LazyLoad resize height="100%" offset={400}>
             {imgRender}
           </LazyLoad>
         ) : (
-          <div>
+          <>
             {imgRender}
-          </div>
+          </>
         )
       }
     </ImageBox>
