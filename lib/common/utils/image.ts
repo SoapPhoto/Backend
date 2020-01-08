@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
+import {
+  transform, GCJ02, WGS84,
+} from 'gcoord';
 
 import { validator } from '@common/validator';
 import { changeToDu } from './gps';
@@ -85,6 +88,7 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
   if (validator.isEmpty(value) && label !== ExifProperties._Location) {
     return null;
   }
+  let gps = [];
   switch (label) {
     case ExifProperties.FocalLength:
       return round(value, 2);
@@ -100,18 +104,19 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
       if (!exifData.GPSLatitude) {
         return undefined;
       }
-      return [
-        changeToDu(
-          exifData.GPSLatitude[0],
-          exifData.GPSLatitude[1],
-          exifData.GPSLatitude[2],
-        ),
+      gps = transform([
         changeToDu(
           exifData.GPSLongitude[0],
           exifData.GPSLongitude[1],
           exifData.GPSLongitude[2],
         ),
-      ];
+        changeToDu(
+          exifData.GPSLatitude[0],
+          exifData.GPSLatitude[1],
+          exifData.GPSLatitude[2],
+        ),
+      ], WGS84, GCJ02);
+      return [gps[1], gps[0]];
     default:
       return value;
   }
