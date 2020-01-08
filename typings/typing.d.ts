@@ -18,6 +18,8 @@ declare module 'cache-manager-redis-store';
 
 declare module 'socks5-https-client/lib/Agent';
 
+declare module 'jsonp-get';
+
 declare module '*.json' {
   const value: any;
   export default value;

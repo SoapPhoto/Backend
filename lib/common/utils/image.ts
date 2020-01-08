@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
+import jsonpGet from 'jsonp-get';
 import {
   transform, GCJ02, WGS84,
 } from 'gcoord';
@@ -88,7 +89,7 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
   if (validator.isEmpty(value) && label !== ExifProperties._Location) {
     return null;
   }
-  let gps = [];
+  let gps: string[] = [];
   switch (label) {
     case ExifProperties.FocalLength:
       return round(value, 2);
@@ -104,19 +105,33 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
       if (!exifData.GPSLatitude) {
         return undefined;
       }
-      gps = transform([
-        changeToDu(
-          exifData.GPSLongitude[0],
-          exifData.GPSLongitude[1],
-          exifData.GPSLongitude[2],
-        ),
+      if (exifData.Make === 'Apple') {
+        gps = transform([
+          changeToDu(
+            exifData.GPSLongitude[0],
+            exifData.GPSLongitude[1],
+            exifData.GPSLongitude[2],
+          ),
+          changeToDu(
+            exifData.GPSLatitude[0],
+            exifData.GPSLatitude[1],
+            exifData.GPSLatitude[2],
+          ),
+        ], WGS84, GCJ02) as any as string[];
+        return [gps[1], gps[0]];
+      }
+      return [
         changeToDu(
           exifData.GPSLatitude[0],
           exifData.GPSLatitude[1],
           exifData.GPSLatitude[2],
         ),
-      ], WGS84, GCJ02);
-      return [gps[1], gps[0]];
+        changeToDu(
+          exifData.GPSLongitude[0],
+          exifData.GPSLongitude[1],
+          exifData.GPSLongitude[2],
+        ),
+      ];
     default:
       return value;
   }
@@ -301,6 +316,22 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   imgHtml.src = imgSrc;
   const fac = new window.FastAverageColor();
   const exif = await getImageEXIF(image);
+  if (exif.location) {
+    const data = await jsonpGet('http://api.map.baidu.com/reverse_geocoding/v3/', {
+      ak: '2m0Mq8pGR18U1Z7AzAslXoZ3wtt2a9Hi',
+      output: 'json',
+      location: exif.location?.toString(),
+      coordtype: 'gcj02ll',
+      callback: 'callback',
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      extensions_poi: 1,
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      extensions_road: true,
+    });
+    if (data.status === 0) {
+      console.log(data.result);
+    }
+  }
   info.make = exif.make;
   info.model = exif.model;
   info.exif = _.omit(exif, ['model', 'make']);

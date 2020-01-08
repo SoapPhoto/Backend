@@ -90,6 +90,7 @@
     "instagram-private-api": "^1.37.1",
     "js-cookie": "^2.2.1",
     "jsonp": "^0.2.1",
+    "jsonp-get": "^0.0.6",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
     "markdown-it": "^10.0.0",
