@@ -82,7 +82,7 @@ export function getImageUrl(image: File) {
 }
 
 export function convertEXIFValue(label: ExifProperties, value: any, exifData: any) {
-  if (validator.isEmpty(value)) {
+  if (validator.isEmpty(value) && label !== ExifProperties._Location) {
     return null;
   }
   switch (label) {
