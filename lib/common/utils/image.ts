@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { omit, pick } from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
 import jsonpGet from 'jsonp-get';
@@ -7,8 +7,10 @@ import {
 } from 'gcoord';
 
 import { validator } from '@common/validator';
+import { imageClassify } from '@lib/services/picture';
 import { changeToDu } from './gps';
 import { round } from './math';
+import { PictureLocation } from '../interfaces/picture';
 
 export const ORIENT_TRANSFORMS: Record<number, string> = {
   1: '',
@@ -64,6 +66,7 @@ export interface IImageInfo {
   width: number;
   make?: string;
   model?: string;
+  location?: PictureLocation;
 }
 
 export const pictureStyle = {
@@ -223,10 +226,12 @@ export function getImageMinSize(
 
 export function previewImage(
   img: HTMLImageElement,
+  minSize = 600,
   orientation?: number,
+  isBase64 = false,
 ): Promise<string> {
   return new Promise((resolve) => {
-    const [width, height] = getImageMinSize(img.naturalWidth, img.naturalHeight, 600, 600);
+    const [width, height] = getImageMinSize(img.naturalWidth, img.naturalHeight, minSize, minSize);
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
     switch (orientation) {
@@ -287,11 +292,41 @@ export function previewImage(
         canvas.width = width;
         canvas.height = height;
     }
-    ctx.drawImage(img, 0, 0, width, height);
-    canvas.toBlob((blob) => {
-      resolve(window.URL.createObjectURL(blob));
-    });
+    if (isBase64) {
+      resolve(canvas.toDataURL());
+    } else {
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        resolve(window.URL.createObjectURL(blob));
+      });
+    }
   });
+}
+
+export async function getImageClassify(base64: string) {
+  const data = await imageClassify(base64);
+  console.log(data);
+}
+
+export async function getLocation(gcj: number[]) {
+  const data = await jsonpGet('http://api.map.baidu.com/reverse_geocoding/v3/', {
+    ak: '2m0Mq8pGR18U1Z7AzAslXoZ3wtt2a9Hi',
+    output: 'json',
+    location: gcj.toString(),
+    coordtype: 'gcj02ll',
+    callback: 'callback',
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    extensions_road: true,
+  });
+  if (data.status === 0) {
+    const location: PictureLocation = {
+      ...data.result.addressComponent,
+      ...pick(data.result, ['sematic_description', 'business', 'formatted_address']),
+    };
+    location.roads = data.result.roads.map((v: any) => v.name);
+    return location;
+  }
+  throw new Error(data);
 }
 
 /**
@@ -310,6 +345,7 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
     width: 0,
     make: undefined,
     model: undefined,
+    location: undefined,
   };
   const imgSrc = window.URL.createObjectURL(image);
   const imgHtml = document.createElement('img');
@@ -317,26 +353,13 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
   const fac = new window.FastAverageColor();
   const exif = await getImageEXIF(image);
   if (exif.location) {
-    const data = await jsonpGet('http://api.map.baidu.com/reverse_geocoding/v3/', {
-      ak: '2m0Mq8pGR18U1Z7AzAslXoZ3wtt2a9Hi',
-      output: 'json',
-      location: exif.location?.toString(),
-      coordtype: 'gcj02ll',
-      callback: 'callback',
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      extensions_poi: 1,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      extensions_road: true,
-    });
-    if (data.status === 0) {
-      console.log(data.result);
-    }
+    info.location = await getLocation(exif.location);
   }
   info.make = exif.make;
   info.model = exif.model;
-  info.exif = _.omit(exif, ['model', 'make']);
+  info.exif = omit(exif, ['model', 'make']);
   const previewSrc = await (async () => new Promise<string>((res) => {
-    imgHtml.onload = async () => {
+    const setInfo = async () => {
       const color = fac.getColor(imgHtml);
       info.color = color.hex;
       info.isDark = color.isDark;
@@ -349,9 +372,17 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
           info.width = imgHtml.naturalHeight;
         }
       }
-      res(await previewImage(imgHtml, info.exif.orientation));
+      res(await previewImage(imgHtml, 600, info.exif.orientation));
     };
+    if (imgHtml.complete) {
+      setInfo();
+    } else {
+      imgHtml.onload = async () => {
+        setInfo();
+      };
+    }
   }))();
+  await getImageClassify(await previewImage(imgHtml, 400, info.exif.orientation, true));
   return [info, previewSrc];
 }
 

@@ -12,6 +12,8 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
+import { RedisService } from 'nestjs-redis';
+import dayjs from 'dayjs';
 
 import { CommentService } from '@server/modules/comment/comment.service';
 import { GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
@@ -22,9 +24,8 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { RedisService } from 'nestjs-redis';
-import dayjs from 'dayjs';
 import { keyword } from '@server/common/utils/keyword';
+import { BaiduService } from '@server/shared/baidu/baidu.service';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
@@ -39,6 +40,7 @@ export class PictureController {
     private readonly pictureService: PictureService,
     private readonly fileService: FileService,
     private readonly redisService: RedisService,
+    private readonly baiduService: BaiduService,
   ) {}
 
   @Post()
@@ -95,6 +97,19 @@ export class PictureController {
     @Query() query: GetPictureListDto,
   ) {
     // return this.pictureService.find(user,  query);
+  }
+
+  @Post('imageClassify')
+  @Roles(Role.USER)
+  public async getImageClassify(
+    @Body() { image }: {image: string},
+  ) {
+    if (image) {
+      return this.baiduService.getImageClassify(image);
+    }
+    return [];
+    // Axios.post('https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general');
+    // console.log(data);
   }
 
   @Get(':id([0-9]+)')

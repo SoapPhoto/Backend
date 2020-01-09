@@ -92,5 +92,8 @@ declare namespace NodeJS {
 
     OAUTH_WEIBO_CLIENT_ID: string;
     OAUTH_WEIBO_CLIENT_SECRET: string;
+
+    BAIDU_CLIENT_ID: string;
+    BAIDU_CLIENT_SECRET: string;
   }
 }

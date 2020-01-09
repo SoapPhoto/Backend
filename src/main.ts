@@ -10,6 +10,7 @@ import { NestFactory } from '@nestjs/core';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import bodyParser from 'body-parser';
 import RateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import Redis from 'ioredis';
@@ -35,6 +36,8 @@ const bootstrap = async () => {
   //   max: 10000,
   // });
   // server.use(limiter);
+  server.use(bodyParser.json({ limit: '50mb' }));
+  server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   server.use(helmet());
   server.use(compression());
   server.use(cookieParser());

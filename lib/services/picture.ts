@@ -20,3 +20,11 @@ export const updatePicture = async (id: number, data: UpdatePictureDot, headers?
 export const deletePicture = async (id: number) => (
   request.delete<PictureEntity>(`/api/picture/${id}`)
 );
+
+export const imageClassify = async (base64: string) => {
+  const params = new URLSearchParams();
+  params.append('image', base64);
+  return request.post('/api/picture/imageClassify', {
+    image: base64,
+  });
+};

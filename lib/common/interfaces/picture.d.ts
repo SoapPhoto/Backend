@@ -8,6 +8,8 @@ export type CreatePictureAddDot = import('@server/modules/picture/dto/picture.dt
 
 export type UpdatePictureDot = import('@server/modules/picture/dto/picture.dto').UpdatePictureDot;
 
+export type PictureLocation = import('@server/modules/picture/interface/location.interface').PictureLocation;
+
 export interface IPictureLikeRequest {
   count: number;
   isLike: boolean;

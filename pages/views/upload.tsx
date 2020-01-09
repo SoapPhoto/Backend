@@ -153,9 +153,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const setFile = async (file: File) => {
     if (isImage(file.name)) {
       imageRef.current = file;
-      const [info, url] = await getImageInfo(file);
-      setImageUrl(url);
-      setImageInfo(info);
+      try {
+        const [info, url] = await getImageInfo(file);
+        setImageUrl(url);
+        setImageInfo(info);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       Toast.warning(t('upload.message.image_format_error'));
     }

@@ -8,6 +8,7 @@ import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
 import { NotificationModule } from '@server/modules/notification/notification.module';
 import { TagModule } from '@server/modules/tag/tag.module';
 import { UserModule } from '@server/modules/user/user.module';
+import { BaiduModule } from '@server/shared/baidu/baidu.module';
 import { PictureController } from './picture.controller';
 import { PictureEntity } from './picture.entity';
 import { PictureResolver } from './picture.resolvers';
@@ -31,6 +32,7 @@ import { FollowModule } from '../follow/follow.module';
     forwardRef(() => CollectionModule),
     forwardRef(() => BadgeModule),
     forwardRef(() => FollowModule),
+    forwardRef(() => BaiduModule),
   ],
   providers: [PictureService, PictureResolver, PictureScheduleService],
   controllers: [PictureController],
