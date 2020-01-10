@@ -71,11 +71,14 @@ export class UserScreenStore extends BaseStore {
     });
   }
 
+  @action public setUsername = (username: string) => this.username = username;
+
   @action public watch = () => watchQueryCacheObservable(this.client.watchQuery<IUserGqlReq>({
     query: UserInfo,
     variables: { username: this.username },
     fetchPolicy: 'cache-only',
   }), (data) => {
+    console.log(this.username, data.user.username);
     if (data.user.username !== this.username) return;
     runInAction(() => merge(this.user, data.user));
   }, {

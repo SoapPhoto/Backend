@@ -124,7 +124,7 @@ const UserInfo = observer(() => {
     let func = push;
     if (isReplace) func = replace;
     if (value) {
-      func(`/views/user?${qs.stringify(params)}`, `${pathname}?modal=${label}`, {
+      func(`/views/user?${qs.stringify(params as any)}`, `${pathname}?modal=${label}`, {
         shallow: true,
       });
       Histore.set('modal', `child-${label}`);
@@ -134,7 +134,7 @@ const UserInfo = observer(() => {
         back();
         Histore.set('modal', `child-${label}-back`);
       } else {
-        func(`/views/user?${qs.stringify(params)}`, pathname, {
+        func(`/views/user?${qs.stringify(params as any)}`, pathname, {
           shallow: true,
         });
       }
@@ -267,6 +267,7 @@ User.getInitialProps = async ({
     if (query.modal !== 'follower' && query.modal !== 'followed') res?.redirect(pathname);
   }
   userCollectionStore.setUsername(username!);
+  userStore.setUsername(username!);
   if (isPop) {
     all.push(userStore.getCache(username));
   } else {
