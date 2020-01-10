@@ -52,7 +52,7 @@ export class PictureController {
     const { info, tags = [], ...restInfo } = body;
     const file = await this.fileService.getOne(body.key);
     if (file) {
-      await Promise.all([
+      const [, picture] = await Promise.all([
         this.fileService.activated(body.key),
         this.pictureService.create({
           ...info,
@@ -66,6 +66,7 @@ export class PictureController {
           hash: file.hash,
         }),
       ]);
+      await this.fileService.bindPicture(body.key, picture);
       return;
     }
     throw new BadRequestException('no file');

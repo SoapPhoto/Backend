@@ -18,7 +18,7 @@ export class FileEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, { eager: true })
   public readonly user?: UserEntity;
 
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => PictureEntity, { eager: true, onDelete: 'CASCADE' })
   public readonly picture?: PictureEntity;
 
   @Column({ type: 'bool', default: false })

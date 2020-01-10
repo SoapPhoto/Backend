@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { FileEntity } from './file.entity';
 import { CreateFileDot } from './dto/file.dto';
 import { UserService } from '../user/user.service';
+import { PictureEntity } from '../picture/picture.entity';
 
 @Injectable()
 export class FileService {
@@ -36,6 +37,15 @@ export class FileService {
       .createQueryBuilder()
       .update(FileEntity)
       .set({ active: true })
+      .where('key=:key', { key })
+      .execute();
+  }
+
+  public async bindPicture(key: string, picture: PictureEntity) {
+    return this.fileRepository
+      .createQueryBuilder()
+      .update(FileEntity)
+      .set({ picture })
       .where('key=:key', { key })
       .execute();
   }

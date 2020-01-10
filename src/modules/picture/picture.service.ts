@@ -68,9 +68,10 @@ export class PictureService {
       keywords.unshift(...newData.tags.map(tag => tag.name));
     }
     newData.keywords = [...new Set(keywords)].join('|');
-    return classToPlain(await this.pictureRepository.save(
+    const picture = await this.pictureRepository.save(
       this.pictureRepository.create(newData),
-    ), { groups: [Role.OWNER] });
+    );
+    return picture;
   }
 
   public async update(id: number, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
