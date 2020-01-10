@@ -309,7 +309,7 @@ export async function getImageClassify(base64: string) {
 }
 
 export async function getLocation(gcj: number[]) {
-  const data = await jsonpGet('http://api.map.baidu.com/reverse_geocoding/v3/', {
+  const data = await jsonpGet('//api.map.baidu.com/reverse_geocoding/v3/', {
     ak: process.env.BAIDU_MAP_AK,
     output: 'json',
     location: gcj.toString(),
