@@ -83,7 +83,11 @@ export class QiniuService {
 
   public isQiniuCallback(url: string, authorization: string) {
     const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
-    return qiniu.util.isQiniuCallback(mac, url, null, authorization);
+    try {
+      return qiniu.util.isQiniuCallback(mac, url, null, authorization);
+    } catch {
+      return false;
+    }
   }
 
   public async fetch(url: string, key: string): Promise<any> {

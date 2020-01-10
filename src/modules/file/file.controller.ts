@@ -50,7 +50,7 @@ export class FileController {
     @Req() req: Request,
     @Headers('authorization') token: string,
   ) {
-    if (this.qiniuService.isQiniuCallback(req.originalUrl, token) && data.userId) {
+    if (this.qiniuService.isQiniuCallback(`https://${req.headers.host}${req.originalUrl}`, token) && data.userId) {
       try {
         return this.fileService.create(data);
       } catch (err) {
