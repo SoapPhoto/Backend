@@ -106,8 +106,13 @@ const UserInfo = observer(() => {
   const { screen } = useStores();
   const { isLogin, userInfo } = useAccountStore();
   const { userStore } = screen;
-  const { user, watch } = userStore;
+  const {
+    user, watch, setUsername, username,
+  } = userStore;
   useEffect(() => {
+    if (params.username !== username) {
+      setUsername(params.username!);
+    }
     const clear = watch();
     return () => clear();
   // eslint-disable-next-line react-hooks/exhaustive-deps
