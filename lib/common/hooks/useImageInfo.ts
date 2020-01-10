@@ -1,5 +1,5 @@
 import {
-  useCallback, useState, SetStateAction, Dispatch, useRef,
+  useCallback, useState, SetStateAction, Dispatch, useRef, MutableRefObject,
 } from 'react';
 
 import Toast from '@lib/components/Toast';
@@ -21,7 +21,7 @@ export type ReturnType = [
  *
  * @returns {ReturnType}
  */
-export const useImageInfo = (): ReturnType => {
+export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): ReturnType => {
   const { t } = useTranslation();
   const base64Ref = useRef('');
   const [imageInfo, setImageInfo] = useState<IImageInfo>();
@@ -37,6 +37,7 @@ export const useImageInfo = (): ReturnType => {
   const setFile = useCallback(async (file: File) => {
     if (isImage(file.name)) {
       try {
+        imageRef.current = file;
         const [info, url, base64] = await getImageInfo(file);
         base64Ref.current = base64;
         // TODO 获取图片信息
@@ -49,7 +50,7 @@ export const useImageInfo = (): ReturnType => {
     } else {
       Toast.warning(t('upload.message.image_format_error'));
     }
-  }, [t]);
+  }, [imageRef, t]);
   const clear = useCallback(() => {
     setImageUrl('');
     setImageInfo(undefined);

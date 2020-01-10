@@ -65,7 +65,7 @@ const initUploadData = {
 const Upload: ICustomNextPage<IProps, any> = () => {
   const { t } = useTranslation();
   const imageRef = React.useRef<File>();
-  const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo();
+  const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo(imageRef);
   const { imageUrl, imageInfo, classify } = imageData;
   const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
