@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
 import { getTitle } from '@lib/common/utils';
 import {
-  getImageInfo, IImageInfo, isImage,
+  IImageInfo,
 } from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
 import { Button, IconButton } from '@lib/components/Button';
@@ -40,6 +40,8 @@ import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 import { I18nNamespace } from '@lib/i18n/Namespace';
 import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { useImageInfo } from '@lib/common/hooks/useImageInfo';
+import { CreatePictureAddDot } from '@lib/common/interfaces/picture';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -63,8 +65,8 @@ const initUploadData = {
 const Upload: ICustomNextPage<IProps, any> = () => {
   const { t } = useTranslation();
   const imageRef = React.useRef<File>();
-  const [imageInfo, setImageInfo] = React.useState<IImageInfo>();
-  const [imageUrl, setImageUrl] = React.useState('');
+  const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo();
+  const { imageUrl, imageInfo, classify } = imageData;
   const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
@@ -76,6 +78,19 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const [data, _setData] = useState<ICreatePictureData>({
     ...initUploadData,
   });
+
+  // TODO 图片自动识别功能
+  // useEffect(() => {
+  //   const tags = classify.filter(cl => cl.score > 0.22);
+  //   if (tags.length > 0) {
+  //     _setData((value) => {
+  //       if (value.tags.length === 0) {
+  //         value.tags.push(...tags.map(v => v.keyword));
+  //       }
+  //       return value;
+  //     });
+  //   }
+  // }, [classify]);
 
   // eslint-disable-next-line arrow-parens
   const setData = <T extends keyof ICreatePictureData>(label: T, value: ICreatePictureData[T]) => {
@@ -110,7 +125,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         }) as IImageInfo,
       );
     }
-  }, [imageInfo]);
+  }, [imageInfo, setImageInfo]);
 
   const addPicture = useCallback(async () => {
     if (validator.isEmpty(data.title)) {
@@ -123,13 +138,19 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       const info = imageInfo;
       if (!isLocation && info?.exif?.location) {
         delete info.exif.location;
+        delete info.location;
       }
-      const addData = {
+      const addData: MutablePartial<CreatePictureAddDot> = {
         info,
         ...data,
         key,
+        location: undefined,
         tags: data.tags.map(name => ({ name })),
       };
+      if (info?.location) {
+        addData.location = info?.location;
+        delete info?.location;
+      }
       try {
         await request.post('/api/picture', addData);
         setDisabled(true);
@@ -150,26 +171,15 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       setFile(files[0]);
     }
   };
-  const setFile = async (file: File) => {
-    if (isImage(file.name)) {
-      imageRef.current = file;
-      try {
-        const [info, url] = await getImageInfo(file);
-        setImageUrl(url);
-        setImageInfo(info);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      Toast.warning(t('upload.message.image_format_error'));
-    }
-  };
+  // const setImageClassify = useCallback(async (base64: string) => {
+  //   const classify = await getImageClassify(base64);
+  // }, []);
   const resetData = useCallback(() => {
-    setImageUrl('');
+    clear();
     _setData({
       ...initUploadData,
     });
-  }, []);
+  }, [clear]);
   return (
     <Wrapper>
       <Head>

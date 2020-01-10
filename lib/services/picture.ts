@@ -1,4 +1,4 @@
-import { PictureEntity, UpdatePictureDot } from '@lib/common/interfaces/picture';
+import { PictureEntity, UpdatePictureDot, ImageClassify } from '@lib/common/interfaces/picture';
 import { request } from '@lib/common/utils/request';
 
 export const likePicture = async (id: number) => (
@@ -24,7 +24,7 @@ export const deletePicture = async (id: number) => (
 export const imageClassify = async (base64: string) => {
   const params = new URLSearchParams();
   params.append('image', base64);
-  return request.post('/api/picture/imageClassify', {
+  return request.post<ImageClassify[]>('/api/picture/imageClassify', {
     image: base64,
   });
 };

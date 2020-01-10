@@ -10,6 +10,8 @@ export type UpdatePictureDot = import('@server/modules/picture/dto/picture.dto')
 
 export type PictureLocation = import('@server/modules/picture/interface/location.interface').PictureLocation;
 
+export type ImageClassify = import('@server/shared/baidu/interface/baidu.interface').BaiduClassify;
+
 export interface IPictureLikeRequest {
   count: number;
   isLike: boolean;

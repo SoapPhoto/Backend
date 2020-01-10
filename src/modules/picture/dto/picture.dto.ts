@@ -2,12 +2,13 @@ import {
   Exclude, Expose, Type,
 } from 'class-transformer';
 import {
-  IsArray, IsBoolean, IsNotEmpty, IsString,
+  IsArray, IsBoolean, IsNotEmpty, IsString, IsOptional, IsObject,
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import dayjs from 'dayjs';
 import { PictureEntity } from '../picture.entity';
+import { PictureLocation } from '../interface/location.interface';
 
 export class GetPictureListDto extends PaginationDto {
 
@@ -73,6 +74,11 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
   @IsBoolean()
   @Expose()
   public readonly isPrivate!: boolean;
+
+  @IsOptional()
+  @IsObject()
+  @Expose()
+  public readonly location?: PictureLocation;
 }
 
 @Exclude()

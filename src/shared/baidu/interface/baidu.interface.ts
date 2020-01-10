@@ -1,15 +1,27 @@
+import { Exclude, Expose } from 'class-transformer/decorators';
 
-export interface IBaiduToken {
-  refresh_token: string;
-  expires_in: number;
-  session_key: string;
-  access_token: string;
-  scope: string;
-  session_secret: string;
+export class BaiduToken {
+  public refresh_token!: string;
+
+  public expires_in!: number;
+
+  public session_key!: string;
+
+  public access_token!: string;
+
+  public scope!: string;
+
+  public session_secret!: string;
 }
 
-export interface IBaiduClassify {
-  score: number;
-  root: string;
-  keyword: string;
+@Exclude()
+export class BaiduClassify {
+  @Expose()
+  public score!: number;
+
+  @Expose()
+  public root!: string;
+
+  @Expose()
+  public keyword!: string;
 }

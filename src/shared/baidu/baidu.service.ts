@@ -3,18 +3,17 @@ import Axios from 'axios';
 import dayjs from 'dayjs';
 import { qs } from 'url-parse';
 
-import { IBaiduClassify, IBaiduToken } from './interface/baidu.interface';
+import { BaiduClassify, BaiduToken } from './interface/baidu.interface';
 
 @Injectable()
 export class BaiduService {
-  private token?: IBaiduToken;
+  private token?: BaiduToken;
 
   private expiresDate = dayjs().toString();
 
   public async getAccountToken() {
     if (dayjs(this.expiresDate).isBefore(dayjs()) || !this.token) {
-      console.log(123123);
-      const { data } = await Axios.post<IBaiduToken>('https://aip.baidubce.com/oauth/2.0/token', {}, {
+      const { data } = await Axios.post<BaiduToken>('https://aip.baidubce.com/oauth/2.0/token', {}, {
         params: {
           // eslint-disable-next-line @typescript-eslint/camelcase
           grant_type: 'client_credentials',
@@ -32,7 +31,7 @@ export class BaiduService {
 
   public async getImageClassify(base64: string) {
     const token = await this.getAccountToken();
-    const { data } = await Axios.post<{result: IBaiduClassify[]}>('https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general',
+    const { data } = await Axios.post<{result: BaiduClassify[]}>('https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general',
       qs.stringify({ image: base64.split(',')[1] }),
       {
         headers: {

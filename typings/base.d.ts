@@ -95,5 +95,7 @@ declare namespace NodeJS {
 
     BAIDU_CLIENT_ID: string;
     BAIDU_CLIENT_SECRET: string;
+
+    BAIDU_MAP_AK: string;
   }
 }

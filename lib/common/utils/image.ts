@@ -292,10 +292,10 @@ export function previewImage(
         canvas.width = width;
         canvas.height = height;
     }
+    ctx.drawImage(img, 0, 0, width, height);
     if (isBase64) {
       resolve(canvas.toDataURL());
     } else {
-      ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob((blob) => {
         resolve(window.URL.createObjectURL(blob));
       });
@@ -304,13 +304,13 @@ export function previewImage(
 }
 
 export async function getImageClassify(base64: string) {
-  const data = await imageClassify(base64);
-  console.log(data);
+  const { data } = await imageClassify(base64);
+  return data;
 }
 
 export async function getLocation(gcj: number[]) {
   const data = await jsonpGet('http://api.map.baidu.com/reverse_geocoding/v3/', {
-    ak: '2m0Mq8pGR18U1Z7AzAslXoZ3wtt2a9Hi',
+    ak: process.env.BAIDU_MAP_AK,
     output: 'json',
     location: gcj.toString(),
     coordtype: 'gcj02ll',
@@ -334,9 +334,9 @@ export async function getLocation(gcj: number[]) {
  *
  * @export
  * @param {File} image
- * @returns {Promise<[IImageInfo, string]>}
+ * @returns {Promise<[IImageInfo, string, string]>}
  */
-export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
+export async function getImageInfo(image: File): Promise<[IImageInfo, string, string]> {
   const info: IImageInfo = {
     exif: {},
     color: '#fff',
@@ -372,7 +372,7 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
           info.width = imgHtml.naturalHeight;
         }
       }
-      res(await previewImage(imgHtml, 600, info.exif.orientation));
+      res(await previewImage(imgHtml, 800, info.exif.orientation));
     };
     if (imgHtml.complete) {
       setInfo();
@@ -382,8 +382,7 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string]> {
       };
     }
   }))();
-  await getImageClassify(await previewImage(imgHtml, 400, info.exif.orientation, true));
-  return [info, previewSrc];
+  return [info, previewSrc, await previewImage(imgHtml, 600, info.exif.orientation, true)];
 }
 
 /**
