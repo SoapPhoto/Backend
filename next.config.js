@@ -72,7 +72,7 @@ const nextConfig = {
 
 module.exports = composePlugins(
   [
-    [withOffline],
+    // [withOffline],
     // [withBundleAnalyzer, { enabled: true }],
     withGraphql,
   ],
