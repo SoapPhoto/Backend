@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 export const Box = styled(motion.div)`
   ${props => box(props.theme, '100%', true)}
   background-repeat: no-repeat;
-  background-position: top;
+  background-position: center;
   background-size: cover;
   max-width: ${rem(customBreakpoints.medium)};
   border: none;

@@ -25,7 +25,7 @@ interface IProps {
 export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) => {
   const [background, setBackground] = useState('');
   const { t } = useTranslation();
-  const { colors } = useTheme();
+  const { styles } = useTheme();
   const {
     make, model, exif, width, height, size, key,
   } = picture;
@@ -33,8 +33,8 @@ export const EXIFModal: React.FC<IProps> = memo(({ visible, onClose, picture }) 
     focalLength, aperture, exposureTime, ISO,
   } = exif!;
   useEffect(() => {
-    setBackground(`linear-gradient(${rgba(colors.pure, 0.8)}, ${colors.pure} 150px), url("${getPictureUrl(key)}")`);
-  }, [colors.pure, key]);
+    setBackground(`linear-gradient(${rgba(styles.box.background, 0.8)}, ${styles.box.background} 150px), url("${getPictureUrl(key)}")`);
+  }, [styles.box.background, key]);
   return (
     <Modal
       visible={visible}

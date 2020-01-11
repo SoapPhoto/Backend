@@ -36,5 +36,6 @@ export const Background = styled.div<{background: string}>`
   height: 150px;
   filter: blur(4px);
   background: ${_ => _.background};
-  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;

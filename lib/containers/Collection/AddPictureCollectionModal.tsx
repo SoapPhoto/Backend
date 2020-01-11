@@ -143,6 +143,18 @@ const ItemHandleIcon = styled.div`
   }
 `;
 
+export const Background = styled.div<{background: string}>`
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 150px;
+  filter: blur(4px);
+  background: ${_ => _.background};
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
 export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   visible,
   picture,
@@ -156,13 +168,13 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   const {
     addCollection, getCollection, userCollection, collectionLoading,
   } = appStore;
-  const { colors } = useTheme();
+  const { styles } = useTheme();
   const { mutate } = useApolloClient();
   const [addCollectionVisible, setAddCollectionVisible] = useState(false);
   const [loadingObj, setLoading] = useState<Record<string, boolean>>({});
   const [current, setCurrent] = useState<Map<number, CollectionEntity>>(new Map());
   // eslint-disable-next-line max-len
-  const background = `linear-gradient(${rgba(colors.gray, 0.8)}, ${colors.gray} 200px), url("${getPictureUrl(key, 'blur')}")`;
+  const background = `linear-gradient(${rgba(styles.box.background, 0.8)}, ${styles.box.background} 150px), url("${getPictureUrl(key, 'blur')}")`;
   useEffect(() => () => setAddCollectionVisible(false), []);
   useEffect(() => {
     if (!visible) {
@@ -297,8 +309,9 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
     <Modal
       visible={visible}
       onClose={onClose}
-      boxStyle={{ backgroundImage: background, padding: 0, maxWidth: rem(500) }}
+      boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
+      <Background background={background} />
       <Title>{t('picture.collection.title')}</Title>
       <CollectionBox>
         <CollectionItemBox
