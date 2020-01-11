@@ -63,6 +63,9 @@ fragment PictureDetailFragment on Picture {
     badge {
       ...BadgeFragment
     }
+    location {
+      ...PictureLocationFragment
+    }
 }
 
 fragment PictureListFragment on Pictures {
@@ -314,10 +317,31 @@ fragment CommentListFragment on Comments {
     }
 }
 
-
 fragment BadgeFragment on Badge {
   id
   type
   name
   rate
+}
+
+fragment PictureLocationFragment on PictureLocation {
+  formatted_address
+  business
+  country
+  country_code
+  country_code_iso
+  country_code_iso2
+  province
+  city
+  city_level
+  district
+  town
+  town_code
+  adcode
+  street
+  street_number
+  direction
+  distance
+  roads
+  sematic_description
 }

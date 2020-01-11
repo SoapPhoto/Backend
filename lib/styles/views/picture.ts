@@ -1,12 +1,13 @@
-import { rem, math } from 'polished';
+import { rem, math, rgba } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 
-import { Info } from '@lib/icon';
+import { Info, Heart } from '@lib/icon';
 import { A } from '@lib/components/A';
-import { theme, activate } from '@lib/common/utils/themes';
+import { theme, activate, initButton } from '@lib/common/utils/themes';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { motion } from 'framer-motion';
 
 export const Wrapper = styled.div`
   ${WrapperBox(1000)};
@@ -143,4 +144,29 @@ export const RelateCollectionList = styled.div`
     padding-left: ${rem(34)};
     padding-right: ${rem(34)};
   `}
+`;
+
+export const LikeContent = styled(motion.button)`
+  ${initButton}
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${_ => rgba(_.theme.colors.gray, 0.8)};
+  padding: ${rem(6)} ${rem(16)};
+  font-family: Rubik;
+  font-size: ${_ => rem(_.theme.fontSizes[0])};
+  border: none;
+  border-radius: 20px;
+  line-height: 20px;
+  font-weight: 600;
+  color: ${theme('colors.secondary')};
+`;
+
+export const HeartIcon = styled(Heart)<{islike: number}>`
+  stroke-width: 2.5px;
+  stroke: ${theme('colors.danger')};
+  fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
+  stroke: ${_ => (_.islike ? _.theme.colors.danger : _.theme.colors.secondary || '#fff')};
+  margin-right: ${rem(6)};
 `;

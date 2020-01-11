@@ -11,7 +11,7 @@ import {
   Info, Settings, Star1,
 } from '@lib/icon';
 import {
-  BaseInfoHandleBox, PictureBaseInfo,
+  BaseInfoHandleBox, PictureBaseInfo, HeartIcon, LikeContent,
 } from '@lib/styles/views/picture';
 import { AddPictureCollectionModal } from '@lib/containers/Collection/AddPictureCollectionModal';
 import { EditPictureModal } from '@lib/containers/Picture/EditModal';
@@ -131,7 +131,26 @@ export const PictureInfo: React.FC<IProps> = observer(({
   };
   return (
     <PictureBaseInfo>
-      <div />
+      <div>
+        <LikeContent
+          transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.94 }}
+          onClick={onLike}
+        >
+          <HeartIcon
+            size={20}
+            islike={info.isLike ? 1 : 0}
+          />
+          <p>{info.likedCount}</p>
+        </LikeContent>
+        {/* <LikeButton
+          color={colors.secondary}
+          isLike={info.isLike}
+          size={22}
+          onLike={onLike}
+        /> */}
+      </div>
       {/* //TODO */}
       <span style={{ display: 'none' }}>{params.type}</span>
       <BaseInfoHandleBox
@@ -144,16 +163,6 @@ export const PictureInfo: React.FC<IProps> = observer(({
             color={colors.secondary}
           />
         </IconButton>
-        {
-          isLogin && (
-            <LikeButton
-              color={colors.secondary}
-              isLike={info.isLike}
-              size={22}
-              onLike={onLike}
-            />
-          )
-        }
         {
           isLogin && (
             <IconButton popover={t('add_collection')} onClick={openCollection}>

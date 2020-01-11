@@ -104,7 +104,6 @@ const TagContent: React.FC<IProps> = ({
     }
     inputRef.current!.value = '';
   };
-  console.log(2, value);
   return (
     <Wrapper {...restProps}>
       {

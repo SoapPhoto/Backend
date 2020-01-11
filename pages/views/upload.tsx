@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
@@ -8,7 +8,7 @@ import {
   IImageInfo,
 } from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
-import { Button, IconButton } from '@lib/components/Button';
+import { Button } from '@lib/components/Button';
 import { withAuth } from '@lib/components/router/withAuth';
 import Tag from '@lib/components/Tag';
 import Toast from '@lib/components/Toast';
@@ -24,6 +24,8 @@ import {
   Preview,
   Progress,
   TextArea,
+  PreviewBtn,
+  PreviewHandleContent,
 } from '@lib/styles/views/upload';
 import { Cell, Grid } from 'styled-css-grid';
 import { Switch } from '@lib/components/Switch';
@@ -31,7 +33,7 @@ import { uploadQiniu } from '@lib/services/file';
 import { UploadBox } from '@lib/containers/Upload/UploadBox';
 import { ICustomNextPage } from '@lib/common/interfaces/global';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
-import { Trash2, Edit } from '@lib/icon';
+import { Trash2, Edit, MapPin } from '@lib/icon';
 import { UploadType } from '@common/enum/upload';
 import { FieldItem } from '@lib/components/Formik/FieldItem';
 import { theme } from '@lib/common/utils/themes';
@@ -192,11 +194,23 @@ const Upload: ICustomNextPage<IProps, any> = () => {
           imageUrl ? (
             <ContentBox columns="40% 1fr" gap="36px">
               <PreviewBox loading={uploadLoading ? 1 : 0}>
-                <TrashIcon>
-                  <IconButton onClick={resetData}>
-                    <Trash2 />
-                  </IconButton>
-                </TrashIcon>
+                <PreviewHandleContent>
+                  {
+                    imageInfo?.location && (
+                      <PreviewBtn
+                        transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
+                        <MapPin size={14} />
+                        <span>{imageInfo.location.formatted_address}</span>
+                      </PreviewBtn>
+                    )
+                  }
+                  <TrashIcon onClick={resetData}>
+                    <Trash2 style={{ strokeWidth: '2.5px' }} size={14} />
+                  </TrashIcon>
+                </PreviewHandleContent>
                 <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 0.6 : 0 }} />
                 <Preview src={imageUrl} />
               </PreviewBox>

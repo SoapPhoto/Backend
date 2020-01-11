@@ -4,9 +4,10 @@ import { Cell, Grid } from 'styled-css-grid';
 
 import { box } from '@lib/common/utils/themes/common';
 import { Input as BaseInput, Textarea } from '@lib/components/Input';
-import { theme } from '@lib/common/utils/themes';
-import { IconButtonStyled } from '@lib/components/Button';
+import { theme, initButton } from '@lib/common/utils/themes';
+import { IconButton } from '@lib/components/Button';
 import { customMedia } from '@lib/common/utils/mediaQuery';
+import { motion } from 'framer-motion';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -125,12 +126,46 @@ export const ContentBox = styled(Grid)`
   `}
 `;
 
-export const TrashIcon = styled.div`
+export const TrashIcon = styled(IconButton)`
   position: absolute;
-  z-index: 2;
   right: ${rem(12)};
   top: ${rem(12)};
-  & ${IconButtonStyled} {
-    color: ${theme('colors.danger')}
+  background: ${_ => rgba(_.theme.colors.pure, 0.8)};
+  border-radius: ${rem(28)};
+  height: ${rem(28)};
+  width: ${rem(28)};
+  color: ${theme('colors.danger')};
+  @supports (backdrop-filter: saturate(180%) blur(20px)) {
+    background-color: ${_ => rgba(_.theme.colors.pure, 0.8)};
+    & { backdrop-filter: saturate(180%) blur(20px); }
+  }
+`;
+
+export const PreviewHandleContent = styled.section`
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+`;
+
+export const PreviewBtn = styled(motion.button)`
+  ${initButton}
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background: ${_ => rgba(_.theme.colors.pure, 0.8)};
+  padding: ${rem(2)} ${rem(14)};
+  left: ${rem(12)};
+  top: ${rem(12)};
+  border-radius: ${rem(28)};
+  height: ${rem(28)};
+  color: ${theme('colors.secondary')};
+  @supports (backdrop-filter: saturate(180%) blur(20px)) {
+    background-color: ${_ => rgba(_.theme.colors.pure, 0.8)};
+    & { backdrop-filter: saturate(180%) blur(20px); }
+  }
+  svg {
+    margin-right: ${rem(4)};
   }
 `;
