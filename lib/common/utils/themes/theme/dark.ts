@@ -79,6 +79,10 @@ const theme: DefaultTheme = {
         opacity: 0.3,
       },
     },
+    skeleton: {
+      accents1: '#111111',
+      accents2: '#333333',
+    },
   },
   layout: {
     header: {

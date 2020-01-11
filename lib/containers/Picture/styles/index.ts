@@ -4,7 +4,9 @@ import styled, { css } from 'styled-components';
 import { Image } from '@lib/components/Image';
 import { A } from '@lib/components/A';
 import { WrapperBox } from '@lib/common/utils/themes/common';
-import { theme, initButton, activate } from '@lib/common/utils/themes';
+import {
+  theme, initButton, activate, skeletonCss,
+} from '@lib/common/utils/themes';
 import { customMedia } from '@lib/common/utils/mediaQuery';
 import { Heart } from '@lib/icon';
 import { motion } from 'framer-motion';
@@ -237,4 +239,52 @@ export const ImgBox = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+`;
+
+export const SkeletonContent = styled.div`
+  display: grid;
+  grid-gap: ${rem(24)};
+  ${customMedia.lessThan('mobile')`
+    grid-template-columns: repeat(1, 1fr);
+  `}
+
+  ${customMedia.between('mobile', 'medium')`
+    grid-template-columns: repeat(2, 1fr);
+  `}
+
+  ${customMedia.between('medium', 'large')`
+    grid-template-columns: repeat(3, 1fr);
+  `}
+
+  ${customMedia.greaterThan('large')`
+    grid-template-columns: repeat(4, 1fr);
+  `}
+`;
+
+export const SkeletonItem = styled.picture`
+  position: relative;
+  height: ${rem(210)};
+  border-radius: 4px;
+  background: ${theme('styles.box.background')};
+  box-shadow: 0 5px 10px ${theme('colors.shadowColor')};
+`;
+
+export const SkeletonAvatar = styled.div`
+  width: ${rem(32)};
+  height: ${rem(32)};
+  border-radius: 50%;
+  position: absolute;
+  bottom: ${rem(12)};
+  left: ${rem(12)};
+  ${skeletonCss}
+`;
+
+export const SkeletonName = styled.div`
+  width: ${rem(80)};
+  height: ${rem(12)};
+  border-radius: 4px;
+  position: absolute;
+  bottom: ${rem(21)};
+  left: ${rem(50)};
+  ${skeletonCss}
 `;

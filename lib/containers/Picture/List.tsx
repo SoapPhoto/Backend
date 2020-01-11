@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
 import {
-  getScrollHeight, getScrollTop, getWindowHeight, server,
+  getScrollHeight, getScrollTop, getWindowHeight,
 } from '@lib/common/utils';
 import { listParse } from '@lib/common/utils/waterfall';
 import { NoSSR } from '@lib/components/SSR';
@@ -12,7 +12,9 @@ import useMedia from '@lib/common/utils/useMedia';
 import { Empty } from '@lib/components/Empty';
 import { customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { observer } from 'mobx-react';
-import { PictureContent, Wrapper } from './styles';
+import {
+  PictureContent, Wrapper, SkeletonContent, SkeletonItem, SkeletonAvatar, SkeletonName,
+} from './styles';
 import Col from './Col';
 
 interface IProps {
@@ -52,7 +54,7 @@ const mediaArr = [
   },
 ];
 
-const colArr = mediaArr.map(media => media.col);
+// const colArr = mediaArr.map(media => media.col);
 
 const OFFSET = 1000;
 
@@ -63,7 +65,6 @@ export const PictureList: React.FC<IProps> = observer(({
   style,
   noMore = false,
 }) => {
-  let serverList: PictureEntity[][][] = [];
   const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
   const pageLock = React.useRef<boolean>(false);
   const col = useMedia(
@@ -116,19 +117,24 @@ export const PictureList: React.FC<IProps> = observer(({
     pictureList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [col, data]);
-  // 服务端渲染列表
-  if (server) {
-    serverList = colArr.map(_col => listParse(data, _col));
-  }
+  // TODO: 去除：服务端渲染列表
+  // if (server) {
+  //   serverList = colArr.map(_col => listParse(data, _col));
+  // }
   return (
     <Wrapper style={style}>
       <NoSSR key="server" server={false}>
         <PictureContent>
-          {
-            serverList.map((mainCol, i) => (
-              <Col ssr col={colArr[i]} key={colArr[i]} list={mainCol} />
-            ))
-          }
+          <SkeletonContent>
+            {
+              [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => (
+                <SkeletonItem key={i}>
+                  <SkeletonAvatar />
+                  <SkeletonName />
+                </SkeletonItem>
+              ))
+            }
+          </SkeletonContent>
         </PictureContent>
       </NoSSR>
       <NoSSR key="client">
@@ -138,8 +144,8 @@ export const PictureList: React.FC<IProps> = observer(({
           col={col}
           list={clientList}
         />
+        <Empty loading={!noMore} />
       </NoSSR>
-      <Empty loading={!noMore} />
     </Wrapper>
   );
 });

@@ -73,6 +73,10 @@ declare module 'styled-components' {
           opacity: number;
         };
       };
+      skeleton: {
+        accents1: string;
+        accents2: string;
+      };
     };
     layout: {
       header: {
