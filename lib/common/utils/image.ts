@@ -8,6 +8,7 @@ import {
 
 import { validator } from '@common/validator';
 import { imageClassify } from '@lib/services/picture';
+import Toast from '@lib/components/Toast';
 import { changeToDu } from './gps';
 import { round } from './math';
 import { PictureLocation } from '../interfaces/picture';
@@ -38,6 +39,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface Window {
     EXIF: any;
+    exifer: any;
     FastAverageColor: any;
   }
 }
@@ -105,7 +107,7 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
       }
       return round(value >= 1 ? value : 1 / value, 1);
     case ExifProperties._Location:
-      if (!exifData.GPSLatitude) {
+      if (!exifData?.GPSLatitude || exifData?.GPSLatitude?.[0]?.toString() === 'NaN') {
         return undefined;
       }
       if (exifData.Make === 'Apple') {
@@ -326,7 +328,9 @@ export async function getLocation(gcj: number[]) {
     location.roads = data.result.roads.map((v: any) => v.name);
     return location;
   }
-  throw new Error(data);
+  Toast.error(data?.msg ?? '获取图片位置信息失败');
+  console.error(data);
+  return undefined;
 }
 
 /**
