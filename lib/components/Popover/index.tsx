@@ -111,7 +111,7 @@ export class Popover extends React.Component<IPopoverProps> {
   public close = (isDelay = false) => {
     clearTimeout(this._timer!);
     if (isDelay) {
-      this._timer = setTimeout(() => {
+      this._timer = window.setTimeout(() => {
         this.setVisible(false);
       }, 150);
     } else {
@@ -122,7 +122,7 @@ export class Popover extends React.Component<IPopoverProps> {
   public open = () => {
     if (this.props.openDelay) {
       clearTimeout(this._timer!);
-      this._timer = setTimeout(() => {
+      this._timer = window.setTimeout(() => {
         if (isFunction(this.props.onOpen)) {
           this.props.onOpen();
         }

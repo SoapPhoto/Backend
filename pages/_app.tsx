@@ -45,7 +45,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 Router.events.on('routeChangeStart', () => {
-  timer = setTimeout(() => {
+  timer = window.setTimeout(() => {
     store.appStore.setLoading(true);
   }, 200);
 });

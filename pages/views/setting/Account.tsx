@@ -146,7 +146,7 @@ const Account = observer(() => {
       if (timer.current) {
         clearTimeout(timer.current);
       }
-      timer.current = setTimeout(() => {
+      timer.current = window.setTimeout(() => {
         setConfirmDisabled(false);
       }, 1000);
     }
