@@ -1,7 +1,7 @@
 import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
-import { Transition, animated } from '@react-spring/web/index.cjs';
+import { Transition } from '@react-spring/web/index.cjs';
 import { timingFunctions } from 'polished';
 
 import {
@@ -132,7 +132,7 @@ export const Modal: React.FC<IModalProps> = memo(({
                 style={{
                   transitionTimingFunction: timingFunctions('easeInOutSine'),
                   transition: '.2s all',
-                  opacity: styles.opacity,
+                  opacity: styles.opacity as number,
                   zIndex: 1000 + _modalIndex,
                 }}
               />
