@@ -132,7 +132,7 @@ export const Modal: React.FC<IModalProps> = memo(({
                 style={{
                   transitionTimingFunction: timingFunctions('easeInOutSine'),
                   transition: '.2s all',
-                  opacity: styles.opacity as number,
+                  opacity: styles.opacity as any as number,
                   zIndex: 1000 + _modalIndex,
                 }}
               />
