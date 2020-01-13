@@ -61,7 +61,7 @@ docker-data/
 static/test
 
 .idea
-yarn.lock
+# yarn.lock
 
 package-lock.json
 
