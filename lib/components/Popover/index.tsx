@@ -68,9 +68,9 @@ export class Popover extends React.Component<IPopoverProps> {
 
   public _media?: MediaQueryList;
 
-  public delay?: NodeJS.Timeout;
+  public delay?: number;
 
-  public _timer?: NodeJS.Timeout;
+  public _timer?: number;
 
   public arrow?: HTMLDivElement;
 

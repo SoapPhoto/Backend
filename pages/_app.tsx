@@ -39,7 +39,7 @@ interface IPageProps {
   statusCode?: number;
 }
 
-let timer: NodeJS.Timeout | undefined;
+let timer: number;
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');

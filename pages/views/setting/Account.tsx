@@ -99,7 +99,7 @@ const Account = observer(() => {
   const { t } = useTranslation();
   const { userInfo } = useAccountStore();
   const { userCredentials, getCredentials } = useAccountStore();
-  const timer = useRef<NodeJS.Timeout | undefined>();
+  const timer = useRef<number>();
   const [currentId, setCurrentId] = useState('');
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmDisabled, setConfirmDisabled] = useState(false);
