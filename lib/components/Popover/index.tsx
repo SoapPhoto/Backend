@@ -1,11 +1,10 @@
 import { isFunction, debounce } from 'lodash';
 import React, { Children } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
+import { animated, Transition } from '@react-spring/web/index.cjs';
 
-import { server } from '@lib/common/utils';
 import { timingFunctions } from 'polished';
 import { isMobile } from '@lib/common/utils/isMobile';
 import { Popper } from '../Popper';
@@ -240,29 +239,34 @@ export class Popover extends React.Component<IPopoverProps> {
         visible={this.visible}
         onClose={this.onClose}
         content={({ visible, close }) => (
-          <AnimatePresence
-            onExitComplete={() => {
+          <Transition
+            items={visible}
+            config={{
+              duration: 200,
+            }}
+            from={{
+              transform: 'scale3d(0.98, 0.98, 0.98)',
+              opacity: 0,
+            }}
+            enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
+            leave={{
+              opacity: 0,
+              transform: 'scale3d(0.98, 0.98, 0.98)',
+              pointerEvents: 'none',
+            }}
+            onRest={() => {
               if (!visible) {
                 close();
               }
             }}
           >
             {
-              visible && (
-                <motion.div
-                  positionTransition
-                  initial={{ opacity: 0, transform: 'scale(0.96)' }}
-                  animate={{ opacity: 1, transform: 'scale(1)' }}
-                  exit={{ opacity: 0, transform: 'scale(0.96)' }}
-                  transition={{
-                    damping: 10,
-                    stiffness: 200,
-                    duration: 0.1,
-                    easings: ['easeIn', 'easeOut'],
-                  }}
+              (show: boolean) => show && (styles => (
+                <animated.div
                   style={{
                     transitionTimingFunction: timingFunctions('easeInOutSine'),
                     transition: '.2s all',
+                    ...styles,
                   }}
                 >
                   {
@@ -278,10 +282,10 @@ export class Popover extends React.Component<IPopoverProps> {
                   <Content x-theme={theme} style={contentStyle}>
                     {contentRender}
                   </Content>
-                </motion.div>
-              )
+                </animated.div>
+              ))
             }
-          </AnimatePresence>
+          </Transition>
         )}
       >
         {childrenRender}

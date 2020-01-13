@@ -130,16 +130,11 @@ export class Popper extends React.Component<IPopperProps> {
         });
       },
     };
-    let renders = <></>;
-    if (!visible && (!transition || exited)) {
-      renders = <></>;
-    } else {
-      renders = (
-        <PopperWrapper ref={this.popperRef}>
-          {typeof content === 'function' ? content(childProps) : content}
-        </PopperWrapper>
-      );
-    }
+    const renders = (
+      <PopperWrapper ref={this.popperRef}>
+        {typeof content === 'function' ? content(childProps) : content}
+      </PopperWrapper>
+    );
     return (
       <>
         {children}

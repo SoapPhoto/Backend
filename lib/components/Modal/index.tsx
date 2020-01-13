@@ -1,7 +1,8 @@
 import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { Transition, animated } from '@react-spring/web/index.cjs';
+import { timingFunctions } from 'polished';
 
 import {
   enableScroll, disableScroll,
@@ -49,6 +50,7 @@ export const Modal: React.FC<IModalProps> = memo(({
     if (isFunction(afterClose)) {
       afterClose();
     }
+    if (_modalIndex === 0) return;
     _modalIndex--;
     if (_modalIndex === 0) {
       enableScroll();
@@ -101,57 +103,70 @@ export const Modal: React.FC<IModalProps> = memo(({
 
   return (
     <Portal>
-      <AnimatePresence
-        onExitComplete={() => {
+      <Transition
+        items={visible}
+        config={{
+          duration: 200,
+        }}
+        from={{
+          transform: 'scale3d(0.98, 0.98, 0.98)',
+          opacity: 0,
+        }}
+        enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
+        leave={{
+          opacity: 0,
+          transform: 'scale3d(0.98, 0.98, 0.98)',
+          pointerEvents: 'none',
+        }}
+        onRest={() => {
+          console.log(visible);
           if (!visible) {
             onDestroy();
           }
         }}
       >
-        {visible && (
-          <div>
-            <Mask
-              positionTransition
-              style={{
-                zIndex: 1000 + _modalIndex,
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.1 }}
-            />
-            <Wrapper
-              fullscreen={fullscreen ? 1 : 0}
-              style={{ zIndex: 1000 + _modalIndex }}
-              onClick={handleClick}
-              ref={wrapperRef}
-            >
-              <Content ref={contentRef}>
-                <Box
-                  positionTransition
-                  style={{
-                    ...boxStyle || {},
-                  }}
-                  initial={{ opacity: 0, transform: 'scale(0.98)' }}
-                  animate={{ opacity: 1, transform: 'scale(1)' }}
-                  exit={{ opacity: 0, transform: 'scale(0.98)' }}
-                  transition={{ duration: 0.1 }}
-                  className={className}
-                  onMouseDown={handleContentOnMouseDown}
-                  onMouseUp={handleContentOnMouseUp}
-                  onClick={handleContentOnMouseUp}
-                >
-                  {
-                    closeIcon && fullscreen
-                        && <XIcon onClick={onClose} />
-                  }
-                  {children}
-                </Box>
-              </Content>
-            </Wrapper>
-          </div>
-        )}
-      </AnimatePresence>
+        {
+          (show: boolean) => show && (styles => (
+            <div>
+              <Mask
+                style={{
+                  transitionTimingFunction: timingFunctions('easeInOutSine'),
+                  transition: '.2s all',
+                  opacity: styles.opacity,
+                  zIndex: 1000 + _modalIndex,
+                }}
+              />
+              <Wrapper
+                fullscreen={fullscreen ? 1 : 0}
+                style={{ zIndex: 1000 + _modalIndex }}
+                onClick={handleClick}
+                ref={wrapperRef}
+              >
+                <Content ref={contentRef}>
+                  <Box
+                    style={{
+                      transitionTimingFunction: timingFunctions('easeInOutSine'),
+                      transition: '.2s all',
+                      ...boxStyle || {},
+                      ...styles as any,
+                    }}
+                    className={className}
+                    onMouseDown={handleContentOnMouseDown}
+                    onMouseUp={handleContentOnMouseUp}
+                    onClick={handleContentOnMouseUp}
+                  >
+                    {
+                      closeIcon && fullscreen
+                          && <XIcon onClick={onClose} />
+                    }
+                    {children}
+                  </Box>
+                </Content>
+              </Wrapper>
+            </div>
+          ))
+        }
+      </Transition>
     </Portal>
   );
 });

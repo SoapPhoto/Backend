@@ -20,6 +20,10 @@ declare module 'socks5-https-client/lib/Agent';
 
 declare module 'jsonp-get';
 
+declare module '@react-spring/web/index.cjs' {
+  export * from '@react-spring/web';
+}
+
 declare module '*.json' {
   const value: any;
   export default value;

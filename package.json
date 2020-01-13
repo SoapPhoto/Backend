@@ -137,6 +137,7 @@
     "react-keybinding-component": "^1.0.0",
     "react-keydown": "^1.9.12",
     "react-lazyload": "^2.6.5",
+    "react-spring": "^9.0.0-beta.34",
     "react-switch": "^5.0.1",
     "react-textarea-autosize": "^7.1.2",
     "react-transition-group": "^4.3.0",
