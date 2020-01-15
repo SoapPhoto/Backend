@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
@@ -44,6 +44,7 @@ import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useImageInfo } from '@lib/common/hooks/useImageInfo';
 import { CreatePictureAddDot } from '@lib/common/interfaces/picture';
+import { LocationModal } from '@lib/components/LocationModal';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -69,6 +70,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const imageRef = React.useRef<File>();
   const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo(imageRef);
   const { imageUrl, imageInfo, classify } = imageData;
+  const [locationVisible, setLocationVisible] = React.useState(false);
   const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
@@ -80,6 +82,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const [data, _setData] = useState<ICreatePictureData>({
     ...initUploadData,
   });
+
+  const locationTitle = useMemo(() => {
+    if (imageInfo?.location) {
+      let title = (imageInfo.location.country ?? '') + (imageInfo.location.province ?? '');
+      if (imageInfo.location.province !== imageInfo.location.city) {
+        title += (imageInfo.location.city ?? '');
+      }
+      return title;
+    }
+    return '';
+  }, [imageInfo]);
 
   // TODO 图片自动识别功能
   // useEffect(() => {
@@ -182,6 +195,12 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       ...initUploadData,
     });
   }, [clear]);
+  const openLocation = useCallback(() => {
+    setLocationVisible(true);
+  }, []);
+  const closeLocation = useCallback(() => {
+    setLocationVisible(false);
+  }, []);
   return (
     <Wrapper>
       <Head>
@@ -195,18 +214,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
             <ContentBox columns="40% 1fr" gap="36px">
               <PreviewBox loading={uploadLoading ? 1 : 0}>
                 <PreviewHandleContent>
-                  {
-                    imageInfo?.location && (
-                      <PreviewBtn
-                        transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                      >
-                        <MapPin size={14} />
-                        <span>{imageInfo.location.formatted_address}</span>
-                      </PreviewBtn>
-                    )
-                  }
+                  <PreviewBtn
+                    transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={openLocation}
+                  >
+                    <MapPin size={14} />
+                    {
+                      locationTitle && <span>{locationTitle}</span>
+                    }
+                  </PreviewBtn>
                   <TrashIcon onClick={resetData}>
                     <Trash2 style={{ strokeWidth: '2.5px' }} size={14} />
                   </TrashIcon>
@@ -286,6 +304,10 @@ const Upload: ICustomNextPage<IProps, any> = () => {
           )
         }
       </Box>
+      <LocationModal
+        visible={locationVisible}
+        onClose={closeLocation}
+      />
       <EXIFEditModal
         initialValues={imageInfo ? {
           make: imageInfo.make,

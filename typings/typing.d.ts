@@ -52,6 +52,8 @@ declare module '*/query.graphql' {
   export const SearchPictures: DocumentNode;
   export const FollowedUsers: DocumentNode;
   export const FollowerUsers: DocumentNode;
+  export const ReverseGeocoding: DocumentNode;
+  export const SearchPlace: DocumentNode;
 }
 declare module '*/mutations.graphql' {
   import { DocumentNode } from 'graphql';

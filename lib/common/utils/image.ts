@@ -310,28 +310,11 @@ export async function getImageClassify(base64: string) {
   return data;
 }
 
-export async function getLocation(gcj: number[]) {
-  const data = await jsonpGet('//api.map.baidu.com/reverse_geocoding/v3/', {
-    ak: process.env.BAIDU_MAP_AK,
-    output: 'json',
-    location: gcj.toString(),
-    coordtype: 'gcj02ll',
-    callback: 'callback',
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    extensions_road: true,
-  });
-  if (data.status === 0) {
-    const location: PictureLocation = {
-      ...data.result.addressComponent,
-      ...pick(data.result, ['sematic_description', 'business', 'formatted_address']),
-    };
-    location.roads = data.result.roads.map((v: any) => v.name);
-    return location;
-  }
-  Toast.error(data?.msg ?? '获取图片位置信息失败');
-  console.error(data);
-  return undefined;
-}
+// export async function getLocation(gcj: number[]) {
+//   // Toast.error(data?.msg ?? '获取图片位置信息失败');
+//   // console.error(data);
+//   return undefined;
+// }
 
 /**
  * 获取图片详细信息
@@ -340,7 +323,9 @@ export async function getLocation(gcj: number[]) {
  * @param {File} image
  * @returns {Promise<[IImageInfo, string, string]>}
  */
-export async function getImageInfo(image: File): Promise<[IImageInfo, string, string]> {
+export async function getImageInfo(
+  image: File,
+): Promise<[IImageInfo, string, string]> {
   const info: IImageInfo = {
     exif: {},
     color: '#fff',
@@ -356,9 +341,6 @@ export async function getImageInfo(image: File): Promise<[IImageInfo, string, st
   imgHtml.src = imgSrc;
   const fac = new window.FastAverageColor();
   const exif = await getImageEXIF(image);
-  if (exif.location) {
-    info.location = await getLocation(exif.location);
-  }
   info.make = exif.make;
   info.model = exif.model;
   info.exif = omit(exif, ['model', 'make']);

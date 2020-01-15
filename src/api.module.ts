@@ -12,7 +12,7 @@ import { FileModule } from './modules/file/file.module';
 import { CredentialsModule } from './modules/credentials/credentials.module';
 import { FollowModule } from './modules/follow/follow.module';
 import { BadgeModule } from './modules/badge/badge.module';
-
+import { LocationModule } from './modules/location/location.module';
 @Module({
   imports: [
     ClientModule,
@@ -28,6 +28,7 @@ import { BadgeModule } from './modules/badge/badge.module';
     CredentialsModule,
     FollowModule,
     BadgeModule,
+    LocationModule,
   ],
   exports: [
     ClientModule,

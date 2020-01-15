@@ -123,3 +123,15 @@ query FollowerUsers($id: Float!, $limit: Float!, $offset: Float!) {
     ...UserDetailFragment
   }
 }
+
+query ReverseGeocoding($location: String!) {
+  reverseGeocoding(location: $location) {
+    ...PictureLocationFragment
+  }
+}
+
+query SearchPlace($value: String!) {
+  searchPlace(value: $value) {
+    ...SearchPlaceDetailFragment
+  }
+}

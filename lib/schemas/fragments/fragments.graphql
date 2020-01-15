@@ -324,6 +324,25 @@ fragment BadgeFragment on Badge {
   rate
 }
 
+fragment SearchPlaceDetailFragment on SearchPlaceDetail {
+  name
+  location {
+    lat
+    lng
+  }
+  address
+  province
+  city
+  area
+  street_id
+  telephone
+  detail
+  uid
+  detail_info {
+    tag
+  }
+}
+
 fragment PictureLocationFragment on PictureLocation {
   formatted_address
   business

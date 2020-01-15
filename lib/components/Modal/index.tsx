@@ -2,14 +2,15 @@ import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
 import { Transition } from '@react-spring/web/index.cjs';
-import { timingFunctions } from 'polished';
+import { timingFunctions, rem } from 'polished';
 
 import {
   enableScroll, disableScroll,
 } from '@lib/common/utils';
 import { isFunction } from 'lodash';
-import { DefaultTheme } from 'styled-components';
+import styled, { DefaultTheme } from 'styled-components';
 import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
+import { theme } from '@lib/common/utils/themes';
 import {
   Box, Content, Mask, Wrapper, XIcon,
 } from './styles';
@@ -27,6 +28,18 @@ export interface IModalProps {
 }
 
 let _modalIndex = 0;
+
+export const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: ${rem(14)};
+  border-bottom: 1px solid ${theme('colors.shadowColor')};
+`;
+
+export const Title = styled.h2`
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
+`;
 
 export const Modal: React.FC<IModalProps> = memo(({
   visible,

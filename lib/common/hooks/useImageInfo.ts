@@ -1,9 +1,11 @@
 import {
   useCallback, useState, SetStateAction, Dispatch, useRef, MutableRefObject,
 } from 'react';
+import { useApolloClient } from 'react-apollo';
 
 import Toast from '@lib/components/Toast';
 import { useTranslation } from '@lib/i18n/useTranslation';
+import { ReverseGeocoding } from '@lib/schemas/query';
 import {
   getImageInfo, isImage, IImageInfo, getImageClassify,
 } from '../utils/image';
@@ -23,6 +25,7 @@ export type ReturnType = [
  */
 export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): ReturnType => {
   const { t } = useTranslation();
+  const apollo = useApolloClient();
   const base64Ref = useRef('');
   const [imageInfo, setImageInfo] = useState<IImageInfo>();
   const [imageUrl, setImageUrl] = useState('');
@@ -39,18 +42,29 @@ export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): Retu
       try {
         imageRef.current = file;
         const [info, url, base64] = await getImageInfo(file);
+        if (info.exif.location) {
+          const { data } = await apollo.query({
+            query: ReverseGeocoding,
+            variables: {
+              location: info.exif.location.toString(),
+            },
+            fetchPolicy: 'network-only',
+          });
+          info.location = data.reverseGeocoding;
+        }
         base64Ref.current = base64;
         // TODO 获取图片信息
         // setImageClassify();
         setImageUrl(url);
         setImageInfo(info);
       } catch (err) {
+        Toast.error('获取图片信息失败');
         console.log(err);
       }
     } else {
       Toast.warning(t('upload.message.image_format_error'));
     }
-  }, [imageRef, t]);
+  }, [apollo, imageRef, t]);
   const clear = useCallback(() => {
     setImageUrl('');
     setImageInfo(undefined);

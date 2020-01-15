@@ -38,15 +38,15 @@ const nextConfig = {
     //     ],
     //   })
     // )
-    const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-    config.plugins.push(
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        reportFilename: options.isServer
-          ? '../analyze/server.html'
-          : './analyze/client.html',
-      }),
-    );
+    // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+    // config.plugins.push(
+    //   new BundleAnalyzerPlugin({
+    //     analyzerMode: 'static',
+    //     reportFilename: options.isServer
+    //       ? '../analyze/server.html'
+    //       : './analyze/client.html',
+    //   }),
+    // );
     config.plugins.push(
       new Dotenv({
         path: path.join(__dirname, '.env'),
