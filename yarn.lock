@@ -3406,6 +3406,13 @@
     lodash.unescape "4.0.1"
     semver "^6.3.0"
 
+"@uiw/react-baidu-map@^1.15.2":
+  version "1.15.2"
+  resolved "https://registry.npm.taobao.org/@uiw/react-baidu-map/download/@uiw/react-baidu-map-1.15.2.tgz#dffb686e55d1f66a670c831809bfcb804784f43f"
+  integrity sha1-3/toblXR9mpnDIMYCb/LgEeE9D8=
+  dependencies:
+    "@babel/runtime" "^7.7.4"
+
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
   resolved "https://registry.npm.taobao.org/@webassemblyjs/ast/download/@webassemblyjs/ast-1.8.5.tgz#51b1c5fe6576a34953bf4b253df9f0d490d9e359"
@@ -18411,7 +18418,7 @@ typeorm@^0.2.22:
     yargonaut "^1.1.2"
     yargs "^13.2.1"
 
-typescript@^3.0.1, typescript@^3.6.4, typescript@^3.7.3:
+typescript@^3.0.1, typescript@^3.6.4, typescript@^3.7.4:
   version "3.7.4"
   resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.7.4.tgz?cache=0&sync_timestamp=1578726944101&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
   integrity sha1-F0Ol7F/vah+p8+RwjjPIHHOHbBk=

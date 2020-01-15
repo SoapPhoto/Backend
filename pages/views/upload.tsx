@@ -207,6 +207,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         <title>{getTitle('upload.title', t)}</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
+        <script src={`//api.map.baidu.com/api?v=3.0&ak=${process.env.BAIDU_MAP_AK}`} />
       </Head>
       <Box>
         {

@@ -20,8 +20,8 @@ interface IProps {
 
 const ModalContent = styled(Modal)`
   padding: 0 !important;
-  max-width: ${rem(400)} !important;
-  height: ${rem(500)};
+  max-width: ${rem(800)} !important;
+  height: 80vh;
   margin: ${rem(24)} auto !important;
   ${customMedia.lessThan('mobile')`
     height: 80vh !important;
@@ -59,6 +59,22 @@ export const LocationModal: React.FC<IProps> = ({
 }) => {
   const [value, setValue] = useState('');
   const [searchPlace, { loading, data }] = useLazyQuery<{searchPlace: any[]}>(SearchPlace);
+  useEffect(() => {
+    if (visible) {
+      const map = new (window as any).BMap.Map('map');
+      const point = new (window as any).BMap.Point(116.404, 39.915);
+      map.centerAndZoom(point, 11);
+      map.enableScrollWheelZoom(false);
+      map.addControl(new (window as any).BMap.ScaleControl({ anchor: (window as any).BMAP_ANCHOR_TOP_LEFT }));
+      map.setMapStyleV2({
+        styleId: 'd5e72abd077744f09ef5d082c769d637',
+      });
+      const gc = new (window as any).BMap.Geocoder();
+      gc.getLocation(point, (rs: any) => {
+        console.log(rs);
+      });
+    }
+  }, [visible]);
   const query = useCallback(debounce(() => {
     searchPlace({
       variables: {
@@ -83,28 +99,29 @@ export const LocationModal: React.FC<IProps> = ({
             onPressEnter={query}
           />
         </Search>
+        <div id="map" style={{ width: '100%', height: '60%' }} />
         <Content
           options={{ scrollbars: { autoHide: 'move' }, sizeAutoCapable: false }}
         >
-        {
-          loading ? (
-            <LoadingBox>
-              <Loading />
-            </LoadingBox>
-          ) : data ? (
-            <div>
-              {
-                data.searchPlace.map((place: any, index) => (
-                  <div key={index}>
-                    <div>{place.name}</div>
-                  </div>
-                ))
-              }
-            </div>
-          ) : (
-            <div />
-          )
-        }
+          {
+            loading ? (
+              <LoadingBox>
+                <Loading />
+              </LoadingBox>
+            ) : data ? (
+              <div>
+                {
+                  data.searchPlace.map((place: any, index) => (
+                    <div key={index}>
+                      <div>{place.name}</div>
+                    </div>
+                  ))
+                }
+              </div>
+            ) : (
+              <div />
+            )
+          }
         </Content>
       </Wrapper>
     </ModalContent>
