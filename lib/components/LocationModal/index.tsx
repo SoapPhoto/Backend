@@ -1,3 +1,15 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
+
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.base.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.control.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.core.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.maptype.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.overlay.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.panorama.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.rightmenu.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.service.d.ts" />
+/// <reference path="../../../node_modules/@types/baidumap-web-sdk/baidumap.tools.d.ts" />
+
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
@@ -61,18 +73,14 @@ export const LocationModal: React.FC<IProps> = ({
   const [searchPlace, { loading, data }] = useLazyQuery<{searchPlace: any[]}>(SearchPlace);
   useEffect(() => {
     if (visible) {
-      const map = new (window as any).BMap.Map('map');
-      const point = new (window as any).BMap.Point(116.404, 39.915);
+      const map = new BMap.Map('map');
+      const point = new BMap.Point(116.404, 39.915);
       map.centerAndZoom(point, 11);
-      map.enableScrollWheelZoom(false);
-      map.addControl(new (window as any).BMap.ScaleControl({ anchor: (window as any).BMAP_ANCHOR_TOP_LEFT }));
-      map.setMapStyleV2({
+      map.addControl(new window.BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT }));
+      map.setMapStyle2({
         styleId: 'd5e72abd077744f09ef5d082c769d637',
       });
-      const gc = new (window as any).BMap.Geocoder();
-      gc.getLocation(point, (rs: any) => {
-        console.log(rs);
-      });
+      // map.addEventListener
     }
   }, [visible]);
   const query = useCallback(debounce(() => {
