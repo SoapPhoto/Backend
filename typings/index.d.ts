@@ -24,7 +24,7 @@ interface IEXIF {
   exposureBias?: string;
   date?: string;
   software?: string;
-  location?: number[];
+  location?: [number, number];
   make?: string;
   model?: string;
   focalLength?: string;

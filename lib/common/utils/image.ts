@@ -1,14 +1,13 @@
+
 import { omit, pick } from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
-import jsonpGet from 'jsonp-get';
 import {
   transform, GCJ02, WGS84,
 } from 'gcoord';
 
 import { validator } from '@common/validator';
 import { imageClassify } from '@lib/services/picture';
-import Toast from '@lib/components/Toast';
 import { changeToDu } from './gps';
 import { round } from './math';
 import { PictureLocation } from '../interfaces/picture';
@@ -402,4 +401,14 @@ export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
     return key;
   }
   return `//cdn.soapphoto.com/${key}${pictureStyle[style]}`;
+}
+
+export function formatLocationData(data: any): PictureLocation {
+  console.log(data);
+  const newData = {
+    ...data.addressComponent,
+    ...pick(data, ['sematic_description', 'business', 'formatted_address']),
+  };
+  console.log(newData);
+  return newData;
 }
