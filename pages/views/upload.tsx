@@ -44,7 +44,8 @@ import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useImageInfo } from '@lib/common/hooks/useImageInfo';
 import { CreatePictureAddDot } from '@lib/common/interfaces/picture';
-import { LocationModal } from '@lib/components/LocationModal';
+// import { LocationModal } from '@lib/components/LocationModal';
+import dynamic from 'next/dynamic';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -64,6 +65,10 @@ const initUploadData = {
   bio: '',
   tags: [],
 };
+
+const DynamicLocationModal = dynamic<any>(() => import('@lib/components/LocationModal').then(v => v.LocationModal), {
+  ssr: false,
+});
 
 const Upload: ICustomNextPage<IProps, any> = () => {
   const { t } = useTranslation();
@@ -208,6 +213,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
         <script src={`//api.map.baidu.com/api?v=3.0&ak=${process.env.BAIDU_MAP_AK}`} />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
       </Head>
       <Box>
         {
@@ -305,7 +311,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
           )
         }
       </Box>
-      <LocationModal
+      <DynamicLocationModal
         visible={locationVisible}
         onClose={closeLocation}
       />

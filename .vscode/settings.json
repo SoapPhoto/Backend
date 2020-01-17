@@ -7,6 +7,7 @@
   "cSpell.words": [
     "Autosize",
     "Formik",
+    "Geolocate",
     "Histore",
     "IEXIF",
     "Qiniu",
@@ -27,6 +28,8 @@
     "lightgray",
     "linkify",
     "localstorage",
+    "mapbox",
+    "mapboxgl",
     "maxsize",
     "mimetype",
     "minmax",
