@@ -166,6 +166,18 @@ export class PictureLocation {
    */
   @Expose()
   public sematic_description?: string;
+
+  /**
+   * 当前位置结合POI的语义化结果描述
+   *
+   * @type {string}
+   * @memberof Location
+   */
+  @Expose()
+  public pois: any[] = [];
+
+  @Expose()
+  public point!: {lng: number; lat: number};
 }
 
 // interface ILocation {

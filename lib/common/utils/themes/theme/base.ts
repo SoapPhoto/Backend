@@ -92,7 +92,7 @@ const theme: DefaultTheme = {
       menu: {
         color: colors.secondary,
         hover: {
-          color: darken(0.3, colors.secondary),
+          color: darken(0.5, colors.secondary),
           background: colors.lightgray,
         },
       },

@@ -404,11 +404,27 @@ export function getPictureUrl(key: string, style: PictureStyle = 'regular') {
 }
 
 export function formatLocationData(data: any): PictureLocation {
-  console.log(data);
   const newData = {
-    ...data.addressComponent,
-    ...pick(data, ['sematic_description', 'business', 'formatted_address']),
+    address: data.address,
+    ...data.addressComponents,
+    ...pick(data, ['sematic_description', 'business', 'formatted_address', 'point']),
   };
-  console.log(newData);
+  newData.pois = [];
+  if (data.surroundingPois?.length > 0) {
+    newData.pois = data.surroundingPois;
+  }
   return newData;
+}
+
+export function formatLocationTitle(location: PictureLocation): string {
+  if (location.pois?.length > 0) {
+    if (location.pois[0].Ji === '旅游景点') {
+      return `${location.pois[0].city || ''}${location.pois[0].title || ''}`;
+    }
+  }
+  let title = (location.country ?? '') + (location.province ?? '');
+  if (location.province !== location.city) {
+    title += (location.city ?? '');
+  }
+  return title;
 }

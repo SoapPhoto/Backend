@@ -14,6 +14,8 @@ export class LocationService {
           region: '全国',
           output: 'json',
           ak: process.env.BAIDU_MAP_BACK_AK,
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          coord_type: 1,
           scope: 2,
         },
       });

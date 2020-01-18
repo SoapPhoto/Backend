@@ -25,7 +25,9 @@ export interface IPopperProps {
   visible: boolean;
   content: ContentType;
   transition?: boolean;
-  getContainer?: Element;
+  place?: boolean;
+  wrapperStyle?: React.CSSProperties;
+  getContainer?: React.ReactInstance | (() => React.ReactInstance | null) | null;
   modifiers?: Modifiers;
   onClose(): void;
   onCreate?(data: Data): void;
@@ -118,8 +120,7 @@ export class Popper extends React.Component<IPopperProps> {
   }
 
   public render() {
-    const { children, getContainer } = this.props;
-    const { visible, content, transition } = this.props;
+    const { children, getContainer, wrapperStyle, visible, content, place } = this.props;
     const { exited } = this.state;
     const childProps: IChildProps = {
       visible,
@@ -131,16 +132,20 @@ export class Popper extends React.Component<IPopperProps> {
       },
     };
     const renders = (
-      <PopperWrapper ref={this.popperRef}>
+      <PopperWrapper style={wrapperStyle} ref={this.popperRef}>
         {typeof content === 'function' ? content(childProps) : content}
       </PopperWrapper>
     );
     return (
       <>
         {children}
-        <Portal container={getContainer}>
-          {renders}
-        </Portal>
+        {
+          place ? renders : (
+            <Portal container={getContainer}>
+              {renders}
+            </Portal>
+          )
+        }
       </>
     );
   }

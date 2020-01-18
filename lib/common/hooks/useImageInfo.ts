@@ -68,7 +68,7 @@ export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): Retu
               }
             }, {
               poiRadius: 200,
-              numPois: 20,
+              numPois: 5,
             });
           }))();
           info.location = formatLocationData(data);

@@ -5,7 +5,7 @@ import { pick, merge } from 'lodash';
 
 import { getTitle } from '@lib/common/utils';
 import {
-  IImageInfo,
+  IImageInfo, formatLocationTitle,
 } from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
 import { Button } from '@lib/components/Button';
@@ -43,7 +43,7 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useImageInfo } from '@lib/common/hooks/useImageInfo';
-import { CreatePictureAddDot } from '@lib/common/interfaces/picture';
+import { CreatePictureAddDot, PictureLocation } from '@lib/common/interfaces/picture';
 // import { LocationModal } from '@lib/components/LocationModal';
 import dynamic from 'next/dynamic';
 
@@ -90,11 +90,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
 
   const locationTitle = useMemo(() => {
     if (imageInfo?.location) {
-      let title = (imageInfo.location.country ?? '') + (imageInfo.location.province ?? '');
-      if (imageInfo.location.province !== imageInfo.location.city) {
-        title += (imageInfo.location.city ?? '');
-      }
-      return title;
+      return formatLocationTitle(imageInfo.location);
     }
     return '';
   }, [imageInfo]);
@@ -191,6 +187,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       setFile(files[0]);
     }
   };
+  const updateLocation = useCallback((newLocation: PictureLocation) => {
+    setImageInfo((info) => {
+      if (info) {
+        return {
+          ...info,
+          location: newLocation,
+        };
+      }
+      return undefined;
+    });
+  }, [setImageInfo]);
   // const setImageClassify = useCallback(async (base64: string) => {
   //   const classify = await getImageClassify(base64);
   // }, []);
@@ -312,8 +319,10 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         }
       </Box>
       <DynamicLocationModal
+        current={imageInfo?.location}
         visible={locationVisible}
         onClose={closeLocation}
+        onConfirm={updateLocation}
       />
       <EXIFEditModal
         initialValues={imageInfo ? {
