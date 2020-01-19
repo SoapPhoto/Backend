@@ -1,10 +1,18 @@
-type Query {
-  "搜索位置信息"
-  searchPlace(value: String): [SearchPlaceDetail]
-  "你想地理编码数据"
-  reverseGeocoding(location: String): PictureLocation
+enum LocationClientType {
+  BAIDU
+  MAPBOX
 }
 
+type Query {
+  "搜索位置信息"
+  searchPlace(value: String, config: LocationBaseInput): [SearchPlaceDetail]
+  "你想地理编码数据"
+  reverseGeocoding(location: String, config: LocationBaseInput): PictureLocation
+}
+
+input LocationBaseInput {
+  clientType: LocationClientType
+}
 
 type PictureLocation {
   "结构化地址信息"

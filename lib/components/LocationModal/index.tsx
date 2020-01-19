@@ -18,7 +18,7 @@ import { rem } from 'polished';
 import mapboxgl from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import {
-  transform, BD09, WGS84,
+  transform, BD09, WGS84, GCJ02,
 } from 'gcoord';
 import { useLazyQuery } from 'react-apollo';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
@@ -31,11 +31,13 @@ import { X } from '@lib/icon';
 import { SearchPlace } from '@lib/schemas/query';
 import { formatLocationTitle, formatLocationData } from '@lib/common/utils/image';
 import { debounce } from 'lodash';
+import provinceJson from '@lib/common/json/province.json';
 import { Modal, Header, Title } from '../Modal';
 import { Input } from '../Input';
 import { IconButton, Button } from '../Button';
 import { Popover } from '../Popover';
 import { Loading } from '../Loading';
+import Toast from '../Toast';
 
 interface IProps {
   visible: boolean;
@@ -154,13 +156,36 @@ export const LocationModal: React.FC<IProps> = ({
       getLocationInfo(p);
     }, city);
   };
-  const getLocationInfo = useCallback((point: [number, number]) => {
+  const getLocationInfo = useCallback((point: [number, number], poi?: any) => {
     const myGeo = new BMap.Geocoder();
     setLocationState(undefined);
     myGeo.getLocation(new BMap.Point(
       ...transform(point, WGS84, BD09) as [number, number],
-    ), (result) => {
+    ), (result: any) => {
       if (result) {
+        if (poi) {
+          result.addressComponents = {
+            ...result.addressComponents,
+            city: poi.city,
+            province: poi.province,
+            // province: poi.province,
+          };
+          result.address = poi.address;
+          const tags = poi.detail_info.tag.split(',');
+          const newPoi = {
+            Ji: tags[0],
+            SE: tags,
+            address: poi.address,
+            city: poi.city,
+            point: poi.location,
+            title: poi.name,
+            type: 0,
+            uid: poi.uid,
+          } as any;
+          // eslint-disable-next-line no-unused-expressions
+          result.surroundingPois ? result.surroundingPois.unshift(newPoi) : result.surroundingPois = [newPoi];
+          console.log(result.surroundingPois);
+        }
         setLocationState(formatLocationData(result));
       }
     }, {
@@ -168,24 +193,34 @@ export const LocationModal: React.FC<IProps> = ({
       numPois: 20,
     });
   }, []);
-  const handleConform = ({ location }: any) => {
+  const handleConform = (confirmData: any) => {
+    const { location, province } = confirmData;
+    if (!location) return Toast.error('选择的地址无效！');
+    const isChina = provinceJson.findIndex(v => v.name === province) >= 0;
     // eslint-disable-next-line no-unused-expressions
     searchPopover.current?.close();
     // const point = transform([location.lng, location.lat], BD09, WGS84) as [number, number];
-    const point = [location.lng, location.lat] as [number, number];
+    let point = [location.lng, location.lat] as [number, number];
+    if (isChina) {
+      point = transform(point, GCJ02, WGS84) as [number, number];
+    }
+    confirmData.location = {
+      lng: point[0],
+      lat: point[0],
+    };
     // eslint-disable-next-line no-unused-expressions
     map.current?.setCenter(point);
     // eslint-disable-next-line no-unused-expressions
     marker.current?.setLngLat(point).addTo(map.current!);
     // eslint-disable-next-line no-unused-expressions
     map.current?.setZoom(17);
-    getLocationInfo(point);
+    getLocationInfo(point, confirmData);
   };
   useEnhancedEffect(() => {
     if (visible) {
       let center: mapboxgl.LngLatLike = [111.94, 35.57];
       let zoom = 3;
-      mapboxgl.accessToken = 'pk.eyJ1IjoieWlpdSIsImEiOiJjazJvMmJ3M2QwejYzM21tdWdiZzR6cmUwIn0.XolZlohi-gYoIdMoen7Gyg';
+      mapboxgl.accessToken = process.env.MAPBOX_AK!;
       if (current) {
         center = transform([current.point.lng, current.point.lat], BD09, WGS84) as mapboxgl.LngLatLike;
         zoom = 17;
@@ -204,7 +239,7 @@ export const LocationModal: React.FC<IProps> = ({
         showCompass: false,
       });
       marker.current = new mapboxgl.Marker({
-        draggable: true,
+        draggable: false,
       });
       if (current) {
         marker.current.setLngLat(center).addTo(map.current!);

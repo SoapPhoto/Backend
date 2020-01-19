@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import axios from 'axios';
 import { plainToClass } from 'class-transformer';
 import { pick } from 'lodash';
+import { MapboxService } from '@server/shared/mapbox/mapbox.service';
 import { PictureLocation } from '../picture/interface/location.interface';
 
 @Injectable()
 export class LocationService {
+  constructor(
+    @Inject(forwardRef(() => MapboxService))
+    private readonly mapboxService: MapboxService,
+  ) {}
+
   public async search(value: string) {
     try {
       const { data } = await axios.get('https://api.map.baidu.com/place/v2/search', {
@@ -16,6 +22,8 @@ export class LocationService {
           ak: process.env.BAIDU_MAP_BACK_AK,
           // eslint-disable-next-line @typescript-eslint/camelcase
           coord_type: 1,
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          ret_coordtype: 'gcj02ll',
           scope: 2,
         },
       });
