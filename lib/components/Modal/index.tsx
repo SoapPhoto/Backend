@@ -132,7 +132,6 @@ export const Modal: React.FC<IModalProps> = memo(({
           pointerEvents: 'none',
         }}
         onRest={() => {
-          console.log(visible);
           if (!visible) {
             onDestroy();
           }

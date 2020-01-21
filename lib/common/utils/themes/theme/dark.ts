@@ -99,6 +99,9 @@ const theme: DefaultTheme = {
       logo: '#e8e8e8',
     },
   },
+  mapbox: {
+    style: 'yiiu/ck5nb2by35j3u1ip9r59mh8dj',
+  },
 };
 
 export default theme;

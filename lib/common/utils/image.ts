@@ -411,14 +411,14 @@ export function formatLocationData(data: any): PictureLocation {
   };
   newData.pois = [];
   if (data.surroundingPois?.length > 0) {
-    newData.pois = data.surroundingPois;
+    newData.pois = data.surroundingPois.slice(0, 3);
   }
   return newData;
 }
 
 export function formatLocationTitle(location: PictureLocation): string {
   if (location.pois?.length > 0) {
-    if (location.pois[0].Ji === '旅游景点') {
+    if (location.pois[0]) {
       return `${location.pois[0].city || ''}${location.pois[0].title || ''}`;
     }
   }

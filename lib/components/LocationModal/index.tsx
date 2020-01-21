@@ -133,7 +133,9 @@ export const LocationModal: React.FC<IProps> = ({
 }) => {
   const searchContainer = useRef<HTMLDivElement>(null);
   const searchPopover = useRef<Popover>(null);
-  const [searchPlace, { loading, data }] = useLazyQuery<{searchPlace: any[]}>(SearchPlace);
+  const [searchPlace, { loading, data }] = useLazyQuery<{searchPlace: any[]}>(SearchPlace, {
+    fetchPolicy: 'no-cache',
+  });
   const map = useRef<mapboxgl.Map>();
   const marker = useRef<mapboxgl.Marker>();
   const container = useRef<HTMLDivElement>(null);
@@ -163,6 +165,7 @@ export const LocationModal: React.FC<IProps> = ({
       ...transform(point, WGS84, BD09) as [number, number],
     ), (result: any) => {
       if (result) {
+        // 格式化选择的poi信息，优先级最高
         if (poi) {
           result.addressComponents = {
             ...result.addressComponents,
@@ -171,7 +174,7 @@ export const LocationModal: React.FC<IProps> = ({
             // province: poi.province,
           };
           result.address = poi.address;
-          const tags = poi.detail_info.tag.split(',');
+          const tags = poi.detail_info.tag.split(';');
           const newPoi = {
             Ji: tags[0],
             SE: tags,
@@ -184,7 +187,6 @@ export const LocationModal: React.FC<IProps> = ({
           } as any;
           // eslint-disable-next-line no-unused-expressions
           result.surroundingPois ? result.surroundingPois.unshift(newPoi) : result.surroundingPois = [newPoi];
-          console.log(result.surroundingPois);
         }
         setLocationState(formatLocationData(result));
       }
@@ -199,6 +201,7 @@ export const LocationModal: React.FC<IProps> = ({
     const isChina = provinceJson.findIndex(v => v.name === province) >= 0;
     // eslint-disable-next-line no-unused-expressions
     searchPopover.current?.close();
+    console.log(confirmData, location, isChina);
     // const point = transform([location.lng, location.lat], BD09, WGS84) as [number, number];
     let point = [location.lng, location.lat] as [number, number];
     if (isChina) {

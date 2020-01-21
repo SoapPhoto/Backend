@@ -188,6 +188,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     }
   };
   const updateLocation = useCallback((newLocation: PictureLocation) => {
+    console.log(newLocation);
     setImageInfo((info) => {
       if (info) {
         return {
