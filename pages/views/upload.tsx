@@ -188,7 +188,6 @@ const Upload: ICustomNextPage<IProps, any> = () => {
     }
   };
   const updateLocation = useCallback((newLocation: PictureLocation) => {
-    console.log(newLocation);
     setImageInfo((info) => {
       if (info) {
         return {
@@ -221,7 +220,7 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
         <script src={`//api.map.baidu.com/api?v=3.0&ak=${process.env.BAIDU_MAP_AK}`} />
-        <link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
       </Head>
       <Box>
         {

@@ -51,7 +51,7 @@ export const withAuth = <P extends any>(role?: string) => (
           } else {
             Router.replaceRoute('/login');
           }
-        } else if (userInfo && userInfo.status === Status.VERIFIED) {
+        } else if (userInfo && userInfo.status !== Status.VERIFIED) {
           if (server && ctx.res && ctx.req) {
             ctx.res.redirect('/auth/verify');
           } else {
@@ -66,7 +66,7 @@ export const withAuth = <P extends any>(role?: string) => (
           } else {
             Router.replaceRoute('/login');
           }
-        } else if (userInfo && userInfo.status === Status.UNVERIFIED) {
+        } else if (userInfo && userInfo.status !== Status.UNVERIFIED) {
           if (server && ctx.res && ctx.req) {
             ctx.res.redirect('/');
           } else {

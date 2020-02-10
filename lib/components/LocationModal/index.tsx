@@ -32,6 +32,7 @@ import { SearchPlace } from '@lib/schemas/query';
 import { formatLocationTitle, formatLocationData } from '@lib/common/utils/image';
 import { debounce } from 'lodash';
 import provinceJson from '@lib/common/json/province.json';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { Modal, Header, Title } from '../Modal';
 import { Input } from '../Input';
 import { IconButton, Button } from '../Button';
@@ -131,6 +132,7 @@ export const LocationModal: React.FC<IProps> = ({
   current,
   onConfirm,
 }) => {
+  const { mapbox } = useTheme();
   const searchContainer = useRef<HTMLDivElement>(null);
   const searchPopover = useRef<Popover>(null);
   const [searchPlace, { loading, data }] = useLazyQuery<{searchPlace: any[]}>(SearchPlace, {
@@ -201,7 +203,6 @@ export const LocationModal: React.FC<IProps> = ({
     const isChina = provinceJson.findIndex(v => v.name === province) >= 0;
     // eslint-disable-next-line no-unused-expressions
     searchPopover.current?.close();
-    console.log(confirmData, location, isChina);
     // const point = transform([location.lng, location.lat], BD09, WGS84) as [number, number];
     let point = [location.lng, location.lat] as [number, number];
     if (isChina) {
@@ -232,7 +233,7 @@ export const LocationModal: React.FC<IProps> = ({
         center,
         zoom,
         container: container.current!,
-        style: 'mapbox://styles/mapbox/streets-v10',
+        style: `mapbox://styles/${mapbox.style}`,
         // 禁止旋转
         pitchWithRotate: false,
         attributionControl: false,
