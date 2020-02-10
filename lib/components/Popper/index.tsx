@@ -120,7 +120,9 @@ export class Popper extends React.Component<IPopperProps> {
   }
 
   public render() {
-    const { children, getContainer, wrapperStyle, visible, content, place } = this.props;
+    const {
+      children, getContainer, wrapperStyle, visible, content, place,
+    } = this.props;
     const { exited } = this.state;
     const childProps: IChildProps = {
       visible,

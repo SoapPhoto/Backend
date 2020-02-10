@@ -299,6 +299,7 @@ export const LocationModal: React.FC<IProps> = ({
   }, [locationState, onClose, onConfirm]);
   return (
     <ModalContent
+      closeIcon={false}
       visible={visible}
       onClose={onClose}
       afterClose={afterClose}
