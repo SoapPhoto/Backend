@@ -9,7 +9,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public formatted_address!: string;
+  public formatted_address?: string;
 
   /**
    * 坐标所在商圈信息
@@ -18,7 +18,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public business!: string;
+  public business?: string;
 
   /**
    * 国家
@@ -27,7 +27,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public country!: string;
+  public country?: string;
 
   /**
    * 国家代码
@@ -36,7 +36,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public country_code!: string;
+  public country_code?: string;
 
   /**
    * 国家代码
@@ -45,7 +45,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public country_code_iso!: string;
+  public country_code_iso?: string;
 
   /**
    * 国家代码
@@ -54,7 +54,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public country_code_iso2!: string;
+  public country_code_iso2?: string;
 
   /**
    * 省名
@@ -75,7 +75,7 @@ export class PictureLocation {
   public city!: string;
 
   @Expose()
-  public city_level!: number;
+  public city_level?: number;
 
   /**
    * 区县名
@@ -102,7 +102,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public town_code!: string;
+  public town_code?: string;
 
   /**
    * 行政区划代码
@@ -111,7 +111,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public adcode!: string;
+  public adcode?: string;
 
   /**
    * 街道名
@@ -120,7 +120,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public street!: string;
+  public street?: string;
 
   /**
    * 街道门牌号
@@ -129,7 +129,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public street_number!: string;
+  public street_number?: string;
 
   /**
    * 相对当前坐标点的方向，当有门牌号的时候返回数据
@@ -138,7 +138,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public direction!: string;
+  public direction?: string;
 
   /**
    * 相对当前坐标点的距离，当有门牌号的时候返回数据
@@ -147,7 +147,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public distance!: string;
+  public distance?: string;
 
   /**
    * 街道
@@ -156,7 +156,7 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public roads!: string[];
+  public roads?: string[];
 
   /**
    * 当前位置结合POI的语义化结果描述
@@ -165,7 +165,19 @@ export class PictureLocation {
    * @memberof Location
    */
   @Expose()
-  public sematic_description!: string;
+  public sematic_description?: string;
+
+  /**
+   * 当前位置结合POI的语义化结果描述
+   *
+   * @type {string}
+   * @memberof Location
+   */
+  @Expose()
+  public pois: any[] = [];
+
+  @Expose()
+  public point!: {lng: number; lat: number};
 }
 
 // interface ILocation {

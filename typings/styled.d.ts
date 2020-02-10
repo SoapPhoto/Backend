@@ -93,5 +93,8 @@ declare module 'styled-components' {
         };
       };
     };
+    mapbox: {
+      style: string;
+    };
   }
 }

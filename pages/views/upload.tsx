@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
 import { getTitle } from '@lib/common/utils';
 import {
-  IImageInfo,
+  IImageInfo, formatLocationTitle,
 } from '@lib/common/utils/image';
 import { request } from '@lib/common/utils/request';
 import { Button } from '@lib/components/Button';
@@ -43,7 +43,9 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useImageInfo } from '@lib/common/hooks/useImageInfo';
-import { CreatePictureAddDot } from '@lib/common/interfaces/picture';
+import { CreatePictureAddDot, PictureLocation } from '@lib/common/interfaces/picture';
+// import { LocationModal } from '@lib/components/LocationModal';
+import dynamic from 'next/dynamic';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
@@ -64,11 +66,16 @@ const initUploadData = {
   tags: [],
 };
 
+const DynamicLocationModal = dynamic<any>(() => import('@lib/components/LocationModal').then(v => v.LocationModal), {
+  ssr: false,
+});
+
 const Upload: ICustomNextPage<IProps, any> = () => {
   const { t } = useTranslation();
   const imageRef = React.useRef<File>();
   const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo(imageRef);
   const { imageUrl, imageInfo, classify } = imageData;
+  const [locationVisible, setLocationVisible] = React.useState(false);
   const [isLocation, setIsLocation] = React.useState(true);
   const [uploadLoading, setUploadLoading] = React.useState(false);
   const [disabled, setDisabled] = React.useState(false);
@@ -80,6 +87,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   const [data, _setData] = useState<ICreatePictureData>({
     ...initUploadData,
   });
+
+  const locationTitle = useMemo(() => {
+    if (imageInfo?.location) {
+      return formatLocationTitle(imageInfo.location);
+    }
+    return '';
+  }, [imageInfo]);
 
   // TODO 图片自动识别功能
   // useEffect(() => {
@@ -173,6 +187,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       setFile(files[0]);
     }
   };
+  const updateLocation = useCallback((newLocation: PictureLocation) => {
+    setImageInfo((info) => {
+      if (info) {
+        return {
+          ...info,
+          location: newLocation,
+        };
+      }
+      return undefined;
+    });
+  }, [setImageInfo]);
   // const setImageClassify = useCallback(async (base64: string) => {
   //   const classify = await getImageClassify(base64);
   // }, []);
@@ -182,12 +207,20 @@ const Upload: ICustomNextPage<IProps, any> = () => {
       ...initUploadData,
     });
   }, [clear]);
+  const openLocation = useCallback(() => {
+    setLocationVisible(true);
+  }, []);
+  const closeLocation = useCallback(() => {
+    setLocationVisible(false);
+  }, []);
   return (
     <Wrapper>
       <Head>
         <title>{getTitle('upload.title', t)}</title>
         <script src="//unpkg.com/exif-js@2.3.0/exif.js" />
         <script src="//unpkg.com/fast-average-color@5.0.0/dist/index.js" />
+        <script src={`//api.map.baidu.com/api?v=3.0&ak=${process.env.BAIDU_MAP_AK}`} />
+        <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
       </Head>
       <Box>
         {
@@ -195,18 +228,17 @@ const Upload: ICustomNextPage<IProps, any> = () => {
             <ContentBox columns="40% 1fr" gap="36px">
               <PreviewBox loading={uploadLoading ? 1 : 0}>
                 <PreviewHandleContent>
-                  {
-                    imageInfo?.location && (
-                      <PreviewBtn
-                        transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                      >
-                        <MapPin size={14} />
-                        <span>{imageInfo.location.formatted_address}</span>
-                      </PreviewBtn>
-                    )
-                  }
+                  <PreviewBtn
+                    transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={openLocation}
+                  >
+                    <MapPin size={14} />
+                    {
+                      locationTitle && <span>{locationTitle}</span>
+                    }
+                  </PreviewBtn>
                   <TrashIcon onClick={resetData}>
                     <Trash2 style={{ strokeWidth: '2.5px' }} size={14} />
                   </TrashIcon>
@@ -286,6 +318,12 @@ const Upload: ICustomNextPage<IProps, any> = () => {
           )
         }
       </Box>
+      <DynamicLocationModal
+        current={imageInfo?.location}
+        visible={locationVisible}
+        onClose={closeLocation}
+        onConfirm={updateLocation}
+      />
       <EXIFEditModal
         initialValues={imageInfo ? {
           make: imageInfo.make,

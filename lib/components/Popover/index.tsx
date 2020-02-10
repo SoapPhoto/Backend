@@ -23,7 +23,7 @@ interface IPopoverProps {
    * @type {Trigger}
    * @memberof IPopoverProps
    */
-  trigger: Trigger;
+  trigger?: Trigger;
   onClose?: () => void;
   onOpen?: () => void;
   /**
@@ -49,6 +49,9 @@ interface IPopoverProps {
    * @memberof IPopoverProps
    */
   mobile?: boolean;
+  place?: boolean;
+  wrapperStyle?: React.CSSProperties;
+  getContainer?: React.ReactInstance | (() => React.ReactInstance | null) | null;
 }
 
 @observer
@@ -57,7 +60,6 @@ export class Popover extends React.Component<IPopoverProps> {
   public static defaultProps: Partial<IPopoverProps> = {
     theme: 'light',
     placement: 'bottom',
-    trigger: 'hover',
   };
 
   @observable public visible = false;
@@ -149,9 +151,12 @@ export class Popover extends React.Component<IPopoverProps> {
       contentStyle,
       arrow = true,
       theme,
+      place = false,
       placement,
       trigger,
       mobile,
+      getContainer,
+      wrapperStyle,
     } = this.props;
     const child: any = Children.only(children);
     const event = {
@@ -202,7 +207,10 @@ export class Popover extends React.Component<IPopoverProps> {
     }
     return (
       <Popper
+        getContainer={getContainer}
+        wrapperStyle={wrapperStyle}
         transition
+        place={place}
         placement={placement}
         ref={(e) => {
           if (e) {

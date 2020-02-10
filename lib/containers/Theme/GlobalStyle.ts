@@ -29,6 +29,10 @@ export const GlobalStyle = createGlobalStyle<{theme?: any}>`
     opacity: 1 !important;
   }
 
+  .tangram-suggestion-main {
+    z-index: 1000000000000000000;
+  }
+
   ${nprogress}
   ${normalize}
   ${scroll}

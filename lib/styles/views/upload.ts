@@ -155,7 +155,6 @@ export const PreviewBtn = styled(motion.button)`
   align-items: center;
   position: absolute;
   background: ${_ => rgba(_.theme.colors.pure, 0.8)};
-  padding: ${rem(2)} ${rem(14)};
   left: ${rem(12)};
   top: ${rem(12)};
   border-radius: ${rem(28)};
@@ -166,6 +165,10 @@ export const PreviewBtn = styled(motion.button)`
     & { backdrop-filter: saturate(180%) blur(20px); }
   }
   svg {
-    margin-right: ${rem(4)};
+    width: ${rem(28)};
+  }
+  > span {
+    line-height: ${rem(28)};
+    margin-right: ${rem(8)};
   }
 `;

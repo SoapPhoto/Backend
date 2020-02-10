@@ -2,9 +2,9 @@ import {
   rem, rgba,
 } from 'polished';
 import styled, { css } from 'styled-components';
+import { motion } from 'framer-motion';
 
 import { theme } from '@lib/common/utils/themes';
-import { motion } from 'framer-motion';
 
 export const LabelBox = styled.label`
   position: relative;

@@ -1,0 +1,78 @@
+enum LocationClientType {
+  BAIDU
+  MAPBOX
+}
+
+type Query {
+  "搜索位置信息"
+  searchPlace(value: String, config: LocationBaseInput): [SearchPlaceDetail]
+  "你想地理编码数据"
+  reverseGeocoding(location: String, config: LocationBaseInput): PictureLocation
+}
+
+input LocationBaseInput {
+  clientType: LocationClientType
+}
+
+type PictureLocation {
+  "结构化地址信息"
+  formatted_address: String
+  "坐标所在商圈信息"
+  business: String
+  "国家"
+  country: String
+  "国家代码"
+  country_code: String
+  "国家代码"
+  country_code_iso: String
+  "国家代码"
+  country_code_iso2: String
+  "省名"
+  province: String
+  "城市名"
+  city: String
+  city_level: Float
+  "区县名"
+  district: String
+  "乡镇名"
+  town: String
+  "乡镇id"
+  town_code: String
+  "行政区划代码"
+  adcode: String
+  "街道名"
+  street: String
+  "街道门牌号"
+  street_number: String
+  "相对当前坐标点的方向，当有门牌号的时候返回数据"
+  direction: String
+  "相对当前坐标点的距离，当有门牌号的时候返回数据"
+  distance: String
+  "街道"
+  roads: [String]
+  "当前位置结合POI的语义化结果描述"
+  sematic_description: String
+}
+
+type SearchPlaceDetailInfo {
+  tag: String
+}
+
+type SearchPlaceDetailLocation {
+  lat: Float
+  lng: Float
+}
+
+type SearchPlaceDetail {
+  name: String
+  location: SearchPlaceDetailLocation
+  address: String
+  province: String
+  city: String
+  area: String
+  street_id: String
+  telephone: String
+  detail: Float
+  uid: String
+  detail_info: SearchPlaceDetailInfo
+}

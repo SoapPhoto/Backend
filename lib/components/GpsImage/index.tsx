@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
-const getUrl = (gps: number[]) => `https://restapi.amap.com/v3/staticmap?location=${
-  gps[1]
-},${gps[0]}&zoom=15&size=600*300&scale=2&markers=mid,,A:${
-  gps[1]
-},${gps[0]}&key=e55a0b1eb15adb1ff24cec5a7aacd637`;
+import { transform, WGS84, GCJ02 } from 'gcoord';
+import { useTheme } from '@lib/common/utils/themes/useTheme';
+
+// const getUrl = (gps: number[]) => `https://restapi.amap.com/v3/staticmap?location=${
+//   gps[1]
+// },${gps[0]}&zoom=15&size=600*300&scale=2&markers=mid,,A:${
+//   gps[1]
+// },${gps[0]}&key=e55a0b1eb15adb1ff24cec5a7aacd637`;
 
 interface IProps {
   gps: number[];
@@ -25,8 +28,13 @@ const Wrapper = styled.div`
 export const GpsImage: React.FC<IProps> = ({
   gps,
   alt = '',
-}) => (
-  <Wrapper>
-    <img src={getUrl(gps)} alt={alt} />
-  </Wrapper>
-);
+}) => {
+  const { mapbox } = useTheme();
+  const gpsString = useMemo(() => transform([gps[1], gps[0]], GCJ02, WGS84), [gps]).toString();
+  const src = useMemo(() => `//api.mapbox.com/styles/v1/${mapbox.style}/static/pin-s-attraction+285A98(${gpsString},14)/${gpsString},14,0,0/600x300@2x?access_token=${process.env.MAPBOX_AK}&attribution=false&logo=false`, [gpsString, mapbox.style]);
+  return (
+    <Wrapper>
+      <img src={src} alt={alt} />
+    </Wrapper>
+  );
+};
