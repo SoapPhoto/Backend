@@ -27,7 +27,7 @@ import { customMedia } from '@lib/common/utils/mediaQuery';
 import { theme } from '@lib/common/utils/themes';
 import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
 import { PictureLocation } from '@lib/common/interfaces/picture';
-import { X } from '@lib/icon';
+import { X, Search as SearchIcon } from '@lib/icon';
 import { SearchPlace } from '@lib/schemas/query';
 import { formatLocationTitle, formatLocationData } from '@lib/common/utils/image';
 import { debounce } from 'lodash';
@@ -124,6 +124,13 @@ const SearchPopoverItemTitle = styled.p`
 const SearchPopoverItemBio = styled.p`
   font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   color: ${theme('colors.secondary')};
+`;
+
+const SearchIconBtn = styled(IconButton)`
+  position: absolute;
+  right: ${rem(8)};
+  top: 0;
+  bottom: 0;
 `;
 
 export const LocationModal: React.FC<IProps> = ({
@@ -309,6 +316,7 @@ export const LocationModal: React.FC<IProps> = ({
               wrapperStyle={{
                 width: '100%',
               }}
+              mobile
               contentStyle={{ padding: 0 }}
               ref={searchPopover}
               placement="bottom-start"
@@ -355,6 +363,9 @@ export const LocationModal: React.FC<IProps> = ({
                 onPressEnter={query}
               />
             </Popover>
+            <SearchIconBtn onClick={query}>
+              <SearchIcon size={20} />
+            </SearchIconBtn>
           </SearchBox>
         </Search>
         <Content>
