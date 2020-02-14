@@ -42,15 +42,12 @@ export class LocationService {
       const { data } = await axios.get('https://api.map.baidu.com/reverse_geocoding/v3/', {
         params: {
           location: transform(geo, GCJ02, BD09).toString(),
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          extensions_road: true,
           region: '全国',
           output: 'json',
-          limit: 5,
           // eslint-disable-next-line @typescript-eslint/camelcase
           extensions_poi: 1,
           // eslint-disable-next-line @typescript-eslint/camelcase
-          poi_types: '自然地物|旅游景点|文化传媒|休闲娱乐|风景区|飞机场|火车站|地铁站|教育培训|房地产|医疗',
+          poi_types: '自然地物|旅游景点|文化传媒|风景区|飞机场|火车站|地铁站|房地产|医疗|高等院校|中学|小学|图书馆|科技馆|体育场馆|剧院|歌舞厅|休闲广场',
           ak: process.env.BAIDU_MAP_BACK_AK,
           scope: 2,
         },
