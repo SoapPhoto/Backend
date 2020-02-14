@@ -227,17 +227,21 @@ const Upload: ICustomNextPage<IProps, any> = () => {
             <ContentBox columns="40% 1fr" gap="36px">
               <PreviewBox loading={uploadLoading ? 1 : 0}>
                 <PreviewHandleContent>
-                  <PreviewBtn
-                    transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={openLocation}
-                  >
-                    <MapPin size={14} />
-                    {
-                      locationTitle && <span>{locationTitle}</span>
-                    }
-                  </PreviewBtn>
+                  {
+                    locationTitle && (
+                      <PreviewBtn
+                        transformTemplate={({ scale }: any) => `translate(0, 0) scale(${scale})`}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={openLocation}
+                      >
+                        <MapPin size={14} />
+                        {
+                          locationTitle && <span>{locationTitle}</span>
+                        }
+                      </PreviewBtn>
+                    )
+                  }
                   <TrashIcon onClick={resetData}>
                     <Trash2 style={{ strokeWidth: '2.5px' }} size={14} />
                   </TrashIcon>

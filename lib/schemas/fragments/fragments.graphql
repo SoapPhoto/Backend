@@ -348,19 +348,18 @@ fragment PictureLocationFragment on PictureLocation {
   business
   country
   country_code
-  country_code_iso
-  country_code_iso2
   province
   city
-  city_level
   district
   town
-  town_code
-  adcode
-  street
-  street_number
-  direction
-  distance
-  roads
-  sematic_description
+  location {
+    lat
+    lng
+  }
+  pois {
+    addr
+    name
+    poiType
+    tag
+  }
 }

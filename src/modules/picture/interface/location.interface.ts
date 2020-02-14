@@ -1,4 +1,52 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
+
+@Exclude()
+export class Poi {
+  /**
+   * 地址
+   *
+   * @type {string}
+   * @memberof Poi
+   */
+  @Expose()
+  public addr?: string;
+
+  /**
+   * 名称
+   *
+   * @type {string}
+   * @memberof Poi
+   */
+  @Expose()
+  public name?: string;
+
+  /**
+   * 类型
+   *
+   * @type {string}
+   * @memberof Poi
+   */
+  @Expose()
+  public poiType?: string;
+
+  /**
+   * point
+   *
+   * @type {any}
+   * @memberof Poi
+   */
+  @Expose()
+  public point?: any;
+
+  /**
+   * tag
+   *
+   * @type {string}
+   * @memberof Poi
+   */
+  @Expose()
+  public tag?: string;
+}
 
 @Exclude()
 export class PictureLocation {
@@ -39,24 +87,6 @@ export class PictureLocation {
   public country_code?: string;
 
   /**
-   * 国家代码
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public country_code_iso?: string;
-
-  /**
-   * 国家代码
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public country_code_iso2?: string;
-
-  /**
    * 省名
    *
    * @type {string}
@@ -73,9 +103,6 @@ export class PictureLocation {
    */
   @Expose()
   public city!: string;
-
-  @Expose()
-  public city_level?: number;
 
   /**
    * 区县名
@@ -96,88 +123,16 @@ export class PictureLocation {
   public town!: string;
 
   /**
-   * 乡镇id
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public town_code?: string;
-
-  /**
-   * 行政区划代码
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public adcode?: string;
-
-  /**
-   * 街道名
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public street?: string;
-
-  /**
-   * 街道门牌号
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public street_number?: string;
-
-  /**
-   * 相对当前坐标点的方向，当有门牌号的时候返回数据
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public direction?: string;
-
-  /**
-   * 相对当前坐标点的距离，当有门牌号的时候返回数据
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public distance?: string;
-
-  /**
-   * 街道
-   *
-   * @type {string[]}
-   * @memberof Location
-   */
-  @Expose()
-  public roads?: string[];
-
-  /**
    * 当前位置结合POI的语义化结果描述
    *
    * @type {string}
    * @memberof Location
    */
   @Expose()
-  public sematic_description?: string;
-
-  /**
-   * 当前位置结合POI的语义化结果描述
-   *
-   * @type {string}
-   * @memberof Location
-   */
-  @Expose()
-  public pois: any[] = [];
+  public pois: Poi[] = [];
 
   @Expose()
-  public point!: {lng: number; lat: number};
+  public location!: {lng: number; lat: number};
 }
 
 // interface ILocation {

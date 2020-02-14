@@ -233,7 +233,7 @@ export const LocationModal: React.FC<IProps> = ({
       let zoom = 3;
       mapboxgl.accessToken = process.env.MAPBOX_AK!;
       if (current) {
-        center = transform([current.point.lng, current.point.lat], BD09, WGS84) as mapboxgl.LngLatLike;
+        center = transform([current.location.lng, current.location.lat], GCJ02, WGS84) as mapboxgl.LngLatLike;
         zoom = 17;
       }
       map.current = new mapboxgl.Map({
@@ -311,7 +311,8 @@ export const LocationModal: React.FC<IProps> = ({
             <XButton />
           </IconButton>
         </Header>
-        <Search ref={searchContainer}>
+        {/* TODO: 功能未完善，暂时关闭 */}
+        {/* <Search ref={searchContainer}>
           <SearchBox>
             <Popover
               wrapperStyle={{
@@ -368,14 +369,14 @@ export const LocationModal: React.FC<IProps> = ({
               <SearchIcon size={20} />
             </SearchIconBtn>
           </SearchBox>
-        </Search>
+        </Search> */}
         <Content>
           <div ref={container} style={{ width: '100%', height: '100%' }} />
-          <Handle>
+          {/* <Handle>
             <Button disabled={!locationState} onClick={confirm}>
               添加位置信息
             </Button>
-          </Handle>
+          </Handle> */}
         </Content>
       </Wrapper>
     </ModalContent>

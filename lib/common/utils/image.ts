@@ -407,7 +407,7 @@ export function formatLocationData(data: any): PictureLocation {
   const newData = {
     address: data.address,
     ...data.addressComponents,
-    ...pick(data, ['sematic_description', 'business', 'formatted_address', 'point']),
+    ...pick(data, ['sematic_description', 'business', 'formatted_address', 'point', 'country']),
   };
   newData.pois = [];
   if (data.surroundingPois?.length > 0) {
@@ -417,14 +417,14 @@ export function formatLocationData(data: any): PictureLocation {
 }
 
 export function formatLocationTitle(location: PictureLocation): string {
-  if (location.pois?.length > 0) {
-    if (location.pois[0]) {
-      return `${location.pois[0].city || ''}${location.pois[0].title || ''}`;
-    }
-  }
-  let title = (location.country ?? '') + (location.province ?? '');
+  let title = (location.province ?? '');
   if (location.province !== location.city) {
     title += (location.city ?? '');
+  }
+  if (location.pois?.length > 0) {
+    if (location.pois[0]) {
+      title += ` · ${location.pois[0].name}`;
+    }
   }
   return title;
 }

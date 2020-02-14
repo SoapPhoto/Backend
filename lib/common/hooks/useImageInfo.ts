@@ -56,33 +56,18 @@ export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): Retu
         imageRef.current = file;
         const [info, url, base64] = await getImageInfo(file);
         if (info.exif.location) {
-          const data = await (() => new Promise<any>((resolve, reject) => {
-            const myGeo = new BMap.Geocoder();
-            myGeo.getLocation(new BMap.Point(
-              ...transform([info.exif.location![1], info.exif.location![0]], GCJ02, BD09) as [number, number],
-            ), (result) => {
-              if (result) {
-                resolve(result);
-              } else {
-                reject(new Error('error getLocation'));
-              }
-            }, {
-              poiRadius: 200,
-              numPois: 5,
-            });
-          }))();
-          info.location = formatLocationData(data);
-          // const { data } = await apollo.query({
-          //   query: ReverseGeocoding,
-          //   variables: {
-          //     location: info.exif.location.toString(),
-          //   },
-          //   fetchPolicy: 'network-only',
-          // });
-          // info.location = data.reverseGeocoding;
+          const { data } = await apollo.query({
+            query: ReverseGeocoding,
+            variables: {
+              location: info.exif.location.toString(),
+            },
+            fetchPolicy: 'network-only',
+          });
+          // console.log(data);
+          info.location = data.reverseGeocoding;
         }
         base64Ref.current = base64;
-        // TODO 获取图片信息
+        // TODO 获取图片信息失败
         // setImageClassify();
         setImageUrl(url);
         setImageInfo(info);
@@ -93,7 +78,7 @@ export const useImageInfo = (imageRef: MutableRefObject<File | undefined>): Retu
     } else {
       Toast.warning(t('upload.message.image_format_error'));
     }
-  }, [imageRef, t]);
+  }, [apollo, imageRef, t]);
   const clear = useCallback(() => {
     setImageUrl('');
     setImageInfo(undefined);
