@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { pick } from 'lodash';
-import { observer } from 'mobx-react';
+import { observer, useLocalStore } from 'mobx-react';
 import { useMutation } from 'react-apollo';
 import { useRouter as useBaseRouter } from 'next/router';
 
@@ -46,9 +46,20 @@ export const PictureInfo: React.FC<IProps> = observer(({
   } = useRouter();
   const { push, replace } = useBaseRouter();
   const { t } = useTranslation();
-  const [EXIFVisible, setEXIFVisible] = useState(false);
-  const [collectionVisible, setCollectionVisible] = useState(false);
-  const [editVisible, setEditVisible] = useState(false);
+  const modalData = useLocalStore(() => ({
+    EXIFVisible: false,
+    collectionVisible: false,
+    editVisible: false,
+    setEXIFVisible(value: boolean) {
+      this.EXIFVisible = value;
+    },
+    setCollectionVisible(value: boolean) {
+      this.collectionVisible = value;
+    },
+    setEditVisible(value: boolean) {
+      this.editVisible = value;
+    },
+  }));
   const { isLogin } = useAccountStore();
   const { colors } = useTheme();
   const [update] = useMutation<{updatePicture: PictureEntity}>(UpdatePicture);
@@ -77,26 +88,26 @@ export const PictureInfo: React.FC<IProps> = observer(({
     if (query.modal) {
       switch (query.modal) {
         case 'info':
-          setEXIFVisible(true);
+          modalData.setEXIFVisible(true);
           break;
         case 'setting':
-          setEditVisible(isOwner);
+          modalData.setEditVisible(isOwner);
           if (!isOwner) openWithRoute('setting', false, true);
           break;
         case 'addCollection':
-          setCollectionVisible(isLogin);
+          modalData.setCollectionVisible(isLogin);
           if (!isLogin) openWithRoute('addCollection', false, true);
           break;
         default:
-          setEXIFVisible(false);
-          setCollectionVisible(false);
-          setEditVisible(false);
+          modalData.setEXIFVisible(false);
+          modalData.setCollectionVisible(false);
+          modalData.setEditVisible(false);
           break;
       }
     } else {
-      setEXIFVisible(false);
-      setCollectionVisible(false);
-      setEditVisible(false);
+      modalData.setEXIFVisible(false);
+      modalData.setCollectionVisible(false);
+      modalData.setEditVisible(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.modal, pathname]);
@@ -190,7 +201,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
           <>
             <AddPictureCollectionModal
               picture={info}
-              visible={collectionVisible}
+              visible={modalData.collectionVisible}
               onClose={closeCollection}
               currentCollections={info.currentCollections || []}
               setPicture={setPicture}
@@ -198,7 +209,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
             {
               isOwner && (
                 <EditPictureModal
-                  visible={editVisible}
+                  visible={modalData.editVisible}
                   onClose={closeEdit}
                   defaultValue={{
                     ...pick(info, ['title', 'bio', 'isPrivate']),
@@ -214,7 +225,7 @@ export const PictureInfo: React.FC<IProps> = observer(({
         )
       }
       <EXIFModal
-        visible={EXIFVisible}
+        visible={modalData.EXIFVisible}
         onClose={closeEXIF}
         picture={info}
       />

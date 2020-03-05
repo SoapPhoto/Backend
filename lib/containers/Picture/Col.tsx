@@ -1,7 +1,7 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import { PictureEntity } from '@lib/common/interfaces/picture';
-import { connect } from '@lib/common/utils/store';
 import { PictureItem } from './Item';
 import { Col, ColItem } from './styles';
 
@@ -18,7 +18,7 @@ interface IListProps {
   like?: (data: PictureEntity) => void;
 }
 
-export const List = connect<React.FC<IListProps>>()(({
+export const List: React.FC<IListProps> = observer(({
   list,
   like,
 }: IListProps) => (
@@ -31,7 +31,7 @@ export const List = connect<React.FC<IListProps>>()(({
   </>
 ));
 
-export default connect<React.FC<IProps>>()(({
+export default observer<React.FC<IProps>>(({
   list,
   col,
   like,

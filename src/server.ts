@@ -5,7 +5,7 @@ import '@common/env';
 
 import next from 'next';
 import express, { Request, Response } from 'express';
-import mobxReact from 'mobx-react';
+import { useStaticRendering } from 'mobx-react';
 import path from 'path';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -22,7 +22,8 @@ const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev, quiet: false });
 const handle = app.getRequestHandler();
 
-mobxReact.useStaticRendering(true);
+// eslint-disable-next-line react-hooks/rules-of-hooks
+useStaticRendering(true);
 
 const tranLocate = (value: string) => value.replace(/_/g, '-').replace(/\s/g, '').toLowerCase().split(',')[0];
 

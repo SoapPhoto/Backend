@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 
 import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';

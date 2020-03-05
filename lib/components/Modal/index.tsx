@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { Transition } from '@react-spring/web/index.cjs';
 import { timingFunctions, rem } from 'polished';
+import { Portal } from 'react-portal';
 
 import {
   enableScroll, disableScroll,
@@ -14,7 +15,6 @@ import { theme } from '@lib/common/utils/themes';
 import {
   Box, Content, Mask, Wrapper, XIcon,
 } from './styles';
-import { Portal } from '../Portal';
 
 export interface IModalProps {
   visible: boolean;

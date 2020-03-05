@@ -2,10 +2,10 @@ import PopperJS, { Data, Modifiers, Placement } from 'popper.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
+import { Portal } from 'react-portal';
 
 import { isIn } from '@lib/common/utils';
 import { observer } from 'mobx-react';
-import { Portal } from '../Portal';
 
 interface IChildProps {
   visible: boolean;
@@ -143,7 +143,7 @@ export class Popper extends React.Component<IPopperProps> {
         {children}
         {
           place ? renders : (
-            <Portal container={getContainer}>
+            <Portal>
               {renders}
             </Portal>
           )
