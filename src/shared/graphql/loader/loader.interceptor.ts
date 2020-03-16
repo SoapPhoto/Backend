@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
 import {
-  NestInterceptor, ExecutionContext, CallHandler, InternalServerErrorException, createParamDecorator, Injectable,
+  NestInterceptor, ExecutionContext, CallHandler, InternalServerErrorException, Injectable,
 } from '@nestjs/common';
 
 import { ModuleRef } from '@nestjs/core';

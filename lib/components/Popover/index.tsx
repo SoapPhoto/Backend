@@ -3,7 +3,7 @@ import React, { Children } from 'react';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { animated, Transition } from '@react-spring/web/index.cjs';
+import { animated, Transition } from 'react-spring/renderprops';
 
 import { timingFunctions } from 'polished';
 import { isMobile } from '@lib/common/utils/isMobile';
@@ -247,53 +247,53 @@ export class Popover extends React.Component<IPopoverProps> {
         visible={this.visible}
         onClose={this.onClose}
         content={({ visible, close }) => (
-          <Transition
-            items={visible}
-            config={{
-              duration: 200,
-            }}
-            from={{
-              transform: 'scale3d(0.98, 0.98, 0.98)',
-              opacity: 0,
-            }}
-            enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
-            leave={{
-              opacity: 0,
-              transform: 'scale3d(0.98, 0.98, 0.98)',
-              pointerEvents: 'none',
-            }}
-            onRest={() => {
-              if (!visible) {
-                close();
-              }
+          // <Transition
+          //   items={visible}
+          //   config={{
+          //     duration: 200,
+          //   }}
+          //   from={{
+          //     transform: 'scale3d(0.98, 0.98, 0.98)',
+          //     opacity: 0,
+          //   }}
+          //   enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
+          //   leave={{
+          //     opacity: 0,
+          //     transform: 'scale3d(0.98, 0.98, 0.98)',
+          //     pointerEvents: 'none',
+          //   }}
+          //   onRest={() => {
+          //     if (!visible) {
+          //       close();
+          //     }
+          //   }}
+          // >
+          //   {
+          //     (show: boolean) => show && (styles => (
+          <animated.div
+            style={{
+              transitionTimingFunction: timingFunctions('easeInOutSine'),
+              transition: '.2s all',
+              // ...styles,
             }}
           >
             {
-              (show: boolean) => show && (styles => (
-                <animated.div
-                  style={{
-                    transitionTimingFunction: timingFunctions('easeInOutSine'),
-                    transition: '.2s all',
-                    ...styles,
-                  }}
-                >
-                  {
-                    arrow && (
-                      <Arrow
-                        x-theme={theme}
-                        x-placement={this.placement}
-                        placement={this.placement}
-                        ref={this.arrowRef}
-                      />
-                    )
-                  }
-                  <Content x-theme={theme} style={contentStyle}>
-                    {contentRender}
-                  </Content>
-                </animated.div>
-              ))
+              arrow && (
+                <Arrow
+                  x-theme={theme}
+                  x-placement={this.placement}
+                  placement={this.placement}
+                  ref={this.arrowRef}
+                />
+              )
             }
-          </Transition>
+            <Content x-theme={theme} style={contentStyle}>
+              {contentRender}
+            </Content>
+          </animated.div>
+          // ))
+          //   }
+          // </Transition>
         )}
       >
         {childrenRender}

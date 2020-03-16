@@ -1,7 +1,7 @@
 import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
-import { Transition } from '@react-spring/web/index.cjs';
+import { Transition } from 'react-spring/renderprops';
 import { timingFunctions, rem } from 'polished';
 import { Portal } from 'react-portal';
 
@@ -98,7 +98,7 @@ export const Modal: React.FC<IModalProps> = memo(({
       setDestroy(false);
       onEnter();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,7 +138,7 @@ export const Modal: React.FC<IModalProps> = memo(({
         }}
       >
         {
-          (show: boolean) => show && (styles => (
+          (show: boolean) => show && ((styles: any) => (
             <div>
               <Mask
                 style={{
@@ -169,7 +169,7 @@ export const Modal: React.FC<IModalProps> = memo(({
                   >
                     {
                       closeIcon && fullscreen
-                          && <XIcon onClick={onClose} />
+                      && <XIcon onClick={onClose} />
                     }
                     {children}
                   </Box>

@@ -121,9 +121,8 @@ export class Popper extends React.Component<IPopperProps> {
 
   public render() {
     const {
-      children, getContainer, wrapperStyle, visible, content, place,
+      children, wrapperStyle, visible, content, place,
     } = this.props;
-    const { exited } = this.state;
     const childProps: IChildProps = {
       visible,
       close: () => {
@@ -133,9 +132,11 @@ export class Popper extends React.Component<IPopperProps> {
         });
       },
     };
+    const c = typeof content === 'function' ? content(childProps) : content;
+    console.log(typeof content === 'function');
     const renders = (
       <PopperWrapper style={wrapperStyle} ref={this.popperRef}>
-        {typeof content === 'function' ? content(childProps) : content}
+        {c}
       </PopperWrapper>
     );
     return (

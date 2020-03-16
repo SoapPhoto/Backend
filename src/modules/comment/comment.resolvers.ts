@@ -1,5 +1,5 @@
 import {
-  Args, Context, Mutation, Query, Resolver, ResolveProperty, Parent,
+  Args, Context, Mutation, Query, Resolver, ResolveField, Parent,
 } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment
 export class CommentResolver {
   constructor(
     private readonly commentService: CommentService,
-  ) {}
+  ) { }
 
   @Query()
   public async comments(
@@ -47,7 +47,7 @@ export class CommentResolver {
     return this.commentService.create(user, data, id, commentId);
   }
 
-  @ResolveProperty('childComments')
+  @ResolveField('childComments')
   public async childComments(
     @Parent() parent: CommentEntity,
     @Context('user') user: Maybe<UserEntity>,
@@ -57,7 +57,7 @@ export class CommentResolver {
     return this.commentService.childComments(parent.id, user, limit);
   }
 
-  @ResolveProperty('subCount')
+  @ResolveField('subCount')
   public async subCount(
     @Parent() parent: CommentEntity,
   ) {

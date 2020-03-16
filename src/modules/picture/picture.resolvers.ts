@@ -1,5 +1,5 @@
 import {
-  Args, Mutation, Query, Resolver, ResolveProperty, Parent, Info,
+  Args, Mutation, Query, Resolver, ResolveField, Parent, Info,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -36,7 +36,7 @@ export class PictureResolver {
     private readonly pictureService: PictureService,
     @Inject(forwardRef(() => BadgeService))
     private readonly badgeService: BadgeService,
-  ) {}
+  ) { }
 
   @Query()
   public async searchPictures(
@@ -54,7 +54,7 @@ export class PictureResolver {
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Info() info: GraphQLResolveInfo,
-      @Args('type') type: PicturesType = PicturesType.HOT,
+    @Args('type') type: PicturesType = PicturesType.HOT,
   ) {
     if (type === PicturesType.HOT) {
       return this.pictureService.getPictureHotInfoList(user, query, info);
@@ -136,14 +136,14 @@ export class PictureResolver {
     return this.pictureService.delete(id, user);
   }
 
-  @ResolveProperty('commentCount')
+  @ResolveField('commentCount')
   public async commentCount(
     @Parent() parent: PictureEntity,
   ) {
     return this.commentService.getPictureCommentCount(parent.id);
   }
 
-  @ResolveProperty('currentCollections')
+  @ResolveField('currentCollections')
   public async currentCollections(
     @Parent() parent: PictureEntity,
     @User() user?: UserEntity,
@@ -152,7 +152,7 @@ export class PictureResolver {
     return this.pictureService.getCurrentCollections(parent.id, user);
   }
 
-  @ResolveProperty('badge')
+  @ResolveField('badge')
   public async badge(
     @Parent() parent: PictureEntity,
     @Loader(BadgePictureLoader.name) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,

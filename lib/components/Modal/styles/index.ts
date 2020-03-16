@@ -1,6 +1,6 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
-import { animated } from '@react-spring/web/index.cjs';
+import { animated } from 'react-spring/renderprops';
 
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
@@ -26,7 +26,7 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-export const Wrapper = styled.div<{fullscreen: number}>`
+export const Wrapper = styled.div<{ fullscreen: number }>`
   position: fixed;
   top: 0;
   right: 0;
