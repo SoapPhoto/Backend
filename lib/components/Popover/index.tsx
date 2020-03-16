@@ -3,7 +3,7 @@ import React, { Children } from 'react';
 import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { animated, Transition } from 'react-spring/renderprops';
+import { animated, Transition } from '@react-spring/web/index.cjs';
 
 import { timingFunctions } from 'polished';
 import { isMobile } from '@lib/common/utils/isMobile';

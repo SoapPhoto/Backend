@@ -1,7 +1,7 @@
 import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
-import { Transition } from 'react-spring/renderprops';
+import { Transition } from '@react-spring/web/index.cjs';
 import { timingFunctions, rem } from 'polished';
 import { Portal } from 'react-portal';
 

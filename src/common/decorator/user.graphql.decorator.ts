@@ -1,8 +1,13 @@
-import { createParamDecorator } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const User = createParamDecorator(
-  (data, ctx) =>
-    // const req = ctx.getRequest();
-    ctx?.args[2]?.req?.user
+  (data, host) => {
+    const type = host.getType();
+    if (type === 'graphql') {
+      const [, , req] = host.getArgs();
+      return req?.user || null;
+    }
+  }
+  // const req = ctx.getRequest();
   ,
 );

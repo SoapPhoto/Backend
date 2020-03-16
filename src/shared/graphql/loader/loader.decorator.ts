@@ -7,12 +7,13 @@ import { NEST_LOADER_CONTEXT_KEY, DataLoaderInterceptor } from './loader.interce
  */
 export const Loader = createParamDecorator(
   (data: string, [_, __, ctx]) => {
-    if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
-      throw new InternalServerErrorException(`
-            You should provide interceptor ${DataLoaderInterceptor.name} globaly with ${APP_INTERCEPTOR}
-          `);
-    }
+    console.log(123123);
+    // if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
+    //   throw new InternalServerErrorException(`
+    //         You should provide interceptor ${DataLoaderInterceptor.name} globaly with ${APP_INTERCEPTOR}
+    //       `);
+    // }
 
-    return ctx[NEST_LOADER_CONTEXT_KEY](data);
+    // return ctx[NEST_LOADER_CONTEXT_KEY](data);
   },
 );

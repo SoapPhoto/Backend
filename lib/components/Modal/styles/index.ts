@@ -1,6 +1,6 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
-import { animated } from 'react-spring/renderprops';
+import { animated } from '@react-spring/web/index.cjs';
 
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';

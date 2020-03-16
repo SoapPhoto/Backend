@@ -133,7 +133,6 @@ export class Popper extends React.Component<IPopperProps> {
       },
     };
     const c = typeof content === 'function' ? content(childProps) : content;
-    console.log(typeof content === 'function');
     const renders = (
       <PopperWrapper style={wrapperStyle} ref={this.popperRef}>
         {c}

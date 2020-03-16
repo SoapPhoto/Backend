@@ -13,7 +13,7 @@ import { Logger } from '../logging/logging.service';
 export class GraphqlService implements GqlOptionsFactory {
   constructor(
     private readonly oauthServerService: OauthServerService,
-  ) {}
+  ) { }
 
   public async createGqlOptions(): Promise<GqlModuleOptions> {
     return {
@@ -73,6 +73,7 @@ export class GraphqlService implements GqlOptionsFactory {
           message,
           error: err,
         });
+        // console.log(error.extensions.exception);
         if (validator.isString(error.message)) {
           Logger.error(
             error.message,
