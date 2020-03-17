@@ -22,9 +22,7 @@ declare module 'jsonp-get';
 
 declare module '@mapbox/mapbox-gl-language';
 
-declare module '@react-spring/web/index.cjs' {
-  export * from '@react-spring/web';
-}
+declare module 'rc-animate';
 
 declare module '*.json' {
   const value: any;

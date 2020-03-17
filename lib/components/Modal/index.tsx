@@ -1,9 +1,9 @@
 import React, {
   CSSProperties, useRef, useCallback, memo,
 } from 'react';
-import { Transition } from '@react-spring/web/index.cjs';
-import { timingFunctions, rem } from 'polished';
+import { rem } from 'polished';
 import { Portal } from 'react-portal';
+import Animate from 'rc-animate';
 
 import {
   enableScroll, disableScroll,
@@ -13,17 +13,17 @@ import styled, { DefaultTheme } from 'styled-components';
 import { useEnhancedEffect } from '@lib/common/hooks/useEnhancedEffect';
 import { theme } from '@lib/common/utils/themes';
 import {
-  Box, Content, Mask, Wrapper, XIcon,
+  Box, Content, LazyMask, LazyWrapper, XIcon,
 } from './styles';
 
 export interface IModalProps {
   visible: boolean;
-  onClose?: () => void;
+  onClose: () => void;
   afterClose?: () => void;
   closeIcon?: boolean;
   theme?: DefaultTheme;
   fullscreen?: boolean;
-  boxStyle?: React.CSSProperties;
+  boxStyle?: CSSProperties;
   className?: string;
 }
 
@@ -52,9 +52,7 @@ export const Modal: React.FC<IModalProps> = memo(({
   fullscreen = true,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const isDestroy = useRef<boolean>(visible);
-  const shouldClose = useRef<boolean | null>(null);
   const isClose = useRef<boolean>(false);
 
   const setDestroy = useCallback((value: boolean) => isDestroy.current = value, []);
@@ -74,23 +72,11 @@ export const Modal: React.FC<IModalProps> = memo(({
     _modalIndex++;
     disableScroll();
   }, []);
-  const handleClose = useCallback(() => {
-    if (isClose.current) return;
-    isClose.current = true;
-    if (isFunction(onClose)) {
+  const onMaskClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
       onClose();
     }
   }, [onClose]);
-  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (shouldClose.current === null) {
-      shouldClose.current = true;
-    }
-    if (shouldClose.current && (e.target === contentRef.current || e.target === wrapperRef.current)) {
-      handleClose();
-    }
-    shouldClose.current = null;
-  }, [handleClose]);
 
   useEnhancedEffect(() => {
     if (visible) {
@@ -101,84 +87,44 @@ export const Modal: React.FC<IModalProps> = memo(({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(() => () => onDestroy(), []);
-
-  const handleContentOnMouseUp = useCallback(() => {
-    shouldClose.current = null;
-  }, []);
-  // const handleContentOnClick = useCallback(() => {
-  //   shouldClose.current = false;
-  // }, []);
-  const handleContentOnMouseDown = useCallback(() => {
-    shouldClose.current = false;
-  }, []);
+  const onEnd = useCallback((_: string, exists: boolean) => !exists && onDestroy(), [onDestroy]);
 
   return (
     <Portal>
-      <Transition
-        items={visible}
-        config={{
-          duration: 200,
-        }}
-        from={{
-          transform: 'scale3d(0.98, 0.98, 0.98)',
-          opacity: 0,
-        }}
-        enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
-        leave={{
-          opacity: 0,
-          transform: 'scale3d(0.98, 0.98, 0.98)',
-          pointerEvents: 'none',
-        }}
-        onRest={() => {
-          if (!visible) {
-            onDestroy();
-          }
-        }}
-      >
-        {
-          (show: boolean) => show && ((styles: any) => (
-            <div>
-              <Mask
-                style={{
-                  transitionTimingFunction: timingFunctions('easeInOutSine'),
-                  transition: '.2s all',
-                  opacity: styles.opacity as any as number,
-                  zIndex: 1000 + _modalIndex,
-                }}
-              />
-              <Wrapper
-                fullscreen={fullscreen ? 1 : 0}
-                style={{ zIndex: 1000 + _modalIndex }}
-                onClick={handleClick}
-                ref={wrapperRef}
+      <div>
+        <Animate onEnd={onEnd} showProp="visible" transitionName="modalMask">
+          <LazyMask
+            onClick={onMaskClick}
+            visible={visible}
+            hiddenClassName="none"
+          />
+        </Animate>
+        <Animate showProp="visible" transitionName="modalContent">
+          <LazyWrapper
+            fullscreen={fullscreen ? 1 : 0}
+            style={{ zIndex: 1000 + _modalIndex }}
+            onClick={onMaskClick}
+            visible={visible}
+            hiddenClassName="none"
+          >
+            <Content
+              ref={contentRef}
+              onClick={onMaskClick}
+            >
+              <Box
+                className={className}
+                style={boxStyle as any}
               >
-                <Content ref={contentRef}>
-                  <Box
-                    style={{
-                      transitionTimingFunction: timingFunctions('easeInOutSine'),
-                      transition: '.2s all',
-                      ...boxStyle || {},
-                      ...styles as any,
-                    }}
-                    className={className}
-                    onMouseDown={handleContentOnMouseDown}
-                    onMouseUp={handleContentOnMouseUp}
-                    onClick={handleContentOnMouseUp}
-                  >
-                    {
-                      closeIcon && fullscreen
-                      && <XIcon onClick={onClose} />
-                    }
-                    {children}
-                  </Box>
-                </Content>
-              </Wrapper>
-            </div>
-          ))
-        }
-      </Transition>
+                {
+                  closeIcon && fullscreen
+                  && <XIcon onClick={onClose} />
+                }
+                {children}
+              </Box>
+            </Content>
+          </LazyWrapper>
+        </Animate>
+      </div>
     </Portal>
   );
 });

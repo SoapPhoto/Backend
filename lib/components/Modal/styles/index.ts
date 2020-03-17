@@ -1,12 +1,12 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
-import { animated } from '@react-spring/web/index.cjs';
 
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { Lazy } from '../Lazy';
 
-export const Box = styled(animated.div)`
+export const Box = styled.div`
   ${props => box(props.theme, '100%', true)}
   background-repeat: no-repeat;
   background-position: center;
@@ -26,7 +26,7 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-export const Wrapper = styled.div<{ fullscreen: number }>`
+export const LazyWrapper = styled(Lazy)<{ fullscreen: number }>`
   position: fixed;
   top: 0;
   right: 0;
@@ -67,7 +67,7 @@ export const Wrapper = styled.div<{ fullscreen: number }>`
   }
 `;
 
-export const Mask = styled(animated.div)`
+export const LazyMask = styled(Lazy)`
   position: fixed;
   top: 0;
   right: 0;
@@ -77,8 +77,6 @@ export const Mask = styled(animated.div)`
   height: 100%;
   user-select: none;
   background-color: rgba(0,0,0,0.4);
-  transition-timing-function: ${timingFunctions('easeInOutSine')};
-  transition: .2s all;
 `;
 
 export const XIcon = styled(X)`

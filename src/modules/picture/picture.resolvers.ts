@@ -11,7 +11,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
-import { User } from '@server/common/decorator/user.graphql.decorator';
+import { User } from '@server/common/decorator/user.decorator';
 import { Loader } from '@server/shared/graphql/loader/loader.decorator';
 import DataLoader from 'dataloader';
 import {
@@ -54,7 +54,7 @@ export class PictureResolver {
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Info() info: GraphQLResolveInfo,
-    @Args('type') type: PicturesType = PicturesType.HOT,
+      @Args('type') type: PicturesType = PicturesType.HOT,
   ) {
     if (type === PicturesType.HOT) {
       return this.pictureService.getPictureHotInfoList(user, query, info);

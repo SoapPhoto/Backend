@@ -9,7 +9,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { classToPlain } from 'class-transformer';
 import { UserPictureType } from '@common/enum/picture';
-import { User } from '@server/common/decorator/user.graphql.decorator';
+import { User } from '@server/common/decorator/user.decorator';
 import { GraphQLResolveInfo } from 'graphql';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';

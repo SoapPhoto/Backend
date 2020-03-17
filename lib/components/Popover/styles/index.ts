@@ -5,29 +5,33 @@ import { box } from '@lib/common/utils/themes/common';
 import { rem } from 'polished';
 import { theme } from '@lib/common/utils/themes';
 
-export const Arrow = styled.span<{placement: Placement}>`
-  position: absolute;
-  margin-left: ${rem('1px')};
-  width: ${rem('10px')};
-  height: ${rem('10px')};
-  transform: rotate(45deg);
-  border: 1px solid transparent;
+export const Arrow = styled.span<{placement?: Placement}>`
+  &,
+  &::before {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    z-index: -1;
+  }
+  &::before {
+    content: '';
+    transform: rotate(45deg);
+    background: ${theme('styles.box.background')};
+    top: 0;
+    left: 0;
+    border: 1px solid transparent;
+  }
   &[x-theme^="light"] {
-    background-color: ${theme('styles.box.background')};
+    &::before {
+      background-color: ${theme('styles.box.background')};
+      border-color: ${theme('styles.box.borderColor')};
+    }
   }
-  &[x-theme^="dark"] {
-    background-color: #363d40;
-    border: none;
-  }
-  &[x-placement^="bottom"] {
-    top: ${rem('-4px')};
-    border-top-color: ${theme('styles.box.borderColor')};
-    border-left-color: ${theme('styles.box.borderColor')};
-  }
-  &[x-placement^="top"] {
-    bottom: ${rem('-4px')};
-    border-right-color: ${theme('styles.box.borderColor')};
-    border-bottom-color: ${theme('styles.box.borderColor')};
+  &[x-theme^="dark"] { 
+    &::before {
+      background-color: #363d40;
+      border: none;
+    }
   }
 `;
 
@@ -44,5 +48,29 @@ export const Content = styled.div`
     background-color: #363d40;
     color: #fff;
     border: none;
+  }
+`;
+
+export const Wrapper = styled.div`
+  z-index: 1100;
+  &[data-popper-placement^="bottom"] {
+    ${Arrow} {
+      top: ${rem('-4px')};
+    }
+  }
+  &[data-popper-placement^="top"] {
+    ${Arrow} {
+      bottom: ${rem('-4px')};
+    }
+  }
+  &[data-popper-placement^="right"] {
+    ${Arrow} {
+      left: ${rem('-4px')};
+    }
+  }
+  &[data-popper-placement^="left"] {
+    ${Arrow} {
+      right: ${rem('-4px')};
+    }
   }
 `;
