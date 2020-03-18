@@ -242,7 +242,7 @@ export class Popover extends React.Component<IPopoverProps> {
         onClose={this.onClose}
         content={(
           <Wrapper>
-            <Animate showProp="visible" transitionName="popper">
+            <Animate showProp="visible" transitionName="popper" transitionAppear>
               <Lazy
                 visible={this.visible}
                 hiddenClassName="none"

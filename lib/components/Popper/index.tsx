@@ -8,6 +8,7 @@ import { Portal } from 'react-portal';
 
 import { isIn } from '@lib/common/utils';
 import { observer } from 'mobx-react';
+import { PortalWrapper } from '../Portal';
 
 interface IChildProps {
   visible: boolean;
@@ -107,7 +108,7 @@ export class Popper extends React.Component<IPopperProps> {
 
   public render() {
     const {
-      children, wrapperStyle, visible, content,
+      children, visible, content, wrapperStyle,
     } = this.props;
     const childProps: IChildProps = {
       visible,
@@ -127,9 +128,9 @@ export class Popper extends React.Component<IPopperProps> {
     return (
       <>
         {children}
-        <Portal>
-          {c}
-        </Portal>
+        <PortalWrapper visible={visible}>
+          {() => <div style={wrapperStyle}>{c}</div>}
+        </PortalWrapper>
       </>
     );
   }

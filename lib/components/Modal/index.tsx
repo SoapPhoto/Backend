@@ -15,6 +15,7 @@ import { theme } from '@lib/common/utils/themes';
 import {
   Box, Content, LazyMask, LazyWrapper, XIcon,
 } from './styles';
+import { PortalWrapper } from '../Portal';
 
 export interface IModalProps {
   visible: boolean;
@@ -90,41 +91,43 @@ export const Modal: React.FC<IModalProps> = memo(({
   const onEnd = useCallback((_: string, exists: boolean) => !exists && onDestroy(), [onDestroy]);
 
   return (
-    <Portal>
-      <div>
-        <Animate onEnd={onEnd} showProp="visible" transitionName="modalMask">
-          <LazyMask
-            onClick={onMaskClick}
-            visible={visible}
-            hiddenClassName="none"
-          />
-        </Animate>
-        <Animate showProp="visible" transitionName="modalContent">
-          <LazyWrapper
-            fullscreen={fullscreen ? 1 : 0}
-            style={{ zIndex: 1000 + _modalIndex }}
-            onClick={onMaskClick}
-            visible={visible}
-            hiddenClassName="none"
-          >
-            <Content
-              ref={contentRef}
+    <PortalWrapper visible={visible}>
+      {() => (
+        <div>
+          <Animate onEnd={onEnd} showProp="visible" transitionName="modalMask" transitionAppear>
+            <LazyMask
               onClick={onMaskClick}
+              visible={visible}
+              hiddenClassName="none"
+            />
+          </Animate>
+          <Animate showProp="visible" transitionName="modalContent" transitionAppear>
+            <LazyWrapper
+              fullscreen={fullscreen ? 1 : 0}
+              style={{ zIndex: 1000 + _modalIndex }}
+              onClick={onMaskClick}
+              visible={visible}
+              hiddenClassName="none"
             >
-              <Box
-                className={className}
-                style={boxStyle as any}
+              <Content
+                ref={contentRef}
+                onClick={onMaskClick}
               >
-                {
-                  closeIcon && fullscreen
-                  && <XIcon onClick={onClose} />
-                }
-                {children}
-              </Box>
-            </Content>
-          </LazyWrapper>
-        </Animate>
-      </div>
-    </Portal>
+                <Box
+                  className={className}
+                  style={boxStyle as any}
+                >
+                  {
+                    closeIcon && fullscreen
+                    && <XIcon onClick={onClose} />
+                  }
+                  {children}
+                </Box>
+              </Content>
+            </LazyWrapper>
+          </Animate>
+        </div>
+      )}
+    </PortalWrapper>
   );
 });
