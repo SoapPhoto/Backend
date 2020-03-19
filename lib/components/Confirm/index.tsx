@@ -6,7 +6,7 @@ import { theme } from '@lib/common/utils/themes';
 import { HelpCircle, StrutAlign } from '@lib/icon';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { customBreakpoints, customMedia } from '@lib/common/utils/mediaQuery';
-import { Modal, IModalProps } from '../Modal';
+import Modal, { IModalProps } from '../Modal';
 import { Button, IButtonProps } from '../Button';
 
 interface IConfirmProps extends IModalProps {

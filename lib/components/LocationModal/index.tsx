@@ -33,7 +33,7 @@ import { formatLocationTitle, formatLocationData } from '@lib/common/utils/image
 import { debounce } from 'lodash';
 import provinceJson from '@lib/common/json/province.json';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
-import { Modal, Header, Title } from '../Modal';
+import Modal from '../Modal';
 import { Input } from '../Input';
 import { IconButton, Button } from '../Button';
 import { Popover } from '../Popover';
@@ -304,13 +304,13 @@ export const LocationModal: React.FC<IProps> = ({
       onClose={onClose}
       afterClose={afterClose}
     >
-      <Wrapper>
-        <Header>
-          <Title>图片位置</Title>
+      <Modal.Content style={{ display: 'flex', flexDirection: 'column' }}>
+        <Modal.Header>
+          <Modal.Title>图片位置</Modal.Title>
           <IconButton onClick={onClose}>
             <XButton />
           </IconButton>
-        </Header>
+        </Modal.Header>
         {/* TODO: 功能未完善，暂时关闭 */}
         {/* <Search ref={searchContainer}>
           <SearchBox>
@@ -378,7 +378,7 @@ export const LocationModal: React.FC<IProps> = ({
             </Button>
           </Handle> */}
         </Content>
-      </Wrapper>
+      </Modal.Content>
     </ModalContent>
   );
 };

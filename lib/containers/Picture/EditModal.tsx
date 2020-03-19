@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { rem } from 'polished';
 
-import { Modal } from '@lib/components/Modal';
+import Modal from '@lib/components/Modal';
 import styled from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikHelpers, Field } from 'formik';
@@ -117,7 +117,7 @@ export const EditPictureModal: React.FC<IProps> = ({
       onClose={onClose}
       boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
-      <Wrapper>
+      <Modal.Content>
         <Title>{t('picture.edit.title')}</Title>
         <Content>
           <Formik<IValues>
@@ -181,7 +181,7 @@ export const EditPictureModal: React.FC<IProps> = ({
             )}
           </Formik>
         </Content>
-      </Wrapper>
+      </Modal.Content>
       <Confirm
         title={t('delete_confirm', t('label.picture'))}
         visible={confirmVisible}

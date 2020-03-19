@@ -228,6 +228,7 @@ export class Popover extends React.Component<IPopoverProps> {
           {
             name: 'preventOverflow',
             options: {
+              padding: 12,
               altBoundary: true,
             },
           },

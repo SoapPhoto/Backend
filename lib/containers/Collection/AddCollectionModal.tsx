@@ -7,7 +7,7 @@ import {
   Formik, FormikHelpers, Form,
 } from 'formik';
 
-import { Modal } from '@lib/components/Modal';
+import Modal from '@lib/components/Modal';
 import { CreateCollectionDot, CollectionEntity } from '@lib/common/interfaces/collection';
 import { FieldInput } from '@lib/components/Formik/FieldInput';
 import { Button } from '@lib/components/Button';

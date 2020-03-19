@@ -143,18 +143,6 @@ const ItemHandleIcon = styled.div`
   }
 `;
 
-export const Background = styled.div<{background: string}>`
-  position: absolute;
-  top: 0;
-  z-index: -1;
-  width: 100%;
-  height: 150px;
-  filter: blur(4px);
-  background: ${_ => _.background};
-  background-repeat: no-repeat;
-  background-size: cover;
-`;
-
 export const AddPictureCollectionModal: React.FC<IProps> = observer(({
   visible,
   picture,
@@ -311,23 +299,25 @@ export const AddPictureCollectionModal: React.FC<IProps> = observer(({
       onClose={onClose}
       boxStyle={{ padding: 0, maxWidth: rem(500) }}
     >
-      <Background background={background} />
-      <Title>{t('picture.collection.title')}</Title>
-      <CollectionBox>
-        <CollectionItemBox
-          onClick={() => setAddCollectionVisible(true)}
-        >
-          <ItemInfoBox isCollected={false} isPreview={false}>
-            <div>
-              <ItemInfoTitle style={{ marginBottom: 0 }}>
-                <PlusCircle style={{ marginRight: '12px' }} />
-                <span>{t('picture.collection.add')}</span>
-              </ItemInfoTitle>
-            </div>
-          </ItemInfoBox>
-        </CollectionItemBox>
-        {content}
-      </CollectionBox>
+      <Modal.Background background={background} />
+      <Modal.Content>
+        <Title>{t('picture.collection.title')}</Title>
+        <CollectionBox>
+          <CollectionItemBox
+            onClick={() => setAddCollectionVisible(true)}
+          >
+            <ItemInfoBox isCollected={false} isPreview={false}>
+              <div>
+                <ItemInfoTitle style={{ marginBottom: 0 }}>
+                  <PlusCircle style={{ marginRight: '12px' }} />
+                  <span>{t('picture.collection.add')}</span>
+                </ItemInfoTitle>
+              </div>
+            </ItemInfoBox>
+          </CollectionItemBox>
+          {content}
+        </CollectionBox>
+      </Modal.Content>
       <AddCollectionModal
         onClose={() => setAddCollectionVisible(false)}
         visible={addCollectionVisible}

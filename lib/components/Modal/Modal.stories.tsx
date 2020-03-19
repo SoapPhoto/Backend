@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 import { css } from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
 import { withGlobalStyle } from '@lib/common/storybook/withGlobalStyle';
-import { Modal } from './index';
+import Modal from './index';
 import { Button } from '../Button';
 
 const stories = storiesOf('Modal', module);
