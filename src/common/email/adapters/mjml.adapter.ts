@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import mjml2html from 'mjml';
 import _, { get } from 'lodash';
-import { TemplateAdapter, MailerOptions } from '@nest-modules/mailer';
+import { TemplateAdapter, MailerOptions } from '@nestjs-modules/mailer';
 
 
 export class MjmlAdapter implements TemplateAdapter {

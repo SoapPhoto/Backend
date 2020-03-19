@@ -6,7 +6,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from 'nestjs-redis';
-import { MailerModule } from '@nest-modules/mailer';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';

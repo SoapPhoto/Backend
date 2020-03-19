@@ -3,7 +3,7 @@ import uniqid from 'uniqid';
 
 import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
-import { MailerService } from '@nest-modules/mailer';
+import { MailerService } from '@nestjs-modules/mailer';
 import { SignupType } from '@common/enum/signupType';
 import { Status } from '@common/enum/userStatus';
 import { ValidationException } from '@server/common/exception/validation.exception';
