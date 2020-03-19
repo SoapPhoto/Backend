@@ -15,10 +15,9 @@ let globalValue: RecordPartial<I18nNamespace, any> = {};
 
 const defaultNamespace = [I18nNamespace.Common, I18nNamespace.Backend, I18nNamespace.Validation];
 
-let currentNamespace: Set<I18nNamespace> = new Set([]);
+let currentNamespace: Array<I18nNamespace> = [];
 
 let currentLocale: LocaleType;
-
 
 // 获取i18n数据
 export const fetchI18n = async (locale: LocaleType, namespace: I18nNamespace | I18nNamespace[]) => {
@@ -46,7 +45,7 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
     currentLocale = LocaleType['zh-CN'];
     // server 需要重置一下
     globalValue = {};
-    currentNamespace.clear();
+    currentNamespace = [];
     currentLocale = req.locale;
     if (LocaleTypeValues.includes(req.cookies.locale)) {
       currentLocale = req.cookies.locale;
@@ -54,11 +53,11 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
   } else if (cookie.get('locale') && LocaleTypeValues.includes(cookie.get('locale') as LocaleType)) {
     currentLocale = cookie.get('locale') as LocaleType;
   }
-  const required = new Set([...defaultNamespace, ...namespacesRequired]);
+  const required = [...new Set([...defaultNamespace, ...namespacesRequired])];
   const noFetch: I18nNamespace[] = [];
   required.forEach((value) => {
-    if (!currentNamespace.has(value)) {
-      currentNamespace.add(value);
+    if (!currentNamespace.find(v => v === value)) {
+      currentNamespace.push(value);
       noFetch.push(value);
     }
   });
@@ -79,11 +78,11 @@ export const initLocale = async (namespacesRequired: I18nNamespace[] = [], req?:
 // 服务器端数据同步客户端
 export const initI18n = (value: II18nValue) => {
   currentLocale = value.locale;
-  currentNamespace = new Set(value.currentNamespace);
+  currentNamespace = value.currentNamespace;
   value.currentNamespace = currentNamespace;
-  value.namespacesRequired = new Set(value.namespacesRequired);
+  value.namespacesRequired = [...new Set(value.namespacesRequired)];
   Object.keys(value.value).map(v => globalValue[v as I18nNamespace] = (value.value as any)[v]);
-  value.namespacesRequired.forEach(v => currentNamespace.add(v));
+  value.namespacesRequired.forEach(v => currentNamespace.push(v));
   return value;
 };
 

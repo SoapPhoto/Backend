@@ -2,7 +2,7 @@ import { MobXProviderContext } from 'mobx-react';
 import { useContext } from 'react';
 import { IMyMobxStore } from './init';
 
-export const useStores = () => useContext<IMyMobxStore>(MobXProviderContext);
+export const useStores = () => useContext<IMyMobxStore>(MobXProviderContext as any);
 
 export const useScreenStores = () => {
   const { screen } = useStores();

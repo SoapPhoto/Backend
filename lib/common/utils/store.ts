@@ -1,4 +1,4 @@
-import { inject, IReactComponent, observer } from 'mobx-react';
+// import { inject, observer } from 'mobx-react';
 
 // eslint-disable-next-line arrow-parens
 export const mergeStore = <T>(store: T, state: Partial<T>) => {
@@ -10,6 +10,6 @@ export const mergeStore = <T>(store: T, state: Partial<T>) => {
   });
 };
 
-export const connect = <T extends IReactComponent>(...stores: any[]) => (component: T) => inject(...stores)(
-  observer(component),
-);
+// export const connect = <T extends IReactComponent>(...stores: any[]) => (component: T) => inject(...stores)(
+//   observer(component),
+// );

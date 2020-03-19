@@ -1,12 +1,13 @@
 import React, {
   useCallback, useRef, useState, useEffect,
 } from 'react';
+import { observer } from 'mobx-react';
 
-import { connect } from '@lib/common/utils/store';
 import { AccountStore } from '@lib/stores/AccountStore';
 import { rem } from 'polished';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { isIn } from '@lib/common/utils';
+import { useAccountStore } from '@lib/stores/hooks';
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';
 import { Textarea } from '../Input';
@@ -22,19 +23,18 @@ interface IProps {
   placeholder?: string;
 }
 
-export const CommentEditor = connect<React.FC<IProps>>('accountStore')(({
+export const CommentEditor: React.FC<IProps> = observer(({
   child = false,
-  accountStore,
   placeholder,
   onConfirm,
   onClose,
 }) => {
+  const { userInfo } = useAccountStore();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { userInfo } = accountStore!;
   const setInputFocus = useCallback(() => {
     inputRef.current!.focus();
   }, []);

@@ -1,5 +1,5 @@
 import {
-  Context, Query, Resolver, ResolveProperty, Subscription, Mutation, Parent,
+  Context, Query, Resolver, ResolveField, Subscription, Mutation, Parent,
 } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
@@ -16,7 +16,7 @@ import { NotificationEntity } from './notification.entity';
 export class NotificationResolver {
   constructor(
     private readonly notificationService: NotificationService,
-  ) {}
+  ) { }
 
   @Query()
   @Roles(Role.USER)
@@ -60,7 +60,7 @@ export class NotificationResolver {
 
 @Resolver('NotificationMedia')
 export class NotificationMediaResolver {
-  @ResolveProperty('__resolveType')
+  @ResolveField('__resolveType')
   public async resolveType(
     @Parent() parent: any,
   ) {

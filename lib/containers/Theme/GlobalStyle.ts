@@ -5,6 +5,7 @@ import normalize from './normalize';
 import { nprogress } from './nprogress';
 import { scroll } from './scroll';
 import { scrollbar } from './scrollbar';
+import { animate } from './animate';
 
 export const GlobalStyle = createGlobalStyle<{theme?: any}>`
   body {
@@ -33,8 +34,13 @@ export const GlobalStyle = createGlobalStyle<{theme?: any}>`
     z-index: 1000000000000000000;
   }
 
+  .none {
+    display: none;
+  }
+
   ${nprogress}
   ${normalize}
   ${scroll}
   ${scrollbar}
+  ${animate}
 `;

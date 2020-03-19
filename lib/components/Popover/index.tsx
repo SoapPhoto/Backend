@@ -1,14 +1,16 @@
 import { isFunction, debounce } from 'lodash';
 import React, { Children } from 'react';
-import PopperJS, { Data, Placement } from 'popper.js';
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
-import { animated, Transition } from '@react-spring/web/index.cjs';
+import {
+  Instance, Placement,
+} from '@popperjs/core';
+import Animate from 'rc-animate';
 
-import { timingFunctions } from 'polished';
 import { isMobile } from '@lib/common/utils/isMobile';
+import { Lazy } from '../Modal/Lazy';
 import { Popper } from '../Popper';
-import { Arrow, Content } from './styles';
+import { Arrow, Content, Wrapper } from './styles';
 
 type Trigger = 'hover' | 'click';
 
@@ -76,7 +78,7 @@ export class Popover extends React.Component<IPopoverProps> {
 
   public arrow?: HTMLDivElement;
 
-  public popper?: PopperJS;
+  public popper?: Instance;
 
   public componentDidMount() {
     this.isMini = isMobile();
@@ -91,7 +93,6 @@ export class Popover extends React.Component<IPopoverProps> {
     this.visible = value;
   };
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   public handleResize = debounce(() => {
     this.isMini = isMobile();
   }, 1000)
@@ -217,87 +218,53 @@ export class Popover extends React.Component<IPopoverProps> {
             this.popper = e.popper;
           }
         }}
-        modifiers={{
-          offset: {
-            enabled: true,
-            offset: '0, 10',
+        modifiers={[
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 10],
+            },
           },
-          preventOverflow: {
-            boundariesElement: 'scrollParent',
+          {
+            name: 'preventOverflow',
+            options: {
+              padding: 12,
+              altBoundary: true,
+            },
           },
-          arrow: {
-            enabled: arrow,
-            element: this.arrow,
-          },
-        }}
-        onCreate={(data: Data) => {
-          if (arrow) {
-            if (this.placement !== data.placement) {
-              this.placement = data.placement;
-            }
-          }
-        }}
-        onUpdate={(data: Data) => {
-          if (arrow) {
-            if (this.placement !== data.placement) {
-              this.placement = data.placement;
-            }
-          }
-        }}
+          this.arrow ? {
+            name: 'arrow',
+            options: {
+              element: this.arrow,
+            },
+          } : {},
+        ]}
         visible={this.visible}
         onClose={this.onClose}
-        content={({ visible, close }) => (
-          <Transition
-            items={visible}
-            config={{
-              duration: 200,
-            }}
-            from={{
-              transform: 'scale3d(0.98, 0.98, 0.98)',
-              opacity: 0,
-            }}
-            enter={{ opacity: 1, transform: 'scale3d(1, 1, 1)' }}
-            leave={{
-              opacity: 0,
-              transform: 'scale3d(0.98, 0.98, 0.98)',
-              pointerEvents: 'none',
-            }}
-            onRest={() => {
-              if (!visible) {
-                close();
-              }
-            }}
-          >
-            {
-              (show: boolean) => show && (styles => (
-                <animated.div
-                  style={{
-                    transitionTimingFunction: timingFunctions('easeInOutSine'),
-                    transition: '.2s all',
-                    ...styles,
-                  }}
-                >
-                  {
-                    arrow && (
-                      <Arrow
-                        x-theme={theme}
-                        x-placement={this.placement}
-                        placement={this.placement}
-                        ref={this.arrowRef}
-                      />
-                    )
-                  }
-                  <Content x-theme={theme} style={contentStyle}>
-                    {contentRender}
-                  </Content>
-                </animated.div>
-              ))
-            }
-          </Transition>
+        content={(
+          <Wrapper>
+            <Animate showProp="visible" transitionName="popper" transitionAppear>
+              <Lazy
+                visible={this.visible}
+                hiddenClassName="none"
+              >
+                {
+                  arrow && (
+                    <Arrow
+                      x-theme={theme}
+                      ref={this.arrowRef}
+                    />
+                  )
+                }
+                <Content x-theme={theme} style={contentStyle}>
+                  {contentRender}
+                </Content>
+              </Lazy>
+            </Animate>
+          </Wrapper>
         )}
       >
         {childrenRender}
-        <span x-placement={this.placement} style={{ display: 'none' }} />
       </Popper>
     );
   }

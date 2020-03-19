@@ -9,3 +9,4 @@ export * from './Modal';
 export * from './Empty';
 export * from './LightBox';
 export * from './SEO';
+export { default as Modal } from './Modal';

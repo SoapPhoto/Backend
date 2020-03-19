@@ -1,12 +1,14 @@
 import { rem, timingFunctions } from 'polished';
 import styled from 'styled-components';
-import { animated } from '@react-spring/web/index.cjs';
+import { theme } from '@lib/common/utils/themes';
 
 import { box } from '@lib/common/utils/themes/common';
 import { X } from '@lib/icon';
 import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
+import { Lazy } from '../Lazy';
 
-export const Box = styled(animated.div)`
+export const Box = styled.div`
+  position: relative;
   ${props => box(props.theme, '100%', true)}
   background-repeat: no-repeat;
   background-position: center;
@@ -26,7 +28,7 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-export const Wrapper = styled.div<{fullscreen: number}>`
+export const LazyWrapper = styled(Lazy)<{ fullscreen: number }>`
   position: fixed;
   top: 0;
   right: 0;
@@ -67,7 +69,7 @@ export const Wrapper = styled.div<{fullscreen: number}>`
   }
 `;
 
-export const Mask = styled(animated.div)`
+export const LazyMask = styled(Lazy)`
   position: fixed;
   top: 0;
   right: 0;
@@ -77,8 +79,6 @@ export const Mask = styled(animated.div)`
   height: 100%;
   user-select: none;
   background-color: rgba(0,0,0,0.4);
-  transition-timing-function: ${timingFunctions('easeInOutSine')};
-  transition: .2s all;
 `;
 
 export const XIcon = styled(X)`
@@ -90,4 +90,36 @@ export const XIcon = styled(X)`
   ${customMedia.lessThan('mobile')`
     display: block;
   `}
+`;
+
+// Components
+
+export const ModalContent = styled.div`
+  position: relative;
+  z-index: 1;
+  height: 100%;
+`;
+
+export const ModalBackground = styled.div<{background: string}>`
+position: absolute;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: 150px;
+  filter: blur(4px);
+  background: ${_ => _.background};
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
+
+export const ModalHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: ${rem(14)};
+  border-bottom: 1px solid ${theme('colors.shadowColor')};
+`;
+
+export const ModalTitle = styled.h2`
+  font-size: ${_ => rem(theme('fontSizes[3]')(_))};
 `;

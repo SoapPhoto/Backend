@@ -18,10 +18,10 @@ interface IProps {
   accountStore?: AccountStore;
   comment: CommentEntity[];
   loading?: boolean;
-  onConfirm: (value: string, commentId?: string) => Promise<void>;
+  onConfirm: (value: string, commentId?: number) => Promise<void>;
 }
 
-export const Comment = observer(({
+export const Comment: React.FC<IProps> = observer(({
   id,
   author,
   comment,

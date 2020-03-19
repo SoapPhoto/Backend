@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { pick } from 'lodash';
-import { observer } from 'mobx-react';
+import { observer, useLocalStore } from 'mobx-react';
 import { useMutation } from 'react-apollo';
 import { useRouter as useBaseRouter } from 'next/router';
 
@@ -21,6 +21,7 @@ import { Histore } from '@lib/common/utils';
 import { useAccountStore } from '@lib/stores/hooks';
 import { useTheme } from '@lib/common/utils/themes/useTheme';
 import { UpdatePicture } from '@lib/schemas/mutations';
+import { WithQueryParam } from '../WithQueryParam';
 
 interface IProps {
   info: PictureEntity;
@@ -46,79 +47,45 @@ export const PictureInfo: React.FC<IProps> = observer(({
   } = useRouter();
   const { push, replace } = useBaseRouter();
   const { t } = useTranslation();
-  const [EXIFVisible, setEXIFVisible] = useState(false);
-  const [collectionVisible, setCollectionVisible] = useState(false);
-  const [editVisible, setEditVisible] = useState(false);
+  const modalData = useLocalStore(() => ({
+    EXIFVisible: false,
+    collectionVisible: false,
+    editVisible: false,
+    setEXIFVisible(value: boolean) {
+      this.EXIFVisible = value;
+    },
+    setCollectionVisible(value: boolean) {
+      this.collectionVisible = value;
+    },
+    setEditVisible(value: boolean) {
+      this.editVisible = value;
+    },
+  }));
   const { isLogin } = useAccountStore();
   const { colors } = useTheme();
-  const [update] = useMutation<{updatePicture: PictureEntity}>(UpdatePicture);
-  const openWithRoute = useCallback((label: string, value?: boolean, isReplace?: boolean) => {
-    let func = push;
-    if (isReplace) func = replace;
-    if (value) {
-      func(`/views/picture?id=${params.id}`, `/picture/${params.id}?modal=${label}`, {
-        shallow: true,
-      });
-      Histore.set('modal', `child-${label}`);
-    } else {
-      const child = Histore!.get('modal');
-      if (/^child/g.test(child)) {
-        back();
-        Histore.set('modal', `child-${label}-back`);
-      } else {
-        func(`/views/picture?id=${params.id}`, `/picture/${params.id}`, {
-          shallow: true,
-        });
-      }
-    }
-  }, [back, params.id, push, replace]);
+  const [update] = useMutation<{ updatePicture: PictureEntity }>(UpdatePicture);
+  const openWithRoute = useCallback((label: string) => {
+    push(`/views/picture?id=${params.id}`, `/picture/${params.id}?action=${label}`, {
+      shallow: true,
+    });
+    Histore.set('modal', `child-${label}`);
+  }, [params.id, push]);
 
-  useEffect(() => {
-    if (query.modal) {
-      switch (query.modal) {
-        case 'info':
-          setEXIFVisible(true);
-          break;
-        case 'setting':
-          setEditVisible(isOwner);
-          if (!isOwner) openWithRoute('setting', false, true);
-          break;
-        case 'addCollection':
-          setCollectionVisible(isLogin);
-          if (!isLogin) openWithRoute('addCollection', false, true);
-          break;
-        default:
-          setEXIFVisible(false);
-          setCollectionVisible(false);
-          setEditVisible(false);
-          break;
-      }
-    } else {
-      setEXIFVisible(false);
-      setCollectionVisible(false);
-      setEditVisible(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.modal, pathname]);
-
-  const closeEXIF = useCallback(() => {
+  const openEXIF = useCallback(() => {
     openWithRoute('info');
   }, [openWithRoute]);
-  const closeCollection = useCallback(() => {
+  const openCollection = useCallback(() => {
     openWithRoute('addCollection');
   }, [openWithRoute]);
-  const closeEdit = useCallback(() => {
+  const openEdit = useCallback(() => {
     openWithRoute('setting');
   }, [openWithRoute]);
-  const openEXIF = useCallback(() => {
-    openWithRoute('info', true);
-  }, [openWithRoute]);
-  const openCollection = useCallback(() => {
-    openWithRoute('addCollection', true);
-  }, [openWithRoute]);
-  const openEdit = useCallback(() => {
-    openWithRoute('setting', true);
-  }, [openWithRoute]);
+
+  const backNow = useCallback(() => {
+    push(`/views/picture?id=${params.id}`, `/picture/${params.id}`, {
+      shallow: true,
+    });
+  }, [params.id, push]);
 
   const updatePicture = async (data: UpdatePictureDot) => {
     const req = await update({
@@ -188,36 +155,48 @@ export const PictureInfo: React.FC<IProps> = observer(({
       {
         isLogin && (
           <>
-            <AddPictureCollectionModal
-              picture={info}
-              visible={collectionVisible}
-              onClose={closeCollection}
-              currentCollections={info.currentCollections || []}
-              setPicture={setPicture}
-            />
+            <WithQueryParam action="addCollection" back={backNow}>
+              {(visible, backView) => (
+                <AddPictureCollectionModal
+                  picture={info}
+                  visible={visible}
+                  onClose={backView}
+                  currentCollections={info.currentCollections || []}
+                  setPicture={setPicture}
+                />
+              )}
+            </WithQueryParam>
             {
               isOwner && (
-                <EditPictureModal
-                  visible={editVisible}
-                  onClose={closeEdit}
-                  defaultValue={{
-                    ...pick(info, ['title', 'bio', 'isPrivate']),
-                    tags: info.tags.map(tag => tag.name),
-                  }}
-                  onOk={onOk}
-                  update={updatePicture}
-                  deletePicture={deletePicture}
-                />
+                <WithQueryParam action="setting" back={backNow}>
+                  {(visible, backView) => (
+                    <EditPictureModal
+                      visible={visible}
+                      defaultValue={{
+                        ...pick(info, ['title', 'bio', 'isPrivate']),
+                        tags: info.tags.map(tag => tag.name),
+                      }}
+                      onClose={backView}
+                      onOk={onOk}
+                      update={updatePicture}
+                      deletePicture={deletePicture}
+                    />
+                  )}
+                </WithQueryParam>
               )
             }
           </>
         )
       }
-      <EXIFModal
-        visible={EXIFVisible}
-        onClose={closeEXIF}
-        picture={info}
-      />
+      <WithQueryParam action="info" back={backNow}>
+        {(visible, backView) => (
+          <EXIFModal
+            visible={visible}
+            onClose={backView}
+            picture={info}
+          />
+        )}
+      </WithQueryParam>
     </PictureBaseInfo>
   );
 });

@@ -1,5 +1,5 @@
 import {
-  Args, Mutation, Query, Resolver, ResolveProperty, Parent, Info,
+  Args, Mutation, Query, Resolver, ResolveField, Parent, Info,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -11,7 +11,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
-import { User } from '@server/common/decorator/user.graphql.decorator';
+import { User } from '@server/common/decorator/user.decorator';
 import { Loader } from '@server/shared/graphql/loader/loader.decorator';
 import DataLoader from 'dataloader';
 import {
@@ -36,7 +36,7 @@ export class PictureResolver {
     private readonly pictureService: PictureService,
     @Inject(forwardRef(() => BadgeService))
     private readonly badgeService: BadgeService,
-  ) {}
+  ) { }
 
   @Query()
   public async searchPictures(
@@ -136,14 +136,14 @@ export class PictureResolver {
     return this.pictureService.delete(id, user);
   }
 
-  @ResolveProperty('commentCount')
+  @ResolveField('commentCount')
   public async commentCount(
     @Parent() parent: PictureEntity,
   ) {
     return this.commentService.getPictureCommentCount(parent.id);
   }
 
-  @ResolveProperty('currentCollections')
+  @ResolveField('currentCollections')
   public async currentCollections(
     @Parent() parent: PictureEntity,
     @User() user?: UserEntity,
@@ -152,7 +152,7 @@ export class PictureResolver {
     return this.pictureService.getCurrentCollections(parent.id, user);
   }
 
-  @ResolveProperty('badge')
+  @ResolveField('badge')
   public async badge(
     @Parent() parent: PictureEntity,
     @Loader(BadgePictureLoader.name) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,

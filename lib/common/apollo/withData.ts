@@ -56,7 +56,7 @@ function createClient({ headers, initialState }: any) {
       const definition = getMainDefinition(query);
       return (
         definition.kind === 'OperationDefinition'
-            && definition.operation === 'subscription'
+        && definition.operation === 'subscription'
       );
     },
     wsLink as any,

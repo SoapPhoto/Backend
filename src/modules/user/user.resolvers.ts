@@ -1,5 +1,5 @@
 import {
-  Args, Context, Query, Resolver, ResolveProperty, Parent, Mutation, Info,
+  Args, Context, Query, Resolver, ResolveField, Parent, Mutation, Info,
 } from '@nestjs/graphql';
 import { fieldsList } from 'graphql-fields-list';
 
@@ -9,7 +9,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { classToPlain } from 'class-transformer';
 import { UserPictureType } from '@common/enum/picture';
-import { User } from '@server/common/decorator/user.graphql.decorator';
+import { User } from '@server/common/decorator/user.decorator';
 import { GraphQLResolveInfo } from 'graphql';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
@@ -27,7 +27,7 @@ export class UserResolver {
     private readonly collectionService: CollectionService,
     private readonly followService: FollowService,
     private readonly pictureService: PictureService,
-  ) {}
+  ) { }
 
   @Query()
   @Roles(Role.USER)
@@ -107,21 +107,21 @@ export class UserResolver {
     return this.userService.updateUserProfile(user, data);
   }
 
-  @ResolveProperty('likedCount')
+  @ResolveField('likedCount')
   public async likedCount(
     @Parent() parent: UserEntity,
   ) {
     return this.pictureService.getUserLikedCount(parent.id);
   }
 
-  @ResolveProperty('likesCount')
+  @ResolveField('likesCount')
   public async likesCount(
     @Parent() parent: UserEntity,
   ) {
     return this.pictureService.userLikesCount(parent.id);
   }
 
-  @ResolveProperty('isFollowing')
+  @ResolveField('isFollowing')
   public async isFollowing(
     @User() user: Maybe<UserEntity>,
     @Parent() parent: UserEntity,
@@ -130,21 +130,21 @@ export class UserResolver {
     return this.followService.isFollowing(user, parent.id);
   }
 
-  @ResolveProperty('followerCount')
+  @ResolveField('followerCount')
   public async followerCount(
     @Parent() parent: UserEntity,
   ) {
     return this.followService.followerCount(parent.id);
   }
 
-  @ResolveProperty('followedCount')
+  @ResolveField('followedCount')
   public async followedCount(
     @Parent() parent: UserEntity,
   ) {
     return this.followService.followedCount(parent.id);
   }
 
-  @ResolveProperty('pictures')
+  @ResolveField('pictures')
   public async getAvatarSize(
     @Parent() parent: UserEntity,
     @Args('limit') limit: number,

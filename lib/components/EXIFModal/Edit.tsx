@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikErrors } from 'formik';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { Modal } from '../Modal';
+import Modal from '../Modal';
 import { FieldInput } from '../Formik';
 import { Button } from '../Button';
 

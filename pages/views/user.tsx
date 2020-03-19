@@ -45,6 +45,7 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { FollowButton } from '@lib/components/Button/FollowButton';
 import { useFollower } from '@lib/common/hooks/useFollower';
 import { useRouter } from '@lib/router';
+import { WithQueryParam } from '@lib/components/WithQueryParam';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -96,11 +97,9 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 
 const UserInfo = observer(() => {
   const {
-    query, back, pathname, params,
+    query, pathname, params,
   } = useRouter();
-  const { push, replace } = useBaseRouter();
-  const [followType, setFollowType] = useState(query.modal || '');
-  const [followModalVisible, setFollowModalVisible] = useState(false);
+  const { push } = useBaseRouter();
   const [follow, followLoading] = useFollower();
   const { t } = useTranslation();
   const { screen } = useStores();
@@ -117,41 +116,20 @@ const UserInfo = observer(() => {
     return () => clear();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.username]);
-  useEffect(() => {
-    if (query.modal) {
-      setFollowModalVisible(true);
-    } else {
-      setFollowModalVisible(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.modal]);
-  const pushModalQuery = useCallback((label: string, value?: boolean, isReplace?: boolean) => {
-    let func = push;
-    if (isReplace) func = replace;
-    if (value) {
-      func(`/views/user?${qs.stringify(params as any)}`, `${pathname}?modal=${label}`, {
-        shallow: true,
-      });
-      Histore.set('modal', `child-${label}`);
-    } else {
-      const child = Histore!.get('modal');
-      if (/^child/g.test(child)) {
-        back();
-        Histore.set('modal', `child-${label}-back`);
-      } else {
-        func(`/views/user?${qs.stringify(params as any)}`, pathname, {
-          shallow: true,
-        });
-      }
-    }
-  }, [back, params, pathname, push, replace]);
+  const pushModalQuery = useCallback((label: string) => {
+    push(`/views/user?${qs.stringify(params as any)}`, `${pathname}?action=${label}`, {
+      shallow: true,
+    });
+    Histore.set('modal', `child-${label}`);
+  }, [params, pathname, push]);
   const openModal = useCallback((type: string) => {
-    setFollowType(type);
-    pushModalQuery(type, true);
+    pushModalQuery(type);
   }, [pushModalQuery]);
-  const closeModal = useCallback(() => {
-    pushModalQuery(followType, false);
-  }, [followType, pushModalQuery]);
+  const backNow = useCallback(() => {
+    push(`/views/user?${qs.stringify(params as any)}`, pathname, {
+      shallow: true,
+    });
+  }, [params, pathname, push]);
   const follower = useCallback(() => user && follow(user), [follow, user]);
   return (
     <UserHeader>
@@ -233,12 +211,26 @@ const UserInfo = observer(() => {
           </InfoBox>
         </Cell>
       </HeaderGrid>
-      <UserFollowModal
-        type={followType}
-        userId={user.id}
-        visible={followModalVisible}
-        onClose={closeModal}
-      />
+      <WithQueryParam action="follower" back={backNow}>
+        {(visible, backView) => (
+          <UserFollowModal
+            type="follower"
+            userId={user.id}
+            visible={visible}
+            onClose={backView}
+          />
+        )}
+      </WithQueryParam>
+      <WithQueryParam action="followed" back={backNow}>
+        {(visible, backView) => (
+          <UserFollowModal
+            type="followed"
+            userId={user.id}
+            visible={visible}
+            onClose={backView}
+          />
+        )}
+      </WithQueryParam>
     </UserHeader>
   );
 });
@@ -269,7 +261,7 @@ User.getInitialProps = async ({
   const arg: [string, UserType] = [username!, type];
   const isPop = location && location.action === 'POP' && !server;
   if (query.modal) {
-    if (query.modal !== 'follower' && query.modal !== 'followed') res?.redirect(pathname);
+    if (query.action !== 'follower' && query.action !== 'followed') res?.redirect(pathname);
   }
   userCollectionStore.setUsername(username!);
   userStore.setUsername(username!);

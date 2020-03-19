@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { rem } from 'polished';
 
-import { Modal } from '@lib/components/Modal';
+import Modal from '@lib/components/Modal';
 import { theme } from '@lib/common/utils/themes';
 import { Formik, FormikHelpers } from 'formik';
 import { FieldInput, FieldSwitch } from '@lib/components/Formik';
