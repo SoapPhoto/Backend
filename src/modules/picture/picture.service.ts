@@ -368,7 +368,7 @@ export class PictureService {
     const client = this.redisService.getClient();
     const limit = (query.page - 1) * query.pageSize;
     const [ids, count] = await Promise.all([
-      client.zrevrange('picture_hot', limit, limit + query.pageSize),
+      client.zrevrange('picture_hot', limit, limit + query.pageSize - 1),
       client.zcount('picture_hot', -1000000, 1000000),
     ]);
     const q = this.pictureRepository.createQueryBuilder('picture');

@@ -158,6 +158,7 @@ const UserCard: React.FC<IProps> = ({
           </UserBox>
           <FollowButton
             size="small"
+            user={user}
             disabled={followLoading}
             isFollowing={user.isFollowing}
             onClick={follower}

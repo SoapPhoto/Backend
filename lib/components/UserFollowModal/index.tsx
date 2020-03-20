@@ -204,6 +204,7 @@ export const UserFollowModal = observer<React.FC<IProps>>(({
                       <Follow
                         isFollowing={user.isFollowing}
                         size="small"
+                        user={user}
                         disabled={followLoading}
                         onClick={() => follow(user)}
                       />

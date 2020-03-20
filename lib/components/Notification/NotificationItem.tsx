@@ -123,6 +123,7 @@ export const NotificationItem: React.FC<IProps> = observer(({ data }) => {
           <FollowButton
             disabled={followLoading}
             size="small"
+            user={data.user}
             isFollowing={isFollowing}
             onClick={() => follow(data.user!)}
           />

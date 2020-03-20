@@ -11,7 +11,7 @@ import { debounce } from 'lodash';
 import useMedia from '@lib/common/utils/useMedia';
 import { Empty } from '@lib/components/Empty';
 import { customBreakpoints } from '@lib/common/utils/mediaQuery';
-import { observer } from 'mobx-react';
+import { observer, useLocalStore } from 'mobx-react';
 import {
   PictureContent, Wrapper, SkeletonContent, SkeletonItem, SkeletonAvatar, SkeletonName,
 } from './styles';
@@ -65,7 +65,12 @@ export const PictureList: React.FC<IProps> = observer(({
   style,
   noMore = false,
 }) => {
-  const [clientList, setClientList] = React.useState<PictureEntity[][]>([]);
+  const store = useLocalStore(() => ({
+    clientList: [] as PictureEntity[][],
+    setClientList(arr: PictureEntity[][]) {
+      this.clientList = arr;
+    },
+  }));
   const pageLock = React.useRef<boolean>(false);
   const col = useMedia(
     mediaArr.map(media => media.media),
@@ -86,10 +91,6 @@ export const PictureList: React.FC<IProps> = observer(({
       }
     }
   }, 100);
-
-  const pictureList = () => {
-    setClientList(() => listParse(data, col));
-  };
   useEffect(() => {
     scrollEvent();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -114,13 +115,9 @@ export const PictureList: React.FC<IProps> = observer(({
   }, [noMore]);
   // 处理客户端列表数据
   useEffect(() => {
-    pictureList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    store.setClientList(listParse(data, col));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [col, data]);
-  // TODO: 去除：服务端渲染列表
-  // if (server) {
-  //   serverList = colArr.map(_col => listParse(data, _col));
-  // }
   return (
     <Wrapper style={style}>
       <NoSSR key="server" server={false}>
@@ -142,7 +139,7 @@ export const PictureList: React.FC<IProps> = observer(({
           style={{ display: 'grid' }}
           like={like}
           col={col}
-          list={clientList}
+          list={store.clientList}
         />
         <Empty loading={!noMore} />
       </NoSSR>

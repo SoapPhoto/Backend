@@ -171,6 +171,7 @@ const UserInfo = observer(() => {
               userInfo?.username !== user.username && (
                 <FollowButton
                   disabled={followLoading}
+                  user={user}
                   style={{ marginLeft: rem(24), marginRight: rem(24) }}
                   isFollowing={user.isFollowing}
                   onClick={follower}

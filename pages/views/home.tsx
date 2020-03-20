@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
-import styled from 'styled-components';
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureList } from '@lib/containers/Picture/List';
@@ -20,21 +18,15 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
   const {
     list, like, getPageList, isNoMore, restQuery,
   } = homeStore;
+  const title = useMemo(() => getTitle(`home.nav.${restQuery.type.toLocaleLowerCase()}`, t), [restQuery.type, t]);
   return (
     <div>
       <SEO
-        title={getTitle(`home.nav.${restQuery.type.toLocaleLowerCase()}`, t)}
+        title={title}
         description="有趣的方式来和小伙伴分享你生活的照片。"
       />
       <Nav>
-        {
-          isLogin && (
-            <NavItem route="/">
-              {t('home.nav.feed')}
-            </NavItem>
-          )
-        }
-        <NavItem route={isLogin ? '/hot' : '/'}>
+        <NavItem route="/">
           {t('home.nav.hot')}
         </NavItem>
         <NavItem route="/new">
@@ -43,6 +35,13 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
         <NavItem route="/choice">
           {t('home.nav.choice')}
         </NavItem>
+        {
+          isLogin && (
+            <NavItem route="/feed">
+              {t('home.nav.feed')}
+            </NavItem>
+          )
+        }
       </Nav>
       <PictureList
         noMore={isNoMore}
@@ -63,7 +62,7 @@ Index.getInitialProps = async ({ mobxStore, route, res }: ICustomNextContext) =>
   const isPop = location && location.action === 'POP' && !server;
   let newType = (type || '').toLocaleLowerCase();
   if (!newType) {
-    newType = accountStore.isLogin ? 'feed' : 'hot';
+    newType = 'hot';
   }
   if (newType === 'feed' && !accountStore.isLogin && res) {
     res.redirect('/');
