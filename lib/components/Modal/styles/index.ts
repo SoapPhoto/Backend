@@ -87,6 +87,7 @@ export const XIcon = styled(X)`
   right: ${rem(24)};
   top: ${rem(24)};
   cursor: pointer;
+  z-index: 2;
   ${customMedia.lessThan('mobile')`
     display: block;
   `}
