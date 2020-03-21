@@ -11,7 +11,7 @@ export const Arrow = styled.span<{placement?: Placement}>`
     width: 10px;
     height: 10px;
     position: absolute;
-    z-index: -1;
+    z-index: 0;
   }
   &::before {
     content: '';
@@ -19,17 +19,17 @@ export const Arrow = styled.span<{placement?: Placement}>`
     background: ${theme('styles.box.background')};
     top: 0;
     left: 0;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
   }
   &[x-theme^="light"] {
     &::before {
       background-color: ${theme('styles.box.background')};
-      border-color: ${theme('styles.box.borderColor')};
+      /* border-color: ${theme('styles.box.borderColor')}; */
     }
   }
   &[x-theme^="dark"] { 
     &::before {
-      background-color: #363d40;
+      background-color: #1e1e1e;
       border: none;
     }
   }
@@ -41,12 +41,14 @@ export const Content = styled.div`
   padding: ${rem('4px')} ${rem('12px')};
   font-size: ${_ => rem(_.theme.fontSizes[0])};
   &[x-theme^="light"] {
-    box-shadow: ${theme('colors.shadowColor')} 0 ${rem('6px')} ${rem('32px')} 0;
+    box-shadow: 0 3px 6px -4px ${theme('styles.popover.boxShadow1')}, 0 6px 16px 0 ${theme('styles.popover.boxShadow2')}, 0 9px 28px 8px ${theme('styles.popover.boxShadow3')};
     background-color: ${theme('styles.box.background')};
+    border: none;
   }
   &[x-theme^="dark"] {
-    background-color: #363d40;
+    background-color: #1e1e1e;
     color: #fff;
+    box-shadow: 0 3px 6px -4px rgba(0,0,0,0.48), 0 6px 16px 0 rgba(0,0,0,0.32), 0 9px 28px 8px rgba(0,0,0,0.2);
     border: none;
   }
 `;

@@ -83,6 +83,11 @@ const theme: DefaultTheme = {
       accents1: '#fafafa',
       accents2: '#eaeaea',
     },
+    popover: {
+      boxShadow1: 'rgba(0, 0, 0, 0.12)',
+      boxShadow2: 'rgba(0, 0, 0, 0.08)',
+      boxShadow3: 'rgba(0, 0, 0, 0.05)',
+    },
   },
   layout: {
     header: {

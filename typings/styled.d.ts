@@ -77,6 +77,11 @@ declare module 'styled-components' {
         accents1: string;
         accents2: string;
       };
+      popover: {
+        boxShadow1: string;
+        boxShadow2: string;
+        boxShadow3: string;
+      };
     };
     layout: {
       header: {
