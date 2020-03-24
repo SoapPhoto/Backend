@@ -1,5 +1,7 @@
 import Head from 'next/head';
-import React, { useEffect, useCallback, useState } from 'react';
+import React, {
+  useEffect, useCallback, useState, useMemo,
+} from 'react';
 
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { PictureEntity } from '@lib/common/interfaces/picture';
@@ -13,7 +15,7 @@ import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import {
-  Heart, MessageSquare, Target, Award, StrutAlign,
+  Heart, MessageSquare, Target, Award, StrutAlign, Hash,
 } from '@lib/icon';
 import {
   BaseInfoItem,
@@ -29,6 +31,7 @@ import {
   UserLink,
   UserName,
   Wrapper,
+  MapIcon,
 } from '@lib/styles/views/picture';
 import { A } from '@lib/components/A';
 import { rem } from 'polished';
@@ -37,7 +40,7 @@ import { I18nNamespace } from '@lib/i18n/Namespace';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useAccountStore, useScreenStores } from '@lib/stores/hooks';
 import { observer } from 'mobx-react';
-import { getPictureUrl } from '@lib/common/utils/image';
+import { getPictureUrl, formatLocationTitle } from '@lib/common/utils/image';
 import dayjs from 'dayjs';
 import { Popover } from '@lib/components/Popover';
 import { css } from 'styled-components';
@@ -90,7 +93,16 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
     // 删除后返回用户首页
     window.location.href = `/@${user.username}`;
   }, [deletePicture, user.username]);
-  const title = getTitle(`${info.title} (@${user.name})`, t);
+
+  const title = useMemo(() => getTitle(`${info.title} (@${user.name})`, t), [info.title, t, user.name]);
+
+  const locationTitle = useMemo(() => {
+    if (info?.location) {
+      return formatLocationTitle(info.location);
+    }
+    return '';
+  }, [info]);
+
   return (
     <Wrapper>
       <Head>
@@ -225,8 +237,12 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           setPicture={setPicture}
         />
         {
-          tags.length > 0 && (
+          (tags.length > 0 || locationTitle) && (
             <TagBox>
+              <Tag>
+                <MapIcon size={18} />
+                {locationTitle}
+              </Tag>
               {
                 tags.map(tag => (
                   <A

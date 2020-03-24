@@ -2,7 +2,7 @@ import { rem, math, rgba } from 'polished';
 import styled from 'styled-components';
 import { Cell, Grid } from 'styled-css-grid';
 
-import { Info, Heart } from '@lib/icon';
+import { Info, Heart, MapPin } from '@lib/icon';
 import { A } from '@lib/components/A';
 import { theme, activate, initButton } from '@lib/common/utils/themes';
 import { WrapperBox } from '@lib/common/utils/themes/common';
@@ -169,4 +169,9 @@ export const HeartIcon = styled(Heart)<{islike: number}>`
   fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
   stroke: ${_ => (_.islike ? _.theme.colors.danger : _.theme.colors.secondary || '#fff')};
   margin-right: ${rem(6)};
+`;
+
+export const MapIcon = styled(MapPin)`
+  margin-right: 6px;
+  stroke: ${theme('colors.baseGreen')} !important;
 `;

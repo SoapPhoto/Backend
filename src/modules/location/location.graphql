@@ -32,7 +32,7 @@ type PictureLocation {
   district: String
   "乡镇名"
   town: String
-  pois: [Poi]
+  pois: [Poi] @limit(number: 3)
 }
 
 type SearchPlaceDetailInfo {

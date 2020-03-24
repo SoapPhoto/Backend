@@ -356,7 +356,7 @@ fragment PictureLocationFragment on PictureLocation {
     lat
     lng
   }
-  pois {
+  pois(limit: 3) {
     addr
     name
     poiType

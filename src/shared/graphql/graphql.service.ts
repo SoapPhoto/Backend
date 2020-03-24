@@ -8,6 +8,7 @@ import { validator } from '@common/validator';
 import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { Logger } from '../logging/logging.service';
+import { LimitDirective } from './directive/limit.directive';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
@@ -41,6 +42,9 @@ export class GraphqlService implements GqlOptionsFactory {
       },
       resolverValidationOptions: {
         requireResolversForResolveType: false,
+      },
+      schemaDirectives: {
+        limit: LimitDirective,
       },
       typePaths: ['./comment/graphql/*.graphql', './**/*.graphql'],
       installSubscriptionHandlers: true,
