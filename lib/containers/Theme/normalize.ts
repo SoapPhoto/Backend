@@ -1,7 +1,10 @@
 /* eslint-disable max-len */
 import { css } from 'styled-components';
 
-const font = 'Rubik, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue","Helvetica",\'Noto Sans SC\', PingFang SC,PingFang TC, Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,"WenQuanYi Micro Hei",sans-serif';
+const font = `
+  Rubik, "Noto Sans SC", PingFang SC, PingFang TC, Microsoft YaHei,
+  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", "Helvetica", Hiragino Sans GB, STHeiti, "WenQuanYi Micro Hei", sans-serif
+`;
 
 // _: ThemedStyledProps<{}, DefaultTheme>
 
@@ -18,6 +21,9 @@ const normalize = () => css`
     overflow-y: scroll;
     overflow-x: hidden;
     font-family: ${font};
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
   }
   html,body{
     width: 100%;
