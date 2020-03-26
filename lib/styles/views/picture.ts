@@ -111,6 +111,9 @@ export const TagBox = styled.div`
     }
     margin-right: ${rem(6)};
   }
+  & > span {
+    margin-right: ${rem(6)};
+  }
 `;
 
 export const RelateCollectionTitle = styled.h3`
