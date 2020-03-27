@@ -20,8 +20,10 @@ export const ItemImage = styled(Image)`
   user-select: none;
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
-  transition: .2s opacity ease-in;
+  transition: .5s opacity ease-in-out;
   z-index: 1;
   border-radius: 4px;
 `;

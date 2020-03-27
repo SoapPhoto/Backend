@@ -19,6 +19,7 @@ fragment PictureFragment on Picture {
   model
   createTime
   updateTime
+  blurhash
 }
 
 fragment PicturePreviewFragment on Picture {
@@ -45,6 +46,7 @@ fragment PictureDetailFragment on Picture {
     ...PictureFragment
     isPrivate
     commentCount
+    blurhashSrc
     currentCollections {
       ...CollectionFragment
     }
@@ -75,6 +77,8 @@ fragment PictureListFragment on Pictures {
     timestamp
     data {
       ...PictureFragment
+      blurhash
+      blurhashSrc
       isPrivate
       user {
         ...UserBaseFragment

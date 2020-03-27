@@ -37,11 +37,25 @@ export const PictureImage: React.FC<IPictureImage> = ({
   return (
     <ImageBox height={height} background={detail.color}>
       <ImgBox style={{ position: 'absolute' }}>
-        <img
-          style={{ filter: 'blur(20px)', width: '100%', borderRadius: '4px' }}
-          src={getPictureUrl(detail.key, 'thumbSmall')}
-          alt=""
-        />
+        {
+          detail.blurhashSrc ? (
+            <img
+              style={{
+                width: '100%', borderRadius: '4px', height: '100%', objectFit: 'cover',
+              }}
+              src={detail.blurhashSrc}
+              alt=""
+            />
+          ) : (
+            <img
+              style={{
+                filter: 'blur(20px)', width: '100%', borderRadius: '4px', height: '100%', objectFit: 'cover',
+              }}
+              src={getPictureUrl(detail.key, 'thumbSmall')}
+              alt=""
+            />
+          )
+        }
       </ImgBox>
       {
         lazyload ? (

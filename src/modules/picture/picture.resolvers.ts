@@ -2,6 +2,7 @@ import {
   Args, Mutation, Query, Resolver, ResolveField, Parent, Info,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
+import { createCanvas, createImageData } from 'canvas';
 
 import {
   UseGuards, Inject, forwardRef,
@@ -14,6 +15,7 @@ import { PicturesType } from '@common/enum/picture';
 import { User } from '@server/common/decorator/user.decorator';
 import { Loader } from '@server/shared/graphql/loader/loader.decorator';
 import DataLoader from 'dataloader';
+import { decode } from 'blurhash';
 import {
   GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
 } from './dto/picture.dto';
@@ -158,5 +160,35 @@ export class PictureResolver {
     @Loader(BadgePictureLoader.name) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,
   ) {
     return badgeLoader.load(parent.id);
+  }
+
+  @ResolveField('blurhashSrc')
+  public async blurhashSrc(
+    @Parent() parent: PictureEntity,
+  ) {
+    const getBase64 = (str: string, width: number, height: number) => {
+      const pixels = decode(str, width, height);
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+      ctx.putImageData(createImageData(pixels, width, height), 0, 0);
+      const base64 = canvas.toDataURL();
+      return base64;
+    };
+    if (parent.blurhash) {
+      let s = 1;
+      let width = 8;
+      let height = 8;
+      if (parent.width > parent.height) {
+        s = Math.round(parent.width / parent.height);
+        width *= s;
+      } else {
+        s = Math.round(parent.height / parent.width);
+        height *= s;
+      }
+      const base64 = getBase64(parent.blurhash, width, height);
+      return base64;
+    }
+    return undefined;
+    // return badgeLoader.load(parent.id);
   }
 }

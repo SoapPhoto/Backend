@@ -1,10 +1,11 @@
 
-import { omit, pick } from 'lodash';
+import { omit, pick, isString } from 'lodash';
 import { extname } from 'path';
 import { $enum } from 'ts-enum-util';
 import {
   transform, GCJ02, WGS84,
 } from 'gcoord';
+import { encode } from 'blurhash';
 
 import { validator } from '@common/validator';
 import { imageClassify } from '@lib/services/picture';
@@ -67,7 +68,7 @@ export interface IImageInfo {
   width: number;
   make?: string;
   model?: string;
-  location?: PictureLocation;
+  blurhash?: string;
 }
 
 export const pictureStyle = {
@@ -333,21 +334,20 @@ export async function getImageInfo(
     width: 0,
     make: undefined,
     model: undefined,
-    location: undefined,
   };
   const imgSrc = window.URL.createObjectURL(image);
   const imgHtml = document.createElement('img');
   imgHtml.src = imgSrc;
-  const fac = new window.FastAverageColor();
   const exif = await getImageEXIF(image);
   info.make = exif.make;
   info.model = exif.model;
   info.exif = omit(exif, ['model', 'make']);
   const previewSrc = await (async () => new Promise<string>((res) => {
     const setInfo = async () => {
-      const color = fac.getColor(imgHtml);
-      info.color = color.hex;
-      info.isDark = color.isDark;
+      // 获取主色调过慢，拆分开来
+      // const color = fac.getColor(imgHtml);
+      // info.color = color.hex;
+      // info.isDark = color.isDark;
       info.height = imgHtml.naturalHeight;
       info.width = imgHtml.naturalWidth;
       if (info.exif && info.exif.orientation) {
@@ -367,7 +367,66 @@ export async function getImageInfo(
       };
     }
   }))();
-  return [info, previewSrc, await previewImage(imgHtml, 600, info.exif.orientation, true)];
+  return [info, previewSrc, await previewImage(imgHtml, 500, info.exif.orientation, true)];
+}
+
+interface IFastAverageColorData {
+  error: Maybe<string>;
+  value: number[];
+  rgb: string;
+  rgba: string;
+  hex: string;
+  hexa: string;
+  isDark: boolean;
+  isLight: boolean;
+}
+
+export async function getImageColor(
+  image: HTMLImageElement | string,
+): Promise<IFastAverageColorData> {
+  const fac = new window.FastAverageColor();
+  const color = await fac.getColorAsync(image);
+  return color;
+  // const color = fac.getColor(imgHtml);
+  // info.color = color.hex;
+  // info.isDark = color.isDark;
+}
+
+export function getImageBlurhash(data: string | HTMLImageElement): Promise<string> {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d')!;
+    let img: HTMLImageElement;
+    if (isString(data)) {
+      img = new Image();
+      img.src = data;
+    } else {
+      img = data;
+    }
+    img.onload = () => {
+      const width = img.naturalWidth;
+      const height = img.naturalHeight;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(img.src);
+      const imageData = ctx.getImageData(
+        0,
+        0,
+        width,
+        height,
+      );
+      const blurhash = encode(
+        imageData.data,
+        width,
+        height,
+        3,
+        2,
+      );
+      resolve(blurhash);
+    };
+  });
+  // imageData;
 }
 
 /**

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { css } from 'styled-components';
 import { pick, merge } from 'lodash';
 
@@ -16,14 +16,10 @@ import {
   Box,
   TrashIcon,
   ContentBox,
-  Content,
-  FormTag,
-  Input,
   Wrapper,
   PreviewBox,
   Preview,
   Progress,
-  TextArea,
   PreviewBtn,
   PreviewHandleContent,
 } from '@lib/styles/views/upload';
@@ -40,60 +36,45 @@ import { theme } from '@lib/common/utils/themes';
 import { rem } from 'polished';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
 import { I18nNamespace } from '@lib/i18n/Namespace';
-import { validator } from '@common/validator';
 import { useTranslation } from '@lib/i18n/useTranslation';
 import { useImageInfo } from '@lib/common/hooks/useImageInfo';
 import { CreatePictureAddDot, PictureLocation } from '@lib/common/interfaces/picture';
 // import { LocationModal } from '@lib/components/LocationModal';
 import dynamic from 'next/dynamic';
+import { useLocalStore, observer } from 'mobx-react';
+import UploadForm, { ICreatePictureData } from '@lib/containers/Upload/UploadForm';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
 
 }
 
-interface ICreatePictureData {
-  isPrivate: boolean;
-  title: string;
-  bio: string;
-  tags: string[];
-}
-
-const initUploadData = {
-  isPrivate: false,
-  title: '',
-  bio: '',
-  tags: [],
-};
-
 const DynamicLocationModal = dynamic<any>(() => import('@lib/components/LocationModal').then(v => v.LocationModal), {
   ssr: false,
 });
 
-const Upload: ICustomNextPage<IProps, any> = () => {
+const Upload: ICustomNextPage<IProps, any> = observer(() => {
   const { t } = useTranslation();
   const imageRef = React.useRef<File>();
   const [imageData, setFile, _setImageUrl, setImageInfo, clear] = useImageInfo(imageRef);
-  const { imageUrl, imageInfo, classify } = imageData;
+  const {
+    imageUrl, imageInfo, imageLocation, loading, classify,
+  } = imageData;
   const [locationVisible, setLocationVisible] = React.useState(false);
-  const [isLocation, setIsLocation] = React.useState(true);
-  const [uploadLoading, setUploadLoading] = React.useState(false);
-  const [disabled, setDisabled] = React.useState(false);
   const [percentComplete, setPercentComplete] = React.useState(0);
-  const [EXIFVisible, setEXIFVisible] = React.useState(false);
-  const [titleError, setTitleError] = React.useState<string>();
+
+  const [uploadDisabled, setUploadDisabled] = React.useState(false);
+  const [uploadLoading, setUploadLoading] = React.useState(false);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_formatSpeed, seFormatSpeed] = React.useState('0Kb/s');
-  const [data, _setData] = useState<ICreatePictureData>({
-    ...initUploadData,
-  });
 
   const locationTitle = useMemo(() => {
-    if (imageInfo?.location) {
-      return formatLocationTitle(imageInfo.location);
+    if (imageLocation) {
+      return formatLocationTitle(imageLocation);
     }
     return '';
-  }, [imageInfo]);
+  }, [imageLocation]);
 
   // TODO 图片自动识别功能
   // useEffect(() => {
@@ -108,68 +89,35 @@ const Upload: ICustomNextPage<IProps, any> = () => {
   //   }
   // }, [classify]);
 
-  // eslint-disable-next-line arrow-parens
-  const setData = <T extends keyof ICreatePictureData>(label: T, value: ICreatePictureData[T]) => {
-    if (label === 'title') {
-      if (value !== '') {
-        setTitleError(undefined);
-      } else {
-        setTitleError('请输入标题！');
-      }
-    }
-    _setData(prev => ({
-      ...prev,
-      [label]: value,
-    }));
-  };
-
   const onUploadProgress = useCallback((speed: string, percent: number) => {
     setPercentComplete(percent);
     seFormatSpeed(speed);
   }, []);
 
-  const updateEXIF = useCallback((value: IEXIFEditValues) => {
-    if (imageInfo) {
-      const { make, model, ...rest } = value;
-      setImageInfo(
-        merge(imageInfo, {
-          make,
-          model,
-          exif: {
-            ...rest,
-          },
-        }) as IImageInfo,
-      );
-    }
-  }, [imageInfo, setImageInfo]);
-
-  const addPicture = useCallback(async () => {
-    if (validator.isEmpty(data.title)) {
-      setTitleError(t('validation.yup_required', t('label.picture_title')));
-      return;
+  const addPicture = useCallback(async (value: ICreatePictureData) => {
+    if (loading) {
+      Toast.warning('正在获取图片信息，请稍后！');
     }
     setUploadLoading(true);
     if (imageRef.current) {
+      // 上传到七牛获取key
       const key = await uploadQiniu(imageRef.current, UploadType.PICTURE, onUploadProgress);
-      const info = imageInfo;
-      if (!isLocation && info?.exif?.location) {
-        delete info.exif.location;
-        delete info.location;
-      }
       const addData: MutablePartial<CreatePictureAddDot> = {
-        info,
-        ...data,
+        info: imageInfo,
+        ...value,
         key,
-        location: undefined,
-        tags: data.tags.map(name => ({ name })),
+        location: imageLocation,
+        tags: value.tags.map(name => ({ name })),
       };
-      if (info?.location) {
-        addData.location = info?.location;
-        delete info?.location;
+      if (!value.isLocation) {
+        delete addData.location;
+        if (addData.info?.exif) {
+          delete addData.info.exif.location;
+        }
       }
       try {
         await request.post('/api/picture', addData);
-        setDisabled(true);
+        setUploadDisabled(true);
         Toast.success(t('upload.message.success_upload'));
         setTimeout(() => {
           window.location = '/' as any;
@@ -181,31 +129,21 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         setPercentComplete(0);
       }
     }
-  }, [data, t, onUploadProgress, imageInfo, isLocation]);
+  }, [loading, onUploadProgress, imageInfo, imageLocation, t]);
   const handleChange = async (files: Maybe<FileList>) => {
     if (files && files[0]) {
       setFile(files[0]);
     }
   };
+  // TODO: 暂时不能修改
   const updateLocation = useCallback((newLocation: PictureLocation) => {
-    setImageInfo((info) => {
-      if (info) {
-        return {
-          ...info,
-          location: newLocation,
-        };
-      }
-      return undefined;
-    });
+    // setImageInfo({
+    //   ...imageInfo,
+    //   location: newLocation,
+    // } as Image);
   }, [setImageInfo]);
-  // const setImageClassify = useCallback(async (base64: string) => {
-  //   const classify = await getImageClassify(base64);
-  // }, []);
   const resetData = useCallback(() => {
     clear();
-    _setData({
-      ...initUploadData,
-    });
   }, [clear]);
   const openLocation = useCallback(() => {
     setLocationVisible(true);
@@ -249,72 +187,13 @@ const Upload: ICustomNextPage<IProps, any> = () => {
                 <Progress style={{ width: `${percentComplete}%`, opacity: uploadLoading ? 0.6 : 0 }} />
                 <Preview src={imageUrl} />
               </PreviewBox>
-              <Content>
-                <Grid columns={1}>
-                  <Cell>
-                    <Input
-                      isTitle
-                      placeholder={t('label.picture_title')}
-                      value={data.title}
-                      onChange={e => setData('title', e.target.value)}
-                      error={titleError}
-                    />
-                    <TextArea
-                      placeholder={t('label.picture_bio')}
-                      value={data.bio}
-                      onChange={e => setData('bio', e.target.value)}
-                    />
-                  </Cell>
-                  <Cell
-                    style={{ marginBottom: rem(24) }}
-                  >
-                    <Switch
-                      label={t('private')}
-                      bio={t('message.visible_yourself', t('label.picture'))}
-                      checked={data.isPrivate}
-                      onChange={checked => setData('isPrivate', checked)}
-                    />
-                  </Cell>
-                  {
-                    imageInfo && imageInfo.exif && imageInfo.exif.location && (
-                      <Cell
-                        style={{ marginBottom: rem(24) }}
-                      >
-                        <Switch
-                          label={t('upload.share_location.label')}
-                          bio={t('upload.share_location.bio')}
-                          checked={isLocation}
-                          onChange={checked => setIsLocation(checked)}
-                        />
-                      </Cell>
-                    )
-                  }
-                  <FieldItem
-                    onClick={() => setEXIFVisible(true)}
-                    label={t('upload.edit_exif.label')}
-                    bio={t('upload.edit_exif.bio')}
-                  >
-                    <Edit size={20} css={css`color: ${theme('colors.primary')};` as any} />
-                  </FieldItem>
-                  <FormTag>
-                    <Tag
-                      value={data.tags}
-                      onChange={tags => setData('tags', tags)}
-                    />
-                  </FormTag>
-                  <Cell
-                    style={{ textAlign: 'right' }}
-                  >
-                    <Button
-                      onClick={addPicture}
-                      loading={uploadLoading}
-                      disabled={disabled}
-                    >
-                      <span>{t('upload.btn.upload')}</span>
-                    </Button>
-                  </Cell>
-                </Grid>
-              </Content>
+              <UploadForm
+                imageInfo={imageInfo}
+                setImageInfo={setImageInfo}
+                onOk={addPicture}
+                loading={uploadLoading}
+                disabled={uploadDisabled || loading}
+              />
             </ContentBox>
           ) : (
             <UploadBox onFileChange={handleChange} />
@@ -322,29 +201,14 @@ const Upload: ICustomNextPage<IProps, any> = () => {
         }
       </Box>
       <DynamicLocationModal
-        current={imageInfo?.location}
+        current={imageLocation}
         visible={locationVisible}
         onClose={closeLocation}
         onConfirm={updateLocation}
       />
-      <EXIFEditModal
-        initialValues={imageInfo ? {
-          make: imageInfo.make,
-          model: imageInfo.model,
-          ...pick(imageInfo.exif, [
-            'focalLength',
-            'aperture',
-            'exposureTime',
-            'ISO',
-          ]),
-        } : {}}
-        visible={EXIFVisible}
-        onOk={updateEXIF}
-        onClose={() => setEXIFVisible(false)}
-      />
     </Wrapper>
   );
-};
+});
 
 export default withAuth('user-verified')(
   pageWithTranslation([I18nNamespace.Picture, I18nNamespace.Upload])(Upload),

@@ -2069,21 +2069,6 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nest-modules/mailer@^1.3.9":
-  version "1.3.9"
-  resolved "https://registry.npm.taobao.org/@nest-modules/mailer/download/@nest-modules/mailer-1.3.9.tgz#9da5d456fa246f1cfd926698bc795a7c1e41ad16"
-  integrity sha1-naXUVvokbxz9kmaYvHlafB5BrRY=
-  dependencies:
-    "@nestjs/common" "6.11.11"
-    "@nestjs/core" "6.11.11"
-    css-inliner "1.1.4"
-    glob "7.1.6"
-    handlebars "4.7.3"
-    lodash "4.17.15"
-    nodemailer "6.4.5"
-    pug "2.0.4"
-    rxjs "6.5.4"
-
 "@nestcloud/core@^0.2.3":
   version "0.2.4"
   resolved "https://registry.npm.taobao.org/@nestcloud/core/download/@nestcloud/core-0.2.4.tgz#4848af409e0ea61df6ba263059e1cfe5900fab52"
@@ -2132,16 +2117,6 @@
     webpack "4.42.0"
     webpack-node-externals "1.7.2"
 
-"@nestjs/common@6.11.11", "@nestjs/common@^6.10.8":
-  version "6.11.11"
-  resolved "https://registry.npm.taobao.org/@nestjs/common/download/@nestjs/common-6.11.11.tgz#701da2462a15cc94d55ec863ddd9f2fb0bbd7136"
-  integrity sha1-cB2iRioVzJTVXshj3dny+wu9cTY=
-  dependencies:
-    axios "0.19.2"
-    cli-color "2.0.0"
-    tslib "1.11.1"
-    uuid "7.0.1"
-
 "@nestjs/common@6.3.1":
   version "6.3.1"
   resolved "https://registry.npm.taobao.org/@nestjs/common/download/@nestjs/common-6.3.1.tgz#222f25251eb1b67c6e552e00b266048daa569bbc"
@@ -2161,6 +2136,16 @@
     tslib "1.11.1"
     uuid "7.0.2"
 
+"@nestjs/common@^6.10.8":
+  version "6.11.11"
+  resolved "https://registry.npm.taobao.org/@nestjs/common/download/@nestjs/common-6.11.11.tgz#701da2462a15cc94d55ec863ddd9f2fb0bbd7136"
+  integrity sha1-cB2iRioVzJTVXshj3dny+wu9cTY=
+  dependencies:
+    axios "0.19.2"
+    cli-color "2.0.0"
+    tslib "1.11.1"
+    uuid "7.0.1"
+
 "@nestjs/common@^7.0.3":
   version "7.0.3"
   resolved "https://registry.npm.taobao.org/@nestjs/common/download/@nestjs/common-7.0.3.tgz#89258b411b2f1a1704ba0289473f2ed8e32423db"
@@ -2170,19 +2155,6 @@
     cli-color "2.0.0"
     tslib "1.11.1"
     uuid "7.0.2"
-
-"@nestjs/core@6.11.11", "@nestjs/core@^6.10.8":
-  version "6.11.11"
-  resolved "https://registry.npm.taobao.org/@nestjs/core/download/@nestjs/core-6.11.11.tgz#2b97a3e9c2a853f5693ed84daf81c1ee3b2782b4"
-  integrity sha1-K5ej6cKoU/VpPthNr4HB7jsngrQ=
-  dependencies:
-    "@nuxtjs/opencollective" "0.2.2"
-    fast-safe-stringify "2.0.7"
-    iterare "1.2.0"
-    object-hash "2.0.3"
-    path-to-regexp "3.2.0"
-    tslib "1.11.1"
-    uuid "7.0.1"
 
 "@nestjs/core@7.0.1":
   version "7.0.1"
@@ -2196,6 +2168,19 @@
     path-to-regexp "3.2.0"
     tslib "1.11.1"
     uuid "7.0.2"
+
+"@nestjs/core@^6.10.8":
+  version "6.11.11"
+  resolved "https://registry.npm.taobao.org/@nestjs/core/download/@nestjs/core-6.11.11.tgz#2b97a3e9c2a853f5693ed84daf81c1ee3b2782b4"
+  integrity sha1-K5ej6cKoU/VpPthNr4HB7jsngrQ=
+  dependencies:
+    "@nuxtjs/opencollective" "0.2.2"
+    fast-safe-stringify "2.0.7"
+    iterare "1.2.0"
+    object-hash "2.0.3"
+    path-to-regexp "3.2.0"
+    tslib "1.11.1"
+    uuid "7.0.1"
 
 "@nestjs/core@^7.0.3":
   version "7.0.3"
@@ -5682,6 +5667,11 @@ bluebird@^3.3.5, bluebird@^3.4.7, bluebird@^3.5.0, bluebird@^3.5.1, bluebird@^3.
   resolved "https://registry.npm.taobao.org/bluebird/download/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha1-nyKcFb4nJFT/qXOs4NvueaGww28=
 
+blurhash@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npm.taobao.org/blurhash/download/blurhash-1.1.3.tgz#dc325af7da836d07a0861d830bdd63694382483e"
+  integrity sha1-3DJa99qDbQeghh2DC91jaUOCSD4=
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.npm.taobao.org/bn.js/download/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
@@ -6233,6 +6223,15 @@ caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30000989, caniuse-lite@^1.0.300010
   version "1.0.30001035"
   resolved "https://registry.npm.taobao.org/caniuse-lite/download/caniuse-lite-1.0.30001035.tgz#2bb53b8aa4716b2ed08e088d4dc816a5fe089a1e"
   integrity sha1-K7U7iqRxay7QjgiNTcgWpf4Imh4=
+
+canvas@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.npm.taobao.org/canvas/download/canvas-2.6.1.tgz#0d087dd4d60f5a5a9efa202757270abea8bef89e"
+  integrity sha1-DQh91NYPWlqe+iAnVycKvqi++J4=
+  dependencies:
+    nan "^2.14.0"
+    node-pre-gyp "^0.11.0"
+    simple-get "^3.0.3"
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -7758,6 +7757,13 @@ decompress-response@^3.3.0:
   integrity sha1-gKTdMjdIOEv6JICDYirt7Jgq3/M=
   dependencies:
     mimic-response "^1.0.0"
+
+decompress-response@^4.2.0:
+  version "4.2.1"
+  resolved "https://registry.npm.taobao.org/decompress-response/download/decompress-response-4.2.1.tgz#414023cc7a302da25ce2ec82d0d5238ccafd8986"
+  integrity sha1-QUAjzHowLaJc4uyC0NUjjMr9iYY=
+  dependencies:
+    mimic-response "^2.0.0"
 
 dedent@0.7.0:
   version "0.7.0"
@@ -13516,6 +13522,11 @@ mimic-response@^1.0.0:
   resolved "https://registry.npm.taobao.org/mimic-response/download/mimic-response-1.0.1.tgz?cache=0&sync_timestamp=1581922421687&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmimic-response%2Fdownload%2Fmimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
   integrity sha1-SSNTiHju9CBjy4o+OweYeBSHqxs=
 
+mimic-response@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/mimic-response/download/mimic-response-2.1.0.tgz#d13763d35f613d09ec37ebb30bac0469c0ee8f43"
+  integrity sha1-0Tdj019hPQnsN+uzC6wEacDuj0M=
+
 min-document@^2.19.0:
   version "2.19.0"
   resolved "https://registry.npm.taobao.org/min-document/download/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
@@ -14646,6 +14657,22 @@ node-notifier@^6.0.0:
     semver "^6.3.0"
     shellwords "^0.1.1"
     which "^1.3.1"
+
+node-pre-gyp@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.npm.taobao.org/node-pre-gyp/download/node-pre-gyp-0.11.0.tgz#db1f33215272f692cd38f03238e3e9b47c5dd054"
+  integrity sha1-2x8zIVJy9pLNOPAyOOPptHxd0FQ=
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
 
 node-pre-gyp@^0.14.0:
   version "0.14.0"
@@ -18354,6 +18381,20 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.npm.taobao.org/signal-exit/download/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
+simple-concat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/simple-concat/download/simple-concat-1.0.0.tgz#7344cbb8b6e26fb27d66b2fc86f9f6d5997521c6"
+  integrity sha1-c0TLuLbib7J9ZrL8hvn21Zl1IcY=
+
+simple-get@^3.0.3:
+  version "3.1.0"
+  resolved "https://registry.npm.taobao.org/simple-get/download/simple-get-3.1.0.tgz#b45be062435e50d159540b576202ceec40b9c6b3"
+  integrity sha1-tFvgYkNeUNFZVAtXYgLO7EC5xrM=
+  dependencies:
+    decompress-response "^4.2.0"
+    once "^1.3.1"
+    simple-concat "^1.0.0"
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npm.taobao.org/simple-swizzle/download/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -19398,7 +19439,7 @@ tapable@^1.0.0, tapable@^1.1.3:
   resolved "https://registry.npm.taobao.org/tapable/download/tapable-1.1.3.tgz#a1fccc06b58db61fd7a45da2da44f5f3a3e67ba2"
   integrity sha1-ofzMBrWNth/XpF2i2kT186Pme6I=
 
-tar@^4.4.2:
+tar@^4, tar@^4.4.2:
   version "4.4.13"
   resolved "https://registry.npm.taobao.org/tar/download/tar-4.4.13.tgz?cache=0&sync_timestamp=1580272840873&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftar%2Fdownload%2Ftar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
   integrity sha1-Q7NkvFKIjVVSmGN7ENYHkCVKtSU=

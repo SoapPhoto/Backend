@@ -38,7 +38,7 @@ export const Image: React.FC<IImageProps> = memo(({
   const shouldReveal = !isFadeIn || isLoaded || server;
   const imageStyle = {
     opacity: shouldReveal ? 1 : 0,
-    transition: isFadeIn ? 'opacity 300ms' : 'none',
+    transition: isFadeIn ? 'opacity 500ms ease-in-out' : 'none',
   };
   return (
     <img

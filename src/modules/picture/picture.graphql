@@ -167,6 +167,12 @@ type Picture implements BaseNode {
   "EXIF信息"
   exif: EXIF
 
+  "blurhash"
+  blurhash: String
+
+  "blurhash src"
+  blurhashSrc: String
+
   "图片作者"
   user: User
 

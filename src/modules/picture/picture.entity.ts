@@ -135,6 +135,11 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public readonly model?: string;
 
+  /** blurhash */
+  @Column({ nullable: true })
+  @Expose()
+  public readonly blurhash?: string;
+
   /** EXIF信息 */
   @Column('simple-json', {
     nullable: true,
@@ -180,6 +185,9 @@ export class PictureEntity extends BaseEntity {
   public info!: CollectionPictureEntity[];
 
   public relatedCollections!: IRelatedCollections;
+
+  @Expose()
+  public blurhashSrc?: string;
 
   @Expose()
   get currentCollections() {
