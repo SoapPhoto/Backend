@@ -58,7 +58,7 @@ export class PictureService {
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
     private readonly redisService: RedisService,
-  ) {}
+  ) { }
 
   public async create(data: Partial<PictureEntity>) {
     const newData = { ...data };
@@ -503,6 +503,9 @@ export class PictureService {
       // }
     }
   }
+
+  public getAllPicture = async () => this.pictureRepository.createQueryBuilder('picture')
+    .getMany()
 
   public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
     .leftJoinAndSelect('picture.tags', 'tag')

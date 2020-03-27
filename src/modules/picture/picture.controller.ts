@@ -14,6 +14,8 @@ import {
 } from '@nestjs/common';
 import { RedisService } from 'nestjs-redis';
 import dayjs from 'dayjs';
+import request from 'request';
+import { Image, createCanvas } from 'canvas';
 
 import { CommentService } from '@server/modules/comment/comment.service';
 import { GetPictureCommentListDto } from '@server/modules/comment/dto/comment.dto';
@@ -26,6 +28,7 @@ import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { keyword } from '@server/common/utils/keyword';
 import { BaiduService } from '@server/shared/baidu/baidu.service';
+import { encode } from 'blurhash';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
@@ -41,7 +44,7 @@ export class PictureController {
     private readonly fileService: FileService,
     private readonly redisService: RedisService,
     private readonly baiduService: BaiduService,
-  ) {}
+  ) { }
 
   @Post()
   @Roles(Role.USER)
@@ -103,7 +106,7 @@ export class PictureController {
   @Post('imageClassify')
   @Roles(Role.USER)
   public async getImageClassify(
-    @Body() { image }: {image: string},
+    @Body() { image }: { image: string },
   ) {
     if (image) {
       return this.baiduService.getImageClassify(image);
@@ -160,6 +163,50 @@ export class PictureController {
     await redisClient.zadd('picture_hot', ...data);
     console.log(dayjs().format(), 'picture hot OK!!!!!!!!');
     return { message: 'ok' };
+  }
+
+  @Get('getPicture')
+  @Roles(Role.OWNER)
+  public async getPicture(
+    @User() user: UserEntity,
+  ) {
+    const list = await this.pictureService.getAllPicture();
+    const data = list.filter(v => !v.blurhash);
+    await Promise.all(data.map(v => new Promise((resolve) => {
+      const hash = v.key;
+      const src = `https://cdn.soapphoto.com/${hash}-pictureSmall`;
+      const options = {
+        url: src,
+        encoding: null,
+      };
+      let sr = 1;
+      let width = 600;
+      let height = 600;
+      if (v.width > v.height) {
+        sr = 600 / v.width;
+        height = Math.round(v.height * sr);
+      } else {
+        sr = 600 / v.height;
+        width = Math.round(v.width * sr);
+      }
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+      request(options, async (err, res, buffer) => {
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0);
+        img.onerror = (err) => { throw err; };
+        img.src = buffer;
+        const blurhash = encode(ctx.getImageData(0, 0, width, height).data, width, height, 3, 2);
+        if (blurhash) {
+          await this.pictureService.updateRaw(v, {
+            blurhash,
+          });
+          console.log('👌', hash);
+          resolve();
+        }
+      });
+    })));
+    return data;
   }
 
   @Get('all/keywords')
