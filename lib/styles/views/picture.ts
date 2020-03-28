@@ -21,9 +21,9 @@ export const UserHeaderWrapper = styled.div`
 
 export const UserHeader = styled(Grid)`
   margin: 0 auto;
-  max-width: ${rem(customBreakpoints.medium)};
-  padding: ${rem(12)};
-  /* max-width: ${rem(customBreakpoints.medium)}; */
+  max-width: calc(${rem(customBreakpoints.medium)} + ${rem(42)});
+  padding: ${rem(12)} ${rem(24)};
+  /* max-width: calc(${rem(customBreakpoints.medium)} + ${rem(42)}); */
 `;
 
 export const UserLink = styled(A)`
@@ -56,25 +56,28 @@ export const UserHeaderHandleBox = styled.div`
 
 export const PictureWrapper = styled.article`
   background-color: ${theme('layout.picture.wrapper.backgroundColor')};
-  padding: ${rem(24)} ${rem(12)};
+  padding: ${rem(24)} ${rem(24)};
 `;
 
 export const PictureBox = styled.div<{num: number}>`
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   cursor: zoom-in;
-  max-width: calc(calc(100vh - ${rem(138 + 48)}) * ${_ => _.num});
-  min-width: 500px;
   width: 100%;
   /* max-width: ${rem(math(`${customBreakpoints.medium} + 120px`))}; */
   margin: 0 auto;
-  ${customMedia.lessThan('medium')`
+  ${customMedia.greaterThan('mobile')`
+    max-width: calc(calc(100vh - ${rem(138 + 48)}) * ${_ => (_ as any).num});
+    min-width: 500px;
+  `}
+  ${customMedia.lessThan('mobile')`
     border-radius: 0;
   `}
 `;
 
 export const Content = styled.div`
-  max-width: ${rem(customBreakpoints.medium)};
+  max-width: calc(${rem(customBreakpoints.medium)} + ${rem(42)});
   margin: ${rem('34px')} auto;
+  padding: 0 ${rem(24)};
   margin-top: 0;
 `;
 
@@ -176,7 +179,7 @@ export const RelateCollectionTitle = styled.h3`
 
 
 export const RelateCollection = styled.div`
-  max-width: ${rem(customBreakpoints.medium)};
+  max-width: calc(${rem(customBreakpoints.medium)} + ${rem(42)});
   margin: ${rem('48px')} auto;
   ${customMedia.lessThan('mobile')`
     margin-left: -${rem(32)};
@@ -231,7 +234,8 @@ export const MapIcon = styled(MapPin)`
 `;
 
 export const CommentWrapper = styled.div`
-  max-width: ${rem(customBreakpoints.medium)};
+  max-width: calc(${rem(customBreakpoints.medium)} + ${rem(42)});
+  padding: 0 ${rem(24)};
   margin: 0 auto;
 `;
 
