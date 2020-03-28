@@ -86,6 +86,7 @@ declare module 'styled-components' {
     layout: {
       header: {
         background: string;
+        borderWidth: number;
         borderColor: string;
         shadowColor: string;
         logo: string;
@@ -95,6 +96,11 @@ declare module 'styled-components' {
             color: string;
             background: string;
           };
+        };
+      };
+      picture: {
+        wrapper: {
+          backgroundColor: string;
         };
       };
     };

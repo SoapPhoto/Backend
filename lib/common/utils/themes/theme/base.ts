@@ -8,7 +8,7 @@ const colors = {
   primary: '#05f',
   text: '#161b3d',
   danger: '#ff4d4f',
-  background: '#f8fafc',
+  background: '#fff',
   gray: '#eaeaea',
   pure: '#fff',
   lightgray: '#fafafa',
@@ -91,8 +91,9 @@ const theme: DefaultTheme = {
   },
   layout: {
     header: {
-      shadowColor: colors.shadowColor,
-      borderColor: colors.gray,
+      shadowColor: '#f3f3f4',
+      borderWidth: 0,
+      borderColor: 'transparent',
       background: '#fff',
       menu: {
         color: colors.secondary,
@@ -102,6 +103,11 @@ const theme: DefaultTheme = {
         },
       },
       logo: colors.primary,
+    },
+    picture: {
+      wrapper: {
+        backgroundColor: '#f8fafc',
+      },
     },
   },
   mapbox: {

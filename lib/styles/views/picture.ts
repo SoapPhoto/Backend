@@ -10,13 +10,20 @@ import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { motion } from 'framer-motion';
 
 export const Wrapper = styled.div`
-  ${WrapperBox(1000)};
-  margin: ${rem('24px')} auto 0;
+  /* ${WrapperBox(1000)};
+  margin: ${rem('24px')} auto 0; */
+`;
+
+export const UserHeaderWrapper = styled.div`
+  box-shadow: inset 0px -1px 0px
+    ${_ => _.theme.layout.header.shadowColor};
 `;
 
 export const UserHeader = styled(Grid)`
-  margin: 0 auto ${rem('24px')};
+  margin: 0 auto;
   max-width: ${rem(customBreakpoints.medium)};
+  padding: ${rem(12)};
+  /* max-width: ${rem(customBreakpoints.medium)}; */
 `;
 
 export const UserLink = styled(A)`
@@ -41,12 +48,26 @@ export const UserHeaderInfo = styled(Cell)`
   justify-content: flex-end;
 `;
 
-export const PictureBox = styled.div`
+export const UserHeaderHandleBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+export const PictureWrapper = styled.article`
+  background-color: ${theme('layout.picture.wrapper.backgroundColor')};
+  padding: ${rem(24)} ${rem(12)};
+`;
+
+export const PictureBox = styled.div<{num: number}>`
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   cursor: zoom-in;
+  max-width: calc(calc(100vh - ${rem(138 + 48)}) * ${_ => _.num});
+  min-width: 500px;
+  width: 100%;
+  /* max-width: ${rem(math(`${customBreakpoints.medium} + 120px`))}; */
+  margin: 0 auto;
   ${customMedia.lessThan('medium')`
-    width: calc(100% + ${rem(64)});
-    margin-left: -${rem(32)};
     border-radius: 0;
   `}
 `;
@@ -54,15 +75,33 @@ export const PictureBox = styled.div`
 export const Content = styled.div`
   max-width: ${rem(customBreakpoints.medium)};
   margin: ${rem('34px')} auto;
+  margin-top: 0;
 `;
 
 export const Title = styled.h2`
-  font-size: ${_ => rem(theme('fontSizes[5]')(_))};
-  margin-bottom: ${rem('16px')};
+  font-size: ${_ => rem(theme('fontSizes[4]')(_))};
+  margin-bottom: ${rem(18)};
 `;
 
 export const GpsContent = styled.div`
+  position: relative;
   margin: ${rem('24px')} 0;
+`;
+
+export const LocationBox = styled.div`
+  position: absolute;
+  left: ${rem(12)};
+  top: ${rem(12)};
+  display: flex;
+  align-items: center;
+  background: ${_ => rgba(_.theme.colors.pure, 0.6)};
+  border-radius: ${rem(28)};
+  height: ${rem(28)};
+  padding: 0 ${rem(12)};
+  @supports (backdrop-filter: saturate(180%) blur(20px)) {
+    background-color: ${_ => rgba(_.theme.colors.pure, 0.8)};
+    & { backdrop-filter: saturate(180%) blur(20px); }
+  }
 `;
 
 export const PictureBaseInfo = styled.div`
@@ -70,6 +109,10 @@ export const PictureBaseInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   color: ${theme('colors.secondary')};
+  padding: ${rem(18)} 0;
+  margin-bottom: ${rem(18)};
+  box-shadow: inset 0px -1px 0px
+    ${_ => _.theme.layout.header.shadowColor};
 `;
 
 export const BaseInfoItem = styled.div`
@@ -103,16 +146,22 @@ export const InfoButton = styled(Info)`
 
 export const TagBox = styled.div`
   display: flex;
+  flex-wrap: wrap;
   margin-top: ${rem('16px')};
   margin-bottom: ${rem(6)};
   & > a {
     &:last-child {
       margin-right: ${rem(0)};
     }
-    margin-right: ${rem(6)};
+    margin-right: ${rem(12)};
   }
-  & > span {
-    margin-right: ${rem(6)};
+`;
+
+export const TagA = styled(A)`
+  display: flex;
+  align-items: center;
+  > svg {
+    margin-top: -2px;
   }
 `;
 
@@ -167,14 +216,25 @@ export const LikeContent = styled(motion.button)`
 `;
 
 export const HeartIcon = styled(Heart)<{islike: number}>`
-  stroke-width: 2.5px;
   stroke: ${theme('colors.danger')};
   fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
   stroke: ${_ => (_.islike ? _.theme.colors.danger : _.theme.colors.secondary || '#fff')};
   margin-right: ${rem(6)};
 `;
 
+export const TimeSpan = styled.span`
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
+`;
+
 export const MapIcon = styled(MapPin)`
-  margin-right: 6px;
-  stroke: ${theme('colors.baseGreen')} !important;
+  margin-right: 3px;
+`;
+
+export const CommentWrapper = styled.div`
+  max-width: ${rem(customBreakpoints.medium)};
+  margin: 0 auto;
+`;
+
+export const Choice = styled.span`
+  margin-right: ${rem(12)};
 `;

@@ -20,9 +20,9 @@ export const Wrapper = styled.header<{login: boolean}>`
   background: ${_ => (_.login ? 'transparent' : _.theme.layout.header.background)};
   border-bottom-color: ${theme('layout.header.borderColor')};
   border-bottom-style: solid;
-  border-bottom-width: ${_ => (_.login ? 0 : 1)}px;
-  box-shadow:
-    ${_ => (_.login ? 'transparent' : _.theme.layout.header.shadowColor)} ${rem('0px')} ${rem('6px')} ${rem('20px')};
+  border-bottom-width: ${_ => (_.login ? 0 : _.theme.layout.header.borderWidth)}px;
+  box-shadow: inset 0px -1px 0px
+    ${_ => (_.login ? 'transparent' : _.theme.layout.header.shadowColor)};
   transition: .2s all ease;
   ${_ => !_.login && `
     @supports (backdrop-filter: saturate(180%) blur(20px)) {

@@ -25,7 +25,7 @@ export const ItemImage = styled(Image)`
   opacity: 0;
   transition: .5s opacity ease-in-out;
   z-index: 1;
-  border-radius: 4px;
+  border-radius: 3px;
 `;
 
 export const PictureContent = styled.div`

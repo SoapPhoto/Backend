@@ -9,9 +9,9 @@ const colors = {
   secondary: '#666',
   danger: '#ff4d4f',
   lightgray: 'rgb(51, 51, 51)',
-  gray: '#1e1e1e',
+  gray: '#121212',
   pure: '#000',
-  background: '#121212',
+  background: '#1e1e1e',
   baseGreen: '#47B881',
 };
 
@@ -41,7 +41,7 @@ const theme: DefaultTheme = {
       color: colors.text,
     },
     box: {
-      background: colors.gray,
+      background: '#1e1e1e',
       borderColor: colors.lightgray,
     },
     input: {
@@ -49,7 +49,7 @@ const theme: DefaultTheme = {
       background: colors.background,
       shadow: 'none',
       disabled: {
-        color: colors.gray,
+        color: '#1e1e1e',
         background: colors.lightgray,
       },
       hover: {
@@ -91,8 +91,9 @@ const theme: DefaultTheme = {
   },
   layout: {
     header: {
-      background: colors.gray,
+      background: '#1e1e1e',
       shadowColor: 'transparent',
+      borderWidth: 1,
       borderColor: colors.lightgray,
       menu: {
         color: colors.secondary,
@@ -102,6 +103,11 @@ const theme: DefaultTheme = {
         },
       },
       logo: '#e8e8e8',
+    },
+    picture: {
+      wrapper: {
+        backgroundColor: '#121212',
+      },
     },
   },
   mapbox: {

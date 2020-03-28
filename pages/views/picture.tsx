@@ -11,11 +11,10 @@ import {
 } from '@lib/components';
 import { Comment } from '@lib/components/Comment';
 import { PictureInfo } from '@lib/components/PictureInfo';
-import { Tag } from '@lib/components/Tag';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import {
-  Heart, MessageSquare, Target, Award, StrutAlign, Hash,
+  Heart, MessageSquare, Target, Award, StrutAlign, Hash, Clock, ThumbsUp,
 } from '@lib/icon';
 import {
   BaseInfoItem,
@@ -32,8 +31,15 @@ import {
   UserName,
   Wrapper,
   MapIcon,
+  PictureWrapper,
+  UserHeaderWrapper,
+  UserHeaderHandleBox,
+  LocationBox,
+  TagA,
+  CommentWrapper,
+  TimeSpan,
+  Choice,
 } from '@lib/styles/views/picture';
-import { A } from '@lib/components/A';
 import { rem } from 'polished';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
 import { I18nNamespace } from '@lib/i18n/Namespace';
@@ -43,8 +49,8 @@ import { observer } from 'mobx-react';
 import { getPictureUrl, formatLocationTitle } from '@lib/common/utils/image';
 import dayjs from 'dayjs';
 import { Popover } from '@lib/components/Popover';
-import { css } from 'styled-components';
-import { theme } from '@lib/common/utils/themes';
+import { FollowButton } from '@lib/components/Button/FollowButton';
+import { useFollower } from '@lib/common/hooks/useFollower';
 
 interface IInitialProps extends IBaseScreenProps {
   screenData: PictureEntity;
@@ -54,10 +60,11 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   const { userInfo } = useAccountStore();
   const { pictureStore } = useScreenStores();
   const { t } = useTranslation();
+  const [follow, followLoading] = useFollower();
   const [boxVisible, setBoxVisible] = useState(false);
   const [commentLoading, setCommentLoading] = useState(true);
   const {
-    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected, setPicture,
+    info, like, getComment, comment, addComment, updateInfo, deletePicture, isCollected, setPicture, watch,
   } = pictureStore;
   const { user, tags, bio } = info;
   const isOwner = (userInfo && userInfo.id.toString() === user.id.toString()) || false;
@@ -70,6 +77,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       } finally {
         setCommentLoading(false);
       }
+      const clear = watch();
+      return () => clear();
     })();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,6 +112,8 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
     return '';
   }, [info]);
 
+  const num = useMemo(() => info.width / info.height, [info.height, info.width]);
+
   return (
     <Wrapper>
       <Head>
@@ -132,101 +143,74 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           ],
         }}
       />
-      <UserHeader columns={2}>
-        <UserInfo width={1}>
-          <UserLink route={`/@${user.username}`}>
-            <Avatar
-              style={{ marginRight: rem(14) }}
-              src={user.avatar}
-              badge={user.badge}
-              size={44}
-            />
-          </UserLink>
-          <div>
-            <UserLink style={{ marginBottom: rem(4) }} route={`/@${user.username}`}>
-              <UserName>
-                <EmojiText
-                  text={user.fullName}
-                />
-              </UserName>
+      <UserHeaderWrapper>
+        <UserHeader columns={2}>
+          <UserInfo width={1}>
+            <UserLink route={`/@${user.username}`}>
+              <Avatar
+                style={{ marginRight: rem(14) }}
+                src={user.avatar}
+                badge={user.badge}
+                size={44}
+              />
             </UserLink>
-            <Popover
-              openDelay={100}
-              trigger="hover"
-              placement="top"
-              theme="dark"
-              content={<span>{dayjs(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+            <div>
+              <UserLink style={{ marginBottom: rem(4) }} route={`/@${user.username}`}>
+                <UserName>
+                  <EmojiText
+                    text={user.fullName}
+                  />
+                </UserName>
+              </UserLink>
+            </div>
+          </UserInfo>
+          <UserHeaderHandleBox>
+            <FollowButton
+              disabled={followLoading}
+              // size="small"
+              user={user}
+              isFollowing={info.user.isFollowing}
+              onClick={() => follow(user)}
+            />
+          </UserHeaderHandleBox>
+          {/* <UserHeaderInfo width={1}>
+            <BaseInfoItem
+              style={{ marginRight: rem(14) }}
             >
-              <BaseInfoItem>
-                {/* <Clock
-                  style={{ strokeWidth: 2.5 }}
-                  size={14}
-                /> */}
-                <p
-                  css={css`font-size: ${_ => rem(theme('fontSizes[0]')(_))};`}
-                >
-                  {dayjs(info.createTime).fromNow()}
-
-                </p>
-              </BaseInfoItem>
-            </Popover>
-          </div>
-        </UserInfo>
-        <UserHeaderInfo width={1}>
-          <BaseInfoItem
-            style={{ marginRight: rem(14) }}
-          >
-            <Target
-              color="#57aae7"
-              style={{ strokeWidth: 2.5 }}
-              size={20}
-            />
-            <p>{info.views}</p>
-          </BaseInfoItem>
-          <BaseInfoItem
-            style={{ marginRight: rem(14) }}
-          >
-            <Heart
-              color="#e71a4d"
-              style={{ strokeWidth: 2.5 }}
-              size={20}
-            />
-            <p>{info.likedCount}</p>
-          </BaseInfoItem>
-          <BaseInfoItem>
-            <MessageSquare
-              color="#c155f4"
-              style={{ strokeWidth: 2.5 }}
-              size={20}
-            />
-            <p>{info.commentCount}</p>
-          </BaseInfoItem>
-        </UserHeaderInfo>
-      </UserHeader>
-      <PictureBox onClick={openLightBox}>
-        <PictureImage lazyload={false} size="regular" detail={info} />
-      </PictureBox>
+              <Target
+                color="#57aae7"
+                style={{ strokeWidth: 2.5 }}
+                size={20}
+              />
+              <p>{info.views}</p>
+            </BaseInfoItem>
+            <BaseInfoItem
+              style={{ marginRight: rem(14) }}
+            >
+              <Heart
+                color="#e71a4d"
+                style={{ strokeWidth: 2.5 }}
+                size={20}
+              />
+              <p>{info.likedCount}</p>
+            </BaseInfoItem>
+            <BaseInfoItem>
+              <MessageSquare
+                color="#c155f4"
+                style={{ strokeWidth: 2.5 }}
+                size={20}
+              />
+              <p>{info.commentCount}</p>
+            </BaseInfoItem>
+          </UserHeaderInfo> */}
+        </UserHeader>
+      </UserHeaderWrapper>
+      <PictureWrapper>
+        <PictureBox num={num} onClick={openLightBox}>
+          <PictureImage lazyload={false} size="regular" detail={info} />
+        </PictureBox>
+      </PictureWrapper>
       <Content>
-        <Title>
-          {
-            info.badge?.findIndex(v => v.name === 'choice') >= 0 && (
-              <StrutAlign>
-                <Popover
-                  openDelay={100}
-                  trigger="hover"
-                  placement="top"
-                  theme="dark"
-                  content={<span>{t('label.choice')}</span>}
-                >
-                  <Award color="#ff9500" style={{ strokeWidth: '2.5px' }} size={34} />
-                </Popover>
-              </StrutAlign>
-            )
-          }
-          <EmojiText
-            text={info.title}
-          />
-        </Title>
         <PictureInfo
           info={info}
           isOwner={isOwner}
@@ -237,28 +221,65 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           setPicture={setPicture}
         />
         {
-          (tags.length > 0 || locationTitle) && (
+          info.title && (
+            <Title>
+              {
+                info.badge?.findIndex(v => v.name === 'choice') >= 0 && (
+                  <Choice>
+                    <StrutAlign>
+                      <Popover
+                        openDelay={100}
+                        trigger="hover"
+                        placement="top"
+                        theme="dark"
+                        content={<span>{t('label.choice')}</span>}
+                      >
+                        <ThumbsUp style={{ marginTop: '-2px' }} color="#ff9500" size={28} />
+                      </Popover>
+                    </StrutAlign>
+                  </Choice>
+                )
+              }
+              <EmojiText
+                text={info.title}
+              />
+            </Title>
+          )
+        }
+        {
+          tags.length > 0 && (
             <TagBox>
-              <Tag>
-                <MapIcon size={18} />
-                {locationTitle}
-              </Tag>
               {
                 tags.map(tag => (
-                  <A
+                  <TagA
                     style={{ textDecoration: 'none' }}
                     route={`/tag/${tag.name}`}
                     key={tag.id}
                   >
-                    <Tag>
-                      {tag.name}
-                    </Tag>
-                  </A>
+                    <Hash size={14} />
+                    {tag.name}
+                  </TagA>
                 ))
               }
             </TagBox>
           )
         }
+        <BaseInfoItem>
+          <Popover
+            openDelay={100}
+            trigger="hover"
+            placement="top"
+            theme="dark"
+            content={<span>{dayjs(info.createTime).format('YYYY-MM-DD HH:mm:ss')}</span>}
+          >
+            <TimeSpan>
+              <StrutAlign>
+                <Clock size={14} />
+              </StrutAlign>
+              {dayjs(info.createTime).fromNow()}
+            </TimeSpan>
+          </Popover>
+        </BaseInfoItem>
         {
           info.bio && (
             <Bio>
@@ -271,6 +292,14 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         {
           isLocation && (
             <GpsContent>
+              {
+                locationTitle && (
+                  <LocationBox>
+                    <MapIcon size={14} />
+                    {locationTitle}
+                  </LocationBox>
+                )
+              }
               <GpsImage gps={info!.exif!.location!} />
             </GpsContent>
           )
@@ -295,7 +324,9 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
           </RelateCollection>
         )
       } */}
-      <Comment id={info.id} author={info.user} onConfirm={onConfirm} comment={comment} loading={commentLoading} />
+      <CommentWrapper>
+        <Comment id={info.id} author={info.user} onConfirm={onConfirm} comment={comment} loading={commentLoading} />
+      </CommentWrapper>
       <LightBox
         visible={boxVisible}
         src={getPictureUrl(info.key, 'full')}

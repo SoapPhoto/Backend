@@ -1,5 +1,5 @@
 import {
-  action, observable, computed,
+  action, observable, computed, runInAction,
 } from 'mobx';
 import { merge, pick } from 'lodash';
 import animateScrollTo from 'animated-scroll-to';
@@ -10,7 +10,7 @@ import {
   deletePicture,
 } from '@lib/services/picture';
 
-import { queryToMobxObservable } from '@lib/common/apollo';
+import { queryToMobxObservable, watchQueryCacheObservable } from '@lib/common/apollo';
 import { Picture, Comments } from '@lib/schemas/query';
 import Fragments from '@lib/schemas/fragments';
 import { LikePicture, UnLikePicture, AddComment } from '@lib/schemas/mutations';
@@ -227,4 +227,15 @@ export class PictureScreenStore extends BaseStore {
       return null;
     }
   }
+
+  @action public watch = () => watchQueryCacheObservable(this.client.watchQuery<{picture: PictureEntity}>({
+    query: Picture,
+    variables: { id: this.info.id },
+    fetchPolicy: 'cache-only',
+  }), (data) => {
+    if (data.picture.id !== this.info.id) return;
+    runInAction(() => merge(this.info, data.picture));
+  }, {
+    observable: true,
+  });
 }

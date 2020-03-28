@@ -55,6 +55,7 @@ fragment PictureDetailFragment on Picture {
     # }
     user {
       ...UserBaseFragment
+      isFollowing
     }
     tags {
       ...TagFragment
