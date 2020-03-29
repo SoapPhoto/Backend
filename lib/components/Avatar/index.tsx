@@ -34,13 +34,15 @@ export interface IAvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   badge?: BadgeEntity[];
 }
 
-const Wrapper = styled.div<{size: number}>`
+const Wrapper = styled.div<{ size: number }>`
   position: relative;
   width: ${props => rem(props.size)};
   height: ${props => rem(props.size)};
+  min-width: ${props => rem(props.size)};
+  min-height: ${props => rem(props.size)};
 `;
 
-const Box = styled.span<{isClick: boolean}>`
+const Box = styled.span<{ isClick: boolean }>`
   width: 100%;
   height: 100%;
   border-radius: 100%;
@@ -87,9 +89,9 @@ export const Avatar: React.FC<IAvatarProps> = ({
     </Box>
     {
       badge && badge.find(v => v.name === 'user-cert') && (
-        <BadgeBox style={{ bottom: rem(-(size / 8)), right: rem(-(size / 8)) }}>
+        <BadgeBox style={{ bottom: rem(-(size / 60)), right: rem(-(size / 60)) }}>
           <StrutAlign>
-            <BadgeCert size={size / 2} />
+            <BadgeCert size={Math.max(size / 4, 16)} />
           </StrutAlign>
         </BadgeBox>
       )

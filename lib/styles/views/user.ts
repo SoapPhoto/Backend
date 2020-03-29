@@ -5,16 +5,22 @@ import { Grid, Cell } from 'styled-css-grid';
 import { href } from '@lib/common/utils/themes/common';
 import { Settings } from '@lib/icon';
 import { theme } from '@lib/common/utils/themes';
-import { customMedia } from '@lib/common/utils/mediaQuery';
+import { customMedia, customBreakpoints } from '@lib/common/utils/mediaQuery';
 import { ChristmasHat } from '@lib/icon/ChristmasHat';
 import { A } from '@lib/components/A';
 
 export const Wrapper = styled.div``;
 
+export const UserHeaderWrapper = styled.div`
+  padding: ${rem(48)} 0;
+  box-shadow: inset 0px -1px 0px
+    ${_ => _.theme.layout.header.shadowColor};
+`;
+
 export const UserHeader = styled.div`
-  max-width: ${rem('700px')};
+  max-width: ${_ => rem(theme('width.header')(_))};
   width: 100%;
-  margin: ${rem(48)} auto;
+  margin: 0 auto;
   padding: 0 ${rem('20px')};
   ${customMedia.lessThan('small')`
     margin: ${rem(32)} auto;
@@ -40,24 +46,32 @@ export const AvatarBox = styled(Cell)`
 `;
 
 export const UserName = styled.h2`
-  font-family: Rubik;
   font-size: ${_ => rem(_.theme.fontSizes[5])};
   margin-top: ${rem('6px')};
   margin-bottom: ${rem('12px')};
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  grid-gap: ${rem(12)};
   ${customMedia.lessThan('small')`
     text-align: center;
+    grid-template-columns: 1fr;
   `}
 `;
 
+export const FollowBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const InfoBox = styled.div`
+  margin-top: ${rem('6px')};
 `;
 
 export const Info = styled.div`
   display: flex;
   width: 100%;
-  margin-top: ${rem('6px')};
   margin-left: ${rem(-12)};
-  margin-right: ${rem(-12)};
   ${customMedia.lessThan('small')`
     width: 80%;
     margin-left: auto;
@@ -126,7 +140,6 @@ export const Bio = styled.p`
 `;
 
 export const EditIcon = styled(Settings)`
-  margin-left: ${rem('24px')};
   stroke: ${theme('colors.secondary')};
 `;
 

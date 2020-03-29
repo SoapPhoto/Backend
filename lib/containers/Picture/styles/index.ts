@@ -255,6 +255,8 @@ export const ImgBox = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
 `;
 
 export const SkeletonContent = styled.div`

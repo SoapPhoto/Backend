@@ -80,9 +80,9 @@ const normalize = () => css`
   img {
     border-style: none;
   }
-  svg:not(:root) {
+  /* svg:not(:root) {
     overflow: hidden;
-  }
+  } */
   button,
   input,
   optgroup,

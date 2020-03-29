@@ -14,7 +14,7 @@ import { PictureInfo } from '@lib/components/PictureInfo';
 import { withError } from '@lib/components/withError';
 import { PictureImage } from '@lib/containers/Picture/Image';
 import {
-  Heart, MessageSquare, Target, Award, StrutAlign, Hash, Clock, ThumbsUp,
+  StrutAlign, Hash, Clock, ThumbsUp,
 } from '@lib/icon';
 import {
   BaseInfoItem,
@@ -25,7 +25,6 @@ import {
   TagBox,
   Title,
   UserHeader,
-  UserHeaderInfo,
   UserInfo,
   UserLink,
   UserName,
@@ -39,6 +38,7 @@ import {
   CommentWrapper,
   TimeSpan,
   Choice,
+  PictureContent,
 } from '@lib/styles/views/picture';
 import { rem } from 'polished';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -81,7 +81,7 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
       return () => clear();
     })();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info.id]);
 
   const isLocation = info.exif && info.exif.location && info.exif.location.length > 0;
@@ -206,9 +206,11 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
         </UserHeader>
       </UserHeaderWrapper>
       <PictureWrapper>
-        <PictureBox num={num} onClick={openLightBox}>
-          <PictureImage lazyload={false} size="regular" detail={info} />
-        </PictureBox>
+        <PictureContent>
+          <PictureBox num={num} onClick={openLightBox}>
+            <PictureImage lazyload={false} size="regular" detail={info} />
+          </PictureBox>
+        </PictureContent>
       </PictureWrapper>
       <Content>
         <PictureInfo

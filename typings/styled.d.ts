@@ -22,6 +22,7 @@ declare module 'styled-components' {
     };
     width: {
       wrapper: number;
+      header: number;
     };
     height: {
       header: number;

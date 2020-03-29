@@ -29,7 +29,7 @@ export const PictureImage: React.FC<IPictureImage> = ({
       <Shadow
         style={{
           backgroundImage: `url(${getPictureUrl(detail.key, size)})`,
-          zIndex: -1,
+          zIndex: 0,
         }}
       />
     </div>

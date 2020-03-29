@@ -2,7 +2,7 @@ import { rem, lighten, darken } from 'polished';
 import styled, { css } from 'styled-components';
 import { theme } from '@lib/common/utils/themes';
 
-const loadingCss = ({ loading }: {loading: number}) => (loading
+const loadingCss = ({ loading }: { loading: number }) => (loading
   ? css`
     pointer-events: none;
   ` : '');
@@ -118,7 +118,7 @@ export const StyleButton = styled.button.attrs<IBtnIProp, IBtnAttr>(
   ` : '')}
   ${_ => _.size === 'small' && css`
     padding: 0 ${rem(12)};
-    font-size: ${rem(theme('fontSizes[0]')(_))};
+    font-size: ${test => rem(theme('fontSizes[30]')(test))};
   `}
   ${_ => _.size === 'large' && css`
     padding: 0 ${rem(15)};

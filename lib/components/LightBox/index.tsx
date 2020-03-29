@@ -32,7 +32,7 @@ const Wrapper = styled(motion.div)`
   color: #fff;
 `;
 
-const Box = styled.div<{big: number; type: string}>`
+const Box = styled.div<{ big: number; type: string }>`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -64,7 +64,7 @@ const CloseBtn = styled(IconButton)`
   cursor: pointer;
 `;
 
-const Img = styled(Image)<{big: number; noBig: number}>`
+const Img = styled(Image) <{ big: number; noBig: number }>`
   ${_ => (_.big ? css`
     max-width: inherit;
     max-height: inherit;
@@ -130,7 +130,7 @@ export const LightBox: React.FC<IProps> = ({
                   <CloseBtn
                     onClick={onClose}
                   >
-                    <X color="#fff" />
+                    <X size={16} color="#fff" />
                   </CloseBtn>
                   <Img
                     big={big ? 1 : 0}

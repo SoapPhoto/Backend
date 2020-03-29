@@ -33,6 +33,8 @@ import {
   InfoItemLabel,
   InfoBox,
   AvatarContent,
+  FollowBox,
+  UserHeaderWrapper,
 } from '@lib/styles/views/user';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { A } from '@lib/components/A';
@@ -46,6 +48,7 @@ import { FollowButton } from '@lib/components/Button/FollowButton';
 import { useFollower } from '@lib/common/hooks/useFollower';
 import { useRouter } from '@lib/router';
 import { WithQueryParam } from '@lib/components/WithQueryParam';
+import { IconButton } from '@lib/components/Button';
 
 interface IProps extends IBaseScreenProps, WithRouterProps {
   username: string;
@@ -97,7 +100,7 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
 
 const UserInfo = observer(() => {
   const {
-    query, pathname, params,
+    pathname, params,
   } = useRouter();
   const { push } = useBaseRouter();
   const [follow, followLoading] = useFollower();
@@ -132,107 +135,118 @@ const UserInfo = observer(() => {
   }, [params, pathname, push]);
   const follower = useCallback(() => user && follow(user), [follow, user]);
   return (
-    <UserHeader>
-      <HeaderGrid columns="140px auto" gap="32px">
-        <AvatarContent>
-          <AvatarBox>
-            {/* <Christmas size={64} /> */}
-          </AvatarBox>
-          <Avatar src={user.avatar} size={140} />
-        </AvatarContent>
-        <Cell>
-          <UserName>
-            <EmojiText
-              text={user.fullName}
+    <UserHeaderWrapper>
+      <UserHeader>
+        <HeaderGrid columns="140px auto" gap="32px">
+          <AvatarContent>
+            <AvatarBox>
+              {/* <Christmas size={64} /> */}
+            </AvatarBox>
+            <Avatar
+              src={user.avatar}
+              size={140}
+              badge={user.badge}
             />
-            {
-              user.badge.find(v => v.name === 'user-cert') && (
-                <StrutAlign>
-                  <Popover
-                    openDelay={100}
-                    trigger="hover"
-                    placement="top"
-                    theme="dark"
-                    content={<span>认证用户</span>}
-                  >
-                    <BadgeCert size={32} style={{ marginLeft: rem(6) }} />
-                  </Popover>
-                </StrutAlign>
-              )
-            }
-            {
-              isLogin && userInfo?.username === user.username && (
-                <A route="/setting/profile">
-                  <EditIcon size={18} />
-                </A>
-              )
-            }
-            {
-              userInfo?.username !== user.username && (
-                <FollowButton
-                  disabled={followLoading}
-                  user={user}
-                  style={{ marginLeft: rem(24), marginRight: rem(24) }}
-                  isFollowing={user.isFollowing}
-                  onClick={follower}
+          </AvatarContent>
+          <Cell>
+            <UserName>
+              <div>
+                <EmojiText
+                  text={user.fullName}
                 />
-              )
-            }
-          </UserName>
-          <Profile>
-            {
-              user.website && (
-                <ProfileItem>
-                  <ProfileItemLink href={user.website} target="__blank">
-                    <LinkIcon size={14} />
-                    {parse(user.website).hostname}
-                  </ProfileItemLink>
-                </ProfileItem>
-              )
-            }
-          </Profile>
-          <Bio>
-            {user.bio}
-          </Bio>
-          <InfoBox>
-            <Info>
-              <InfoItem click={1} onClick={() => openModal('follower')}>
-                <InfoItemCount>{user.followerCount}</InfoItemCount>
-                <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
-              </InfoItem>
-              <InfoItem click={1} onClick={() => openModal('followed')}>
-                <InfoItemCount>{user.followedCount}</InfoItemCount>
-                <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
-              </InfoItem>
-              <InfoItem>
-                <InfoItemCount>{user.likesCount}</InfoItemCount>
-                <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
-              </InfoItem>
-            </Info>
-          </InfoBox>
-        </Cell>
-      </HeaderGrid>
-      <WithQueryParam action="follower" back={backNow}>
-        {(visible, backView) => (
-          <UserFollowModal
-            type="follower"
-            userId={user.id}
-            visible={visible}
-            onClose={backView}
-          />
-        )}
-      </WithQueryParam>
-      <WithQueryParam action="followed" back={backNow}>
-        {(visible, backView) => (
-          <UserFollowModal
-            type="followed"
-            userId={user.id}
-            visible={visible}
-            onClose={backView}
-          />
-        )}
-      </WithQueryParam>
-    </UserHeader>
+                {/* {
+                  user.badge.find(v => v.name === 'user-cert') && (
+                    <StrutAlign>
+                      <Popover
+                        openDelay={100}
+                        trigger="hover"
+                        placement="top"
+                        theme="dark"
+                        content={<span>认证用户</span>}
+                      >
+                        <BadgeCert size={32} style={{ marginLeft: rem(6) }} />
+                      </Popover>
+                    </StrutAlign>
+                  )
+                } */}
+              </div>
+              {
+                isLogin && userInfo?.username === user.username && (
+                  <A route="/setting/profile">
+                    <IconButton>
+                      <EditIcon size={26} />
+                    </IconButton>
+                  </A>
+                )
+              }
+              {
+                userInfo?.username !== user.username && (
+                  <FollowBox>
+                    <FollowButton
+                      disabled={followLoading}
+                      user={user}
+                      isFollowing={user.isFollowing}
+                      onClick={follower}
+                    />
+                  </FollowBox>
+                )
+              }
+            </UserName>
+            <Profile>
+              {
+                user.website && (
+                  <ProfileItem>
+                    <ProfileItemLink href={user.website} target="__blank">
+                      <LinkIcon size={14} />
+                      {parse(user.website).hostname}
+                    </ProfileItemLink>
+                  </ProfileItem>
+                )
+              }
+            </Profile>
+            <Bio>
+              {user.bio}
+            </Bio>
+            <InfoBox>
+              <Info>
+                <InfoItem click={1} onClick={() => openModal('follower')}>
+                  <InfoItemCount>{user.followerCount}</InfoItemCount>
+                  <InfoItemLabel>{t('user.label.followers')}</InfoItemLabel>
+                </InfoItem>
+                <InfoItem click={1} onClick={() => openModal('followed')}>
+                  <InfoItemCount>{user.followedCount}</InfoItemCount>
+                  <InfoItemLabel>{t('user.label.followed')}</InfoItemLabel>
+                </InfoItem>
+                <InfoItem>
+                  <InfoItemCount>{user.likesCount}</InfoItemCount>
+                  <InfoItemLabel>{t('user.label.likes')}</InfoItemLabel>
+                </InfoItem>
+              </Info>
+            </InfoBox>
+          </Cell>
+        </HeaderGrid>
+        <WithQueryParam action="follower" back={backNow}>
+          {(visible, backView) => (
+            <UserFollowModal
+              type="follower"
+              userId={user.id}
+              visible={visible}
+              onClose={backView}
+            />
+          )}
+        </WithQueryParam>
+        <WithQueryParam action="followed" back={backNow}>
+          {(visible, backView) => (
+            <UserFollowModal
+              type="followed"
+              userId={user.id}
+              visible={visible}
+              onClose={backView}
+            />
+          )}
+        </WithQueryParam>
+      </UserHeader>
+    </UserHeaderWrapper>
   );
 });
 

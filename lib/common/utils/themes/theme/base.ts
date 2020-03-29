@@ -27,7 +27,8 @@ const theme: DefaultTheme = {
     heading: 1.25,
   },
   width: {
-    wrapper: 2120,
+    wrapper: 1920,
+    header: 700,
   },
   height: {
     header: 70,

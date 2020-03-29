@@ -87,8 +87,9 @@ export const CommentModal: React.FC<IProps> = ({
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState<CommentEntity[]>();
   const [count, setCount] = useState(0);
-  const [getChildComments] = useWatchQuery<{childComments: IPaginationList<CommentEntity>}>(ChildComments);
+  const [getChildComments] = useWatchQuery<{ childComments: IPaginationList<CommentEntity> }>(ChildComments);
   useEnhancedEffect(() => {
+    console.log(visible);
     if (visible && comment) {
       (async () => {
         setLoading(true);
@@ -105,10 +106,10 @@ export const CommentModal: React.FC<IProps> = ({
         });
       })();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment, visible]);
   const addComment = useCallback(async (content: string, commentId?: number) => {
-    const { data } = await mutate<{addComment: CommentEntity}>({
+    const { data } = await mutate<{ addComment: CommentEntity }>({
       mutation: AddComment,
       variables: {
         id,
@@ -134,27 +135,27 @@ export const CommentModal: React.FC<IProps> = ({
         (loading || !list || !comment) ? (
           <Empty loading />
         ) : (
-          <Wrapper>
-            <Header>
-              <Title>{t('comment.all_comment.title', count.toString())}</Title>
-              <IconButton onClick={onClose}>
-                <XButton />
-              </IconButton>
-            </Header>
-            <Content
-              options={{ sizeAutoCapable: false }}
-            >
-              <CommentListBox>
-                <CommentList
-                  parent={comment}
-                  author={author}
-                  onConfirm={addComment}
-                  comment={list}
-                />
-              </CommentListBox>
-            </Content>
-          </Wrapper>
-        )
+            <Wrapper>
+              <Header>
+                <Title>{t('comment.all_comment.title', count.toString())}</Title>
+                <IconButton onClick={onClose}>
+                  <XButton />
+                </IconButton>
+              </Header>
+              <Content
+                options={{ sizeAutoCapable: false }}
+              >
+                <CommentListBox>
+                  <CommentList
+                    parent={comment}
+                    author={author}
+                    onConfirm={addComment}
+                    comment={list}
+                  />
+                </CommentListBox>
+              </Content>
+            </Wrapper>
+          )
       }
     </ModalContent>
   );

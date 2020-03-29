@@ -5,38 +5,38 @@ import { observer } from 'mobx-react';
 import { theme } from '@lib/common/utils/themes';
 import { ArrowHorizontal, StrutAlign } from '@lib/icon';
 import { useTranslation } from '@lib/i18n/useTranslation';
-import { rem } from 'polished';
+import { rem, darken } from 'polished';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { useAccountStore } from '@lib/stores/hooks';
-import { Button, IButtonProps } from '.';
+import { IButtonProps } from '.';
 
 interface IProps extends IButtonProps {
   isFollowing: number;
   user: UserEntity;
 }
 
-const LButton = styled(Button)<{isFollowing: number;unContent: string}>`
+const LButton = styled.button<{ isFollowing: number; unContent: string }>`
+  outline: none;
   position: relative;
-  min-width: ${rem(70)};
+  padding: 9px 25px;
+  line-height: 1;
+  border: none;
+  border-radius: 16px;
+  font-size: ${_ => rem(theme('fontSizes[1]')(_))};
+  font-weight: 600;
+  background-color: ${theme('colors.primary')};
+  transition: background-color .2s,color .2s;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  :hover {
+    background-color: ${_ => darken(0.05, theme('colors.primary')(_))};
+  }
   ${_ => (_.isFollowing !== 0 ? css`
-    background: ${theme('colors.gray')(_)};
+    background-color: ${theme('colors.gray')(_)};
     color: ${theme('colors.secondary')(_)};
-    border-color: ${theme('colors.gray')(_)};
     &:hover {
-      color: ${theme('colors.pure')(_)};
-      background-color: ${theme('colors.danger')(_)};
-      border-color: ${theme('colors.danger')(_)};
-      & span {
-        opacity: 0;
-      }
-      &::before {
-        content: '${_.unContent}';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
+      background-color: ${darken(0.05, theme('colors.gray')(_))};
     }
   ` : css``)}
   > span {
@@ -62,10 +62,8 @@ export const FollowButton: React.FC<IProps> = observer(({
       unContent={t('follow.btn.un_follow')}
       isFollowing={isFollowing}
     >
-      <span>
-        {isFollowing === 2 && (<StrutAlign><ArrowHorizontal style={{ marginRight: rem(4) }} size={11} /></StrutAlign>)}
-        {content}
-      </span>
+      {isFollowing === 2 && (<StrutAlign><ArrowHorizontal style={{ marginRight: rem(4) }} size={11} /></StrutAlign>)}
+      {content}
     </LButton>
   );
 });

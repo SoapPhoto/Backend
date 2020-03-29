@@ -5,7 +5,7 @@ import { rem } from 'polished';
 import { ICustomNextContext, ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { getTitle, server } from '@lib/common/utils';
 import { PictureList } from '@lib/containers/Picture/List';
-import { Package } from '@lib/icon';
+import { Package, Hash, StrutAlign } from '@lib/icon';
 import { withError } from '@lib/components/withError';
 import { useScreenStores } from '@lib/stores/hooks';
 import { pageWithTranslation } from '@lib/i18n/pageWithTranslation';
@@ -13,31 +13,36 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { WrapperBox } from '@lib/common/utils/themes/common';
 import { observer } from 'mobx-react';
 import { SEO } from '@lib/components';
+import { theme } from '@lib/common/utils/themes';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+`;
 
 const Header = styled.div`
   ${WrapperBox()}
+  max-width: ${_ => rem(theme('width.header')(_))};
+  margin: 0 auto;
   margin: ${rem('46px')} auto;
 `;
 
 const Title = styled.h2`
   width: 100%;
   font-size: ${_ => rem(_.theme.fontSizes[5])};
-  text-align: center;
   font-size: ${rem(50)};
-  margin-top: ${rem(5)};
-  margin-bottom: ${rem(25)};
+  margin-bottom: ${rem(4)};
 `;
 
 const PictureNumber = styled.p`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  svg {
-    margin-right: ${rem('6px')};
-    margin-top: -${rem('2px')};
-  }
+`;
+
+const HashIcon = styled(Hash)`
+  color: ${theme('colors.secondary')};
+  stroke-width: 3px;
+  margin-right: ${rem(6)};
+`;
+
+const PictureNumberCount = styled.span`
 `;
 
 const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
@@ -56,13 +61,15 @@ const TagDetail: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
       />
       <Header>
         <Title>
+          <StrutAlign>
+            <HashIcon />
+          </StrutAlign>
           {info.name}
         </Title>
         <PictureNumber>
-          <Package />
-          <span>
-            {t('img_count', info.pictureCount.toString())}
-          </span>
+          <PictureNumberCount>
+            {/* {t('img_count', info.pictureCount.toString())} */}
+          </PictureNumberCount>
         </PictureNumber>
       </Header>
       <PictureList

@@ -59,10 +59,16 @@ export const PictureWrapper = styled.article`
   padding: ${rem(24)} ${rem(24)};
 `;
 
-export const PictureBox = styled.div<{num: number}>`
+export const PictureContent = styled.div`
+  max-width: ${_ => rem(theme('width.wrapper')(_))};
+  margin: 0 auto;
+`;
+
+export const PictureBox = styled.div<{ num: number }>`
   box-shadow: ${theme('colors.shadowColor')} ${rem('0px')} ${rem('6px')} ${rem('20px')};
   cursor: zoom-in;
   width: 100%;
+  max-width: ${_ => rem(theme('width.wrapper')(_))};
   /* max-width: ${rem(math(`${customBreakpoints.medium} + 120px`))}; */
   margin: 0 auto;
   ${customMedia.greaterThan('mobile')`
@@ -218,7 +224,7 @@ export const LikeContent = styled(motion.button)`
   color: ${theme('colors.secondary')};
 `;
 
-export const HeartIcon = styled(Heart)<{islike: number}>`
+export const HeartIcon = styled(Heart) <{ islike: number }>`
   stroke: ${theme('colors.danger')};
   fill: ${_ => (_.islike ? _.theme.colors.danger : 'none')};
   stroke: ${_ => (_.islike ? _.theme.colors.danger : _.theme.colors.secondary || '#fff')};
