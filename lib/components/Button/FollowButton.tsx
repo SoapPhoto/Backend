@@ -41,7 +41,7 @@ const LButton = styled.button<{ isFollowing: number; unContent: string }>`
   ` : css``)}
   > span {
     display: inline-block;
-    width: 100%;
+    /* width: 100%; */
   }
 `;
 
