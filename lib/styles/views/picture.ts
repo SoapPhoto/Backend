@@ -107,6 +107,8 @@ export const LocationBox = styled.div`
   border-radius: ${rem(28)};
   height: ${rem(28)};
   padding: 0 ${rem(12)};
+  color: ${theme('colors.secondary')};
+  font-size: ${_ => rem(theme('fontSizes[0]')(_))};
   @supports (backdrop-filter: saturate(180%) blur(20px)) {
     background-color: ${_ => rgba(_.theme.colors.pure, 0.8)};
     & { backdrop-filter: saturate(180%) blur(20px); }
