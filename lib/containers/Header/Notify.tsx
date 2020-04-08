@@ -20,7 +20,7 @@ const Button = styled(IconButton)`
 `;
 
 export const Notify: React.FC = observer(() => {
-  const { unread } = useNotification();
+  const { unread, unReadAll } = useNotification();
   const notifyRef = React.useRef<Popover>(null);
   const { pathname } = useRouter();
   useEffect(() => {
@@ -33,6 +33,7 @@ export const Notify: React.FC = observer(() => {
       ref={notifyRef}
       placement="bottom-end"
       contentStyle={{ padding: 0 }}
+      onClose={() => unReadAll()}
       content={(
         <NotificationPopover />
       )}

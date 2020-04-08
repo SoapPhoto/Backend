@@ -30,7 +30,7 @@ const ListBox = styled.div`
 
 export const NotificationPopover = observer(() => {
   const {
-    getList, list, loading, listInit, unReadAll, watch,
+    getList, list, loading, listInit, watch,
   } = useNotification();
   const [init, setInit] = useState(false);
   useEnhancedEffect(() => {
@@ -40,7 +40,6 @@ export const NotificationPopover = observer(() => {
     const clear = watch();
     setInit(true);
     return () => {
-      unReadAll();
       clear();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps

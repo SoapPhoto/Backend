@@ -91,7 +91,12 @@ export class NotificationService {
     if (
       notify.category === NotificationCategory.LIKED
     ) {
-      return this.pictureService.findOne(notify.mediaId!, null);
+      try {
+        // 不存在会报错
+        return this.pictureService.findOne(notify.mediaId!, null);
+      } catch {
+        return undefined;
+      }
     }
     if (notify.category === NotificationCategory.REPLY
       || notify.category === NotificationCategory.COMMENT) {
