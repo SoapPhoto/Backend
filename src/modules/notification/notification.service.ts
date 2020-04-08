@@ -56,7 +56,7 @@ export class NotificationService {
         }),
       );
     }
-    notification.media = await this.setNotificationItemMedia(notification);
+    notification.media = await this.setNotificationItemMedia(notification, publisher);
     await this.pubSub.publish('newNotification', { newNotification: classToPlain(notification), subscribers });
     // this.wss.emitUserMessage(subscribers, 'message', {
     //   event: 'message',
@@ -81,19 +81,19 @@ export class NotificationService {
       .getMany();
     return Promise.all(
       data.map(async (notify) => {
-        notify.media = await this.setNotificationItemMedia(notify);
+        notify.media = await this.setNotificationItemMedia(notify, user);
         return classToPlain(notify);
       }),
     );
   }
 
-  public setNotificationItemMedia = async (notify: NotificationEntity) => {
+  public setNotificationItemMedia = async (notify: NotificationEntity, user: Maybe<UserEntity>) => {
     if (
       notify.category === NotificationCategory.LIKED
     ) {
       try {
         // 不存在会报错
-        return this.pictureService.findOne(notify.mediaId!, null);
+        return this.pictureService.findOne(notify.mediaId!, user);
       } catch {
         return undefined;
       }
