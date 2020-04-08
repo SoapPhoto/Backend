@@ -1,5 +1,5 @@
 import React, {
-  useState, useCallback, Dispatch, SetStateAction,
+  useState, useCallback,
 } from 'react';
 import { Cell, Grid } from 'styled-css-grid';
 import { rem } from 'polished';
@@ -40,7 +40,7 @@ export interface ICreatePictureData {
 
 const initUploadData: ICreatePictureData = {
   isPrivate: false,
-  isLocation: false,
+  isLocation: true,
   title: '',
   bio: '',
   tags: [],
