@@ -27,10 +27,10 @@ const Index: ICustomNextPage<IBaseScreenProps, {}> = observer(() => {
       />
       <Nav>
         <NavItem route="/">
-          {t('home.nav.hot')}
-        </NavItem>
-        <NavItem route="/new">
           {t('home.nav.new')}
+        </NavItem>
+        <NavItem route="/hot">
+          {t('home.nav.hot')}
         </NavItem>
         <NavItem route="/choice">
           {t('home.nav.choice')}
@@ -62,7 +62,7 @@ Index.getInitialProps = async ({ mobxStore, route, res }: ICustomNextContext) =>
   const isPop = location && location.action === 'POP' && !server;
   let newType = (type || '').toLocaleLowerCase();
   if (!newType) {
-    newType = 'hot';
+    newType = 'new';
   }
   if (newType === 'feed' && !accountStore.isLogin && res) {
     res.redirect('/');
