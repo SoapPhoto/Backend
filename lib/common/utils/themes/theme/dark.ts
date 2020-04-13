@@ -77,7 +77,7 @@ const theme: DefaultTheme = {
     },
     picture: {
       shadow: {
-        opacity: 0.3,
+        opacity: 0.5,
       },
     },
     skeleton: {

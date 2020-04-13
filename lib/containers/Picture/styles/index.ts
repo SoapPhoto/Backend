@@ -244,8 +244,9 @@ export const Shadow = styled.div`
   height: 10%;
   width: 90%;
   left: 5%;
-  bottom: 2px;
-  background-position-y: 100%;
+  bottom: -2px;
+  background-position: bottom;
+  background-size: 100%;
   filter: blur(10px);
   z-index: 0;
   opacity: ${theme('styles.picture.shadow.opacity')};
