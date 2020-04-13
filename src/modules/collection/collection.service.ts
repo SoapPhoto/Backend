@@ -230,9 +230,7 @@ export class CollectionService {
       countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
     const dataQuery = this.pictureService.getCollectionPictureListQuery(id, user, info);
-    dataQuery
-      .limit(query.pageSize)
-      .offset((query.page - 1) * query.pageSize);
+    dataQuery.skip((query.page - 1) * query.pageSize).take(query.pageSize);
     if (!owner) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }

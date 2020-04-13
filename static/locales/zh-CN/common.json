@@ -83,7 +83,8 @@
     "menu": {
       "picture": "照片",
       "like": "喜欢",
-      "collection": "收藏夹"
+      "collection": "收藏夹",
+      "choice": "精选"
     },
     "label": {
       "followers": "粉丝",

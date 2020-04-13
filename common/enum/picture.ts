@@ -3,6 +3,7 @@ import { $enum } from 'ts-enum-util';
 export enum UserPictureType {
   MY = 'MY',
   LIKED = 'LIKED',
+  CHOICE = 'CHOICE',
 }
 
 

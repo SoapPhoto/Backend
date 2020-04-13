@@ -13,6 +13,7 @@
     "code_credentials_invalid": "代码凭证无效",
     "client_credentials_invalid": "客户凭证无效",
     "user_credentials_invalid": "用户凭证无效",
+    "Invalid grant: user credentials are invalid": "用户名或密码错误",
 
     "authorized": "已授权其他账号",
     "reserved_login": "必须留有一个登录信息",

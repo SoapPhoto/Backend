@@ -8,6 +8,7 @@ export enum SettingType {
 
 export enum UserType {
   like = 'like',
+  choice = 'choice',
   collections = 'collections'
 }
 

@@ -296,6 +296,32 @@ export class PictureService {
   }
 
   /**
+   * 某个用户喜精选的图片列表
+   *
+   * @memberof PictureService
+   */
+  public getUserChoicePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+    const q = this.selectList(user, query, { info, path: 'data' });
+    let isOwner = false;
+    if (validator.isNumberString(idOrName)) {
+      if (user && user.id.toString() === idOrName) isOwner = true;
+      q.andWhere('picture.userId=:id', { id: idOrName });
+    } else {
+      if (user && user.username === idOrName) isOwner = true;
+      q.andWhere('picture.userUsername=:id', { id: idOrName });
+    }
+    if (!isOwner) {
+      q.andWhere('picture.isPrivate=:private', { private: false });
+    }
+    q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
+      .andWhere('badgeActivity.pictureId=picture.id AND badgeActivity.badgeId=1');
+    const [data, count] = await q.cache(100).getManyAndCount();
+    return listRequest(query, classToPlain(data, {
+      groups: isOwner ? [Role.OWNER] : undefined,
+    }), count);
+  }
+
+  /**
    * 获取某个标签的图片列表
    *
    * @memberof PictureService

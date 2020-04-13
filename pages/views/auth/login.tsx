@@ -29,6 +29,7 @@ import { EmojiText, SEO } from '@lib/components';
 import { Popover } from '@lib/components/Popover';
 import { A } from '@lib/components/A';
 import { Weibo } from '@lib/icon/Weibo';
+import { useApolloClient } from 'react-apollo';
 
 interface IValues {
   username: string;
@@ -44,17 +45,19 @@ const Handle = styled.div`
 `;
 
 const Login: React.FC<IBaseScreenProps> = () => {
-  const { query, replaceRoute } = useRouter();
+  const { query, replaceRoute, pushRoute } = useRouter();
   const { login, codeLogin } = useAccountStore();
+  const apolloClient = useApolloClient();
   const { t } = useTranslation();
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const push = useCallback(() => {
+  const push = useCallback(async () => {
+    await apolloClient.clearStore();
     if (query.redirectUrl) {
-      window.location = query.redirectUrl as any;
+      pushRoute(query.redirectUrl);
     } else {
-      window.location = '/' as any;
+      pushRoute('/');
     }
-  }, [query.redirectUrl]);
+  }, [apolloClient, pushRoute, query.redirectUrl]);
   const handleOk = async (value: IValues, { setSubmitting }: FormikHelpers<IValues>) => {
     (async () => {
       setConfirmLoading(true);
@@ -68,7 +71,7 @@ const Login: React.FC<IBaseScreenProps> = () => {
         Toast.success(t('auth.message.login_successful'));
       } catch (error) {
         setSubmitting(false);
-        Toast.error(t(error.message));
+        Toast.error(t(`backend_error.${error.message}`));
       } finally {
         setConfirmLoading(false);
       }

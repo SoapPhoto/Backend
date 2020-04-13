@@ -83,7 +83,8 @@
     "menu": {
       "picture": "Pictures",
       "like": "Likes",
-      "collection": "Collections"
+      "collection": "Collections",
+      "choice": "Choice"
     },
     "label": {
       "followed": "Followed",

@@ -81,6 +81,9 @@ export class UserResolver {
     if (type === UserPictureType.MY) {
       return this.pictureService.getUserPicture(username, query, user, info);
     }
+    if (type === UserPictureType.CHOICE) {
+      return this.pictureService.getUserChoicePicture(username, query, user, info);
+    }
     return this.pictureService.getUserLikePicture(username, query, user, info);
   }
 
@@ -94,6 +97,9 @@ export class UserResolver {
   ) {
     if (type === UserPictureType.MY) {
       return this.pictureService.getUserPicture(id, query, user, info);
+    }
+    if (type === UserPictureType.CHOICE) {
+      return this.pictureService.getUserChoicePicture(id, query, user, info);
     }
     return this.pictureService.getUserLikePicture(id, query, user, info);
   }

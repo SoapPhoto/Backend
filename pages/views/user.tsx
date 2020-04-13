@@ -80,6 +80,9 @@ const User = observer<ICustomNextPage<IProps, {}>>(({ type }) => {
         <NavItem route={`/@${user.username}/like`}>
           {t('user.menu.like')}
         </NavItem>
+        <NavItem route={`/@${user.username}/choice`}>
+          {t('user.menu.choice')}
+        </NavItem>
         <NavItem route={`/@${user.username}/collections`}>
           {t('user.menu.collection')}
         </NavItem>

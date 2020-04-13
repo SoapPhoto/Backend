@@ -161,8 +161,7 @@ export class PictureUserActivityService {
       if (!isCount) {
         q
           .addSelect('likedTime')
-          .offset((query.page - 1) * query.pageSize)
-          .limit(query.pageSize)
+          .skip((query.page - 1) * query.pageSize).take(query.pageSize)
           .orderBy('activity.likedTime', 'DESC');
       }
       return q;

@@ -13,6 +13,7 @@
     "code_credentials_invalid": "Code credentials are invalid",
     "client_credentials_invalid": "Client credentials are invalid",
     "user_credentials_invalid": "User credentials are invalid",
+    "Invalid grant: user credentials are invalid": "Wrong user name or password",
 
     "authorized": "Authorized other account",
     "reserved_login": "You must leave a login info",

@@ -1,6 +1,7 @@
 enum UserPictureType {
   MY
   LIKED
+  CHOICE
 }
 enum UserSignupType {
   EMAIL

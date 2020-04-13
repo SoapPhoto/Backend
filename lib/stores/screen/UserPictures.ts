@@ -43,6 +43,14 @@ export class UserScreenPictureList {
           type: UserPictureType.MY,
         },
       }),
+      CHOICE: new PictureListStore<IUserPictureQuery>({
+        query: UserPictures,
+        label: 'userPicturesByName',
+        restQuery: {
+          username: '',
+          type: UserPictureType.CHOICE,
+        },
+      }),
     };
   }
 
@@ -58,10 +66,20 @@ export class UserScreenPictureList {
     this.setType(type);
   }
 
-  public getType = (type?: UserType) => (type === UserType.like ? UserPictureType.LIKED : UserPictureType.MY)
+  public getType = (type?: UserType) => {
+    const obj: Record<string, UserPictureType> = {
+      [UserType.like]: UserPictureType.LIKED,
+      [UserType.choice]: UserPictureType.CHOICE,
+    };
+    return obj[type as any] || UserPictureType.MY;
+  }
 
   public setType = (type?: UserType) => {
-    this.type = type === UserType.like ? UserPictureType.LIKED : UserPictureType.MY;
+    const obj: Record<string, UserPictureType> = {
+      [UserType.like]: UserPictureType.LIKED,
+      [UserType.choice]: UserPictureType.CHOICE,
+    };
+    this.type = obj[type as any] || UserPictureType.MY;
   }
 
   public update = (store?: Partial<this>, apollo?: ApolloClient<any>) => {
@@ -71,6 +89,7 @@ export class UserScreenPictureList {
     this.isInit = true;
     this.list.LIKED.update(store?.list?.LIKED, apollo);
     this.list.MY.update(store?.list?.MY, apollo);
+    this.list.CHOICE.update(store?.list?.CHOICE, apollo);
     this.type = store?.type ?? UserPictureType.MY;
   }
 }
