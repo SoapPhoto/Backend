@@ -7,6 +7,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
+import { ClientInfo, IClientInfo } from '@server/common/decorator/client_info.decorator';
 import { CommentEntity } from './comment.entity';
 import { CommentService } from './comment.service';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
@@ -39,12 +40,13 @@ export class CommentResolver {
   @Mutation()
   @Roles(Role.USER)
   public async addComment(
+    @ClientInfo() clientInfo: IClientInfo,
     @Context('user') user: UserEntity,
     @Args('id') id: number,
     @Args('commentId') commentId: number,
     @Args('data') data: CreatePictureCommentDot,
   ) {
-    return this.commentService.create(user, data, id, commentId);
+    return this.commentService.create(clientInfo, user, data, id, commentId);
   }
 
   @ResolveField('childComments')

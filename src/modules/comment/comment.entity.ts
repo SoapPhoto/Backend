@@ -6,6 +6,7 @@ import { Expose, Exclude, Type } from 'class-transformer';
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/modules/picture/picture.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
+import { Role } from '../user/enum/role.enum';
 
 @Exclude()
 @Entity('picture_comment')
@@ -19,6 +20,24 @@ export class CommentEntity extends BaseEntity {
   })
   @Expose()
   public content!: string;
+
+  @Column({
+    nullable: true,
+  })
+  @Expose({ groups: [Role.ADMIN] })
+  public ip!: string;
+
+  @Column('simple-json', {
+    nullable: true,
+  })
+  @Expose()
+  public ip_location!: Record<string, string>;
+
+  @Column({
+    nullable: true,
+  })
+  @Expose()
+  public userAgent!: string;
 
   @ManyToOne(() => UserEntity, user => user.comments, { cascade: true })
   @Expose()

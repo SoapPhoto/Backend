@@ -22,6 +22,7 @@ import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 import ormconfig from './ormconfig';
 import { GraphqlService } from './shared/graphql/graphql.service';
 import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
+import { IpModule } from './shared/ip/ip.module';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -70,6 +71,7 @@ import { DataLoaderInterceptor } from './shared/graphql/loader/loader.intercepto
     ApiModule,
     EmailModule,
     QiniuModule,
+    IpModule,
     EventsModule,
   ],
   providers: [

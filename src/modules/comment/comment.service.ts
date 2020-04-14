@@ -1,5 +1,5 @@
 import {
-  BadGatewayException, Injectable, forwardRef, Inject, NotFoundException,
+  Injectable, forwardRef, Inject, NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +10,7 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
 import { classToPlain, plainToClass } from 'class-transformer';
+import { IClientInfo } from '@server/common/decorator/client_info.decorator';
 import { CommentEntity } from './comment.entity';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
@@ -66,10 +67,16 @@ export class CommentService {
     return q.getOne();
   }
 
-  public async create(user: UserEntity, data: CreatePictureCommentDot, id: number, commentId?: number) {
+  public async create(
+    clientInfo: IClientInfo,
+    user: UserEntity,
+    data: CreatePictureCommentDot,
+    id: number,
+    commentId?: number,
+  ) {
     const picture = await this.pictureService.findOne(id, user);
     if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
-      throw new BadGatewayException('no_exist_picture');
+      throw new NotFoundException('no_exist_picture');
     }
     const createData: MutablePartial<CommentEntity> = {
       ...data,
@@ -93,6 +100,8 @@ export class CommentService {
       createData.replyUser = picture.user;
     }
     const isOwner = createData.replyUser.id === user.id;
+    createData.ip = clientInfo.ip;
+    createData.userAgent = clientInfo.ua;
     const comment = await this.commentRepository.save(
       this.commentRepository.create(createData),
     );

@@ -12,6 +12,7 @@ import { NotificationModule } from '../notification/notification.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([CommentEntity]),
+    // forwardRef(() => IpModule),
     forwardRef(() => UserModule),
     forwardRef(() => PictureModule),
     forwardRef(() => NotificationModule),

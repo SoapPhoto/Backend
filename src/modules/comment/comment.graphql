@@ -39,6 +39,9 @@ type Comment implements BaseNode {
   "评论作者"
   user: User
 
+  ip: String
+  userAgent: String
+
   "评论的图片"
   picture: Picture
   createTime: DateTime
