@@ -81,6 +81,7 @@ export class AccountStore {
     params.append('grant_type', 'authorization_code');
     const data = await oauthToken(type, params);
     localStorage.setItem('token', JSON.stringify(data.data));
+    this.setUserInfo(data.data.user);
   }
 
   public activeUser = async ({ code, username, name }: ActiveUserDto) => {
