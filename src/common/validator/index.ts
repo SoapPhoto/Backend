@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationArguments } from 'class-validator';
+import { registerDecorator, ValidationArguments, isURL } from 'class-validator';
 import { isUserName } from '@common/validator';
 
 // tslint:disable-next-line: function-name
@@ -32,7 +32,7 @@ export function IsWebsite() {
       validator: {
         validate(value: any, _: ValidationArguments) {
           if (value) {
-            return validator.isURL(value);
+            return isURL(value);
           }
           return true;
         },

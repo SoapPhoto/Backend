@@ -1,9 +1,8 @@
 import {
-  IsEmail, IsString, IsUrl, Length, ValidateIf,
+  IsEmail, IsString, IsUrl, Length, ValidateIf, isNotEmpty,
 } from 'class-validator';
 
 import { IsUserName } from '@server/common/validator';
-import { validator } from '@common/validator';
 import { Exclude, Expose } from 'class-transformer';
 import { UserEntity } from '../user.entity';
 
@@ -63,13 +62,13 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   public readonly name!: string;
 
   /** 个人简介 */
-  @ValidateIf(o => validator.isNotEmpty(o.bio))
+  @ValidateIf(o => isNotEmpty(o.bio))
   @IsString()
   @Expose()
   public readonly bio!: string;
 
   /** 个人网站 */
-  @ValidateIf(o => validator.isNotEmpty(o.website))
+  @ValidateIf(o => isNotEmpty(o.website))
   @IsUrl()
   @Expose()
   public readonly website!: string;

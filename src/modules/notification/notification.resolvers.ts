@@ -1,12 +1,12 @@
 import {
   Context, Query, Resolver, ResolveField, Subscription, Mutation, Parent,
 } from '@nestjs/graphql';
+import { isNumber } from 'class-validator';
 
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { Roles } from '@server/common/decorator/roles.decorator';
-import { validator } from '@common/validator';
 import { NotificationService } from './notification.service';
 import { Role } from '../user/enum/role.enum';
 import { NotificationEntity } from './notification.entity';
@@ -64,7 +64,7 @@ export class NotificationMediaResolver {
   public async resolveType(
     @Parent() parent: any,
   ) {
-    if (validator.isNumber(parent.subCount)) {
+    if (isNumber(parent.subCount)) {
       return 'Comment';
     }
     return 'Picture';

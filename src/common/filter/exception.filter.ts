@@ -3,10 +3,9 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
+import { ValidationError, isString } from 'class-validator';
 
 import { Logger } from '@server/shared/logging/logging.service';
-import { ValidationError } from 'class-validator';
-import { validator } from '@common/validator';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -45,7 +44,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const exRes = exception.getResponse() as any;
-      if (validator.isString(exRes)) {
+      if (isString(exRes)) {
         done(status, exRes, exception.stack);
       } else if (exRes.message) {
         if (Array.isArray(exRes.message)) {

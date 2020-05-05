@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator/decorator/decorators';
+import { IsString } from 'class-validator';
 import { Expose, Exclude } from 'class-transformer';
 
 @Exclude()

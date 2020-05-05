@@ -15,9 +15,9 @@ import dayjs from 'dayjs';
 import nodejieba from 'nodejieba';
 import { RedisService } from 'nestjs-redis';
 import { fieldsProjection } from 'graphql-fields-list';
+import { isNumberString } from 'class-validator';
 
 import { listRequest } from '@server/common/utils/request';
-import { validator } from '@common/validator';
 import { GetTagPictureListDto } from '@server/modules/tag/dto/tag.dto';
 import { TagService } from '@server/modules/tag/tag.service';
 import { UserEntity } from '@server/modules/user/user.entity';
@@ -247,7 +247,7 @@ export class PictureService {
   public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const q = this.selectList(user, query, { info, path: 'data' });
     let isOwner = false;
-    if (validator.isNumberString(idOrName)) {
+    if (isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
       q.andWhere('picture.userId=:id', { id: idOrName });
     } else {
@@ -303,7 +303,7 @@ export class PictureService {
   public getUserChoicePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const q = this.selectList(user, query, { info, path: 'data' });
     let isOwner = false;
-    if (validator.isNumberString(idOrName)) {
+    if (isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
       q.andWhere('picture.userId=:id', { id: idOrName });
     } else {

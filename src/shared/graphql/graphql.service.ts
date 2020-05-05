@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { GqlOptionsFactory, GqlModuleOptions } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import * as OAuth2Server from 'oauth2-server';
+import { isString } from 'class-validator';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
-import { validator } from '@common/validator';
 import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { Logger } from '../logging/logging.service';
@@ -78,7 +78,7 @@ export class GraphqlService implements GqlOptionsFactory {
           error: err,
         });
         // console.log(error.extensions.exception);
-        if (validator.isString(error.message)) {
+        if (isString(error.message)) {
           Logger.error(
             error.message,
             error.stack ? error.stack.split('\n').toString() : '',

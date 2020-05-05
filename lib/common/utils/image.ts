@@ -6,8 +6,8 @@ import {
   transform, GCJ02, WGS84,
 } from 'gcoord';
 import { encode } from 'blurhash';
+import { isEmpty } from 'class-validator';
 
-import { validator } from '@common/validator';
 import { imageClassify } from '@lib/services/picture';
 import { changeToDu } from './gps';
 import { round } from './math';
@@ -91,7 +91,7 @@ export function getImageUrl(image: File) {
 }
 
 export function convertEXIFValue(label: ExifProperties, value: any, exifData: any) {
-  if (validator.isEmpty(value) && label !== ExifProperties._Location) {
+  if (isEmpty(value) && label !== ExifProperties._Location) {
     return null;
   }
   let gps: string[] = [];
@@ -102,7 +102,7 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
     case ExifProperties.ExposureBias:
       return round(value, 1);
     case ExifProperties.ExposureTime:
-      if (validator.isEmpty(value)) {
+      if (isEmpty(value)) {
         return null;
       }
       return round(value >= 1 ? value : 1 / value, 1);
@@ -144,7 +144,7 @@ export function convertEXIFValue(label: ExifProperties, value: any, exifData: an
 
 export function formatEXIFValue(label: ExifProperties, value: any, originalValue: any) {
   return new Promise<any>((resolve) => {
-    if (validator.isEmpty(value)) {
+    if (isEmpty(value)) {
       resolve(null);
     } else {
       switch (label) {

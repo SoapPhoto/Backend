@@ -5,8 +5,8 @@ import { Cell, Grid } from 'styled-css-grid';
 import { rem } from 'polished';
 import { useLocalStore, observer } from 'mobx-react';
 import { css } from 'styled-components';
-
-import { validator } from '@common/validator';
+import { pick, merge } from 'lodash';
+import { isEmpty } from 'class-validator';
 
 import { Edit } from '@lib/icon';
 import { Switch } from '@lib/components/Switch';
@@ -20,7 +20,6 @@ import { useTranslation } from '@lib/i18n/useTranslation';
 import { IImageInfo } from '@lib/common/utils/image';
 import { Button } from '@lib/components/Button';
 import { EXIFEditModal, IEXIFEditValues } from '@lib/components/EXIFModal/Edit';
-import { pick, merge } from 'lodash';
 
 interface IProps {
   imageInfo?: IImageInfo;
@@ -71,7 +70,7 @@ const UploadForm: React.FC<IProps> = observer(({
     data[type] = value;
   }, []);
   const onAdd = useCallback(() => {
-    if (validator.isEmpty(data.title)) {
+    if (isEmpty(data.title)) {
       setTitleError(t('validation.yup_required', t('label.picture_title')));
       return;
     }

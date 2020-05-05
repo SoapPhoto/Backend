@@ -65,7 +65,7 @@ app.prepare().then(() => {
   // eslint-disable-next-line no-restricted-syntax
   for (const key in routeObject) {
     if (key) {
-      server.get(key, (req: Request, res: Response) => app.render(req, res, `/${routeObject[key]}`, req.query));
+      server.get(key, (req: Request, res: Response) => app.render(req, res, `/${routeObject[key]}`, req.query as any));
     }
   }
 

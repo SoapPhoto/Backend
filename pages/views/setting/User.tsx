@@ -3,6 +3,7 @@ import { Cell, Grid } from 'styled-css-grid';
 import Head from 'next/head';
 import { useApolloClient } from 'react-apollo';
 import { Formik, FormikHelpers } from 'formik';
+import { isNotEmpty, isURL } from 'class-validator';
 
 import { getTitle } from '@lib/common/utils';
 import { getImageUrl } from '@lib/common/utils/image';
@@ -19,7 +20,6 @@ import { UpdateProfile } from '@lib/schemas/mutations';
 import { UploadType } from '@common/enum/upload';
 import { UserEntity } from '@lib/common/interfaces/user';
 import { FieldInput } from '@lib/components/Formik';
-import { validator } from '@common/validator';
 
 interface IValues {
   name: string;
@@ -87,7 +87,7 @@ const User: React.FC = () => {
         }}
         onSubmit={handleOk}
         validate={(value) => {
-          if (validator.isNotEmpty(value.website) && !validator.isURL(value.website)) {
+          if (isNotEmpty(value.website) && !isURL(value.website)) {
             return {
               website: t('validation.yup_format', t('label.url')),
             };

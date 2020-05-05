@@ -10,8 +10,8 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
 import { omit, isArray } from 'lodash';
 import { fieldsProjection } from 'graphql-fields-list';
+import { isNumberString, isNumber } from 'class-validator';
 
-import { validator } from '@common/validator';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { EmailService } from '@server/shared/email/email.service';
 import { LoggingService } from '@server/shared/logging/logging.service';
@@ -24,7 +24,6 @@ import { Role } from './enum/role.enum';
 import { FileService } from '../file/file.service';
 import { BadgeEntity } from '../badge/badge.entity';
 import { BadgeService } from '../badge/badge.service';
-import { GetPictureListDto } from '../picture/dto/picture.dto';
 
 @Injectable()
 export class UserService {
@@ -144,7 +143,7 @@ export class UserService {
 
   public async findOne(query: ID, _user: Maybe<UserEntity>, info?: GraphQLResolveInfo | string[]) {
     const q = this.userEntity.createQueryBuilder('user');
-    const isId = validator.isNumber(query) || validator.isNumberString(query as string);
+    const isId = isNumber(query) || isNumberString(query as string);
     if (isId) {
       q.where('user.id=:id', { id: query });
     } else {
@@ -234,6 +233,6 @@ export class UserService {
   }
 
   public isId(id: string | number) {
-    return validator.isNumber(id) || validator.isNumberString(id as string);
+    return isNumber(id) || isNumberString(id as string);
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
+import { isNumberString } from 'class-validator';
 
-import { validator } from '@common/validator';
 import { NotificationService } from '@server/modules/notification/notification.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 
@@ -140,7 +140,7 @@ export class PictureUserActivityService {
           ) as [string, string],
         )
         .where('activity.like=:like', { like: true });
-      if (validator.isNumberString(userIdOrName)) {
+      if (isNumberString(userIdOrName)) {
         type = 'userId';
         if (user && user.id.toString() === userIdOrName) isMe = true;
       } else {

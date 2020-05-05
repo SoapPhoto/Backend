@@ -32,7 +32,7 @@ export interface IPopperProps {
   place?: boolean;
   wrapperStyle?: React.CSSProperties;
   getContainer?: React.ReactInstance | (() => React.ReactInstance | null) | null;
-  modifiers?: Partial<Modifier<any>>[];
+  modifiers?: Partial<Modifier<any, any>>[];
   onClose(): void;
   onCreate?(data: Partial<State>): void;
   onUpdate?(data: Partial<State>): void;

@@ -3,15 +3,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { classToPlain } from 'class-transformer';
+import { isNumberString } from 'class-validator';
+import { GraphQLResolveInfo } from 'graphql';
 
 import { listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { classToPlain } from 'class-transformer';
-import { validator } from '@common/validator';
 import { Role } from '@server/modules/user/enum/role.enum';
-import { GraphQLResolveInfo } from 'graphql';
 import { CollectionEntity } from './collection.entity';
 import {
   CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto, UpdateCollectionDot,
@@ -242,7 +242,7 @@ export class CollectionService {
     let isOwner = false;
     const q = this.collectionEntity.createQueryBuilder('collection');
     let userValue;
-    if (validator.isNumberString(idOrName)) {
+    if (isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
       userValue = 'userId';
     } else {

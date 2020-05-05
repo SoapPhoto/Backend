@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { rem } from 'polished';
 import styled from 'styled-components';
 import { Formik, FormikHelpers } from 'formik';
+import { isEmpty } from 'class-validator';
 
 import { SEO } from '@lib/components';
 import { Header, Title, SubTitle } from '@lib/styles/views/auth';
@@ -9,7 +10,7 @@ import { FieldInput } from '@lib/components/Formik';
 import { Button } from '@lib/components/Button';
 import { ICustomNextPage, IBaseScreenProps } from '@lib/common/interfaces/global';
 import { box } from '@lib/common/utils/themes/common';
-import { validator, isUserName } from '@common/validator';
+import { isUserName } from '@common/validator';
 import { useRouter } from 'next/router';
 import Toast from '@lib/components/Toast';
 import { useAccountStore } from '@lib/stores/hooks';
@@ -85,7 +86,7 @@ const CompleteUserInfo: ICustomNextPage<IBaseScreenProps, any> = () => {
     })();
   }, [activeUser, push, query.code]);
   const validate = useCallback((values: IValues) => {
-    if (validator.isEmpty(values.username)) {
+    if (isEmpty(values.username)) {
       return {
         username: '请填写用户名!',
       };
