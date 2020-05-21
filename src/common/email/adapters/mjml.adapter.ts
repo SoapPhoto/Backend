@@ -22,7 +22,9 @@ export class MjmlAdapter implements TemplateAdapter {
 
     let html = '';
     try {
-      const template = fs.readFileSync(templatePath, 'UTF-8');
+      const template = fs.readFileSync(templatePath, {
+        encoding: 'utf8',
+      });
       ({ html } = mjml2html(
         _.template(template)({
           ...options,

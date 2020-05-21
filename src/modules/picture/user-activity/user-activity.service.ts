@@ -127,7 +127,7 @@ export class PictureUserActivityService {
     .where('pictureId=:id', { id: picture.id })
     .execute()
 
-  public getLikeList = async (userIdOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>) => {
+  public getLikeList = async (userIdOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>): Promise<[number, string[]]> => {
     const getQ = (isCount = false) => {
       let isMe = false;
       let type = '';
