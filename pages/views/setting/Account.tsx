@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useCallback, useState, useRef,
+  useEffect, useCallback, useState, useRef, useMemo,
 } from 'react';
 import styled, { css } from 'styled-components';
 import { rem } from 'polished';
@@ -17,7 +17,6 @@ import {
 } from '@lib/common/utils/oauth';
 import { OauthStateType } from '@common/enum/oauthState';
 import { useAccountStore } from '@lib/stores/hooks';
-import { useComputed } from 'mobx-react-lite';
 import { observer } from 'mobx-react';
 import { OauthType, OauthTypeValues } from '@common/enum/router';
 import { IGoogleUserInfo, IGithubUserInfo, IOauthUserInfo } from '@lib/common/interfaces/user';
@@ -104,7 +103,7 @@ const Account = observer(() => {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmDisabled, setConfirmDisabled] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const crData = useComputed(
+  const crData = useMemo(
     () => {
       const newData: RecordPartial<OauthType, CredentialsEntity> = {};
       userCredentials.forEach(v => newData[v.type] = v);

@@ -17,7 +17,7 @@ const getDisplayName = <P extends {}>(
 export const withAuth = <P extends any>(role?: string) => (
   WrappedComponent: ComponentType<P>,
 ) => class extends React.Component<P> {
-  public static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`;
+  public static displayName = `withAuthSync(${getDisplayName(WrappedComponent as any)})`;
 
   public static async getInitialProps(ctx: ICustomNextContext) {
     const { isLogin, userInfo } = store.accountStore;
@@ -26,7 +26,7 @@ export const withAuth = <P extends any>(role?: string) => (
         if (isLogin) {
           if (server && ctx && ctx.res) {
             if (ctx.req!.query.redirectUrl) {
-              ctx.res.redirect(ctx.req!.query.redirectUrl);
+              ctx.res.redirect(ctx.req!.query.redirectUrl as string);
             } else {
               ctx.res.redirect('/');
             }

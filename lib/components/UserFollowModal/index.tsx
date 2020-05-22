@@ -133,7 +133,9 @@ export const UserFollowModal = observer<React.FC<IProps>>(({
       offset: 0,
     });
     const clear = watch((data: any) => {
-      setUserList(data[`${type}Users` as any]);
+      if (data[`${type}Users` as any]) {
+        setUserList(data[`${type}Users` as any]);
+      }
     });
     // eslint-disable-next-line consistent-return
     return () => clear();

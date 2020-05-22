@@ -22,7 +22,7 @@ interface IWithMobxProps {
 }
 
 export function withMobx(WrappedComponent: typeof App) {
-  const withDisplayName = `WithMobx(${getDisplayName(WrappedComponent)})`;
+  const withDisplayName = `WithMobx(${getDisplayName(WrappedComponent as any)})`;
 
   class WithMobx extends React.Component<IWithMobxProps> {
     public static displayName = withDisplayName;

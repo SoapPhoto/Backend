@@ -185,11 +185,11 @@ export class OauthService {
         const weiboData = cr.info as IWeiboUserInfo;
         createData = {
           avatar: weiboData.avatar_hd,
-          name: weiboData.name,
           bio: weiboData.description,
           website: weiboData.url,
           ...userInfo,
         };
+        createData.name = weiboData.name;
       }
       if (!createData) throw new BadRequestException('type_err');
       // 检查username是否被注册

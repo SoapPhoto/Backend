@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export function withAppTranslation(WrappedComponent: typeof App) {
-  const withDisplayName = `WithAppTranslation(${getDisplayName(WrappedComponent)})`;
+  const withDisplayName = `WithAppTranslation(${getDisplayName(WrappedComponent as any)})`;
   class WithAppTranslation extends React.PureComponent<IProps> {
     public static displayName = withDisplayName;
 
