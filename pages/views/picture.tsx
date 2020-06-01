@@ -117,10 +117,6 @@ const Picture: ICustomNextPage<IInitialProps, any> = observer(() => {
   return (
     <Wrapper>
       <Head>
-        <script
-          type="text/javascript"
-          src="https://webapi.amap.com/maps?v=1.4.14&key=e55a0b1eb15adb1ff24cec5a7aacd637"
-        />
         <meta property="weibo:image:full_image" content={getPictureUrl(info.key, 'full')} />
         <meta name="weibo:image:create_at" content={info.createTime.toString()} />
         <meta name="weibo:image:update_at" content={info.updateTime.toString()} />
