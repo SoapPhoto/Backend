@@ -1,16 +1,21 @@
 import { Exclude, Expose } from 'class-transformer/decorators';
 
 export class BaiduToken {
+  // eslint-disable-next-line camelcase
   public refresh_token!: string;
 
+  // eslint-disable-next-line camelcase
   public expires_in!: number;
 
+  // eslint-disable-next-line camelcase
   public session_key!: string;
 
+  // eslint-disable-next-line camelcase
   public access_token!: string;
 
   public scope!: string;
 
+  // eslint-disable-next-line camelcase
   public session_secret!: string;
 }
 

@@ -53,7 +53,6 @@ export class MapboxService {
       if (list[0]) {
         const info = list[0];
         const data: Record<string, any> = {};
-        // eslint-disable-next-line @typescript-eslint/camelcase
         data.formatted_address = info.place_name;
         // const context: Record<string, any> = {};
         info.context.forEach((ct: any) => {

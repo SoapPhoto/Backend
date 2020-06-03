@@ -21,7 +21,7 @@ export class BadgeEntity extends BaseEntity {
   @Expose()
   public readonly name!: string;
 
-  @Column()
+  @Column({ type: 'varchar', nullable: true })
   @Expose()
   public readonly rate!: BadgeRate;
 }

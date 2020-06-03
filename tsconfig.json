@@ -25,15 +25,12 @@
   },
   "include": [
     "src/**/*",
-    "lib/**/*",
-    "pages/**/*",
     "typings/**/*",
     "server.ts",
     "common/**/*"
   ],
   "exclude": [
     "node_modules",
-    ".next",
     "dist",
     "server",
     "**/*.spec.ts"

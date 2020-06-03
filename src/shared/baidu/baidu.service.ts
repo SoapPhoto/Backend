@@ -15,11 +15,8 @@ export class BaiduService {
     if (dayjs(this.expiresDate).isBefore(dayjs()) || !this.token) {
       const { data } = await Axios.post<BaiduToken>('https://aip.baidubce.com/oauth/2.0/token', {}, {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           grant_type: 'client_credentials',
-          // eslint-disable-next-line @typescript-eslint/camelcase
           client_id: process.env.BAIDU_CLIENT_ID,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           client_secret: process.env.BAIDU_CLIENT_SECRET,
         },
       });
@@ -38,7 +35,6 @@ export class BaiduService {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         params: {
-        // eslint-disable-next-line @typescript-eslint/camelcase
           access_token: token.access_token,
         },
       });

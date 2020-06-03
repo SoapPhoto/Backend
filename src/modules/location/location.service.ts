@@ -21,7 +21,6 @@ export class LocationService {
           region: '全国',
           output: 'json',
           ak: process.env.BAIDU_MAP_BACK_AK,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           coord_type: 1,
           scope: 2,
         },
@@ -44,9 +43,7 @@ export class LocationService {
           location: transform(geo, GCJ02, BD09).toString(),
           region: '全国',
           output: 'json',
-          // eslint-disable-next-line @typescript-eslint/camelcase
           extensions_poi: 1,
-          // eslint-disable-next-line @typescript-eslint/camelcase
           poi_types: '自然地物|旅游景点|文化传媒|风景区|飞机场|火车站|地铁站|房地产|医疗|高等院校|中学|小学|图书馆|科技馆|体育场馆|剧院|歌舞厅|休闲广场',
           ak: process.env.BAIDU_MAP_BACK_AK,
           scope: 2,

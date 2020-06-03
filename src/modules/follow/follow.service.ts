@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import {
   Injectable, Inject, forwardRef, BadGatewayException,
 } from '@nestjs/common';

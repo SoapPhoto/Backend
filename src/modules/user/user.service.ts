@@ -192,7 +192,7 @@ export class UserService {
       .leftJoinAndMapMany(`${value}.badge`, BadgeEntity, 'userBadge', 'userBadgeActivity.badgeId=userBadge.id');
   }
 
-  public async getRawIdsList(ids: string[], user: Maybe<UserEntity>) {
+  public async getRawIdsList(ids: string[], _user: Maybe<UserEntity>) {
     const q = this.userEntity.createQueryBuilder('user')
       .where('user.id IN (:...ids)', { ids });
     this.selectBadge(q);

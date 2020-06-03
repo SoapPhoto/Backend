@@ -29,7 +29,7 @@ export class AuthController {
 
   @Post('signup')
   public async signup(
-    @Body() body: CreateUserDto,
+  @Body() body: CreateUserDto,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -42,7 +42,6 @@ export class AuthController {
       },
       query: {},
       body: {
-        // eslint-disable-next-line @typescript-eslint/camelcase
         grant_type: 'password',
         username: body.username,
         password: body.password,
@@ -60,7 +59,7 @@ export class AuthController {
 
   @Post('logout')
   public async logout(
-    @Res() res: Response,
+  @Res() res: Response,
   ) {
     res.clearCookie('Authorization', {
       domain: process.env.COOKIE_DOMAIN,
@@ -71,7 +70,7 @@ export class AuthController {
   @Post('validatorEmail')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async validatorEmail(
-    @Body() body: ValidatorEmailDto,
+  @Body() body: ValidatorEmailDto,
   ) {
     return this.authService.validatorEmail(body);
   }
@@ -80,7 +79,7 @@ export class AuthController {
   @Roles(Role.USER)
   @HttpCode(HttpStatus.NO_CONTENT)
   public async resetMail(
-    @User() user: UserEntity,
+  @User() user: UserEntity,
   ) {
     return this.authService.resetMail(user);
   }
@@ -89,7 +88,7 @@ export class AuthController {
   @Roles(Role.USER)
   @HttpCode(HttpStatus.NO_CONTENT)
   public async resetPassword(
-    @User() user: UserEntity,
+  @User() user: UserEntity,
     @Body() data: ResetPasswordDto,
   ) {
     return this.authService.resetPassword(user, data);
@@ -99,7 +98,7 @@ export class AuthController {
   @Roles(Role.USER)
   @HttpCode(HttpStatus.NO_CONTENT)
   public async newPassword(
-    @User() user: UserEntity,
+  @User() user: UserEntity,
     @Body() data: NewPasswordDto,
   ) {
     return this.authService.newPassword(user, data);

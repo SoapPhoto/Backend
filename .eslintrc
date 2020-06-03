@@ -1,7 +1,6 @@
 {
   "extends": [
     "yiiu",
-    "yiiu/react",
     "yiiu/typescript"
   ],
   "rules": {

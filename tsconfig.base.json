@@ -5,7 +5,6 @@
     "esModuleInterop": true,
     "baseUrl": "./",
     "types": [
-      "react",
       "node"
     ],
     "lib": [
@@ -17,12 +16,6 @@
     "paths": {
       "@server/*": [
         "src/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@pages/*": [
-        "pages/*"
       ],
       "@typings/*": [
         "typings/*"

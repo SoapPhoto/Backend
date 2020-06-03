@@ -5,3 +5,4 @@ docker-data/*
 logs/*
 src/*.graphql
 src/*.json
+src/migrations/*

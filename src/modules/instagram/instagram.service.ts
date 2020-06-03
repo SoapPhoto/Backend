@@ -5,6 +5,7 @@ import SocksProxyAgent from 'socks-proxy-agent';
 
 @Injectable()
 export class InstagramService {
+  // eslint-disable-next-line camelcase
   public access_token = '1456582124.1677ed0.0976d264b6f24ff5b57d97d5c17e1407';
 
   private insUrl = 'https://api.instagram.com/v1';

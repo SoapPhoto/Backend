@@ -1,5 +1,4 @@
 declare namespace NodeJS {
-  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface ProcessEnv {
     /**
      * 端口
