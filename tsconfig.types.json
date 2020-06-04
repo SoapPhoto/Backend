@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "outDir": "./dist",
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDeclarationOnly": true
+  },
+  "include": ["src/**/*", "typings/**/*"],
+  "exclude": ["node_modules", "test", "**/*spec.ts", "common/**/*"]
+}

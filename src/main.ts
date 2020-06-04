@@ -3,7 +3,7 @@
 /// <reference types="../typings/express" />
 /// <reference types="../typings/socket" />
 
-import '@common/env';
+import '../env';
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
