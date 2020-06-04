@@ -2,7 +2,7 @@
 /// <reference types="../typings/typing" />
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {} from '@common/env';
+import {} from '../env';
 
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 

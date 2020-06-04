@@ -5,7 +5,8 @@
     "outDir": "./dist",
     "target": "es2016",
     "module": "commonjs",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "emitDeclarationOnly": true
   },
   "include": ["src/**/*", "typings/**/*", "common/**/*"],
   "exclude": ["node_modules", "test", "**/*spec.ts", "pages/**/*", "lib/**/*"]

@@ -1,5 +1,9 @@
 import { registerDecorator, ValidationArguments, isURL } from 'class-validator';
-import { isUserName } from '@common/validator';
+
+export const isUserName = (number: string) => {
+  const reg = /^(?=.*[A-z]|[\d]*_+[\d]*)[\w_]{2,15}$/;
+  return reg.test(number);
+};
 
 // tslint:disable-next-line: function-name
 export function IsUserName() {
