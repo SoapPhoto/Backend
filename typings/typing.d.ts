@@ -82,3 +82,5 @@ declare module '*/fragments.graphql' {
   const value: DocumentNode;
   export default value;
 }
+
+declare module 'ali-oss'

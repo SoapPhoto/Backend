@@ -23,6 +23,7 @@ import ormconfig from './ormconfig';
 import { GraphqlService } from './shared/graphql/graphql.service';
 import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
 import { IpModule } from './shared/ip/ip.module';
+import { OssModule } from './shared/oss/oss.module';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -71,6 +72,7 @@ import { IpModule } from './shared/ip/ip.module';
     ApiModule,
     EmailModule,
     QiniuModule,
+    OssModule,
     IpModule,
     EventsModule,
   ],
