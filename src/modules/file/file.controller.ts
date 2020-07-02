@@ -48,7 +48,14 @@ export class FileController {
 
   @Get('sts')
   public getOssSts() {
-    return this.ossService.test();
+    return this.ossService.getSts();
+  }
+
+  @All('upload/oss/callback')
+  public uploadOssCallback(
+  @Req() req: Request,
+  ) {
+    console.log(req);
   }
 
   @All('upload/callback')

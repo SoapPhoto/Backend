@@ -2,17 +2,19 @@ import { Injectable } from '@nestjs/common';
 import * as OSS from 'ali-oss';
 
 import { uploadPolicy } from './policy';
-
-let expirationTime: Date | null = null;
-const oss: any = null;
+import { ISts } from './oss.interface';
 
 @Injectable()
 export class OssService {
-  public async test() {
+  private sts: Maybe<ISts> = null
+
+  private expirationTime: Maybe<Date> = null
+
+  public async getSts(): Promise<ISts> {
     if (
-      oss === null
-      || expirationTime === null
-      || expirationTime.getTime() <= new Date().getTime()
+      this.sts === null
+      || this.expirationTime === null
+      || this.expirationTime.getTime() <= new Date().getTime()
     ) {
       const client = new OSS.STS({
         accessKeyId: process.env.OSS_KEY_ID!,
@@ -29,32 +31,15 @@ export class OssService {
           reject(err);
         }));
 
-      expirationTime = new Date(auth.Expiration);
-      return {
+      this.expirationTime = new Date(auth.Expiration);
+      this.sts = {
         AccessKeyId: auth.AccessKeyId,
         AccessKeySecret: auth.AccessKeySecret,
         SecurityToken: auth.SecurityToken,
         Expiration: auth.Expiration,
       };
-      // const data = {
-      //   AccessKeyId: auth.AccessKeyId,
-      //   AccessKeySecret: auth.AccessKeySecret,
-      //   SecurityToken: auth.SecurityToken,
-      //   Expiration: auth.Expiration
-      // }
-
-      // oss = new OSS.OSS({
-      //   region: 'oss-cn-shanghai',
-      //   accessKeyId: auth.AccessKeyId,
-      //   accessKeySecret: auth.AccessKeySecret,
-      //   stsToken: auth.SecurityToken,
-      //   bucket: 'eesast',
-      //   cname: true,
-      //   endpoint: process.env.STATIC_URL,
-      //   secure: true,
-      // });
-      // return oss;
+      return this.sts;
     }
-    // return oss;
+    return this.sts;
   }
 }

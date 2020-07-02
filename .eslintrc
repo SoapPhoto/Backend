@@ -11,6 +11,7 @@
       "error",
       160
     ],
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/indent": ["error", 2],
     "import/extensions": "off",
     "no-const-assign": "off"
