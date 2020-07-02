@@ -9,6 +9,7 @@ import { PictureEntity } from '../picture/picture.entity';
 
 @Entity('file')
 export class FileEntity extends BaseEntity {
+  /** 阿里云的object */
   @PrimaryColumn()
   public readonly key!: string;
 
@@ -24,9 +25,16 @@ export class FileEntity extends BaseEntity {
   @Column({ type: 'bool', default: false })
   public active!: boolean;
 
-  /** 七牛的hash */
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public readonly hash!: string;
+
+  // oss bucket
+  @Column({
+    nullable: true,
+  })
+  public readonly bucket?: string;
 
   /** 图片原始文件名 */
   @Column()

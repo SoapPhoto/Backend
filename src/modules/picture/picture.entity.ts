@@ -41,7 +41,7 @@ export class PictureEntity extends BaseEntity {
   public readonly key!: string;
 
   /** 七牛的hash */
-  @Column()
+  @Column({ nullable: true })
   @Expose()
   public readonly hash!: string;
 

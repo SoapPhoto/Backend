@@ -21,7 +21,7 @@ import { User } from '@server/common/decorator/user.decorator';
 import { OssService } from '@server/shared/oss/oss.service';
 import { Role } from '../user/enum/role.enum';
 import { FileService } from './file.service';
-import { CreateFileDot, GetTokenDot } from './dto/file.dto';
+import { CreateFileDot, GetTokenDot, CreateOssFileDot } from './dto/file.dto';
 import { UserEntity } from '../user/user.entity';
 
 @Controller('api/file')
@@ -52,10 +52,21 @@ export class FileController {
   }
 
   @All('upload/oss/callback')
-  public uploadOssCallback(
+  public async uploadOssCallback(
   @Req() req: Request,
+    @Body() data: CreateOssFileDot,
   ) {
-    console.log(req);
+    await this.ossService.isOssCallback(data, req);
+    await this.fileService.create({
+      key: data.object,
+      userId: data.userId,
+      type: data.type,
+      originalname: data.originalname,
+      size: data.size,
+      mimetype: data.mimetype,
+      bucket: data.bucket,
+    });
+    return { key: data.object };
   }
 
   @All('upload/callback')

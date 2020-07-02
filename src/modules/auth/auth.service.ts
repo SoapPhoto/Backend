@@ -1,5 +1,5 @@
 import { Injectable, BadGatewayException, ForbiddenException } from '@nestjs/common';
-import uniqid from 'uniqid';
+import { v4 as uuid } from 'uuid';
 
 import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
@@ -45,7 +45,7 @@ export class AuthService {
     await this.userService.isSignup(data.username, data.email);
     const info: MutablePartial<UserEntity> = {
       identifier: data.email,
-      verificationToken: uniqid(),
+      verificationToken: uuid(),
     };
     const newUser = await this.userService.createUser({
       ...data,

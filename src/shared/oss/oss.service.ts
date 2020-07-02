@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadGatewayException } from '@nestjs/common';
 import * as OSS from 'ali-oss';
+import axios from 'axios';
+import crypto from 'crypto';
 
+import { Request } from 'express';
 import { uploadPolicy } from './policy';
 import { ISts } from './oss.interface';
 
@@ -41,5 +44,16 @@ export class OssService {
       return this.sts;
     }
     return this.sts;
+  }
+
+  public async isOssCallback(data: any, req: Request) {
+    const { headers } = req;
+    const publicKeyUrl = Buffer.from(headers['x-oss-pub-key-url'] as string, 'base64').toString();
+    const publicKey = await axios(publicKeyUrl).then(res => res.data) as string;
+    const authString = `${req.originalUrl}\n${JSON.stringify(req.body)}`;
+    const result = crypto.createVerify('RSA-MD5').update(authString).verify(publicKey, headers.authorization!, 'base64');
+    if (!result) {
+      throw new BadGatewayException('verification gives a false result');
+    }
   }
 }

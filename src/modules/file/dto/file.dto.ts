@@ -11,7 +11,7 @@ export class CreateFileDot implements Partial<FileEntity> {
 
   @IsString()
   @Expose()
-  public hash!: string;
+  public hash?: string;
 
   @Type(() => Number)
   @Expose()
@@ -29,6 +29,36 @@ export class CreateFileDot implements Partial<FileEntity> {
 
   @Expose()
   public mimetype!: string;
+
+  @Expose()
+  public bucket?: string;
+}
+
+@Exclude()
+export class CreateOssFileDot implements Partial<FileEntity> {
+  @IsString()
+  @Expose()
+  public object!: string;
+
+  @Type(() => Number)
+  @Expose()
+  public userId!: number;
+
+  @Expose()
+  public type!: FileType;
+
+  @Expose()
+  public originalname!: string;
+
+  @Type(() => Number)
+  @Expose()
+  public size!: number;
+
+  @Expose()
+  public mimetype!: string;
+
+  @Expose()
+  public bucket!: string;
 }
 
 

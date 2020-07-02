@@ -9,7 +9,7 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import uid from 'uniqid';
+import { v4 as uuid } from 'uuid';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
@@ -40,7 +40,7 @@ export class UserController {
   @Get('whoami')
   @Roles(Role.USER)
   public async getMyInfo(
-    @User() user: UserEntity,
+  @User() user: UserEntity,
   ) {
     return this.userService.findOne(user.id, user);
   }
@@ -51,7 +51,7 @@ export class UserController {
     const list = await this.userService.findAllUsers();
     await Promise.all(list.map(async (user) => {
       if (/githubusercontent.com/g.test(user.avatar)) {
-        const data = await this.qiniuService.fetch(user.avatar, `${Buffer.from('AVATAR').toString('base64')}-${uid()}`);
+        const data = await this.qiniuService.fetch(user.avatar, uuid());
         if (data) {
           await this.fileService.create({
             key: data.key,
@@ -73,7 +73,7 @@ export class UserController {
 
   @Get(':idOrName/picture')
   public async getUserPicture(
-    @Param('idOrName') idOrName: string,
+  @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
@@ -82,7 +82,7 @@ export class UserController {
 
   @Get(':idOrName/picture/like')
   public async getUserLikePicture(
-    @Param('idOrName') idOrName: string,
+  @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
     @Query() query: GetPictureListDto,
   ) {
@@ -92,7 +92,7 @@ export class UserController {
   @Post(':name/setting/profile')
   @Roles(Role.USER)
   public async updateUserSetting(
-    @Param('name') username: string,
+  @Param('name') username: string,
     @User() user: UserEntity,
     @Body() body: UpdateProfileSettingDto,
   ) {
@@ -104,7 +104,7 @@ export class UserController {
 
   @Get(':id([0-9]+)')
   public async getIdInfo(
-    @Param('id') id: string,
+  @Param('id') id: string,
     @User() user: Maybe<UserEntity>,
   ) {
     return this.userService.findOne(id, user);
@@ -112,7 +112,7 @@ export class UserController {
 
   @Get(':name')
   public async getNameInfo(
-    @Param('name') username: string,
+  @Param('name') username: string,
     @User() user: Maybe<UserEntity>,
   ) {
     return this.userService.findOne(username, user);
@@ -120,7 +120,7 @@ export class UserController {
 
   @Get(':idOrName/collection')
   public async getUserCollections(
-    @Param('idOrName') idOrName: string,
+  @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
     @Query() query: GetUserCollectionListDto,
   ) {
