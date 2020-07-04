@@ -43,7 +43,7 @@ export class PictureBadgeActivityService {
         LEFT JOIN LATERAL ( SELECT * FROM picture_badge_activity WHERE pictureId = picture.id LIMIT 3 ) pictureBadgeActivity ON pictureBadgeActivity.pictureId = picture.id
         LEFT JOIN badge pictureBadge ON pictureBadgeActivity.badgeId = pictureBadge.id 
       WHERE
-        picture.id IN ( ${ids.join()} ) AND pictureBadge.id IS NOT NULL
+        picture.id IN ( ${ids.join()} ) AND picture.isPrivate=0 AND picture.deleted=0 AND pictureBadge.id IS NOT NULL
     `);
 
     const badgeMap: Record<string, BadgeEntity[]> = {};

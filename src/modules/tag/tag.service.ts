@@ -38,7 +38,8 @@ export class TagService {
       .loadRelationCountAndMap(
         'tag.pictureCount', 'tag.pictures', 'picture',
         qb => qb
-          .where('picture.isPrivate = 0'),
+          .where('picture.isPrivate = 0')
+          .andWhere('picture.deleted = 0'),
       )
       .getOne();
   }

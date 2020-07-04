@@ -77,6 +77,7 @@ export class PictureService {
   public async update(id: number, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
     const picture = await this.pictureRepository.createQueryBuilder('picture')
       .where('picture.id=:id', { id })
+      .andWhere('picture.deleted = 0')
       .leftJoinAndSelect('picture.user', 'user')
       .getOne();
     if (!picture || picture.user.id !== user.id) {
@@ -330,6 +331,7 @@ export class PictureService {
     const q = this.selectList(user, query, { info, path: 'data' });
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
+      .andWhere('picture.deleted = 0')
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
     return listRequest(query, classToPlain(data), count);
@@ -346,10 +348,12 @@ export class PictureService {
       throw new BadRequestException();
     }
     if (data.user.id === user.id) {
-      this.pictureRepository.createQueryBuilder()
-        .delete()
-        .from(PictureEntity)
-        .where('id=:id', { id })
+      await this.pictureRepository.createQueryBuilder()
+        .update()
+        .set({
+          deleted: 1,
+        })
+        .where('id = :id', { id })
         .execute();
       return {
         done: true,
@@ -368,7 +372,8 @@ export class PictureService {
    */
   public async getUserPreviewPictures(username: string, limit: number) {
     return this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.userUsername=:username', { username })
+      .where('picture.userUsername=:username AND picture.deleted = 0', { username })
+      .andWhere('picture.deleted = 0')
       .andWhere('picture.isPrivate=0')
       .orderBy('picture.createTime', 'DESC')
       .limit(limit)
@@ -401,6 +406,8 @@ export class PictureService {
     this.selectInfo(q, user, { info, path: 'data' });
     // q.whereInIds(ids)
     q.where(`picture.id IN (${ids.toString()})`)
+      .andWhere('picture.deleted = 0')
+      .andWhere('picture.isPrivate=0')
       .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
       .cache(1000);
     const data = await q.getMany();
@@ -424,7 +431,8 @@ export class PictureService {
    */
   public async calculateHotPictures() {
     const data = await this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.isPrivate=:isPrivate', { isPrivate: false })
+      .where('picture.isPrivate=:isPrivate AND', { isPrivate: false })
+      .andWhere('picture.deleted = 0')
       .select('picture.id, picture.views, picture.createTime')
       .leftJoinAndMapOne(
         'picture.badge',
@@ -467,7 +475,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public select = (user: Maybe<UserEntity>, options?: ISelectOptions) => {
-    const q = this.pictureRepository.createQueryBuilder('picture');
+    const q = this.pictureRepository.createQueryBuilder('picture')
+      .andWhere('picture.deleted = 0');
     q.orderBy('picture.createTime', 'DESC');
     this.selectInfo(q, user, options);
     return q;
@@ -496,7 +505,8 @@ export class PictureService {
    */
   // eslint-disable-next-line arrow-parens
   public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, options?: ISelectOptions) => {
-    q.leftJoinAndSelect('picture.user', options?.value || 'user');
+    q.leftJoinAndSelect('picture.user', options?.value || 'user')
+      .andWhere('picture.deleted = 0');
     if (options && options.info) {
       const pictureSelect = fieldsProjection(options.info, { path: options?.path || '' });
       const userSelect = fieldsProjection(options.info, { path: `${options?.path ? `${options?.path}.` : ''}user` });

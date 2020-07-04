@@ -179,6 +179,11 @@ export class PictureEntity extends BaseEntity {
   @Column()
   public keywords!: string;
 
+  @Column({
+    default: 0,
+  })
+  public deleted!: number
+
   @Expose()
   public badge: BadgeEntity[] = [];
 

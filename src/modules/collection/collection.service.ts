@@ -150,7 +150,8 @@ export class CollectionService {
       qb => qb
         .leftJoin('info.picture', 'picture')
         .leftJoin('info.collection', 'collection')
-        .andWhere(`(${sql}picture.isPrivate = 0)`),
+        .andWhere(`(${sql}picture.isPrivate = 0)`)
+        .andWhere('picture.deleted = 0'),
     );
   }
 
@@ -173,6 +174,7 @@ export class CollectionService {
       .leftJoinAndSelect('collection.user', 'user')
       .leftJoin('collection.info', 'info')
       .leftJoin('info.picture', 'picture')
+      .andWhere('picture.deleted = 0')
       .leftJoinAndMapMany(
         'collection.info',
         CollectionPictureEntity,
@@ -225,7 +227,8 @@ export class CollectionService {
     const countQuery = this.collectionPictureEntity.createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .select('COUNT(DISTINCT pictureId)', 'count')
-      .leftJoin('cp.picture', 'picture');
+      .leftJoin('cp.picture', 'picture')
+      .andWhere('picture.deleted = 0');
     if (!owner) {
       countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
@@ -234,6 +237,7 @@ export class CollectionService {
     if (!owner) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
+    dataQuery.andWhere('picture.deleted = 0');
     const [list, count] = await dataQuery.getManyAndCount();
     return listRequest(query, classToPlain(list, { groups: owner ? [Role.OWNER] : [] }), count);
   }
@@ -277,6 +281,7 @@ export class CollectionService {
         .leftJoinAndSelect('cp.picture', 'picture')
         .leftJoin('cp.collection', 'collection')
         .andWhere(`(${sql}picture.isPrivate=0)`)
+        .andWhere('picture.deleted = 0')
         .orderBy('cp.createTime', 'DESC')
         .limit(3)
         .offset(0)
