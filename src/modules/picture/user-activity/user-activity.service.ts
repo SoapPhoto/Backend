@@ -116,6 +116,7 @@ export class PictureUserActivityService {
     const data = await this.activityRepository.createQueryBuilder('activity')
       .leftJoin('activity.picture', 'picture')
       .where('picture.userId=:userId AND activity.like=1', { userId })
+      .andWhere('picture.deleted = 0')
       .getCount();
     return data;
   }
@@ -147,15 +148,17 @@ export class PictureUserActivityService {
         type = 'userUsername';
         if (user && user.username === userIdOrName) isMe = true;
       }
-      q.andWhere(`activity.${type}=:id`, { id: userIdOrName });
+      q.andWhere(`activity.${type}=:id`, { id: userIdOrName })
+        .leftJoin('activity.picture', 'picture')
+        .andWhere('picture.isPrivate = 0');
       if (isMe) {
         const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
-        q.leftJoin('activity.picture', 'picture')
+        q
           .andWhere(`((picture.${type}=:id AND ${qO}) OR picture.isPrivate = 0)`, {
             id: userIdOrName,
           });
       } else {
-        q.leftJoin('activity.picture', 'picture')
+        q
           .andWhere('picture.isPrivate = 0');
       }
       if (!isCount) {
@@ -177,6 +180,8 @@ export class PictureUserActivityService {
   public getPictureLikedCount = async (pictureId: number) => {
     const data = await this.activityRepository.createQueryBuilder('activity')
       .where('activity.pictureId=:pictureId AND activity.like=1', { pictureId })
+      .leftJoin('activity.picture', 'picture')
+      .andWhere('picture.deleted = 0')
       .getCount();
     return data;
   }
@@ -184,6 +189,8 @@ export class PictureUserActivityService {
   public getUserLikedCount = async (userId: number) => {
     const data = await this.activityRepository.createQueryBuilder('activity')
       .where('activity.userId=:userId AND activity.like=1', { userId })
+      .leftJoin('activity.picture', 'picture')
+      .andWhere('picture.deleted = 0')
       .getCount();
     return data;
   }

@@ -174,7 +174,6 @@ export class CollectionService {
       .leftJoinAndSelect('collection.user', 'user')
       .leftJoin('collection.info', 'info')
       .leftJoin('info.picture', 'picture')
-      .andWhere('picture.deleted = 0')
       .leftJoinAndMapMany(
         'collection.info',
         CollectionPictureEntity,
@@ -182,7 +181,8 @@ export class CollectionService {
         `
           collection_info.collectionId = collection.id AND
           collection_info.pictureId = picture.id AND
-          (${sql}picture.isPrivate=0)
+          (${sql}picture.isPrivate=0) AND
+          picture.deleted = 0
         `,
       )
       .leftJoinAndSelect('collection_info.picture', 'collection_info_picture')

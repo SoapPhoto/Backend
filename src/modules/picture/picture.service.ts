@@ -123,6 +123,7 @@ export class PictureService {
       q.andWhere(`keywords like '%${words}%'`);
     }
     const [data, count] = await q.andWhere('picture.isPrivate=:private', { private: false })
+      .andWhere('picture.deleted = 0')
       .cache(3000)
       .getManyAndCount();
     return listRequest(query, data, count);
@@ -132,7 +133,8 @@ export class PictureService {
     const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto, { info, path: 'data' })
       .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.createTime > :after', { after: query.lastTime })
-      .andWhere('picture.createTime <= :before', { before: query.time });
+      .andWhere('picture.createTime <= :before', { before: query.time })
+      .andWhere('picture.deleted = 0');
     const [data, count] = await q.getManyAndCount();
     return listRequest(query, data, count);
   }
@@ -212,7 +214,8 @@ export class PictureService {
 
   public async find(user: Maybe<UserEntity>, type: PicturesType, query: GetNewPictureListDto, info: GraphQLResolveInfo) {
     const q = this.selectList(user, query, { info, value: 'user', path: 'data' })
-      .andWhere('picture.isPrivate=:private', { private: false });
+      .andWhere('picture.isPrivate=:private', { private: false })
+      .andWhere('picture.deleted = 0');
     if (type === PicturesType.CHOICE) {
       q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
         .andWhere('badgeActivity.pictureId=picture.id', { private: false });
@@ -246,7 +249,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
-    const q = this.selectList(user, query, { info, path: 'data' });
+    const q = this.selectList(user, query, { info, path: 'data' })
+      .andWhere('picture.deleted = 0');
     let isOwner = false;
     if (isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
@@ -274,8 +278,9 @@ export class PictureService {
   public async getFeedPictures(user: UserEntity, query: GetPictureListDto, info: GraphQLResolveInfo) {
     const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
     if (ids.length === 0) return listRequest(query, [], 0);
-    const q = this.selectList(user, query, { info, path: 'data' });
-    q.where('picture.userId IN (:ids)', { ids });
+    const q = this.selectList(user, query, { info, path: 'data' })
+      .where('picture.userId IN (:ids)', { ids })
+      .andWhere('picture.deleted = 0');
     const [data, count] = await q.cache(5000).getManyAndCount();
     return listRequest(query, classToPlain(data), count);
   }
@@ -290,8 +295,9 @@ export class PictureService {
     if (ids.length === 0) {
       return listRequest(query, [], count as number);
     }
-    const q = this.selectList(user, query, { info, path: 'data' });
-    q.andWhere('picture.id IN (:...ids)', { ids });
+    const q = this.selectList(user, query, { info, path: 'data' })
+      .where('picture.id IN (:...ids)', { ids })
+      .andWhere('picture.deleted = 0');
     const data = await q.getMany();
     return listRequest(query, classToPlain(data), count as number);
   }
@@ -315,7 +321,8 @@ export class PictureService {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
-      .andWhere('badgeActivity.pictureId=picture.id AND badgeActivity.badgeId=1');
+      .andWhere('badgeActivity.pictureId=picture.id AND badgeActivity.badgeId=1')
+      .andWhere('picture.deleted = 0');
     const [data, count] = await q.cache(100).getManyAndCount();
     return listRequest(query, classToPlain(data, {
       groups: isOwner ? [Role.OWNER] : undefined,
