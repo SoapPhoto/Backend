@@ -6,7 +6,6 @@ import { isNumberString } from 'class-validator';
 import { NotificationService } from '@server/modules/notification/notification.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 
-import Maybe from 'graphql/tsutils/Maybe';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
 import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';

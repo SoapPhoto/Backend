@@ -1,4 +1,3 @@
-
 import {
   MiddlewareConsumer, Module, NestModule, RequestMethod,
 } from '@nestjs/common';
@@ -24,6 +23,7 @@ import { GraphqlService } from './shared/graphql/graphql.service';
 import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
 import { IpModule } from './shared/ip/ip.module';
 import { OssModule } from './shared/oss/oss.module';
+import { BlurhashModule } from './shared/blurhash/blurhash.module';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -75,6 +75,7 @@ import { OssModule } from './shared/oss/oss.module';
     OssModule,
     IpModule,
     EventsModule,
+    BlurhashModule,
   ],
   providers: [
     {
