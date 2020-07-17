@@ -25,7 +25,7 @@ export class OauthController {
 
   @Post('/token')
   public async accessToken(
-    @Req() req: Request,
+  @Req() req: Request,
     @Res() res: Response,
   ) {
     return this.token(req, res);
@@ -33,17 +33,16 @@ export class OauthController {
 
   @Post(`/:type(${OauthTypeValues.join('|')})/token`)
   public async oauthToken(
-    @Param('type') type: OauthType,
+  @Param('type') type: OauthType,
     @Req() req: Request,
     @Res() res: Response,
   ) {
     return this.token(req, res, type);
   }
 
-
   @Get(`/:type(${OauthTypeValues.join('|')})/redirect`)
   public async oauthRedirect(
-    @Param('type') type: OauthType,
+  @Param('type') type: OauthType,
     @Query() query: OauthQueryDto,
     @Res() res: Response,
   ) {
@@ -62,6 +61,7 @@ export class OauthController {
         res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err) {
+      console.log(err.error);
       const message = err?.response?.data?.error ?? err.message.message;
       this.logger.error(message, undefined, `OAUTH-${type.toUpperCase()}`);
       res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
@@ -70,7 +70,7 @@ export class OauthController {
 
   @Post('/active')
   public async active(
-    @Body() body: ActiveUserDto,
+  @Body() body: ActiveUserDto,
     @Req() req: Request,
     @Res() res: Response,
   ) {

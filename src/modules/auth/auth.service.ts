@@ -103,7 +103,7 @@ export class AuthService {
         },
       });
     } catch (err) {
-      throw new BadGatewayException(err.message);
+      throw new BadGatewayException(`[mailerService] ${err.message}`);
     }
   }
 }

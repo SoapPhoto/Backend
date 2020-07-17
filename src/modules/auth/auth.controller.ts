@@ -14,7 +14,6 @@ import { Role } from '../user/enum/role.enum';
 import { UserEntity } from '../user/user.entity';
 import { OauthServerService } from '../oauth/oauth-server/oauth-server.service';
 
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const OAuth2Server = require('oauth2-server');
 
