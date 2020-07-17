@@ -438,7 +438,7 @@ export class PictureService {
    */
   public async calculateHotPictures() {
     const data = await this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.isPrivate=:isPrivate AND', { isPrivate: false })
+      .where('picture.isPrivate=:isPrivate', { isPrivate: false })
       .andWhere('picture.deleted = 0')
       .select('picture.id, picture.views, picture.createTime')
       .leftJoinAndMapOne(

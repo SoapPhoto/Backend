@@ -55,8 +55,13 @@ type Query {
 }
 
 type Mutation {
+  "修改用户信息"
   updateProfile(
     data: UpdateProfileInput!
+  ): User
+  "修改封面"
+  updateCover(
+    cover: String!
   ): User
 }
 
@@ -87,6 +92,9 @@ type User implements BaseNode {
 
   "用户头像"
   avatar(size: Float): String
+
+  "用户封面"
+  cover: String
 
   "个人介绍"
   bio: String
@@ -133,5 +141,10 @@ type User implements BaseNode {
 
   "徽章"
   badge: [Badge]
+}
+
+type UserCoverRes {
+  id: Float!
+  cover: String!
 }
 

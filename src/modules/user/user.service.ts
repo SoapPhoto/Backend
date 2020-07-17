@@ -232,6 +232,23 @@ export class UserService {
     });
   }
 
+  public async updateCover(user: UserEntity, cover: string) {
+    const m = this.userEntity.createQueryBuilder()
+      .update()
+      .set({
+        cover,
+      })
+      .where('id = :id', { id: user.id });
+    await Promise.all([
+      this.fileService.activated(cover),
+      m.execute(),
+    ]);
+    const data = await this.findOne(user.id, null);
+    return classToPlain(data, {
+      groups: [Role.OWNER],
+    });
+  }
+
   public isId(id: string | number) {
     return isNumber(id) || isNumberString(id as string);
   }

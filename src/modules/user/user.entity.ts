@@ -111,6 +111,10 @@ export class UserEntity extends BaseEntity {
   @Expose()
   public avatar!: string;
 
+  @Column({ nullable: true })
+  @Expose()
+  public cover?: string;
+
   /** 个人介绍 */
   @Column({
     nullable: true,
