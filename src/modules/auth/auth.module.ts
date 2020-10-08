@@ -9,7 +9,6 @@ import { InvitationService } from './invitation/invitation.service';
 import { AccessTokenModule } from '../oauth/access-token/access-token.module';
 import { OauthModule } from '../oauth/oauth.module';
 
-
 @Module({
   imports: [
     forwardRef(() => UserModule),

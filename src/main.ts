@@ -11,6 +11,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import * as Sentry from '@sentry/node';
 import RateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import Redis from 'ioredis';
@@ -19,6 +20,11 @@ import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
 
 const bootstrap = async () => {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    debug: true,
+  });
+
   const server = await NestFactory.create(AppModule, {
     logger: new LoggingService(),
   });
@@ -50,7 +56,6 @@ const bootstrap = async () => {
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
   });
-
   await server.listen(process.env.PORT!);
 
   // Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');

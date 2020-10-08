@@ -101,6 +101,16 @@ export class PictureResolver {
     return this.collectionService.pictureRelatedCollection(id);
   }
 
+  @Query()
+  public async pictureRelatedPictures(
+  @User() user: Maybe<UserEntity>,
+    @Args('id') id: number,
+    @Args('limit') limit = 30,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    return this.pictureService.getPictureRelated(id, limit, user, info);
+  }
+
   @Mutation()
   @Roles(Role.USER)
   public async likePicture(

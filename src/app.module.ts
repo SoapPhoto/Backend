@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { RavenModule, RavenInterceptor } from 'nest-raven';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
@@ -66,6 +67,7 @@ import { BlurhashModule } from './shared/blurhash/blurhash.module';
         },
       }),
     }),
+    RavenModule,
     LoggingModule,
     AuthModule,
     OauthModule,
@@ -85,6 +87,10 @@ import { BlurhashModule } from './shared/blurhash/blurhash.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: DataLoaderInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useValue: new RavenInterceptor(),
     },
   ],
 })

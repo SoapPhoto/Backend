@@ -42,6 +42,13 @@ type Query {
     username: String
     query: PicturesQueryInput!
   ): Pictures
+
+  "获取相关图片"
+  pictureRelatedPictures(
+    "图片id"
+    id: Float!
+    limit: Float
+  ): [Picture!]!
 }
 
 type Mutation {
@@ -105,6 +112,7 @@ type EXIF {
   ISO: Float
   location: [Float]
 }
+
 
 """
 图片

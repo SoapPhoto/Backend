@@ -1,5 +1,5 @@
 import {
-  classToPlain,
+  classToPlain, plainToClass,
 } from 'class-transformer';
 import {
   BadRequestException,
@@ -24,9 +24,10 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { keyword } from '@server/common/utils/keyword';
 import { LoggingService } from '@server/shared/logging/logging.service';
-import { isBoolean } from 'lodash';
+import { isBoolean, uniq } from 'lodash';
 import { PicturesType } from '@common/enum/picture';
 import { GraphQLResolveInfo } from 'graphql';
+import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -342,6 +343,31 @@ export class PictureService {
       .andWhere('picture.isPrivate=:private', { private: false })
       .getManyAndCount();
     return listRequest(query, classToPlain(data), count);
+  }
+
+  /**
+   * 获取图片相似图片列表
+   *
+   * @memberof PictureService
+   */
+  public getPictureRelated = async (id: number, limit: number, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+    const userData = await this.findOne(id, null);
+    let tag: string[] = [];
+    nodejieba.tag(userData.title).forEach(v => tag.push(v.word));
+    userData.tags.forEach(v => tag.push(v.name));
+    tag = uniq(tag);
+    const q = this.selectList(user, plainToClass(PaginationDto, {
+      page: 1,
+      pageSize: limit,
+    }), { info });
+    // this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
+    q.andWhere(`MATCH(keywords) AGAINST('${tag.map(v => `${v}*`).join(' ')}' IN boolean MODE)`)
+      .andWhere('picture.id != :id', { id });
+    const data = await q.andWhere('picture.isPrivate=:private', { private: false })
+      .andWhere('picture.deleted = 0')
+      .cache(3000)
+      .getMany();
+    return data;
   }
 
   /**
