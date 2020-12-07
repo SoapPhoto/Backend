@@ -25,7 +25,7 @@ export class OauthController {
 
   @Post('/token')
   public async accessToken(
-  @Req() req: Request,
+    @Req() req: Request,
     @Res() res: Response,
   ) {
     return this.token(req, res);
@@ -33,7 +33,7 @@ export class OauthController {
 
   @Post(`/:type(${OauthTypeValues.join('|')})/token`)
   public async oauthToken(
-  @Param('type') type: OauthType,
+    @Param('type') type: OauthType,
     @Req() req: Request,
     @Res() res: Response,
   ) {
@@ -42,7 +42,7 @@ export class OauthController {
 
   @Get(`/:type(${OauthTypeValues.join('|')})/redirect`)
   public async oauthRedirect(
-  @Param('type') type: OauthType,
+    @Param('type') type: OauthType,
     @Query() query: OauthQueryDto,
     @Res() res: Response,
   ) {
@@ -70,7 +70,7 @@ export class OauthController {
 
   @Post('/active')
   public async active(
-  @Body() body: ActiveUserDto,
+    @Body() body: ActiveUserDto,
     @Req() req: Request,
     @Res() res: Response,
   ) {

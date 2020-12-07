@@ -5,7 +5,6 @@ import mjml2html from 'mjml';
 import _, { get } from 'lodash';
 import { TemplateAdapter, MailerOptions } from '@nestjs-modules/mailer';
 
-
 export class MjmlAdapter implements TemplateAdapter {
   public compile(mail: any, callback: any, mailerOptions: MailerOptions): void {
     const templateExt = `${path.extname(mail.data.template)}.mjml`;

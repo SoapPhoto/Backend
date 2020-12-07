@@ -84,7 +84,6 @@ export class PictureController {
     return this.pictureService.delete(id, user);
   }
 
-
   @Put(':id')
   @Roles(Role.USER)
   public async updatePicture(
@@ -132,7 +131,6 @@ export class PictureController {
   ) {
     return this.pictureService.likePicture(Number(id), user, true);
   }
-
 
   @Put('unlike/:id([0-9]+)')
   @Roles(Role.USER)

@@ -11,9 +11,10 @@
       "error",
       160
     ],
+    "indent": ["error", 2],
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
-    "@typescript-eslint/indent": ["error", 2],
     "import/extensions": "off",
-    "no-const-assign": "off"
+    "no-const-assign": "off",
+    "@typescript-eslint/indent": ["off", 2]
   }
 }
