@@ -50,13 +50,20 @@ export class OauthService {
       },
     });
     if (info.access_token) {
-      const { data } = await axios.get('https://api.github.com/user', {
-        headers: {
-          accept: 'application/json',
-          Authorization: `token ${info.access_token}`,
-        },
-      });
-      return this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
+      try {
+        const { data } = await axios.get('https://api.github.com/user', {
+          headers: {
+            accept: 'application/json',
+            Authorization: `token ${info.access_token}`,
+          },
+        });
+        return this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
+      } catch (err) {
+        if (err.code === 'ECONNREFUSED') {
+          throw new BadGatewayException('ECONNREFUSED');
+        }
+        throw new BadGatewayException('bad github');
+      }
     }
     return null;
   }
