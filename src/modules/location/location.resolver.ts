@@ -12,8 +12,9 @@ export class LocationResolver {
   @Query()
   public async searchPlace(
     @Args('value') value: string,
+    @Args('region') region: string,
   ) {
-    return this.locationService.search(value);
+    return this.locationService.search(region, value);
   }
 
   @Query()

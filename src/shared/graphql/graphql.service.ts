@@ -3,6 +3,7 @@ import { GqlOptionsFactory, GqlModuleOptions } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
 import * as OAuth2Server from 'oauth2-server';
 import { isString } from 'class-validator';
+import { join } from 'path';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
 import { pubSub } from '@server/common/pubSub';
@@ -46,7 +47,7 @@ export class GraphqlService implements GqlOptionsFactory {
       schemaDirectives: {
         limit: LimitDirective,
       },
-      typePaths: ['./comment/graphql/*.graphql', './**/*.graphql'],
+      typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,
       subscriptions: {
         onConnect: async (connectionParams, _webSocket, context: any) => {

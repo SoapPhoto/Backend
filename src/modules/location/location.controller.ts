@@ -17,14 +17,15 @@ export class LocationController {
     private readonly mapboxService: MapboxService,
   ) {}
 
-  @Get('search/:search')
+  @Get('place/:search')
   @Roles(Role.USER)
   public async searchPlace(
+    @Query('region') region: string,
     @Param('search') value: string,
-      @Query('clientType') type = LocationClientType.BAIDU,
+    @Query('clientType') type = LocationClientType.BAIDU,
   ) {
     if (type === LocationClientType.BAIDU) {
-      return this.locationService.search(value);
+      return this.locationService.search(region, value);
     }
     return this.mapboxService.forwardGeocode(value);
   }

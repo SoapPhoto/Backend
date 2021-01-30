@@ -70,7 +70,7 @@ export class PictureController {
         }),
       ]);
       await this.fileService.bindPicture(body.key, picture);
-      return;
+      return picture;
     }
     throw new BadRequestException('no file');
   }
