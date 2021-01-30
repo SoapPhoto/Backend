@@ -1,6 +1,6 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/camelcase */
 import {
   Injectable, UnauthorizedException, BadGatewayException, BadRequestException,
 } from '@nestjs/common';
