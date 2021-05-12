@@ -12,8 +12,9 @@ export class OauthMiddleware implements NestMiddleware {
   ) {}
 
   public async use(req: any, res: Response, next: () => void) {
-    const isReq = /text\/html|application\/json/g.test(req.headers.accept || '');
-    if (!isReq) {
+    const isReqAccept = /text\/html|application\/json/g.test(req.headers.accept || '');
+    const isReqContentType = /text\/html|application\/json/g.test(req.headers['content-type'] || '');
+    if (!isReqAccept && !isReqContentType) {
       next();
       return;
     }

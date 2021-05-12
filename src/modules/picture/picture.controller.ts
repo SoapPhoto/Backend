@@ -192,7 +192,7 @@ export class PictureController {
       request(options, async (err, res, buffer) => {
         const img = new Image();
         img.onload = () => ctx.drawImage(img, 0, 0);
-        img.onerror = (err) => { throw err; };
+        img.onerror = (error) => { throw error; };
         img.src = buffer;
         const blurhash = encode(ctx.getImageData(0, 0, width, height).data, width, height, 3, 2);
         if (blurhash) {
@@ -200,7 +200,7 @@ export class PictureController {
             blurhash,
           });
           console.log('👌', hash);
-          resolve();
+          resolve(null);
         }
       });
     })));
