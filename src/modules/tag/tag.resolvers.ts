@@ -30,7 +30,7 @@ export class TagResolver {
   public async tagPictures(
     @Context('user') user: Maybe<UserEntity>,
     @Args('name') name: string,
-    @Args() query: GetTagPictureListDto,
+    @Args('query') query: GetTagPictureListDto,
     @Info() info: GraphQLResolveInfo,
   ) {
     return this.pictureService.getTagPictureList(name, user, query, info);
