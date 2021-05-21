@@ -54,9 +54,7 @@ export class CollectionService {
         user,
       }),
     );
-    return classToPlain(data, {
-      groups: [Role.OWNER],
-    });
+    return this.getCollectionDetail(data.id, user);
   }
 
   public async updateCollection(body: UpdateCollectionDot, id: number, user: UserEntity) {
@@ -68,11 +66,12 @@ export class CollectionService {
     if (!collection || collection.user.id !== user.id) {
       throw new ForbiddenException();
     }
-    return this.collectionEntity.createQueryBuilder()
+    await this.collectionEntity.createQueryBuilder()
       .update()
       .set(body)
       .where('id = :id', { id })
       .execute();
+    return this.getCollectionDetail(id, user);
   }
 
   /**
@@ -265,7 +264,7 @@ export class CollectionService {
 
     this.userService.selectBadge(q);
     this.selectInfo(q, user);
-    const [data, count] = await q.cache(500).getManyAndCount();
+    const [data, count] = await q.getManyAndCount();
     if (data.length === 0) {
       return listRequest(query, [], count);
     }

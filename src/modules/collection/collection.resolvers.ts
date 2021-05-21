@@ -7,7 +7,7 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { GraphQLResolveInfo } from 'graphql';
 import { CollectionService } from './collection.service';
 import { UserEntity } from '../user/user.entity';
-import { GetCollectionPictureListDto } from './dto/collection.dto';
+import { CreateCollectionDot, GetCollectionPictureListDto, UpdateCollectionDot } from './dto/collection.dto';
 import { Role } from '../user/enum/role.enum';
 
 @Resolver()
@@ -68,5 +68,24 @@ export class CollectionResolver {
     return {
       done: true,
     };
+  }
+
+  @Mutation()
+  @Roles(Role.USER)
+  public async addCollection(
+    @Context('user') user: UserEntity,
+    @Args('data') data: CreateCollectionDot,
+  ) {
+    return this.collectionService.create(data, user);
+  }
+
+  @Mutation()
+  @Roles(Role.USER)
+  public async updateCollection(
+    @Context('user') user: UserEntity,
+    @Args('id') id: number,
+    @Args('data') data: UpdateCollectionDot,
+  ) {
+    return this.collectionService.updateCollection(data, id, user);
   }
 }

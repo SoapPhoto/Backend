@@ -36,6 +36,29 @@ type Mutation {
     "收藏夹id"
     id: Float!
   ): Status
+  "编辑收藏夹"
+  updateCollection(
+    "收藏夹id"
+    id: Float!
+    "编辑"
+    data: AddCollectionInput!
+  ): Collection
+  "新增收藏夹"
+  addCollection(
+    "新增"
+    data: AddCollectionInput!
+  ): Collection
+}
+
+input AddCollectionInput {
+  "名字"
+  name: String
+
+  "介绍"
+  bio: String
+
+  "私人"
+  isPrivate: Boolean
 }
 
 type Collections implements BaseList {
