@@ -38,10 +38,10 @@ export class BaiduService {
    * @returns
    * @memberof BaiduService
    */
-  public async getImageClassify(base64: string) {
+  public async getImageClassify(image: string, url = false) {
     const token = await this.getAccountToken();
     const { data } = await Axios.post<{result: BaiduClassify[]}>('https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general',
-      qs.stringify({ image: base64.split(',')[1] }),
+      qs.stringify({ [url ? 'url' : 'image']: url ? image : image.split(',')[1] }),
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

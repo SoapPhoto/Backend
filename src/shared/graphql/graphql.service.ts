@@ -43,7 +43,7 @@ export class GraphqlService implements GqlOptionsFactory {
         };
       },
       resolverValidationOptions: {
-        requireResolversForResolveType: false,
+        requireResolversForResolveType: 'ignore',
       },
       schemaDirectives: {
         limit: LimitDirective,

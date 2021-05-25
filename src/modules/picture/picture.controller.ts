@@ -29,6 +29,8 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { keyword } from '@server/common/utils/keyword';
 import { BaiduService } from '@server/shared/baidu/baidu.service';
 import { encode } from 'blurhash';
+import { plainToClass } from 'class-transformer';
+import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
@@ -231,5 +233,43 @@ export class PictureController {
       }),
     );
     return { message: 'ok' };
+  }
+
+  @Get('all/classify')
+  @Roles(Role.OWNER)
+  public async allClassify() {
+    const list = await this.pictureService.getNotClassifyPicture();
+    const result = await Promise.all(list.map(async (e) => {
+      let key = `https://cdn-oss.soapphoto.com/photo/${e.key}@!medium`;
+      if (/^photo\//.test(e.key)) {
+        key = `https://cdn-oss.soapphoto.com/${e.key}@!medium`;
+      }
+      try {
+        const classify = await this.baiduService.getImageClassify(key, true);
+        if (classify) {
+          await this.pictureService.updateClassifyPicture(e.id, plainToClass(BaiduClassify, classify));
+          return { url: key, id: e.id, classify };
+        }
+        return false;
+      } catch (err) {
+        return {
+          id: e.id,
+          url: key,
+          message: err,
+        };
+      }
+      // return this.baiduService.getImageClassify(key, true);
+    }));
+    return result;
+    // await Promise.all(
+    //   list.map(async (item) => {
+    //     const keywords = keyword([item.title, item.bio]);
+    //     keywords.unshift(...item.tags.map(tag => tag.name));
+    //     item.keywords = [...new Set(keywords)].join('|');
+    //     return this.pictureService.updateRaw(item, {
+    //       keywords: [...new Set(keywords)].join('|'),
+    //     });
+    //   }),
+    // );
   }
 }

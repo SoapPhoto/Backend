@@ -8,8 +8,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Index,
-  BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 
 import { CommentEntity } from '@server/modules/comment/comment.entity';
@@ -17,6 +15,7 @@ import { BaseEntity } from '@server/common/base.entity';
 import { TagEntity } from '@server/modules/tag/tag.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionPictureEntity } from '@server/modules/collection/picture/collection-picture.entity';
+import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
 import { PictureUserActivityEntity } from './user-activity/user-activity.entity';
 import { Role } from '../user/enum/role.enum';
 import { CollectionEntity } from '../collection/collection.entity';
@@ -153,6 +152,13 @@ export class PictureEntity extends BaseEntity {
   })
   @Expose()
   public readonly location?: PictureLocation;
+
+  /** EXIF信息 */
+  @Column('simple-json', {
+    nullable: true,
+  })
+  @Expose()
+  public readonly classify?: BaiduClassify[];
 
   /** 图片作者 */
   @Type(() => UserEntity)

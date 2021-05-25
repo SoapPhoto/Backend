@@ -28,6 +28,7 @@ import { isBoolean, uniq } from 'lodash';
 import { PicturesType } from '@common/enum/picture';
 import { GraphQLResolveInfo } from 'graphql';
 import { PaginationDto } from '@server/common/dto/pagination.dto';
+import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -575,6 +576,20 @@ export class PictureService {
 
   public getAllPicture = async () => this.pictureRepository.createQueryBuilder('picture')
     .getMany()
+
+  public getNotClassifyPicture = async () => this.pictureRepository.createQueryBuilder('picture')
+    .where('picture.classify is null')
+    .andWhere('picture.deleted = 0')
+    .orderBy('picture.createTime', 'DESC')
+    .skip(0)
+    .take(5)
+    .getMany()
+
+  public updateClassifyPicture = async (id: number, classify: BaiduClassify[]) => this.pictureRepository.createQueryBuilder('picture')
+    .update()
+    .set({ classify })
+    .where('id = :id', { id })
+    .execute();
 
   public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
     .leftJoinAndSelect('picture.tags', 'tag')

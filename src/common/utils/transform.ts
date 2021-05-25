@@ -1,5 +1,4 @@
-
-export const transformAvatar = (value: string) => {
+export const transformAvatar = ({ value }) => {
   if (/^qiniu:/g.test(value)) {
     const data = value.replace(/^qiniu:/, '').split('|');
     if (data && data[1]) return `${process.env.CDN_URL}/${data[1]}`;

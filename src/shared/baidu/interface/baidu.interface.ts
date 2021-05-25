@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer/decorators';
+import { Exclude, Expose } from 'class-transformer';
 
 export class BaiduToken {
   // eslint-disable-next-line camelcase

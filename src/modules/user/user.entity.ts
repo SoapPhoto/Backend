@@ -79,7 +79,7 @@ export class UserEntity extends BaseEntity {
     default: '',
   })
   @Expose({ groups: [Role.OWNER, Role.ADMIN] })
-  @Transform((value?: string) => {
+  @Transform(({ value }) => {
     if (value) {
       const m = value.match(/^(.*)@/);
       if (m && m.length > 1) {
