@@ -150,6 +150,13 @@ export class PictureController {
     return this.commentService.getPictureList(id, query, user);
   }
 
+  @Get('baidu/token')
+  @Roles(Role.USER)
+  public async getBaiduToken(
+  ) {
+    return this.baiduService.getAccountToken();
+  }
+
   @Get('getHot')
   @Roles(Role.OWNER)
   public async createPictureComment(
