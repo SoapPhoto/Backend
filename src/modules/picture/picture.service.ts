@@ -29,6 +29,7 @@ import { PicturesType } from '@common/enum/picture';
 import { GraphQLResolveInfo } from 'graphql';
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
+import { platform } from 'os';
 import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
@@ -224,7 +225,8 @@ export class PictureService {
     }
     if (type === PicturesType.FEED) {
       if (!user) throw new ForbiddenException();
-      const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
+      const fq = plainToClass(PaginationDto, { page: 1, pageSize: 100000000 });
+      const ids = await this.followService.followUsers(user.id, fq, 'followed', true);
       if (ids.length === 0) return listRequest(query, [], 0);
       q.andWhere('picture.userId IN (:ids)', { ids });
     }
@@ -242,7 +244,10 @@ export class PictureService {
     if (!picture) {
       throw new BadRequestException('no_exist_picture');
     }
-    return this.activityService.like(picture, user, data);
+    const likeData = await this.activityService.like(picture, user, data);
+    picture.isLike = likeData.isLike;
+    picture.likedCount = likeData.count;
+    return picture;
   }
 
   /**
@@ -278,7 +283,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public async getFeedPictures(user: UserEntity, query: GetPictureListDto, info: GraphQLResolveInfo) {
-    const ids = await this.followService.followUsers({ id: user.id, limit: 10000000000, offset: 0 }, 'followed', true);
+    const fq = plainToClass(PaginationDto, { page: 1, pageSize: 100000000 });
+    const ids = await this.followService.followUsers(user.id, fq, 'followed', true);
     if (ids.length === 0) return listRequest(query, [], 0);
     const q = this.selectList(user, query, { info, path: 'data' })
       .where('picture.userId IN (:ids)', { ids })

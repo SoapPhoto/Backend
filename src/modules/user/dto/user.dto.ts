@@ -1,5 +1,5 @@
 import {
-  IsEmail, IsString, IsUrl, Length, ValidateIf, isNotEmpty,
+  IsEmail, IsString, IsUrl, Length, ValidateIf, isNotEmpty, IsInt, Max, Min, IsBoolean,
 } from 'class-validator';
 
 import { IsUserName } from '@server/common/validator';
@@ -72,6 +72,18 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   @IsUrl()
   @Expose()
   public readonly website!: string;
+
+  /** 性别 */
+  @IsInt()
+  @Max(1)
+  @Min(0)
+  @Expose()
+  public readonly gender!: number;
+
+  /** 性别展示 */
+  @IsBoolean()
+  @Expose()
+  public readonly genderSecret!: boolean;
 
   @Expose()
   public readonly key!: string;

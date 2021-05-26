@@ -70,6 +70,8 @@ input UpdateProfileInput {
   bio: String
   website: String
   key: String
+  gender: Float
+  genderSecret: Boolean
 }
 
 """
@@ -101,6 +103,18 @@ type User implements BaseNode {
 
   "个人网站"
   website: String
+
+  "性别"
+  gender: Float
+
+  "性别"
+  genderSecret: Boolean
+
+  "生日"
+  birthday: DateTime
+
+  "生日的显示"
+  birthdayShow: Float
 
   "喜欢的picture数量"
   likedCount: Float

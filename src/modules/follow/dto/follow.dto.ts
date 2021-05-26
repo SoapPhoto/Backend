@@ -1,6 +1,5 @@
 import { IsNumber } from 'class-validator';
 import { Expose, Exclude, Type } from 'class-transformer';
-import { Default } from '@server/common/transformer/default';
 
 @Exclude()
 export class FollowUserDto {
@@ -16,14 +15,4 @@ export class FollowUsersDto {
   @Expose()
   @Type(() => Number)
   public readonly id!: number
-
-  @Type(() => Number)
-  @Expose()
-  @Default(30)
-  public readonly limit!: number
-
-  @Type(() => Number)
-  @Expose()
-  @Default(0)
-  public readonly offset!: number
 }

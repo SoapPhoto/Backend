@@ -3,7 +3,8 @@ import { Place } from '@server/modules/location/interface/place.interface';
 import Axios from 'axios';
 import { plainToClass } from 'class-transformer';
 import dayjs from 'dayjs';
-import { BD09, GCJ02, transform } from 'gcoord';
+import gcoord from 'gcoord';
+import { Position } from 'gcoord/dist/types/geojson';
 import { qs } from 'url-parse';
 
 import { BaiduClassify, BaiduToken } from './interface/baidu.interface';
@@ -96,10 +97,10 @@ export class BaiduService {
   }
 
   public async reverseGeocoding(location: string): Promise<Place[]> {
-    const geo = location.split(',');
+    const geo = location.split(',').map(v => Number(v))as [number, number];
     const { data } = await Axios.get('https://api.map.baidu.com/reverse_geocoding/v3/', {
       params: {
-        location: transform(geo, GCJ02, BD09).toString(),
+        location: gcoord.transform<Position>(geo, gcoord.GCJ02, gcoord.BD09).toString(),
         region: '全国',
         output: 'json',
         extensions_poi: 1,

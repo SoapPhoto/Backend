@@ -7,6 +7,7 @@ import {
 
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
+import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { FollowService } from './follow.service';
 import { UserEntity } from '../user/user.entity';
 import { Role } from '../user/enum/role.enum';
@@ -22,16 +23,18 @@ export class FollowResolver {
 
   @Query()
   public async followerUsers(
-    @Args() input: FollowUsersDto,
+    @Args('id') id: number,
+    @Args('query') query: PaginationDto,
   ) {
-    return this.followService.followUsers(input);
+    return this.followService.followUsers(id, query);
   }
 
   @Query()
   public async followedUsers(
-    @Args() input: FollowUsersDto,
+    @Args('id') id: number,
+    @Args('query') query: PaginationDto,
   ) {
-    return this.followService.followUsers(input, 'followed');
+    return this.followService.followUsers(id, query, 'followed');
   }
 
   @Mutation()

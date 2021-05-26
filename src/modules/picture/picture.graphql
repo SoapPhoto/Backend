@@ -55,11 +55,11 @@ type Mutation {
   "喜欢图片"
   likePicture(
     id: Float!
-  ): LikePictureReq
+  ): Picture
   "取消喜欢图片"
   unlikePicture(
     id: Float!
-  ): LikePictureReq
+  ): Picture
   updatePicture(
     id: Float!
     data: UpdatePictureInput!

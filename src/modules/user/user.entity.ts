@@ -129,6 +129,59 @@ export class UserEntity extends BaseEntity {
   @Expose()
   public website!: string;
 
+  /** 性别 */
+  /** 0:男 1:女 保密了的话就传-1 */
+  @Transform((data) => {
+    if (data.obj.role === 'OWNER') {
+      return data.value;
+    }
+    if (data.obj.genderSecret) {
+      return -1;
+    }
+    return data.value;
+  })
+  @Column({
+    nullable: false,
+    default: 0,
+    type: 'tinyint',
+  })
+  @Expose()
+  public gender!: number;
+
+  /** 性别是否保密 */
+  @Column({
+    default: false,
+  })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  public genderSecret!: boolean;
+
+  /** 生日 */
+  @Transform((data) => {
+    if (data.obj.role === 'OWNER') {
+      return data.value;
+    }
+    if (data.obj.birthdayShow === 0) {
+      return null;
+    }
+    return data.value;
+  })
+  @Column({
+    nullable: true,
+    type: 'datetime',
+  })
+  @Expose()
+  public birthday?: Date;
+
+  /** 生日显示方法 */
+  /** 0:保密 1:显示日期 2:显示年龄 3:显示星座 */
+  @Column({
+    nullable: false,
+    default: 1,
+    type: 'tinyint',
+  })
+  @Expose({ groups: [Role.OWNER, Role.ADMIN] })
+  public birthdayShow!: number;
+
   /** 用户的picture */
   @OneToMany(() => PictureEntity, photo => photo.user)
   @Expose()

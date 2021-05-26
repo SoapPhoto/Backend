@@ -4,6 +4,7 @@ import {
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { FollowEntity } from './follow.entity';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -60,13 +61,13 @@ export class FollowService {
    * @returns
    * @memberof FollowService
    */
-  public async followUsers(input: FollowUsersDto, type: string, onlyId: boolean): Promise<string[]>
+  public async followUsers(id: number, query: PaginationDto, type: string, onlyId: boolean): Promise<string[]>
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers(input: FollowUsersDto, type?: string): Promise<UserEntity[]>
+  public async followUsers(id: number, query: PaginationDto, type?: string): Promise<UserEntity[]>
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers({ id, limit, offset }: FollowUsersDto, type = 'follower', onlyId?: boolean) {
+  public async followUsers(id: number, query: PaginationDto, type = 'follower', onlyId?: boolean) {
     let queryId = 'follower_user_id';
     let getId = 'followed_user_id';
     if (type === 'follower') {
@@ -79,8 +80,7 @@ export class FollowService {
     const [ids] = await Promise.all([
       q
         .select(`\`follow\`.\`${getId}\``)
-        .limit(limit)
-        .offset(offset)
+        .skip((query.page - 1) * query.pageSize).take(query.pageSize)
         .getRawMany(),
     ]);
     if (ids.length === 0) return [];
