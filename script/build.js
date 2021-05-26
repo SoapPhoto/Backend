@@ -58,7 +58,7 @@ const migrate = async () => {
     initial: true,
   }, promptsOptions);
   const spCreate = async () => new Promise((resolve, reject) => {
-    const result = spawn('npm', ['run', 'typeorm:migrate', name], { stdio: 'inherit' });
+    const result = spawn('npm', ['run', 'typeorm:migrate'], { stdio: 'inherit' });
     result
       .on('close', (code) => {
         if (code === 0) {
