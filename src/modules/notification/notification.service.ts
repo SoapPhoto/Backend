@@ -13,6 +13,7 @@ import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 import { CommentService } from '../comment/comment.service';
 import { UserService } from '../user/user.service';
+import { PictureEntity } from '../picture/picture.entity';
 
 @Injectable()
 export class NotificationService {
@@ -93,9 +94,10 @@ export class NotificationService {
     ) {
       try {
         // 不存在会报错
-        return this.pictureService.findOne(notify.mediaId!, user);
-      } catch {
-        return undefined;
+        const data = await this.pictureService.findOne(notify.mediaId!, user);
+        return data;
+      } catch (e) {
+        // console.log(e);
       }
     }
     if (notify.category === NotificationCategory.REPLY
