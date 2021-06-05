@@ -72,6 +72,8 @@ input UpdateProfileInput {
   key: String
   gender: Float
   genderSecret: Boolean
+  birthday: DateTime
+  birthdayShow: Float
 }
 
 """
