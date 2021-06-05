@@ -27,6 +27,10 @@ export interface IRelatedCollections {
   data: CollectionEntity[];
 }
 
+@Index('IDX_KEYWORDS', ['keywords'], { fulltext: true })
+@Index('IDX_SEARCH', ['createTime', 'isPrivate', 'deleted'])
+@Index(['id', 'createTime', 'isPrivate', 'deleted'])
+@Index(['user', 'createTime', 'isPrivate', 'deleted'])
 @Exclude()
 @Entity('picture')
 export class PictureEntity extends BaseEntity {
@@ -181,7 +185,6 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   public tags!: TagEntity[];
 
-  @Index({ fulltext: true })
   @Column()
   public keywords!: string;
 

@@ -568,15 +568,6 @@ export class PictureService {
           ),
         );
       }
-      // if (pictureSelect['badge.id']) {
-      //   q.leftJoin(
-      //     sq => sq
-      //       .select()
-      //       .from(PictureBadgeActivityEntity, 'pictureBadgeActivity')
-      //       .take(2), 'pictureBadgeActivity', 'pictureBadgeActivity.pictureId=picture.id',
-      //   )
-      //     .leftJoinAndMapMany('picture.badge', BadgeEntity, 'pictureBadge', 'pictureBadgeActivity.badgeId=pictureBadge.id');
-      // }
     }
   }
 

@@ -1,11 +1,13 @@
 import {
-  Column, Entity, ManyToOne, PrimaryGeneratedColumn,
+  Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PictureEntity } from '../picture.entity';
 
+@Index(['picture', 'like'])
+@Index(['picture', 'user'])
 @Entity('picture_user_activity')
 export class PictureUserActivityEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
