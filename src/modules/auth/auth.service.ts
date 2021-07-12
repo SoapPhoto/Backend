@@ -46,12 +46,13 @@ export class AuthService {
     const info: MutablePartial<UserEntity> = {
       identifier: data.email,
       verificationToken: uuid(),
+      status: Status.VERIFIED,
     };
-    const newUser = await this.userService.createUser({
+    await this.userService.createUser({
       ...data,
       ...info,
     });
-    await this.sendValidator(newUser);
+    // await this.sendValidator(newUser);
   }
 
   public async resetMail(user: UserEntity) {
