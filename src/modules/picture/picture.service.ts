@@ -63,6 +63,12 @@ export class PictureService {
     private readonly redisService: RedisService,
   ) { }
 
+  public getPictureKeyword(picture: PictureEntity) {
+    const keywords = keyword([picture.title, picture.bio]);
+    const key = [...new Set(keywords), ...new Set((picture.classify || []).map(v => v.keyword))].join('|');
+    return key;
+  }
+
   public async create(data: Partial<PictureEntity>) {
     const newData = { ...data };
     const keywords = keyword([newData.title, newData.bio]);
@@ -70,7 +76,7 @@ export class PictureService {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
       keywords.unshift(...newData.tags.map(tag => tag.name));
     }
-    newData.keywords = [...new Set(keywords)].join('|');
+    newData.keywords = [...new Set(keywords), ...new Set((newData.classify || []).map(v => v.keyword))].join('|');
     const picture = await this.pictureRepository.save(
       this.pictureRepository.create(newData),
     );

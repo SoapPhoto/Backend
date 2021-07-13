@@ -81,9 +81,9 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
   @Expose()
   public readonly location?: PictureLocation;
 
-  @Type(() => BaiduClassify)
-  @Expose()
-  public readonly classify?: BaiduClassify[];
+  // @Type(() => BaiduClassify)
+  // @Expose()
+  // public readonly classify?: BaiduClassify[];
 }
 
 @Exclude()

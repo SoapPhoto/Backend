@@ -272,4 +272,18 @@ export class PictureController {
     //   }),
     // );
   }
+
+  @Get('update/keywords')
+  @Roles(Role.OWNER)
+  public async updateKeywords() {
+    const list = await this.pictureService.getAllPicture();
+    await Promise.all(list.map(async (picture) => {
+      this.pictureService.updateRaw(picture, { keywords: this.pictureService.getPictureKeyword(picture) });
+      return true;
+    }));
+    return {
+      message: 'ok',
+      total: list.length,
+    };
+  }
 }
