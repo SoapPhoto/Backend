@@ -365,16 +365,16 @@ export class PictureService {
    */
   public getPictureRelated = async (id: number, limit: number, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
     const userData = await this.findOne(id, null);
-    let tag: string[] = [];
-    nodejieba.tag(userData.title).forEach(v => tag.push(v.word));
-    userData.tags.forEach(v => tag.push(v.name));
-    tag = uniq(tag);
+    // let tag: string[] = [];
+    // nodejieba.tag(userData.title).forEach(v => tag.push(v.word));
+    // userData.tags.forEach(v => tag.push(v.name));
+    // tag = uniq(tag);
     const q = this.selectList(user, plainToClass(PaginationDto, {
       page: 1,
       pageSize: limit,
-    }), { info });
+    }), { info, orderBy: true });
     // this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
-    q.andWhere(`MATCH(keywords) AGAINST('${tag.map(v => `${v}*`).join(' ')}' IN boolean MODE)`)
+    q.andWhere(`MATCH(keywords) AGAINST('${userData.keywords.split('|').map(v => `>${v}`).join(' ')}' IN boolean MODE)`)
       .andWhere('picture.id != :id', { id });
     const data = await q.andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.deleted = 0')
@@ -523,7 +523,9 @@ export class PictureService {
   public select = (user: Maybe<UserEntity>, options?: ISelectOptions) => {
     const q = this.pictureRepository.createQueryBuilder('picture')
       .andWhere('picture.deleted = 0');
-    q.orderBy('picture.createTime', 'DESC');
+    if (!options?.orderBy) {
+      q.orderBy('picture.createTime', 'DESC');
+    }
     this.selectInfo(q, user, options);
     return q;
   }
