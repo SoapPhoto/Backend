@@ -14,6 +14,8 @@ interface ISelectOptions {
   info?: import('graphql').GraphQLResolveInfo;
   value?: string;
   select?: string[];
+  /** 取消掉orderBy createDate */
+  orderBy?: boolean;
   [key: string]: any;
 }
 
