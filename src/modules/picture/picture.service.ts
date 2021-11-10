@@ -13,7 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import dayjs from 'dayjs';
 import nodejieba from 'nodejieba';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { fieldsProjection } from 'graphql-fields-list';
 import { isNumberString } from 'class-validator';
 
@@ -60,7 +60,7 @@ export class PictureService {
     private readonly followService: FollowService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
   ) { }
 
   public getPictureKeyword(picture: PictureEntity) {
@@ -442,7 +442,7 @@ export class PictureService {
   }
 
   public getPictureHotInfoList = async (user: Maybe<UserEntity>, query: GetPictureListDto, info: GraphQLResolveInfo) => {
-    const client = this.redisService.getClient();
+    const client = this.redisManager.getClient();
     const limit = (query.page - 1) * query.pageSize;
     const [ids, count] = await Promise.all([
       client.zrevrange('picture_hot', limit, limit + query.pageSize - 1),

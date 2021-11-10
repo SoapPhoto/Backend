@@ -9,6 +9,7 @@ import { NotificationModule } from '@server/modules/notification/notification.mo
 import { TagModule } from '@server/modules/tag/tag.module';
 import { UserModule } from '@server/modules/user/user.module';
 import { BaiduModule } from '@server/shared/baidu/baidu.module';
+import { BlurhashModule } from '@server/shared/blurhash/blurhash.module';
 import { PictureController } from './picture.controller';
 import { PictureEntity } from './picture.entity';
 import { PictureResolver } from './picture.resolvers';
@@ -33,6 +34,7 @@ import { FollowModule } from '../follow/follow.module';
     forwardRef(() => BadgeModule),
     forwardRef(() => FollowModule),
     forwardRef(() => BaiduModule),
+    forwardRef(() => BlurhashModule),
   ],
   providers: [PictureService, PictureResolver, PictureScheduleService],
   controllers: [PictureController],

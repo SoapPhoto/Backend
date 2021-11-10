@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { OauthStateType } from '@common/enum/oauthState';
 import { UserService } from '../user/user.service';
 import { CredentialsEntity } from './credentials.entity';
@@ -17,7 +17,7 @@ export class CredentialsService {
     private readonly userService: UserService,
     @InjectRepository(CredentialsEntity)
     private credentialsRepository: Repository<CredentialsEntity>,
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
   ) {}
 
   public getInfo = async (id: string) => this.credentialsRepository.createQueryBuilder('cr')
@@ -38,7 +38,7 @@ export class CredentialsService {
   }
 
   public async authorize(user: UserEntity, { code }: AuthorizeDto) {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const strData = await redisClient.get(`oauth.${OauthStateType.authorize}.${code}`);
     if (!strData) {
       throw new UnauthorizedException('code_credentials_invalid');

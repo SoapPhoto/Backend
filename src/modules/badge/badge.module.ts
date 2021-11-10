@@ -5,13 +5,12 @@ import { BadgeService } from './badge.service';
 import { PictureBadgeActivityModule } from './picture-badge-activity/picture-badge-activity.module';
 import { BadgeEntity } from './badge.entity';
 import { UserBadgeActivityModule } from './user-badge-activity/user-badge-activity.module';
-import { BadgeUserLoader, BadgePictureLoader } from './badge.loader';
+import { BadgePictureLoader } from './badge.loader';
 
 @Module({
   providers: [
     BadgeResolver,
     BadgeService,
-    BadgeUserLoader,
     BadgePictureLoader,
   ],
   imports: [
@@ -19,6 +18,9 @@ import { BadgeUserLoader, BadgePictureLoader } from './badge.loader';
     PictureBadgeActivityModule,
     UserBadgeActivityModule,
   ],
-  exports: [BadgeService],
+  exports: [
+    BadgeService,
+    BadgePictureLoader,
+  ],
 })
 export class BadgeModule {}

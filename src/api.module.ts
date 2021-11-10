@@ -13,6 +13,7 @@ import { CredentialsModule } from './modules/credentials/credentials.module';
 import { FollowModule } from './modules/follow/follow.module';
 import { BadgeModule } from './modules/badge/badge.module';
 import { LocationModule } from './modules/location/location.module';
+
 @Module({
   imports: [
     ClientModule,

@@ -1,6 +1,6 @@
 scalar DateTime
 
-directive @limit(number: Float) on FIELD_DEFINITION
+# directive @limit(number: Float) on FIELD_DEFINITION
 
 interface BaseNode {
   id: Float!

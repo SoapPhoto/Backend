@@ -4,7 +4,7 @@ import { parse } from 'cookie';
 
 import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-server.service';
 import { WsException } from '@nestjs/websockets';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationService } from '@server/modules/notification/notification.service';
 
@@ -13,7 +13,7 @@ export class EventsService {
   constructor(
     @Inject(forwardRef(() => OauthServerService))
     private readonly oauthServerService: OauthServerService,
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
     @Inject(forwardRef(() => NotificationService))
     private readonly notificationService: NotificationService,
   ) {}
@@ -37,7 +37,7 @@ export class EventsService {
   }
 
   public async login(clientId: string, user: UserEntity) {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     await redisClient.set(`socket.login.${user.id}.${clientId}`, JSON.stringify({
       clientId,
       user,
@@ -45,13 +45,13 @@ export class EventsService {
   }
 
   public async logout(clientId: string) {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const keys = await redisClient.keys(`socket.login.*.${clientId}`);
     redisClient.del(...keys);
   }
 
   public async getClientId(userId: number) {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const data = await redisClient.keys(`socket.login.${userId}.*`);
     const arr = await Promise.all<string>(
       data.map(async (id) => {

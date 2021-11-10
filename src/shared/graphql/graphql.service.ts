@@ -8,7 +8,6 @@ import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-ser
 import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { Logger } from '../logging/logging.service';
-import { LimitDirective } from './directive/limit.directive';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
@@ -18,6 +17,7 @@ export class GraphqlService implements GqlOptionsFactory {
 
   public async createGqlOptions(): Promise<GqlModuleOptions> {
     return {
+      // plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
       playground: true,
       cors: {
@@ -45,32 +45,31 @@ export class GraphqlService implements GqlOptionsFactory {
       resolverValidationOptions: {
         requireResolversForResolveType: 'ignore',
       },
-      schemaDirectives: {
-        limit: LimitDirective,
-      },
       typePaths: ['./**/*.graphql'],
       installSubscriptionHandlers: true,
       subscriptions: {
-        onConnect: async (connectionParams, _webSocket, context: any) => {
-          const request = new OAuth2Server.Request({
-            method: 'get',
-            query: {},
-            headers: {
-              ...connectionParams,
-            },
-          });
-          const response = new OAuth2Server.Response(context.res);
-          try {
-            const token = await this.oauthServerService.server.authenticate(request, response);
-            context.user = token;
-            return {
-              user: token.user,
-            };
-          } catch (err) {
-            return {
-              user: null,
-            };
-          }
+        'subscriptions-transport-ws': {
+          onConnect: async (connectionParams: any, _webSocket: any, context: any) => {
+            const request = new OAuth2Server.Request({
+              method: 'get',
+              query: {},
+              headers: {
+                ...connectionParams,
+              },
+            });
+            const response = new OAuth2Server.Response(context.res);
+            try {
+              const token = await this.oauthServerService.server.authenticate(request, response);
+              context.user = token;
+              return {
+                user: token.user,
+              };
+            } catch (err) {
+              return {
+                user: null,
+              };
+            }
+          },
         },
       },
       formatError: (error: GraphQLError) => {
@@ -83,7 +82,7 @@ export class GraphqlService implements GqlOptionsFactory {
         if (isString(error.message)) {
           Logger.error(
             error.message,
-            error.stack ? error.stack.split('\n').toString() : '',
+            error.stack ? error.stack.toString() : '',
             `graphql-${error.path?.toString()}`,
           );
           return returnError(error.message);

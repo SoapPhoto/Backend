@@ -4,7 +4,7 @@ import {
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RedisModule } from 'nestjs-redis';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RavenModule, RavenInterceptor } from 'nest-raven';
 
@@ -21,10 +21,10 @@ import { OauthMiddleware } from './common/middleware/oauth.middleware';
 import { MjmlAdapter } from './common/email/adapters/mjml.adapter';
 import ormconfig from './ormconfig';
 import { GraphqlService } from './shared/graphql/graphql.service';
-import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
 import { IpModule } from './shared/ip/ip.module';
 import { OssModule } from './shared/oss/oss.module';
 import { BlurhashModule } from './shared/blurhash/blurhash.module';
+import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -41,12 +41,14 @@ import { BlurhashModule } from './shared/blurhash/blurhash.module';
     //   ttl: 20, // seconds
     //   max: 1000, // max number of items in cache
     // }),
-    RedisModule.register({
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-      db: Number(process.env.REDIS_DB),
-      password: process.env.REDIS_PASSWORD,
-      keyPrefix: process.env.REDIS_PREFIX,
+    RedisModule.forRoot({
+      config: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        db: Number(process.env.REDIS_DB),
+        password: process.env.REDIS_PASSWORD,
+        keyPrefix: process.env.REDIS_PREFIX,
+      },
     }),
     TypeOrmModule.forRoot(ormconfig),
     GraphQLModule.forRootAsync({

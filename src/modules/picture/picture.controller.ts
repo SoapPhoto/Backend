@@ -12,7 +12,7 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import dayjs from 'dayjs';
 import request from 'request';
 import { Image, createCanvas } from 'canvas';
@@ -44,7 +44,7 @@ export class PictureController {
     private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
     private readonly fileService: FileService,
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
     private readonly baiduService: BaiduService,
   ) { }
 
@@ -165,7 +165,7 @@ export class PictureController {
     @User() user: UserEntity,
   ) {
     if (user.username !== 'yiiu') throw new ForbiddenException();
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const data = await this.pictureService.calculateHotPictures();
     await redisClient.zadd('picture_hot', ...data);
     console.log(dayjs().format(), 'picture hot OK!!!!!!!!');

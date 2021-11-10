@@ -2,7 +2,6 @@ import {
   Args, Mutation, Query, Resolver, ResolveField, Parent, Info,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { createCanvas, createImageData } from 'canvas';
 
 import {
   UseGuards, Inject, forwardRef,
@@ -13,9 +12,9 @@ import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { PicturesType } from '@common/enum/picture';
 import { User } from '@server/common/decorator/user.decorator';
-import { Loader } from '@server/shared/graphql/loader/loader.decorator';
 import DataLoader from 'dataloader';
 import { BlurhashService } from '@server/shared/blurhash/blurhash.service';
+import { Loader } from '@server/shared/graphql/loader/loader.interceptor';
 import {
   GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
 } from './dto/picture.dto';
@@ -166,8 +165,8 @@ export class PictureResolver {
 
   @ResolveField('badge')
   public async badge(
-  @Parent() parent: PictureEntity,
-    @Loader(BadgePictureLoader.name) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,
+    @Parent() parent: PictureEntity,
+    @Loader(BadgePictureLoader) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,
   ) {
     return badgeLoader.load(parent.id);
   }

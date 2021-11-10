@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { getTokenExpiresAt } from '@server/common/utils/token';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { OauthType } from '@common/enum/router';
 import { AccessTokenEntity } from '../access-token/access-token.entity';
 import { AccessTokenService } from '../access-token/access-token.service';
@@ -30,7 +30,7 @@ export class OauthServerService {
     private readonly clientService: ClientService,
     private readonly userService: UserService,
     private readonly accessTokenService: AccessTokenService,
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
   ) {
     this.server = new OAuth2Server({
       model: {
@@ -51,7 +51,7 @@ export class OauthServerService {
     if (!client) {
       throw new UnauthorizedException('client_credentials_invalid');
     }
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const data = await redisClient.get(`oauth.code.${req.body.code}`);
     if (!data) {
       throw new UnauthorizedException('code_credentials_invalid');

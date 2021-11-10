@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 
 import SocksProxyAgent from 'socks-proxy-agent';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { OauthStateType, OauthActionType } from '@common/enum/oauthState';
 import { OauthType } from '@common/enum/router';
 import { SignupType } from '@common/enum/signupType';
@@ -32,7 +32,7 @@ export class OauthService {
   private google_authorize = 'https://www.googleapis.com/oauth2/v4/token'
 
   constructor(
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
     private readonly clientService: ClientService,
     private readonly userService: UserService,
     private readonly credentialsService: CredentialsService,
@@ -124,7 +124,7 @@ export class OauthService {
   }
 
   public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: number, data: IOauthUserInfo): Promise<{code: string; action: OauthActionType} | null> {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     if (state === OauthStateType.login) {
       // 这边验证oauth账户，有存在的话就返回，不存在就创建并返回创建的数据
       const cr = await this.verifyUser(type, id, data);
@@ -171,7 +171,7 @@ export class OauthService {
   }
 
   public async activeUser({ code, ...userInfo }: ActiveUserDto) {
-    const redisClient = this.redisService.getClient();
+    const redisClient = this.redisManager.getClient();
     const infoStr = await redisClient.get(`oauth.active.${code}`);
     if (infoStr) {
       const { type, cr } = JSON.parse(infoStr);

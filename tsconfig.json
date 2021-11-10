@@ -30,7 +30,6 @@
     "common/**/*"
   ],
   "exclude": [
-    "node_modules",
     "dist",
     "server",
     "**/*.spec.ts"

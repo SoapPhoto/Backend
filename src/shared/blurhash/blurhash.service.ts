@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from 'nestjs-redis';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { decode } from 'blurhash';
 import { createCanvas, createImageData } from 'canvas';
 import { cli } from 'winston/lib/winston/config';
@@ -8,11 +8,11 @@ import dayjs from 'dayjs';
 @Injectable()
 export class BlurhashService {
   constructor(
-    private readonly redisService: RedisService,
+    private readonly redisManager: RedisManager,
   ) {}
 
   public async getBase64(hash: string, width: number, height: number) {
-    const client = this.redisService.getClient();
+    const client = this.redisManager.getClient();
     let base64 = await client.get(hash);
     if (base64) {
       return base64;

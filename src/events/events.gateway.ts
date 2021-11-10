@@ -11,7 +11,7 @@ import {
 import { LoggingService } from '@server/shared/logging/logging.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { EventsService } from './events.service';
-// import { RedisService } from 'nestjs-redis';
+// import { RedisManager } from '@liaoliaots/nestjs-redis';
 
 interface IUserClientData {
   clientId: string;
@@ -25,7 +25,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   public data: Record<string, IUserClientData> = {};
 
   constructor(
-    // private readonly redisService: RedisService,
+    // private readonly redisManager: RedisManager,
     private readonly logger: LoggingService,
     private readonly eventsService: EventsService,
   ) {}
