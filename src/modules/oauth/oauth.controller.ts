@@ -93,7 +93,7 @@ export class OauthController {
         path: '/',
       });
       res.json(token);
-    } catch (err) {
+    } catch (err: any) {
       if (
         err instanceof OAuth2Server.OAuthError
         || err instanceof OAuth2Server.InvalidArgumentError

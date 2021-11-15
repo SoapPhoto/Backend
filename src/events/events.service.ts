@@ -31,7 +31,7 @@ export class EventsService {
         new OAuth2Server.Response({}),
       );
       return data.user;
-    } catch (err) {
+    } catch (err: any) {
       throw new WsException(err.message);
     }
   }
@@ -66,5 +66,5 @@ export class EventsService {
     return arr.filter(Boolean);
   }
 
-  public getUnReadCount = async (user: UserEntity) => this.notificationService.getUnReadCount(user)
+  public getUnReadCount = async (user: UserEntity) => this.notificationService.getUnReadCount(user);
 }

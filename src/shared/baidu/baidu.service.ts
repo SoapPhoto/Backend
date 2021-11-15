@@ -81,7 +81,7 @@ export class BaiduService {
       params: q,
     });
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results.map(v => ({ ...v, detail: v.detail_info })));
+      return plainToClass<Place, any[]>(Place, data.results.map((v: any) => ({ ...v, detail: v.detail_info })));
     }
     return [];
   }
@@ -99,7 +99,7 @@ export class BaiduService {
       params: q,
     });
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results.map(v => ({ ...v, detail: v.detail_info })));
+      return plainToClass<Place, any[]>(Place, data.results.map((v: any) => ({ ...v, detail: v.detail_info })));
     }
     return [];
   }
@@ -160,7 +160,7 @@ export class BaiduService {
       params: q,
     });
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.result.map(v => ({ ...v })));
+      return plainToClass<Place, any[]>(Place, data.result.map((v: any) => ({ ...v })));
     }
     return [];
   }

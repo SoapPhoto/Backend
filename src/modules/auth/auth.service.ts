@@ -102,7 +102,7 @@ export class AuthService {
           id: Buffer.from(id.toString() as any).toString('base64').replace('=', ''),
         },
       });
-    } catch (err) {
+    } catch (err: any) {
       throw new BadGatewayException(`[mailerService] ${err.message}`);
     }
   }

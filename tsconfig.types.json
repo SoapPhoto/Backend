@@ -1,13 +1,31 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "module": "esnext",
     "jsx": "preserve",
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es6",
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
     "outDir": "./dist",
-    "target": "es2016",
-    "module": "commonjs",
     "moduleResolution": "node",
-    "emitDeclarationOnly": true
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": true,
+    "strict": true,
+    "pretty": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": ["src/**/*", "typings/**/*"],
-  "exclude": ["node_modules", "test", "**/*spec.ts", "common/**/*"]
+  "include": ["src"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "types", "common"]
 }

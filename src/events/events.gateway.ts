@@ -45,7 +45,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
 
   @SubscribeMessage('CONNECT_USER')
   public async connectUser(client: Socket, _data: any) {
-    const user = await this.eventsService.getUserLoginInfo(client.handshake.headers.cookie);
+    const user = await this.eventsService.getUserLoginInfo(client.handshake.headers.cookie!);
     await this.eventsService.login(client.id, user);
     return {
       event: 'CONNECT_USER',
