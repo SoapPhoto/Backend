@@ -5,7 +5,11 @@ enum LocationClientType {
 
 type Query {
   "搜索位置信息"
-  searchPlace(value: String, config: LocationBaseInput): [SearchPlaceDetail]
+  searchPlace(value: String!, region: String!, clientType: LocationClientType): [SearchPlaceDetail]
+  "地址输入提示"
+  placeSuggestion(value: String!, region: String!): [SearchPlaceDetail]
+  "Poi详情"
+  placeDetail(uid: String!): SearchPlaceDetail
   "你想地理编码数据"
   reverseGeocoding(location: String, config: LocationBaseInput): PictureLocation
 }
@@ -61,7 +65,6 @@ type SearchPlaceDetail {
   area: String
   street_id: String
   telephone: String
-  detail: Float
   uid: String
-  detail_info: SearchPlaceDetailInfo
+  detail: SearchPlaceDetailInfo
 }

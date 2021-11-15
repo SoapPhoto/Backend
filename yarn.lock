@@ -154,13 +154,6 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@cobraz/nestjs-dataloader@^0.0.3-alpha":
-  version "0.0.3-alpha"
-  resolved "https://registry.npmmirror.com/@cobraz/nestjs-dataloader/download/@cobraz/nestjs-dataloader-0.0.3-alpha.tgz#735ab930f92904cbfb14d1494967ea0f3d64b2bd"
-  integrity sha1-c1q5MPkpBMv7FNFJSWfqDz1ksr0=
-  dependencies:
-    dataloader "^2.0.0"
-
 "@commitlint/cli@^14.1.0":
   version "14.1.0"
   resolved "https://registry.npmmirror.com/@commitlint/cli/download/@commitlint/cli-14.1.0.tgz?cache=0&sync_timestamp=1635774198498&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fcli%2Fdownload%2F%40commitlint%2Fcli-14.1.0.tgz#7b657a955ed22f3df348ba9afa6ce5a5121ff7eb"
@@ -8873,6 +8866,16 @@ nanoclone@^0.2.1:
   resolved "https://registry.npm.taobao.org/nanoclone/download/nanoclone-0.2.1.tgz#dd4090f8f1a110d26bb32c49ed2f5b9235209ed4"
   integrity sha1-3UCQ+PGhENJrsyxJ7S9bkjUgntQ=
 
+nanoid@^2.1.0:
+  version "2.1.11"
+  resolved "https://registry.npmmirror.com/nanoid/download/nanoid-2.1.11.tgz#ec24b8a758d591561531b4176a01e3ab4f0f0280"
+  integrity sha1-7CS4p1jVkVYVMbQXagHjq08PAoA=
+
+nanoid@^3.1.30:
+  version "3.1.30"
+  resolved "https://registry.npmmirror.com/nanoid/download/nanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"
+  integrity sha1-Y/k8xUjSoRPcXfvGO/oJ4rm2Q2I=
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.nlark.com/nanomatch/download/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -11064,6 +11067,13 @@ shelljs@0.8.4:
     glob "^7.0.0"
     interpret "^1.0.0"
     rechoir "^0.6.2"
+
+shortid@^2.2.16:
+  version "2.2.16"
+  resolved "https://registry.npm.taobao.org/shortid/download/shortid-2.2.16.tgz#b742b8f0cb96406fd391c76bfc18a67a57fe5608"
+  integrity sha1-t0K48MuWQG/Tkcdr/Bimelf+Vgg=
+  dependencies:
+    nanoid "^2.1.0"
 
 side-channel@^1.0.4:
   version "1.0.4"

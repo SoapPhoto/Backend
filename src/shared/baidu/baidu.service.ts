@@ -60,20 +60,28 @@ export class BaiduService {
     return [];
   }
 
-  public async chinaPlaceSearch(region: string, query: string): Promise<Place[]> {
+  /**
+   * 查询Poi
+   *
+   * @param {string} query
+   * @param {string} [region]
+   * @return {*}  {Promise<Place[]>}
+   * @memberof BaiduService
+   */
+  public async chinaPlaceSearch(query: string, region?: string): Promise<Place[]> {
     const q = {
       ak: this.mapToken,
       scope: 2,
       output: 'json',
       ret_coordtype: 'gcj02ll',
-      region,
+      region: region || '全国',
       query,
     };
     const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/search', {}, {
       params: q,
     });
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results);
+      return plainToClass<Place, any[]>(Place, data.results.map(v => ({ ...v, detail: v.detail_info })));
     }
     return [];
   }
@@ -91,11 +99,18 @@ export class BaiduService {
       params: q,
     });
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results);
+      return plainToClass<Place, any[]>(Place, data.results.map(v => ({ ...v, detail: v.detail_info })));
     }
     return [];
   }
 
+  /**
+   * 逆地址
+   *
+   * @param {string} location
+   * @return {*}  {Promise<Place[]>}
+   * @memberof BaiduService
+   */
   public async reverseGeocoding(location: string): Promise<Place[]> {
     const geo = location.split(',').map(v => Number(v))as [number, number];
     const { data } = await Axios.get('https://api.map.baidu.com/reverse_geocoding/v3/', {
@@ -131,5 +146,39 @@ export class BaiduService {
       })));
     }
     return [];
+  }
+
+  public async placeSuggestion(query: string, region?: string): Promise<Place[]> {
+    const q = {
+      ak: this.mapToken,
+      output: 'json',
+      ret_coordtype: 'gcj02ll',
+      region: region || '全国',
+      query,
+    };
+    const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/suggestion', {}, {
+      params: q,
+    });
+    if (data.status === 0) {
+      return plainToClass<Place, any[]>(Place, data.result.map(v => ({ ...v })));
+    }
+    return [];
+  }
+
+  public async placeDetail(uid: string): Promise<Place|undefined> {
+    const q = {
+      ak: this.mapToken,
+      output: 'json',
+      scope: '2',
+      ret_coordtype: 'gcj02ll',
+      uid,
+    };
+    const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/detail', {}, {
+      params: q,
+    });
+    if (data.status === 0 && data.result) {
+      return plainToClass<Place, any>(Place, { ...data.result, detail: data.result.detail_info });
+    }
+    return undefined;
   }
 }

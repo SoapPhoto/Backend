@@ -25,11 +25,11 @@ import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class OauthService {
-  private github_authorize = 'https://github.com/login/oauth/access_token'
+  private github_authorize = 'https://github.com/login/oauth/access_token';
 
-  private weibo_authorize = 'https://api.weibo.com/oauth2/access_token'
+  private weibo_authorize = 'https://api.weibo.com/oauth2/access_token';
 
-  private google_authorize = 'https://www.googleapis.com/oauth2/v4/token'
+  private google_authorize = 'https://www.googleapis.com/oauth2/v4/token';
 
   constructor(
     private readonly redisManager: RedisManager,
@@ -39,6 +39,8 @@ export class OauthService {
   ) { }
 
   public async github({ code, state }: OauthQueryDto) {
+    const proxyOptions = 'socks5://127.0.0.1:7890';
+    const httpsAgent = new SocksProxyAgent(proxyOptions);
     const { data: info } = await axios.post(this.github_authorize, {}, {
       params: {
         client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
@@ -48,7 +50,9 @@ export class OauthService {
       headers: {
         accept: 'application/json',
       },
+      httpsAgent,
     });
+    console.log(info);
     if (info.access_token) {
       try {
         const { data } = await axios.get('https://api.github.com/user', {
@@ -56,20 +60,26 @@ export class OauthService {
             accept: 'application/json',
             Authorization: `token ${info.access_token}`,
           },
+          httpsAgent,
         });
+        // console.log(data);
+        console.log(state);
         return this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
-      } catch (err) {
+      } catch (err: any) {
         if (err.code === 'ECONNREFUSED') {
           throw new BadGatewayException('ECONNREFUSED');
         }
         throw new BadGatewayException('bad github');
       }
     }
+    if (info.error) {
+      throw info;
+    }
     return null;
   }
 
   public async google({ code, state }: OauthQueryDto) {
-    const proxyOptions = 'socks5://127.0.0.1:2081';
+    const proxyOptions = 'socks5://127.0.0.1:7890';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
     const client = axios.create({ httpsAgent });
     const { data: info } = await client.post(this.google_authorize, {}, {

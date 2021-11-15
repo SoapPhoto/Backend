@@ -13,6 +13,7 @@ import { CredentialsModule } from './modules/credentials/credentials.module';
 import { FollowModule } from './modules/follow/follow.module';
 import { BadgeModule } from './modules/badge/badge.module';
 import { LocationModule } from './modules/location/location.module';
+import { InviteModule } from './modules/invite/invite.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { LocationModule } from './modules/location/location.module';
     FollowModule,
     BadgeModule,
     LocationModule,
+    InviteModule,
   ],
   exports: [
     ClientModule,

@@ -1,5 +1,8 @@
 import {
-  MiddlewareConsumer, Module, NestModule, RequestMethod,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
 } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';

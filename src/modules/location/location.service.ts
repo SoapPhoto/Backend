@@ -11,9 +11,19 @@ export class LocationService {
     private readonly baiduService: BaiduService,
   ) {}
 
-  public async search(region: string, value: string) {
-    const placeList = await this.baiduService.chinaPlaceSearch(region, value);
+  public async search(value: string, region?: string) {
+    const placeList = await this.baiduService.chinaPlaceSearch(value, region);
     return placeList;
+  }
+
+  public async placeSuggestion(value: string, region: string) {
+    const placeList = await this.baiduService.placeSuggestion(value, region);
+    return placeList;
+  }
+
+  public async placeDetail(uid: string) {
+    const placeDetail = await this.baiduService.placeDetail(uid);
+    return placeDetail;
   }
 
   public async reverseGeocoding(location: string) {

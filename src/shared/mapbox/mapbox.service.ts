@@ -12,7 +12,7 @@ import { IMapboxGeocodeFeature } from './mapbox.interface';
 
 @Injectable()
 export class MapboxService {
-  private geocodingClient = geocoding({ accessToken: process.env.MAPBOX_AK! })
+  private geocodingClient = geocoding({ accessToken: process.env.MAPBOX_AK! });
 
   public async forwardGeocode(value: string) {
     const { body } = await this.geocodingClient.forwardGeocode({

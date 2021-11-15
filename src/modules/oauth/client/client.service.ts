@@ -12,21 +12,25 @@ export class ClientService {
     private clientRepository: Repository<ClientEntity>,
   ) {}
 
-  public getOne = async (id: string, secret: string) => this.clientRepository.findOne({
-    where: {
-      id,
-      secret,
-    },
-  })
+  public getOne = async (id: string, secret: string) => {
+    console.log(id, secret);
+    const data = await this.clientRepository.findOne({
+      where: {
+        id,
+      },
+    });
+    console.log(data);
+    return data;
+  };
 
   public create = async (data: CreateClientDto) => {
     const client = new ClientEntity();
     return this.clientRepository.save(
       this.clientRepository.merge(client, data),
     );
-  }
+  };
 
   public getBaseClient = async () => {
 
-  }
+  };
 }

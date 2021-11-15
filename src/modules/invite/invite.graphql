@@ -1,0 +1,21 @@
+
+type Mutation {
+  createInvite: Invite
+}
+
+type Invite implements BaseNode {
+  "id"
+  id: Float!
+
+  "创建时间"
+  createTime: DateTime
+
+  "修改时间"
+  updateTime: DateTime
+
+
+  "code"
+  code: String
+  
+  user: User
+}

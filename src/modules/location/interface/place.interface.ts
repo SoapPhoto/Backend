@@ -43,7 +43,7 @@ export class Place {
   @Expose()
   public address!: string;
 
-  @Expose({ name: 'detail_info' })
+  @Expose()
   @Type(() => PlaceDetail)
   public detail!: PlaceDetail;
 }

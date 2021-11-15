@@ -56,15 +56,14 @@ export class OauthController {
         data = await this.oauthService.weibo(query);
       }
       if (data) {
-        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?code=${data.code}&type=${type.toUpperCase()}&action=${data.action}`);
+        res.redirect(`${process.env.OAUTH_CALLBACK_URL}/redirect/oauth/${type || ''}?code=${data.code}&type=${type.toUpperCase()}&action=${data.action}`);
       } else {
-        res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
+        res.redirect(`${process.env.OAUTH_CALLBACK_URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
-    } catch (err) {
-      console.log(err.error);
-      const message = err?.response?.data?.error ?? err.message.message;
+    } catch (err: any) {
+      const message = err?.response?.data?.error ?? err?.message?.message ?? err.error;
       this.logger.error(message, undefined, `OAUTH-${type.toUpperCase()}`);
-      res.redirect(`${process.env.URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
+      res.redirect(`${process.env.OAUTH_CALLBACK_URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
     }
   }
 
@@ -105,5 +104,5 @@ export class OauthController {
       }
       throw new BadRequestException(err.message);
     }
-  }
+  };
 }
