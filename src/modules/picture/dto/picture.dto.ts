@@ -7,9 +7,8 @@ import {
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import dayjs from 'dayjs';
-import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
+import { LocationEntity } from '@server/modules/location/location.entity';
 import { PictureEntity } from '../picture.entity';
-import { PictureLocation } from '../interface/location.interface';
 
 export class GetPictureListDto extends PaginationDto {
 
@@ -79,7 +78,7 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
   @IsOptional()
   @IsObject()
   @Expose()
-  public readonly location?: PictureLocation;
+  public readonly location?: LocationEntity;
 
   // @Type(() => BaiduClassify)
   // @Expose()
@@ -90,15 +89,15 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
 export class UpdatePictureDot implements Partial<PictureEntity> {
   @IsString()
   @Expose()
-  public readonly title!: string
+  public readonly title!: string;
 
   @IsString()
   @Expose()
-  public readonly bio!: string
+  public readonly bio!: string;
 
   @IsBoolean()
   @Expose()
-  public readonly isPrivate!: boolean
+  public readonly isPrivate!: boolean;
 
   @Expose()
   @IsNotEmpty()

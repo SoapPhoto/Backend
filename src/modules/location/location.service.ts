@@ -1,6 +1,9 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { MapboxService } from '@server/shared/mapbox/mapbox.service';
 import { BaiduService } from '@server/shared/baidu/baidu.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { LocationEntity } from './location.entity';
 
 @Injectable()
 export class LocationService {
@@ -9,6 +12,8 @@ export class LocationService {
     private readonly mapboxService: MapboxService,
     @Inject(forwardRef(() => BaiduService))
     private readonly baiduService: BaiduService,
+    @InjectRepository(LocationEntity)
+    private locationRepository: Repository<LocationEntity>,
   ) {}
 
   public async search(value: string, region?: string) {
@@ -29,5 +34,16 @@ export class LocationService {
   public async reverseGeocoding(location: string) {
     const data = await this.baiduService.reverseGeocoding(location);
     return data;
+  }
+
+  public async getOneOrCreate(uid: string) {
+    const data = await this.locationRepository.findOne({ uid });
+    if (!data) {
+      const poi = await this.placeDetail(uid);
+      if (poi) {
+        await this.locationRepository.save(poi);
+      }
+    }
+    return this.locationRepository.findOne({ uid });
   }
 }

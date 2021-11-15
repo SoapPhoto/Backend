@@ -34,18 +34,20 @@ import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
 import { CreatePictureAddDot, GetPictureListDto, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
+import { LocationService } from '../location/location.service';
+import { LocationEntity } from '../location/location.entity';
 
 @Controller('api/picture')
 @UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class PictureController {
   constructor(
-    private readonly qiniuService: QiniuService,
     private readonly commentService: CommentService,
     private readonly pictureService: PictureService,
     private readonly fileService: FileService,
     private readonly redisManager: RedisManager,
     private readonly baiduService: BaiduService,
+    private readonly locationService: LocationService,
   ) { }
 
   @Post()
@@ -57,6 +59,10 @@ export class PictureController {
     const { info, tags = [], ...restInfo } = body;
     const file = await this.fileService.getOne(body.key);
     if (file) {
+      let location: LocationEntity | undefined;
+      if (restInfo.location) {
+        location = await this.locationService.getOneOrCreate(restInfo.location.uid);
+      }
       const [, picture] = await Promise.all([
         this.fileService.activated(body.key),
         this.pictureService.create({
@@ -64,6 +70,7 @@ export class PictureController {
           ...restInfo,
           tags,
           user,
+          location,
           originalname: file.originalname,
           mimetype: file.mimetype,
           size: file.size,

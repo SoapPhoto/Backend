@@ -20,6 +20,7 @@ import { CollectionModule } from '../collection/collection.module';
 import { PictureScheduleService } from './picture.schedule';
 import { BadgeModule } from '../badge/badge.module';
 import { FollowModule } from '../follow/follow.module';
+import { LocationModule } from '../location/location.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { FollowModule } from '../follow/follow.module';
     forwardRef(() => FollowModule),
     forwardRef(() => BaiduModule),
     forwardRef(() => BlurhashModule),
+    forwardRef(() => LocationModule),
   ],
   providers: [PictureService, PictureResolver, PictureScheduleService],
   controllers: [PictureController],
