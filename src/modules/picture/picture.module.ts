@@ -21,6 +21,7 @@ import { PictureScheduleService } from './picture.schedule';
 import { BadgeModule } from '../badge/badge.module';
 import { FollowModule } from '../follow/follow.module';
 import { LocationModule } from '../location/location.module';
+import { PictureCommentCountLoader } from './picture.loader';
 
 @Module({
   imports: [
@@ -32,13 +33,14 @@ import { LocationModule } from '../location/location.module';
     forwardRef(() => UserModule),
     forwardRef(() => FileModule),
     forwardRef(() => CollectionModule),
+    forwardRef(() => LocationModule),
     forwardRef(() => BadgeModule),
     forwardRef(() => FollowModule),
     forwardRef(() => BaiduModule),
     forwardRef(() => BlurhashModule),
     forwardRef(() => LocationModule),
   ],
-  providers: [PictureService, PictureResolver, PictureScheduleService],
+  providers: [PictureService, PictureResolver, PictureScheduleService, PictureCommentCountLoader],
   controllers: [PictureController],
   exports: [PictureService],
 })

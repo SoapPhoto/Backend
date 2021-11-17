@@ -73,6 +73,7 @@ input UpdatePictureInput {
   title: String
   bio: String
   isPrivate: Boolean
+  locationUid: String
   tags: [String]
 }
 

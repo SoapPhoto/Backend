@@ -1,5 +1,5 @@
 import {
-  Args, Context, Query, Resolver, ResolveField, Parent, Mutation, Info,
+  Args, Context, Query, Resolver, ResolveField, Parent, Mutation, Info, Subscription,
 } from '@nestjs/graphql';
 import { fieldsList } from 'graphql-fields-list';
 
@@ -11,6 +11,9 @@ import { classToPlain } from 'class-transformer';
 import { UserPictureType } from '@common/enum/picture';
 import { User } from '@server/common/decorator/user.decorator';
 import { GraphQLResolveInfo } from 'graphql';
+import { pubSub } from '@server/common/pubSub';
+import { RedisManager } from '@liaoliaots/nestjs-redis';
+import { SUBSCRIPTIONS_ONLINE_USER } from '@server/common/constants/subscriptions';
 import { Role } from './enum/role.enum';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
@@ -23,6 +26,7 @@ import { PictureService } from '../picture/picture.service';
 @UseGuards(AuthGuard)
 export class UserResolver {
   constructor(
+    private readonly redisManager: RedisManager,
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
     private readonly followService: FollowService,
@@ -122,6 +126,17 @@ export class UserResolver {
     return this.userService.updateCover(user, cover);
   }
 
+  @Subscription('userOnlineStatus', {
+    filter: (payload, _var, context) => {
+      const { user } = payload;
+      return user.id.toString() === _var.id.toString();
+    },
+  })
+  @Roles(Role.USER)
+  public async userOnlineStatus() {
+    return pubSub.asyncIterator('userOnlineStatus');
+  }
+
   @ResolveField('likedCount')
   public async likedCount(
   @Parent() parent: UserEntity,
@@ -145,23 +160,34 @@ export class UserResolver {
     return this.followService.isFollowing(user, parent.id);
   }
 
+  @ResolveField('isOnline')
+  public async isOnline(
+    @Parent() parent: UserEntity,
+  ) {
+    const client = this.redisManager.getClient();
+    const result = await client.sismember(SUBSCRIPTIONS_ONLINE_USER, `userId:${parent.id.toString()}`);
+
+    return result === 1;
+    // return this.followService.followerCount(parent.id);
+  }
+
   @ResolveField('followerCount')
   public async followerCount(
-  @Parent() parent: UserEntity,
+    @Parent() parent: UserEntity,
   ) {
     return this.followService.followerCount(parent.id);
   }
 
   @ResolveField('followedCount')
   public async followedCount(
-  @Parent() parent: UserEntity,
+    @Parent() parent: UserEntity,
   ) {
     return this.followService.followedCount(parent.id);
   }
 
   @ResolveField('pictures')
   public async getAvatarSize(
-  @Parent() parent: UserEntity,
+    @Parent() parent: UserEntity,
     @Args('limit') limit: number,
   ) {
     return this.pictureService.getUserPreviewPictures(parent.username, limit);

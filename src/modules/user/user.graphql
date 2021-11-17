@@ -65,6 +65,10 @@ type Mutation {
   ): User
 }
 
+type Subscription {
+  userOnlineStatus(id: Float!): UserOnlineStatus
+}
+
 input UpdateProfileInput {
   name: String
   bio: String
@@ -105,6 +109,9 @@ type User implements BaseNode {
 
   "个人网站"
   website: String
+
+  "在线状态"
+  isOnline: Boolean
 
   "性别"
   gender: Float
@@ -157,6 +164,10 @@ type User implements BaseNode {
 
   "徽章"
   badge: [Badge]
+}
+
+type UserOnlineStatus {
+  online: Boolean!
 }
 
 type UserCoverRes {

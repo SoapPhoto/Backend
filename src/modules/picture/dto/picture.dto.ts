@@ -91,6 +91,7 @@ export class UpdatePictureDot implements Partial<PictureEntity> {
   @Expose()
   public readonly title!: string;
 
+  @IsOptional()
   @IsString()
   @Expose()
   public readonly bio!: string;
@@ -98,6 +99,11 @@ export class UpdatePictureDot implements Partial<PictureEntity> {
   @IsBoolean()
   @Expose()
   public readonly isPrivate!: boolean;
+
+  @IsOptional()
+  @IsString()
+  @Expose()
+  public locationUid!: string;
 
   @Expose()
   @IsNotEmpty()

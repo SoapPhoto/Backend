@@ -13,13 +13,12 @@ export class ClientService {
   ) {}
 
   public getOne = async (id: string, secret: string) => {
-    console.log(id, secret);
     const data = await this.clientRepository.findOne({
       where: {
         id,
+        secret,
       },
     });
-    console.log(data);
     return data;
   };
 
