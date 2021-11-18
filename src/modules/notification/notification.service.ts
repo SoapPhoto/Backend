@@ -63,7 +63,7 @@ export class NotificationService {
     //   event: 'message',
     //   data: classToPlain(notification),
     // });
-  }
+  };
 
   public async getList(user: UserEntity) {
     const data = await this.notificationRepository.createQueryBuilder('notification')
@@ -108,14 +108,14 @@ export class NotificationService {
       return this.userService.findOne(notify.mediaId!, null, ['badge']);
     }
     return undefined;
-  }
+  };
 
   public getUnReadCount = async (user: UserEntity) => this.notificationRepository.createQueryBuilder('notification')
     .leftJoin('notification.subscribers', 'subscribers')
     .where('subscribers.userId=:userId AND subscribers.read=0', { userId: user.id })
-    .getCount()
+    .getCount();
 
   public markNotificationReadAll = async (user: UserEntity) => {
     await this.subscribersService.markNotificationReadAll(user);
-  }
+  };
 }

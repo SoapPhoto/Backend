@@ -73,6 +73,7 @@ input UpdatePictureInput {
   title: String
   bio: String
   isPrivate: Boolean
+  locationUid: String
   tags: [String]
 }
 
@@ -204,5 +205,5 @@ type Picture implements BaseNode {
   "徽章"
   badge: [Badge]
   "位置信息"
-  location: PictureLocation
+  location: Location
 }

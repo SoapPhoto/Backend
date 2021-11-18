@@ -25,6 +25,7 @@ import { CommentService } from '../comment/comment.service';
 import { BadgeService } from '../badge/badge.service';
 import { BadgePictureLoader } from '../badge/badge.loader';
 import { BadgeEntity } from '../badge/badge.entity';
+import { PictureCommentCountLoader } from './picture.loader';
 
 @Resolver('Picture')
 @UseGuards(AuthGuard)
@@ -42,7 +43,7 @@ export class PictureResolver {
 
   @Query()
   public async searchPictures(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Args('words') words: string,
     @Info() info: GraphQLResolveInfo,
@@ -52,7 +53,7 @@ export class PictureResolver {
 
   @Query()
   public async pictures(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Info() info: GraphQLResolveInfo,
     @Args('type') type: PicturesType = PicturesType.HOT,
@@ -65,7 +66,7 @@ export class PictureResolver {
 
   @Query()
   public async newPictures(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('query') query: GetNewPictureListDto,
     @Info() info: GraphQLResolveInfo,
   ) {
@@ -74,7 +75,7 @@ export class PictureResolver {
 
   @Query()
   public async userPictures(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args('username') username: string,
     @Args('query') query: GetUserPictureListDto,
@@ -85,7 +86,7 @@ export class PictureResolver {
 
   @Query()
   public async picture(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Info() info: GraphQLResolveInfo,
     @Args('id') id: number,
   ) {
@@ -95,14 +96,14 @@ export class PictureResolver {
 
   @Query()
   public async pictureRelatedCollection(
-  @Args('id') id: number,
+    @Args('id') id: number,
   ) {
     return this.collectionService.pictureRelatedCollection(id);
   }
 
   @Query()
   public async pictureRelatedPictures(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('id') id: number,
     @Args('limit') limit = 30,
     @Info() info: GraphQLResolveInfo,
@@ -113,7 +114,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async likePicture(
-  @User() user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, true);
@@ -122,7 +123,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async unlikePicture(
-  @User() user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.likePicture(id, user, false);
@@ -131,7 +132,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async updatePicture(
-  @User() user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
     @Args('data') data: UpdatePictureDot,
   ) {
@@ -141,7 +142,7 @@ export class PictureResolver {
   @Mutation()
   @Roles(Role.USER)
   public async deletePicture(
-  @User() user: UserEntity,
+    @User() user: UserEntity,
     @Args('id') id: number,
   ) {
     return this.pictureService.delete(id, user);
@@ -149,14 +150,15 @@ export class PictureResolver {
 
   @ResolveField('commentCount')
   public async commentCount(
-  @Parent() parent: PictureEntity,
+    @Parent() parent: PictureEntity,
+    @Loader(PictureCommentCountLoader) loader: DataLoader<number, number>,
   ) {
-    return this.commentService.getPictureCommentCount(parent.id);
+    return loader.load(parent.id);
   }
 
   @ResolveField('currentCollections')
   public async currentCollections(
-  @Parent() parent: PictureEntity,
+    @Parent() parent: PictureEntity,
     @User() user?: UserEntity,
   ) {
     if (!user) return [];
@@ -173,7 +175,7 @@ export class PictureResolver {
 
   @ResolveField('blurhashSrc')
   public async blurhashSrc(
-  @Parent() parent: PictureEntity,
+    @Parent() parent: PictureEntity,
   ) {
     if (parent.blurhash) {
       let s = 1;

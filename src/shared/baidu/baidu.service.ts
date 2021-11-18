@@ -1,5 +1,6 @@
 import { Injectable, BadGatewayException } from '@nestjs/common';
 import { Place } from '@server/modules/location/interface/place.interface';
+import { LocationEntity } from '@server/modules/location/location.entity';
 import Axios from 'axios';
 import { plainToClass } from 'class-transformer';
 import dayjs from 'dayjs';
@@ -165,7 +166,7 @@ export class BaiduService {
     return [];
   }
 
-  public async placeDetail(uid: string): Promise<Place|undefined> {
+  public async placeDetail(uid: string): Promise<LocationEntity|undefined> {
     const q = {
       ak: this.mapToken,
       output: 'json',
@@ -177,7 +178,7 @@ export class BaiduService {
       params: q,
     });
     if (data.status === 0 && data.result) {
-      return plainToClass<Place, any>(Place, { ...data.result, detail: data.result.detail_info });
+      return plainToClass<LocationEntity, any>(LocationEntity, { ...data.result, detail: data.result.detail_info });
     }
     return undefined;
   }

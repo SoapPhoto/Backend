@@ -8,6 +8,7 @@ import { CommentEntity } from './comment.entity';
 import { CommentResolver } from './comment.resolvers';
 import { CommentService } from './comment.service';
 import { NotificationModule } from '../notification/notification.module';
+import { ChildCommentLoader, CommentSubCountLoader } from './comment.loader';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { NotificationModule } from '../notification/notification.module';
     forwardRef(() => PictureModule),
     forwardRef(() => NotificationModule),
   ],
-  providers: [CommentService, CommentResolver],
+  providers: [CommentService, CommentResolver, ChildCommentLoader, CommentSubCountLoader],
   controllers: [CommentController],
   exports: [CommentService],
 })

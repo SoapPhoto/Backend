@@ -39,8 +39,7 @@ export class NotificationResolver {
 
   @Subscription(_returns => NotificationEntity, {
     filter: (payload, _var, context) => {
-      const { req } = context;
-      const { user } = req;
+      const { user } = context;
       return user.id.toString() === payload.subscribers.id.toString();
     },
   })

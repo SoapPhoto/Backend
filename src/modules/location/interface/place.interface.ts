@@ -35,6 +35,9 @@ export class Place {
   public city!: string;
 
   @Expose()
+  public district!: string;
+
+  @Expose()
   public area!: string;
 
   @Expose()

@@ -129,6 +129,9 @@ export class UserEntity extends BaseEntity {
   @Expose()
   public website!: string;
 
+  @Expose()
+  public isOnline!: boolean;
+
   /** 性别 */
   /** 0:男 1:女 保密了的话就传-1 */
   @Transform((data) => {

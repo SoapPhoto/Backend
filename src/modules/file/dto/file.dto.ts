@@ -61,7 +61,6 @@ export class CreateOssFileDot implements Partial<FileEntity> {
   public bucket!: string;
 }
 
-
 @Exclude()
 export class GetTokenDot {
   @IsString()

@@ -8,9 +8,12 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { ClientInfo, IClientInfo } from '@server/common/decorator/client_info.decorator';
+import DataLoader from 'dataloader';
+import { Loader } from '@server/shared/graphql/loader/loader.interceptor';
 import { CommentEntity } from './comment.entity';
 import { CommentService } from './comment.service';
 import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
+import { ChildCommentLoader, CommentSubCountLoader, IChildCommentLoaderArgs } from './comment.loader';
 
 @Resolver('Comment')
 @UseGuards(AuthGuard)
@@ -34,7 +37,7 @@ export class CommentResolver {
     @Args('id') id: number,
     @Args('query') query: GetPictureCommentListDto,
   ) {
-    return this.commentService.childComments(id, user, undefined, query);
+    return this.commentService.childComments(id, user, 0, query);
   }
 
   @Mutation()
@@ -52,18 +55,19 @@ export class CommentResolver {
   @ResolveField('childComments')
   public async childComments(
     @Parent() parent: CommentEntity,
-    @Context('user') user: Maybe<UserEntity>,
-    @Args('limit') limit?: number,
+    @Args('limit') limit: number,
+    @Loader(ChildCommentLoader) loader: DataLoader<IChildCommentLoaderArgs, CommentEntity>,
   ) {
     if (!parent || (parent && parent.parentComment)) return [];
-    return this.commentService.childComments(parent.id, user, limit);
+    return loader.load({ id: parent.id, limit });
   }
 
   @ResolveField('subCount')
   public async subCount(
     @Parent() parent: CommentEntity,
+    @Loader(CommentSubCountLoader) loader: DataLoader<number, number>,
   ) {
     if (!parent || (parent && parent.parentComment)) return 0;
-    return this.commentService.getSubCount(parent.id);
+    return loader.load(parent.id);
   }
 }

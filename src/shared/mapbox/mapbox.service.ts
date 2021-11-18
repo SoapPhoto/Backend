@@ -6,8 +6,6 @@ import { Injectable } from '@nestjs/common';
 
 import geocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { LngLatLike } from 'mapbox-gl';
-import { plainToClass } from 'class-transformer';
-import { PictureLocation } from '@server/modules/picture/interface/location.interface';
 import { IMapboxGeocodeFeature } from './mapbox.interface';
 
 @Injectable()
@@ -67,7 +65,7 @@ export class MapboxService {
             data[aliasName[type]] = ct.text;
           }
         });
-        return plainToClass(PictureLocation, data);
+        // return plainToClass(PictureLocation, data);
       }
       return list as IMapboxGeocodeFeature;
     }

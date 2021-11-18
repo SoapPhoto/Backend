@@ -20,7 +20,7 @@ import { PictureUserActivityEntity } from './user-activity/user-activity.entity'
 import { Role } from '../user/enum/role.enum';
 import { CollectionEntity } from '../collection/collection.entity';
 import { BadgeEntity } from '../badge/badge.entity';
-import { PictureLocation } from './interface/location.interface';
+import { LocationEntity } from '../location/location.entity';
 
 export interface IRelatedCollections {
   count: number;
@@ -155,7 +155,7 @@ export class PictureEntity extends BaseEntity {
     nullable: true,
   })
   @Expose()
-  public readonly location?: PictureLocation;
+  public readonly location?: LocationEntity;
 
   /** EXIF信息 */
   @Column('simple-json', {
@@ -191,7 +191,7 @@ export class PictureEntity extends BaseEntity {
   @Column({
     default: 0,
   })
-  public deleted!: number
+  public deleted!: number;
 
   @Expose()
   public badge: BadgeEntity[] = [];

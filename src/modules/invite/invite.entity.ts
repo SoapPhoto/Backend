@@ -13,7 +13,7 @@ export class InviteEntity extends BaseEntity {
   @PrimaryColumn()
   public readonly code!: string;
 
-  @OneToOne(() => UserEntity)
-  @JoinColumn()
-  public user!: UserEntity;
+  // @OneToOne(() => UserEntity)
+  // @JoinColumn()
+  // public user!: UserEntity;
 }
