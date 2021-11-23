@@ -50,9 +50,7 @@ export class OssService {
     const { headers } = req;
     const publicKeyUrl = Buffer.from(headers['x-oss-pub-key-url'] as string, 'base64').toString();
     const publicKey = await axios(publicKeyUrl).then(res => res.data) as string;
-    const authString = `${'/6d25c702-26c3-4d98-b270-06ea4055d14c'}\n${JSON.stringify(req.body)}`;
-    console.log(publicKeyUrl);
-    console.log(authString);
+    const authString = `${req.originalUrl}\n${JSON.stringify(req.body)}`;
     const result = crypto.createVerify('RSA-MD5').update(authString).verify(publicKey, headers.authorization!, 'base64');
     if (!result) {
       throw new BadGatewayException('verification gives a false result');
