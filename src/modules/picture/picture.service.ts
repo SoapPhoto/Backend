@@ -71,7 +71,14 @@ export class PictureService {
 
   public getPictureKeyword(picture: PictureEntity) {
     const keywords = keyword([picture.title, picture.bio]);
-    const key = [...new Set(keywords), ...new Set((picture.classify || []).map(v => v.keyword))].join('|');
+    let locationKey: string[] = [];
+    if (picture.location?.form === 'BAIDU') {
+      locationKey.push(picture.location.name);
+      if (picture.location.detail.tag) {
+        locationKey = locationKey.concat([...picture.location.detail.tag.split(';')]);
+      }
+    }
+    const key = [...new Set([...keywords, ...(picture.classify || []).map(v => v.keyword)]), ...locationKey].join('|');
     return key;
   }
 
@@ -82,10 +89,9 @@ export class PictureService {
       newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
       keywords.unshift(...newData.tags.map(tag => tag.name));
     }
-    newData.keywords = [...new Set(keywords), ...new Set((newData.classify || []).map(v => v.keyword))].join('|');
-    const picture = await this.pictureRepository.save(
-      this.pictureRepository.create(newData),
-    );
+    const newPicture = this.pictureRepository.create(newData);
+    newPicture.keywords = this.getPictureKeyword(newPicture);
+    const picture = await this.pictureRepository.save(newPicture);
     return picture;
   }
 
@@ -105,7 +111,6 @@ export class PictureService {
       location = await this.locationService.getOneOrCreate(data.locationUid);
     }
     updateData.location = location;
-    const keywords = keyword([updateData.title, updateData.bio]);
     if (tags.length > 0) {
       const newTags = await Promise.all(
         (tags as string[]).map((tag: string) => this.tagService.createTag({ name: tag })),
@@ -114,8 +119,7 @@ export class PictureService {
     } else {
       updateData.tags = [];
     }
-    keywords.unshift(...updateData.tags.map(tag => tag.name));
-    updateData.keywords = [...new Set(keywords)].join('|');
+    updateData.keywords = this.getPictureKeyword({ ...picture, ...updateData } as PictureEntity);
     const p = this.pictureRepository.merge(
       picture,
       updateData,
