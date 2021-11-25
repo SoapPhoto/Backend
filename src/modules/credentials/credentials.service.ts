@@ -23,7 +23,7 @@ export class CredentialsService {
   public getInfo = async (id: string) => this.credentialsRepository.createQueryBuilder('cr')
     .where('cr.id=:id', { id })
     .leftJoinAndSelect('cr.user', 'user')
-    .getOne()
+    .getOne();
 
   public async create(data: Partial<CredentialsEntity>) {
     return this.credentialsRepository.save(
@@ -39,7 +39,7 @@ export class CredentialsService {
 
   public async authorize(user: UserEntity, { code }: AuthorizeDto) {
     const redisClient = this.redisManager.getClient();
-    const strData = await redisClient.get(`oauth.${OauthStateType.authorize}.${code}`);
+    const strData = await redisClient.get(`oauth:${OauthStateType.authorize}:${code}`);
     if (!strData) {
       throw new UnauthorizedException('code_credentials_invalid');
     }
@@ -59,7 +59,7 @@ export class CredentialsService {
       throw new UnauthorizedException('authorized');
     }
     await this.create({
-      id: `${type}_${data.id}`,
+      id: `${type}_${data.id ?? data.sub}`,
       type,
       user,
       info: data,

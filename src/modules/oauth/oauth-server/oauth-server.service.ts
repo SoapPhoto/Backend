@@ -22,9 +22,9 @@ const tokenUtil = require('oauth2-server/lib/utils/token-util');
 export class OauthServerService {
   public server: any;
 
-  private getAccessToken = this.accessTokenService.getAccessToken
+  private getAccessToken = this.accessTokenService.getAccessToken;
 
-  private getRefreshToken = this.accessTokenService.getRefreshToken
+  private getRefreshToken = this.accessTokenService.getRefreshToken;
 
   constructor(
     private readonly clientService: ClientService,
@@ -52,7 +52,7 @@ export class OauthServerService {
       throw new UnauthorizedException('client_credentials_invalid');
     }
     const redisClient = this.redisManager.getClient();
-    const data = await redisClient.get(`oauth.code.${req.body.code}`);
+    const data = await redisClient.get(`oauth:code:${req.body.code}`);
     if (!data) {
       throw new UnauthorizedException('code_credentials_invalid');
     }
@@ -68,12 +68,12 @@ export class OauthServerService {
       accessToken: await this.generateAccessToken(),
       refreshToken: await this.generateRefreshToken(),
     }, client, userInfo);
-  }
+  };
 
   private getClient = async (clientId: string, clientSecret: string) => {
     const client = await this.clientService.getOne(clientId, clientSecret);
     return client;
-  }
+  };
 
   private saveToken = async ({ accessToken, refreshToken }: any, client: ClientEntity, user: UserEntity) => {
     const token = {
@@ -86,9 +86,9 @@ export class OauthServerService {
     };
     const newToken = await this.accessTokenService.create(token);
     return newToken;
-  }
+  };
 
-  private verifyScope = async () => true
+  private verifyScope = async () => true;
 
   private revokeToken = async (token: AccessTokenEntity) => {
     if (token) {
@@ -97,14 +97,14 @@ export class OauthServerService {
       }
     }
     return false;
-  }
+  };
 
   private getUser = async (email: string, password: string) => {
     const user = await this.userService.verifyUser(email, password);
     return user;
-  }
+  };
 
-  private generateAccessToken = async () => tokenUtil.generateRandomToken()
+  private generateAccessToken = async () => tokenUtil.generateRandomToken();
 
-  private generateRefreshToken = async () => tokenUtil.generateRandomToken()
+  private generateRefreshToken = async () => tokenUtil.generateRandomToken();
 }

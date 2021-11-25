@@ -87,7 +87,7 @@ export class OauthService {
         grant_type: 'authorization_code',
         client_id: process.env.OAUTH_GOOGLE_CLIENT_ID,
         client_secret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.URL}/oauth/google/redirect`,
+        redirect_uri: `${process.env.OAUTH_CALLBACK_URL}/oauth/google/redirect`,
         code,
       },
       headers: {
@@ -140,14 +140,14 @@ export class OauthService {
       const cr = await this.verifyUser(type, id, data);
       if (!cr) throw new UnauthorizedException('No Credential Info');
       if (cr.user) {
-        await redisClient.set(`oauth.code.${code}`, JSON.stringify({
+        await redisClient.set(`oauth:code:${code}`, JSON.stringify({
           type,
           client: await this.clientService.getBaseClient(),
           user: cr.user,
         }), 'EX', 2000);
         return { code, action: OauthActionType.login };
       }
-      await redisClient.set(`oauth.active.${code}`, JSON.stringify({
+      await redisClient.set(`oauth:active:${code}`, JSON.stringify({
         type,
         client: await this.clientService.getBaseClient(),
         cr,
@@ -159,7 +159,7 @@ export class OauthService {
       if (cr) {
         throw new BadGatewayException('authorized user');
       }
-      await redisClient.set(`oauth.authorize.${code}`, JSON.stringify({
+      await redisClient.set(`oauth:authorize:${code}`, JSON.stringify({
         type,
         data,
       }), 'EX', 5000);
@@ -182,7 +182,7 @@ export class OauthService {
 
   public async activeUser({ code, ...userInfo }: ActiveUserDto) {
     const redisClient = this.redisManager.getClient();
-    const infoStr = await redisClient.get(`oauth.active.${code}`);
+    const infoStr = await redisClient.get(`oauth:active:${code}`);
     if (infoStr) {
       const { type, cr } = JSON.parse(infoStr);
       let createData: Maybe<Partial<UserEntity>> = null;
@@ -219,8 +219,8 @@ export class OauthService {
         credentials: [cr],
         signupType: type as SignupType,
       });
-      await redisClient.del(`oauth.active.${code}`);
-      await redisClient.set(`oauth.code.${code}`, JSON.stringify({
+      await redisClient.del(`oauth:active:${code}`);
+      await redisClient.set(`oauth:code:${code}`, JSON.stringify({
         type,
         user,
         client: await this.clientService.getBaseClient(),

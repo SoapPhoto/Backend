@@ -1,5 +1,5 @@
 import {
-  BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters, Get, Param, Query, Body,
+  BadRequestException, Controller, Post, Req, Res, UnauthorizedException, UseFilters, Get, Param, Query, Body, BadGatewayException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -61,7 +61,10 @@ export class OauthController {
         res.redirect(`${process.env.OAUTH_CALLBACK_URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=no code`);
       }
     } catch (err: any) {
-      const message = err?.response?.data?.error ?? err?.message?.message ?? err.error;
+      let message = err?.response?.data?.error ?? err?.message?.message ?? err.error;
+      if (err instanceof BadGatewayException) {
+        message = err.message;
+      }
       this.logger.error(message, undefined, `OAUTH-${type.toUpperCase()}`);
       res.redirect(`${process.env.OAUTH_CALLBACK_URL}/redirect/oauth/${type || ''}?type=${type.toUpperCase()}&message=${message}`);
     }
