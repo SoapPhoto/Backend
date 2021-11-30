@@ -76,7 +76,7 @@ input UpdateProfileInput {
   key: String
   gender: Float
   genderSecret: Boolean
-  birthday: DateTime
+  birthday: String
   birthdayShow: Float
 }
 
@@ -120,7 +120,7 @@ type User implements BaseNode {
   genderSecret: Boolean
 
   "生日"
-  birthday: DateTime
+  birthday: String
 
   "生日的显示"
   birthdayShow: Float

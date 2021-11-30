@@ -170,10 +170,9 @@ export class UserEntity extends BaseEntity {
   })
   @Column({
     nullable: true,
-    type: 'datetime',
   })
   @Expose()
-  public birthday?: Date;
+  public birthday?: string;
 
   /** 生日显示方法 */
   /** 0:保密 1:显示日期 2:显示年龄 3:显示星座 */
