@@ -114,6 +114,12 @@ type EXIF {
   location: [Float]
 }
 
+type Classify {
+  score: Float
+  root: String
+  keyword: String
+}
+
 
 """
 图片
@@ -204,6 +210,10 @@ type Picture implements BaseNode {
 
   "徽章"
   badge: [Badge]
+
   "位置信息"
   location: Location
+
+  "图片智能标签"
+  classify: [Classify]
 }

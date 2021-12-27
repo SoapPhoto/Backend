@@ -25,6 +25,7 @@ import { PictureBadgeActivityEntity } from './modules/badge/picture-badge-activi
 import { UserBadgeActivityEntity } from './modules/badge/user-badge-activity/user-badge-activity.entity';
 import { InviteEntity } from './modules/invite/invite.entity';
 import { LocationEntity } from './modules/location/location.entity';
+// import { PictureMarkEntity } from './modules/picture/mark/mark.entity';
 
 const ormconfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -58,6 +59,7 @@ const ormconfig: TypeOrmModuleOptions = {
     UserBadgeActivityEntity,
     InviteEntity,
     LocationEntity,
+    // PictureMarkEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
   cli: {

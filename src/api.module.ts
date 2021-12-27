@@ -14,6 +14,7 @@ import { FollowModule } from './modules/follow/follow.module';
 import { BadgeModule } from './modules/badge/badge.module';
 import { LocationModule } from './modules/location/location.module';
 import { InviteModule } from './modules/invite/invite.module';
+// import { PictureMarkModule } from './modules/picture/mark/mark.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { InviteModule } from './modules/invite/invite.module';
     BadgeModule,
     LocationModule,
     InviteModule,
+    // PictureMarkModule,
   ],
   exports: [
     ClientModule,
