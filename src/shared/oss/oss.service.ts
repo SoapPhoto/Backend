@@ -15,24 +15,26 @@ export class OssService {
 
   public async getSts(): Promise<ISts> {
     if (
-      this.sts === null
-      || this.expirationTime === null
-      || this.expirationTime.getTime() <= new Date().getTime()
+      this.sts === null ||
+      this.expirationTime === null ||
+      this.expirationTime.getTime() <= new Date().getTime()
     ) {
       const client = new OSS.STS({
         accessKeyId: process.env.OSS_KEY_ID!,
         accessKeySecret: process.env.OSS_KEY_SECRET!,
       });
 
-      const auth = await new Promise<any>((resolve, reject) => client
-        .assumeRole(process.env.OSS_ROLE_ARN, uploadPolicy, 3600)
-        .then((result: any) => {
-          resolve(result.credentials);
-        })
-        .catch((err: Error) => {
-          console.error(err);
-          reject(err);
-        }));
+      const auth = await new Promise<any>((resolve, reject) =>
+        client
+          .assumeRole(process.env.OSS_ROLE_ARN, uploadPolicy, 3600)
+          .then((result: any) => {
+            resolve(result.credentials);
+          })
+          .catch((err: Error) => {
+            console.error(err);
+            reject(err);
+          })
+      );
 
       this.expirationTime = new Date(auth.Expiration);
       this.sts = {
@@ -48,10 +50,18 @@ export class OssService {
 
   public async isOssCallback(data: any, req: Request) {
     const { headers } = req;
-    const publicKeyUrl = Buffer.from(headers['x-oss-pub-key-url'] as string, 'base64').toString();
-    const publicKey = await axios(publicKeyUrl).then(res => res.data) as string;
+    const publicKeyUrl = Buffer.from(
+      headers['x-oss-pub-key-url'] as string,
+      'base64'
+    ).toString();
+    const publicKey = (await axios(publicKeyUrl).then(
+      (res) => res.data
+    )) as string;
     const authString = `${req.originalUrl}\n${JSON.stringify(req.body)}`;
-    const result = crypto.createVerify('RSA-MD5').update(authString).verify(publicKey, headers.authorization!, 'base64');
+    const result = crypto
+      .createVerify('RSA-MD5')
+      .update(authString)
+      .verify(publicKey, headers.authorization!, 'base64');
     if (!result) {
       throw new BadGatewayException('verification gives a false result');
     }

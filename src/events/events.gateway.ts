@@ -18,7 +18,9 @@ interface IUserClientData {
 }
 
 @WebSocketGateway()
-export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+export class EventsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer()
   public server!: Server;
 
@@ -27,7 +29,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   constructor(
     // private readonly redisManager: RedisManager,
     private readonly logger: LoggingService,
-    private readonly eventsService: EventsService,
+    private readonly eventsService: EventsService
   ) {}
 
   public handleConnection(client: Socket) {
@@ -45,7 +47,9 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
 
   @SubscribeMessage('CONNECT_USER')
   public async connectUser(client: Socket, _data: any) {
-    const user = await this.eventsService.getUserLoginInfo(client.handshake.headers.cookie!);
+    const user = await this.eventsService.getUserLoginInfo(
+      client.handshake.headers.cookie!
+    );
     await this.eventsService.login(client.id, user);
     return {
       event: 'CONNECT_USER',
@@ -76,7 +80,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
       return;
     }
     await Promise.all(
-      ids.map(async id => this.server.to(id).emit(event, data)),
+      ids.map(async (id) => this.server.to(id).emit(event, data))
     );
   }
 }

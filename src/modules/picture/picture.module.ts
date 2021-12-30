@@ -1,5 +1,8 @@
 import {
-  forwardRef, MiddlewareConsumer, Module, NestModule,
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -40,14 +43,17 @@ import { PictureCommentCountLoader } from './picture.loader';
     forwardRef(() => BlurhashModule),
     forwardRef(() => LocationModule),
   ],
-  providers: [PictureService, PictureResolver, PictureScheduleService, PictureCommentCountLoader],
+  providers: [
+    PictureService,
+    PictureResolver,
+    PictureScheduleService,
+    PictureCommentCountLoader,
+  ],
   controllers: [PictureController],
   exports: [PictureService],
 })
 export class PictureModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(PictureController);
+    consumer.apply(OauthMiddleware).forRoutes(PictureController);
   }
 }

@@ -34,7 +34,9 @@ export class InstagramService {
 
   // 封装请求
   private async get<T>(path: string): Promise<T> {
-    const opts = url.parse(`${this.insUrl}${path}?access_token=${this.access_token}`);
+    const opts = url.parse(
+      `${this.insUrl}${path}?access_token=${this.access_token}`
+    );
     (opts as any).agent = new SocksProxyAgent('socks://127.0.0.1:1080');
     return new Promise((resolve, reject) => {
       const req = https.get(opts, (res) => {

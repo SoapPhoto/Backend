@@ -1,4 +1,8 @@
-import { Injectable, BadGatewayException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  BadGatewayException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 import { UserService } from '@server/modules/user/user.service';
@@ -7,7 +11,11 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { SignupType } from '@common/enum/signupType';
 import { Status } from '@common/enum/userStatus';
 import { ValidationException } from '@server/common/exception/validation.exception';
-import { ValidatorEmailDto, ResetPasswordDto, NewPasswordDto } from './dto/auth.dto';
+import {
+  ValidatorEmailDto,
+  ResetPasswordDto,
+  NewPasswordDto,
+} from './dto/auth.dto';
 import { CreateUserDto } from '../user/dto/user.dto';
 import { UserEntity } from '../user/user.entity';
 import { AccessTokenService } from '../oauth/access-token/access-token.service';
@@ -17,7 +25,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly mailerService: MailerService,
-    private readonly accessTokenService: AccessTokenService,
+    private readonly accessTokenService: AccessTokenService
   ) {}
 
   public async validatorEmail(query: ValidatorEmailDto) {
@@ -28,8 +36,8 @@ export class AuthService {
       if (userInfo.isVerified() || userInfo.signupType !== SignupType.EMAIL) {
         throw new BadGatewayException('verified');
       } else if (
-        userInfo.identifier === identifier
-        && userInfo.verificationToken === verificationToken
+        userInfo.identifier === identifier &&
+        userInfo.verificationToken === verificationToken
       ) {
         await this.userService.updateUser(userInfo, {
           status: Status.VERIFIED,
@@ -66,7 +74,10 @@ export class AuthService {
     }
   }
 
-  public async resetPassword(user: UserEntity, { password, newPassword }: ResetPasswordDto) {
+  public async resetPassword(
+    user: UserEntity,
+    { password, newPassword }: ResetPasswordDto
+  ) {
     if (await this.userService.verifyUser(user.username, password)) {
       const newPasswordData = await this.userService.getPassword(newPassword);
       await this.userService.updateUser(user, newPasswordData);
@@ -86,9 +97,7 @@ export class AuthService {
   }
 
   private async sendValidator(user: UserEntity) {
-    const {
-      identifier, verificationToken, username, id,
-    } = user;
+    const { identifier, verificationToken, username, id } = user;
     try {
       await this.mailerService.sendMail({
         to: identifier,
@@ -99,7 +108,9 @@ export class AuthService {
           identifier,
           verificationToken,
           username,
-          id: Buffer.from(id.toString() as any).toString('base64').replace('=', ''),
+          id: Buffer.from(id.toString() as any)
+            .toString('base64')
+            .replace('=', ''),
         },
       });
     } catch (err: any) {

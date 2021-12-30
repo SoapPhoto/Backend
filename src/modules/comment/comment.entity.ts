@@ -1,6 +1,4 @@
-import {
-  Column, Entity, ManyToOne, PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Expose, Exclude, Type } from 'class-transformer';
 
 import { BaseEntity } from '@server/common/base.entity';
@@ -39,11 +37,13 @@ export class CommentEntity extends BaseEntity {
   @Expose()
   public userAgent!: string;
 
-  @ManyToOne(() => UserEntity, user => user.comments, { cascade: true })
+  @ManyToOne(() => UserEntity, (user) => user.comments, { cascade: true })
   @Expose()
   public readonly user!: UserEntity;
 
-  @ManyToOne(() => PictureEntity, item => item.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => PictureEntity, (item) => item.comments, {
+    onDelete: 'CASCADE',
+  })
   @Expose()
   public readonly picture!: PictureEntity;
 

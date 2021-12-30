@@ -8,11 +8,17 @@ export class AuthInvitationCodeEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id!: number;
 
-  @ManyToOne(() => UserEntity, user => user.collections, { eager: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => UserEntity, (user) => user.collections, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   public creator!: UserEntity;
 
   public key!: string;
 
-  @ManyToOne(() => UserEntity, user => user.collections, { eager: true, onDelete: 'SET NULL' })
+  @ManyToOne(() => UserEntity, (user) => user.collections, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   public user?: UserEntity;
 }

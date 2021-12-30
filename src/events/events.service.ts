@@ -15,7 +15,7 @@ export class EventsService {
     private readonly oauthServerService: OauthServerService,
     private readonly redisManager: RedisManager,
     @Inject(forwardRef(() => NotificationService))
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: NotificationService
   ) {}
 
   public async getUserLoginInfo(cookie: string): Promise<UserEntity> {
@@ -28,7 +28,7 @@ export class EventsService {
             ...parse(cookie),
           },
         }),
-        new OAuth2Server.Response({}),
+        new OAuth2Server.Response({})
       );
       return data.user;
     } catch (err: any) {
@@ -38,10 +38,13 @@ export class EventsService {
 
   public async login(clientId: string, user: UserEntity) {
     const redisClient = this.redisManager.getClient();
-    await redisClient.set(`socket.login.${user.id}.${clientId}`, JSON.stringify({
-      clientId,
-      user,
-    }));
+    await redisClient.set(
+      `socket.login.${user.id}.${clientId}`,
+      JSON.stringify({
+        clientId,
+        user,
+      })
+    );
   }
 
   public async logout(clientId: string) {
@@ -61,10 +64,11 @@ export class EventsService {
         }
         const info = JSON.parse(infoStr);
         return info.clientId;
-      }),
+      })
     );
     return arr.filter(Boolean);
   }
 
-  public getUnReadCount = async (user: UserEntity) => this.notificationService.getUnReadCount(user);
+  public getUnReadCount = async (user: UserEntity) =>
+    this.notificationService.getUnReadCount(user);
 }

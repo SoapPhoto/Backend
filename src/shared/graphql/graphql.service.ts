@@ -9,20 +9,26 @@ import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { async } from 'rxjs';
-import { SUBSCRIPTIONS_ONLINE_USER, SUBSCRIPTIONS_TOTAL } from '@server/common/constants/subscriptions';
+import {
+  SUBSCRIPTIONS_ONLINE_USER,
+  SUBSCRIPTIONS_TOTAL,
+} from '@server/common/constants/subscriptions';
 import { Logger } from '../logging/logging.service';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
   constructor(
     private readonly oauthServerService: OauthServerService,
-    private readonly redisManager: RedisManager,
-  ) { }
+    private readonly redisManager: RedisManager
+  ) {}
 
   public async createGqlOptions(): Promise<GqlModuleOptions> {
     // 服务器中断就要清空掉redis
     const client = this.redisManager.getClient();
-    const data = await client.del(SUBSCRIPTIONS_ONLINE_USER, SUBSCRIPTIONS_TOTAL);
+    const data = await client.del(
+      SUBSCRIPTIONS_ONLINE_USER,
+      SUBSCRIPTIONS_TOTAL
+    );
     console.log('deleteAll：', data);
     return {
       // plugins: [ApolloServerPluginLandingPageLocalDefault()],
@@ -57,7 +63,11 @@ export class GraphqlService implements GqlOptionsFactory {
       installSubscriptionHandlers: true,
       subscriptions: {
         'subscriptions-transport-ws': {
-          onConnect: async (connectionParams: any, _webSocket: any, context: any) => {
+          onConnect: async (
+            connectionParams: any,
+            _webSocket: any,
+            context: any
+          ) => {
             const request = new OAuth2Server.Request({
               method: 'get',
               query: {},
@@ -73,11 +83,20 @@ export class GraphqlService implements GqlOptionsFactory {
               return {};
             }
             const response = new OAuth2Server.Response(context.res);
-            const token = await this.oauthServerService.server.authenticate(request, response);
+            const token = await this.oauthServerService.server.authenticate(
+              request,
+              response
+            );
             context.user = token;
             // 存一下登录用户id
-            redisClient.sadd(SUBSCRIPTIONS_ONLINE_USER, `userId:${context.user.user.id.toString()}`);
-            pubSub.publish('userOnlineStatus', { userOnlineStatus: { online: true }, user: context.user.user });
+            redisClient.sadd(
+              SUBSCRIPTIONS_ONLINE_USER,
+              `userId:${context.user.user.id.toString()}`
+            );
+            pubSub.publish('userOnlineStatus', {
+              userOnlineStatus: { online: true },
+              user: context.user.user,
+            });
             return {
               user: token.user,
             };
@@ -86,8 +105,14 @@ export class GraphqlService implements GqlOptionsFactory {
             const redisClient = this.redisManager.getClient();
             redisClient.decr(SUBSCRIPTIONS_TOTAL);
             if (context.user) {
-              pubSub.publish('userOnlineStatus', { userOnlineStatus: { online: false }, user: context.user.user });
-              redisClient.srem(SUBSCRIPTIONS_ONLINE_USER, `userId:${context.user.user.id.toString()}`);
+              pubSub.publish('userOnlineStatus', {
+                userOnlineStatus: { online: false },
+                user: context.user.user,
+              });
+              redisClient.srem(
+                SUBSCRIPTIONS_ONLINE_USER,
+                `userId:${context.user.user.id.toString()}`
+              );
             }
           },
         },
@@ -122,7 +147,7 @@ export class GraphqlService implements GqlOptionsFactory {
           Logger.error(
             error.message,
             error.stack ? error.stack.toString() : '',
-            `graphql-${error.path?.toString()}`,
+            `graphql-${error.path?.toString()}`
           );
           return returnError(error.message);
         }
@@ -131,9 +156,12 @@ export class GraphqlService implements GqlOptionsFactory {
           Logger.warn(
             'Validation Error',
             // error.stack,
-            `graphql-${error.path?.toString()}`,
+            `graphql-${error.path?.toString()}`
           );
-          return returnError('Validation Error', formatValidatorClass(message.message));
+          return returnError(
+            'Validation Error',
+            formatValidatorClass(message.message)
+          );
         }
         return error;
       },

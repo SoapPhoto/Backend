@@ -8,9 +8,7 @@ https://docs.nestjs.com/modules
 */
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([InviteEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([InviteEntity])],
   controllers: [],
   providers: [InviteService, InviteResolver],
 })

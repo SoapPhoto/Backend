@@ -1,7 +1,5 @@
 /* eslint-disable no-undef */
-import {
-  Entity, ManyToMany, Column, PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, ManyToMany, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureEntity } from '@server/modules/picture/picture.entity';
@@ -21,7 +19,7 @@ export class TagEntity extends BaseEntity {
   })
   public readonly name!: string;
 
-  @ManyToMany(() => PictureEntity, item => item.tags)
+  @ManyToMany(() => PictureEntity, (item) => item.tags)
   public readonly pictures!: PictureEntity[];
 
   @Type(() => Number)

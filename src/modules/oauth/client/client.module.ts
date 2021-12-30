@@ -7,21 +7,13 @@ import { ClientEntity } from './client.entity';
 import { ClientService } from './client.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ClientEntity]),
-  ],
-  providers: [
-    ClientService,
-  ],
+  imports: [TypeOrmModule.forFeature([ClientEntity])],
+  providers: [ClientService],
   controllers: [ClientController],
-  exports: [
-    ClientService,
-  ],
+  exports: [ClientService],
 })
 export class ClientModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(ClientController);
+    consumer.apply(OauthMiddleware).forRoutes(ClientController);
   }
 }

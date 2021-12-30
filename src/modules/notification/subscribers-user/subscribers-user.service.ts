@@ -8,14 +8,15 @@ import { NotificationSubscribersUserEntity } from './subscribers-user.entity';
 export class SubscribersUserService {
   constructor(
     @InjectRepository(NotificationSubscribersUserEntity)
-    private subscribersRepository: Repository<NotificationSubscribersUserEntity>,
+    private subscribersRepository: Repository<NotificationSubscribersUserEntity>
   ) {}
 
   public markNotificationReadAll = async (user: UserEntity) => {
-    await this.subscribersRepository.createQueryBuilder()
+    await this.subscribersRepository
+      .createQueryBuilder()
       .update()
       .set({ read: true })
       .where('userId=:id AND read=0', { id: user.id })
       .execute();
-  }
+  };
 }

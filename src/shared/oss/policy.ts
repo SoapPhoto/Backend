@@ -1,14 +1,9 @@
 export const uploadPolicy = {
   Statement: [
     {
-      Action: [
-        'oss:PutObject',
-      ],
+      Action: ['oss:PutObject'],
       Effect: 'Allow',
-      Resource: [
-        'acs:oss:*:*:soapphoto',
-        'acs:oss:*:*:soapphoto/*',
-      ],
+      Resource: ['acs:oss:*:*:soapphoto', 'acs:oss:*:*:soapphoto/*'],
     },
   ],
   Version: '1',
@@ -19,10 +14,7 @@ export const defaultPolicy = {
     {
       Action: 'oss:*',
       Effect: 'Allow',
-      Resource: [
-        'acs:oss:*:*:soapphoto',
-        'acs:oss:*:*:soapphoto/*',
-      ],
+      Resource: ['acs:oss:*:*:soapphoto', 'acs:oss:*:*:soapphoto/*'],
     },
   ],
   Version: '1',

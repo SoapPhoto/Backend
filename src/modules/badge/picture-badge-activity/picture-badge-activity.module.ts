@@ -4,9 +4,7 @@ import { PictureBadgeActivityService } from './picture-badge-activity.service';
 import { PictureBadgeActivityEntity } from './picture-badge-activity.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([PictureBadgeActivityEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([PictureBadgeActivityEntity])],
   providers: [PictureBadgeActivityService],
   exports: [PictureBadgeActivityService],
 })

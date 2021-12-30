@@ -1,9 +1,20 @@
 import {
-  IsEmail, IsString, IsUrl, Length, ValidateIf, isNotEmpty, IsInt, Max, Min, IsBoolean, IsDate, IsDateString,
+  IsEmail,
+  IsString,
+  IsUrl,
+  Length,
+  ValidateIf,
+  isNotEmpty,
+  IsInt,
+  Max,
+  Min,
+  IsBoolean,
+  IsOptional,
+  IsDateString,
 } from 'class-validator';
 
 import { IsUserName } from '@server/common/validator';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { UserEntity } from '../user.entity';
 
 /**
@@ -62,13 +73,13 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   public readonly name!: string;
 
   /** 个人简介 */
-  @ValidateIf(o => isNotEmpty(o.bio))
+  @ValidateIf((o) => isNotEmpty(o.bio))
   @IsString()
   @Expose()
   public readonly bio!: string;
 
   /** 个人网站 */
-  @ValidateIf(o => isNotEmpty(o.website))
+  @ValidateIf((o) => isNotEmpty(o.website))
   @IsUrl()
   @Expose()
   public readonly website!: string;
@@ -76,7 +87,6 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   /** 性别 */
   @IsInt()
   @Max(1)
-  @Min(0)
   @Expose()
   public readonly gender!: number;
 
@@ -85,10 +95,12 @@ export class UpdateProfileSettingDto implements Partial<UserEntity> {
   @Expose()
   public readonly genderSecret!: boolean;
 
+  @IsOptional()
   @IsDateString()
   @Expose()
   public readonly birthday!: string;
 
+  @IsOptional()
   @IsInt()
   @Max(3)
   @Min(0)

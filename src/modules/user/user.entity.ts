@@ -1,8 +1,10 @@
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import {
-  Exclude, Expose, Transform, Type,
-} from 'class-transformer';
-import {
-  Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEmail, ValidateIf } from 'class-validator';
 
@@ -72,25 +74,28 @@ export class UserEntity extends BaseEntity {
   public signupType!: SignupType;
 
   /** 邮箱 */
-  @ValidateIf(o => !!o.email)
+  @ValidateIf((o) => !!o.email)
   @IsEmail()
   @Column({
     unique: false,
     default: '',
   })
   @Expose({ groups: [Role.OWNER, Role.ADMIN] })
-  @Transform(({ value }) => {
-    if (value) {
-      const m = value.match(/^(.*)@/);
-      if (m && m.length > 1) {
-        const left = m[1];
-        const { length } = m[1];
-        const sliceLength = length > 4 ? 4 : (length - 2) > 1 ? length - 2 : 1;
-        return value.replace(left, `${left.slice(0, sliceLength)}****`);
+  @Transform(
+    ({ value }) => {
+      if (value) {
+        const m = value.match(/^(.*)@/);
+        if (m && m.length > 1) {
+          const left = m[1];
+          const { length } = m[1];
+          const sliceLength = length > 4 ? 4 : length - 2 > 1 ? length - 2 : 1;
+          return value.replace(left, `${left.slice(0, sliceLength)}****`);
+        }
       }
-    }
-    return value;
-  }, { toPlainOnly: true })
+      return value;
+    },
+    { toPlainOnly: true }
+  )
   public readonly email!: string;
 
   /** 密码验证 */
@@ -185,27 +190,31 @@ export class UserEntity extends BaseEntity {
   public birthdayShow!: number;
 
   /** 用户的picture */
-  @OneToMany(() => PictureEntity, photo => photo.user)
+  @OneToMany(() => PictureEntity, (photo) => photo.user)
   @Expose()
   public readonly pictures!: PictureEntity[];
 
   /** 用户的评论 */
-  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE' })
+  @OneToMany(() => PictureEntity, (photo) => photo.user, {
+    onDelete: 'CASCADE',
+  })
   @Expose()
   public readonly comments!: CommentEntity[];
 
   /** 用户的收藏夹 */
-  @OneToMany(() => CollectionEntity, collection => collection.user)
+  @OneToMany(() => CollectionEntity, (collection) => collection.user)
   @Expose()
   public readonly collections!: CollectionEntity[];
 
   /** 用户的绑定用户  */
-  @OneToMany(() => CredentialsEntity, credentials => credentials.user, { onDelete: 'CASCADE' })
+  @OneToMany(() => CredentialsEntity, (credentials) => credentials.user, {
+    onDelete: 'CASCADE',
+  })
   @Expose()
   public readonly credentials!: CredentialsEntity[];
 
   /** 用户的picture操作 */
-  @OneToMany(() => PictureUserActivityEntity, activity => activity.user)
+  @OneToMany(() => PictureUserActivityEntity, (activity) => activity.user)
   public readonly pictureActivities!: PictureUserActivityEntity[];
 
   @Expose()

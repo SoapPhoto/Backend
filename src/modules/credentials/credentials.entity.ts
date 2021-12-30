@@ -1,7 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import {
-  Entity, BaseEntity, PrimaryColumn, Column, ManyToOne,
-} from 'typeorm';
+import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
 
 import { OauthType } from '@common/enum/router';
 import { UserEntity } from '../user/user.entity';
@@ -19,7 +17,7 @@ export class CredentialsEntity extends BaseEntity {
   public type!: OauthType;
 
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.pictures, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (user) => user.pictures, { onDelete: 'CASCADE' })
   @Expose()
   public readonly user!: UserEntity;
 

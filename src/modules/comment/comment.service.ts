@@ -1,5 +1,8 @@
 import {
-  Injectable, forwardRef, Inject, NotFoundException,
+  Injectable,
+  forwardRef,
+  Inject,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -8,11 +11,17 @@ import { IListRequest, listRequest } from '@server/common/utils/request';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
-import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import {
+  NotificationType,
+  NotificationCategory,
+} from '@common/enum/notification';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { IClientInfo } from '@server/common/decorator/client_info.decorator';
 import { CommentEntity } from './comment.entity';
-import { CreatePictureCommentDot, GetPictureCommentListDto } from './dto/comment.dto';
+import {
+  CreatePictureCommentDot,
+  GetPictureCommentListDto,
+} from './dto/comment.dto';
 import { NotificationService } from '../notification/notification.service';
 import { IChildCommentLoaderArgs } from './comment.loader';
 
@@ -26,13 +35,19 @@ export class CommentService {
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @Inject(forwardRef(() => NotificationService))
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: NotificationService
   ) {}
 
-  public async getPictureList(id: string, query: GetPictureCommentListDto, _user: Maybe<UserEntity>) {
+  public async getPictureList(
+    id: string,
+    query: GetPictureCommentListDto,
+    _user: Maybe<UserEntity>
+  ) {
     const q = this.commentRepository
       .createQueryBuilder('comment')
-      .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', { id })
+      .where('comment.pictureId=:id AND comment.parentCommentId IS NULL', {
+        id,
+      })
       .orderBy('comment.createTime', 'DESC')
       .leftJoinAndSelect('comment.user', 'user');
     this.userService.selectBadge(q);
@@ -49,7 +64,8 @@ export class CommentService {
    * @memberof CommentService
    */
   public async getRawOne(id: number) {
-    const q = this.commentRepository.createQueryBuilder('comment')
+    const q = this.commentRepository
+      .createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
@@ -61,7 +77,8 @@ export class CommentService {
   }
 
   public async getOne(id: number) {
-    const q = this.commentRepository.createQueryBuilder('comment')
+    const q = this.commentRepository
+      .createQueryBuilder('comment')
       .where('comment.id=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
       .leftJoinAndSelect('comment.user', 'user');
@@ -74,10 +91,13 @@ export class CommentService {
     user: UserEntity,
     data: CreatePictureCommentDot,
     id: number,
-    commentId?: number,
+    commentId?: number
   ) {
     const picture = await this.pictureService.findOne(id, user);
-    if (!picture || (picture && picture.isPrivate && picture.user.id !== user.id)) {
+    if (
+      !picture ||
+      (picture && picture.isPrivate && picture.user.id !== user.id)
+    ) {
       throw new NotFoundException('no_exist_picture');
     }
     const createData: MutablePartial<CommentEntity> = {
@@ -105,32 +125,47 @@ export class CommentService {
     createData.ip = clientInfo.ip;
     createData.userAgent = clientInfo.ua;
     const comment = await this.commentRepository.save(
-      this.commentRepository.create(createData),
+      this.commentRepository.create(createData)
     );
     if (!isOwner) {
-      this.notificationService.publishNotification(
-        user,
-        createData.replyUser,
-        {
-          type: NotificationType.USER,
-          category: commentId ? NotificationCategory.REPLY : NotificationCategory.COMMENT,
-          mediaId: comment.id,
-        },
-      );
+      this.notificationService.publishNotification(user, createData.replyUser, {
+        type: NotificationType.USER,
+        category: commentId
+          ? NotificationCategory.REPLY
+          : NotificationCategory.COMMENT,
+        mediaId: comment.id,
+      });
     }
-    return classToPlain(plainToClass(CommentEntity, {
-      ...comment,
-      user,
-    }));
+    return classToPlain(
+      plainToClass(CommentEntity, {
+        ...comment,
+        user,
+      })
+    );
   }
 
-  public async childComments(id: number, user: Maybe<UserEntity>, limit: number, query: GetPictureCommentListDto): Promise<IListRequest<CommentEntity[]>>
+  public async childComments(
+    id: number,
+    user: Maybe<UserEntity>,
+    limit: number,
+    query: GetPictureCommentListDto
+  ): Promise<IListRequest<CommentEntity[]>>;
 
-  public async childComments(id: number, user: Maybe<UserEntity>, limit?: number): Promise<CommentEntity[]>
+  public async childComments(
+    id: number,
+    user: Maybe<UserEntity>,
+    limit?: number
+  ): Promise<CommentEntity[]>;
 
   // eslint-disable-next-line max-len
-  public async childComments(id: number, user: Maybe<UserEntity>, limit?: number, query?: GetPictureCommentListDto): Promise<CommentEntity[] | IListRequest<CommentEntity[]>> {
-    const q = this.commentRepository.createQueryBuilder('comment')
+  public async childComments(
+    id: number,
+    user: Maybe<UserEntity>,
+    limit?: number,
+    query?: GetPictureCommentListDto
+  ): Promise<CommentEntity[] | IListRequest<CommentEntity[]>> {
+    const q = this.commentRepository
+      .createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .leftJoinAndSelect('comment.parentComment', 'parentComment')
       .leftJoinAndSelect('comment.replyComment', 'replyComment')
@@ -153,15 +188,21 @@ export class CommentService {
   }
 
   public async getSubCount(id: number) {
-    const data = await this.commentRepository.createQueryBuilder('comment')
+    const data = await this.commentRepository
+      .createQueryBuilder('comment')
       .where('comment.parentComment=:id', { id })
       .getCount();
     return data;
   }
 
-  public async getCommentSubCounts(ids: number[]): Promise<{parentCommentId: number;count: string}[]> {
-    const data = await this.commentRepository.createQueryBuilder('comment')
-      .select('COUNT(DISTINCT(`comment`.`id`)) as count, comment.parentCommentId')
+  public async getCommentSubCounts(
+    ids: number[]
+  ): Promise<{ parentCommentId: number; count: string }[]> {
+    const data = await this.commentRepository
+      .createQueryBuilder('comment')
+      .select(
+        'COUNT(DISTINCT(`comment`.`id`)) as count, comment.parentCommentId'
+      )
       .where('comment.parentCommentId IN (:...ids)', { ids })
       .groupBy('comment.id')
       .getRawMany();
@@ -169,14 +210,18 @@ export class CommentService {
   }
 
   public async getPictureCommentCount(pictureId: number) {
-    const data = await this.commentRepository.createQueryBuilder('comment')
+    const data = await this.commentRepository
+      .createQueryBuilder('comment')
       .where('comment.pictureId=:pictureId', { pictureId })
       .getCount();
     return data;
   }
 
-  public async getPicturesCommentCount(ids: number[]): Promise<{pictureId: number;count: string}[]> {
-    const data = await this.commentRepository.createQueryBuilder('comment')
+  public async getPicturesCommentCount(
+    ids: number[]
+  ): Promise<{ pictureId: number; count: string }[]> {
+    const data = await this.commentRepository
+      .createQueryBuilder('comment')
       .select('COUNT(DISTINCT(`comment`.`id`)) as count, comment.pictureId')
       .where('comment.pictureId IN (:...ids)', { ids })
       .groupBy('comment.pictureId')
@@ -185,14 +230,18 @@ export class CommentService {
   }
 
   public async findByChildComments(keys: readonly IChildCommentLoaderArgs[]) {
-    const data = await Promise.all(keys.map<Promise<CommentEntity[]>>(key => this.childComments(key.id, null, key.limit)));
+    const data = await Promise.all(
+      keys.map<Promise<CommentEntity[]>>((key) =>
+        this.childComments(key.id, null, key.limit)
+      )
+    );
     return data;
   }
 
   public async findBySubCounts(keys: readonly number[]) {
     const counts = await this.getCommentSubCounts(keys as number[]);
     return keys.map((id) => {
-      const d = counts.find(v => v.parentCommentId === id);
+      const d = counts.find((v) => v.parentCommentId === id);
       if (!d) {
         return 0;
       }

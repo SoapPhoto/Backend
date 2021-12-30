@@ -10,14 +10,14 @@ export class LocationResolver {
     @Inject(forwardRef(() => LocationService))
     private readonly locationService: LocationService,
     @Inject(forwardRef(() => MapboxService))
-    private readonly mapboxService: MapboxService,
+    private readonly mapboxService: MapboxService
   ) {}
 
   @Query()
   public async searchPlace(
     @Args('value') value: string,
     @Args('region') region: string,
-    @Args('clientType') type = LocationClientType.BAIDU,
+    @Args('clientType') type = LocationClientType.BAIDU
   ) {
     if (type === LocationClientType.BAIDU) {
       return this.locationService.search(value, region);
@@ -26,24 +26,20 @@ export class LocationResolver {
   }
 
   @Query()
-  public async reverseGeocoding(
-    @Args('location') location: string,
-  ) {
+  public async reverseGeocoding(@Args('location') location: string) {
     return this.locationService.reverseGeocoding(location);
   }
 
   @Query()
   public async placeSuggestion(
     @Args('value') value: string,
-    @Args('region') region: string,
+    @Args('region') region: string
   ) {
     return this.locationService.placeSuggestion(value, region);
   }
 
   @Query()
-  public async placeDetail(
-    @Args('uid') uid: string,
-  ) {
+  public async placeDetail(@Args('uid') uid: string) {
     return this.locationService.placeDetail(uid);
   }
 }

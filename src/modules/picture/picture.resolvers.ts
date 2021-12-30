@@ -1,11 +1,15 @@
 import {
-  Args, Mutation, Query, Resolver, ResolveField, Parent, Info,
+  Args,
+  Mutation,
+  Query,
+  Resolver,
+  ResolveField,
+  Parent,
+  Info,
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import {
-  UseGuards, Inject, forwardRef,
-} from '@nestjs/common';
+import { UseGuards, Inject, forwardRef } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
@@ -16,7 +20,10 @@ import DataLoader from 'dataloader';
 import { BlurhashService } from '@server/shared/blurhash/blurhash.service';
 import { Loader } from '@server/shared/graphql/loader/loader.interceptor';
 import {
-  GetPictureListDto, GetUserPictureListDto, UpdatePictureDot, GetNewPictureListDto,
+  GetPictureListDto,
+  GetUserPictureListDto,
+  UpdatePictureDot,
+  GetNewPictureListDto,
 } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { CollectionService } from '../collection/collection.service';
@@ -38,15 +45,15 @@ export class PictureResolver {
     private readonly pictureService: PictureService,
     @Inject(forwardRef(() => BadgeService))
     private readonly badgeService: BadgeService,
-    private readonly blurhashService: BlurhashService,
-  ) { }
+    private readonly blurhashService: BlurhashService
+  ) {}
 
   @Query()
   public async searchPictures(
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Args('words') words: string,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     return this.pictureService.search(words, query, user, info);
   }
@@ -56,7 +63,7 @@ export class PictureResolver {
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetPictureListDto,
     @Info() info: GraphQLResolveInfo,
-    @Args('type') type: PicturesType = PicturesType.HOT,
+    @Args('type') type: PicturesType = PicturesType.HOT
   ) {
     if (type === PicturesType.HOT) {
       return this.pictureService.getPictureHotInfoList(user, query, info);
@@ -68,7 +75,7 @@ export class PictureResolver {
   public async newPictures(
     @User() user: Maybe<UserEntity>,
     @Args('query') query: GetNewPictureListDto,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     return this.pictureService.getNewList(user, query, info);
   }
@@ -79,25 +86,28 @@ export class PictureResolver {
     @Args('id') id: string,
     @Args('username') username: string,
     @Args('query') query: GetUserPictureListDto,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
-    return this.pictureService.getUserPicture(id || username, query, user, info);
+    return this.pictureService.getUserPicture(
+      id || username,
+      query,
+      user,
+      info
+    );
   }
 
   @Query()
   public async picture(
     @User() user: Maybe<UserEntity>,
     @Info() info: GraphQLResolveInfo,
-    @Args('id') id: number,
+    @Args('id') id: number
   ) {
     this.pictureService.addViewCount(id);
     return this.pictureService.findOne(id, user, true, info);
   }
 
   @Query()
-  public async pictureRelatedCollection(
-    @Args('id') id: number,
-  ) {
+  public async pictureRelatedCollection(@Args('id') id: number) {
     return this.collectionService.pictureRelatedCollection(id);
   }
 
@@ -106,26 +116,20 @@ export class PictureResolver {
     @User() user: Maybe<UserEntity>,
     @Args('id') id: number,
     @Args('limit') limit = 30,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     return this.pictureService.getPictureRelated(id, limit, user, info);
   }
 
   @Mutation()
   @Roles(Role.USER)
-  public async likePicture(
-    @User() user: UserEntity,
-    @Args('id') id: number,
-  ) {
+  public async likePicture(@User() user: UserEntity, @Args('id') id: number) {
     return this.pictureService.likePicture(id, user, true);
   }
 
   @Mutation()
   @Roles(Role.USER)
-  public async unlikePicture(
-    @User() user: UserEntity,
-    @Args('id') id: number,
-  ) {
+  public async unlikePicture(@User() user: UserEntity, @Args('id') id: number) {
     return this.pictureService.likePicture(id, user, false);
   }
 
@@ -134,24 +138,21 @@ export class PictureResolver {
   public async updatePicture(
     @User() user: UserEntity,
     @Args('id') id: number,
-    @Args('data') data: UpdatePictureDot,
+    @Args('data') data: UpdatePictureDot
   ) {
     return this.pictureService.update(id, data, user);
   }
 
   @Mutation()
   @Roles(Role.USER)
-  public async deletePicture(
-    @User() user: UserEntity,
-    @Args('id') id: number,
-  ) {
+  public async deletePicture(@User() user: UserEntity, @Args('id') id: number) {
     return this.pictureService.delete(id, user);
   }
 
   @ResolveField('commentCount')
   public async commentCount(
     @Parent() parent: PictureEntity,
-    @Loader(PictureCommentCountLoader) loader: DataLoader<number, number>,
+    @Loader(PictureCommentCountLoader) loader: DataLoader<number, number>
   ) {
     return loader.load(parent.id);
   }
@@ -159,7 +160,7 @@ export class PictureResolver {
   @ResolveField('currentCollections')
   public async currentCollections(
     @Parent() parent: PictureEntity,
-    @User() user?: UserEntity,
+    @User() user?: UserEntity
   ) {
     if (!user) return [];
     return this.pictureService.getCurrentCollections(parent.id, user);
@@ -168,15 +169,14 @@ export class PictureResolver {
   @ResolveField('badge')
   public async badge(
     @Parent() parent: PictureEntity,
-    @Loader(BadgePictureLoader) badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>,
+    @Loader(BadgePictureLoader)
+    badgeLoader: DataLoader<BadgeEntity['id'], BadgeEntity>
   ) {
     return badgeLoader.load(parent.id);
   }
 
   @ResolveField('blurhashSrc')
-  public async blurhashSrc(
-    @Parent() parent: PictureEntity,
-  ) {
+  public async blurhashSrc(@Parent() parent: PictureEntity) {
     if (parent.blurhash) {
       let s = 1;
       let width = 8;
@@ -188,7 +188,11 @@ export class PictureResolver {
         s = Math.round(parent.height / parent.width);
         height *= s;
       }
-      const base64 = await this.blurhashService.getBase64(parent.blurhash, width, height);
+      const base64 = await this.blurhashService.getBase64(
+        parent.blurhash,
+        width,
+        height
+      );
       return base64;
     }
     return undefined;

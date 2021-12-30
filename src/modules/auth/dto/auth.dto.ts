@@ -21,12 +21,12 @@ export class ResetPasswordDto {
   @Length(8, 30)
   @IsString()
   @Expose()
-  public password!: string
+  public password!: string;
 
   @Length(8, 30)
   @IsString()
   @Expose()
-  public newPassword!: string
+  public newPassword!: string;
 }
 
 @Exclude()
@@ -34,5 +34,5 @@ export class NewPasswordDto {
   @Length(8, 30)
   @IsString()
   @Expose()
-  public newPassword!: string
+  public newPassword!: string;
 }

@@ -12,7 +12,7 @@ export class TagService {
     @InjectRepository(TagEntity)
     private tagRepository: Repository<TagEntity>,
     @Inject(forwardRef(() => PictureService))
-    private readonly pictureService: PictureService,
+    private readonly pictureService: PictureService
   ) {}
 
   public async createTag(tag: Partial<TagEntity>): Promise<TagEntity> {
@@ -26,20 +26,22 @@ export class TagService {
     }
     if (!tagData) {
       tagData = await this.tagRepository.save(
-        this.tagRepository.create({ name: tag.name }),
+        this.tagRepository.create({ name: tag.name })
       );
     }
     return tagData!;
   }
 
   public async getTagInfo(name: string, _user: Maybe<UserEntity>) {
-    return this.tagRepository.createQueryBuilder('tag')
+    return this.tagRepository
+      .createQueryBuilder('tag')
       .where('tag.name=:name', { name })
       .loadRelationCountAndMap(
-        'tag.pictureCount', 'tag.pictures', 'picture',
-        qb => qb
-          .where('picture.isPrivate = 0')
-          .andWhere('picture.deleted = 0'),
+        'tag.pictureCount',
+        'tag.pictures',
+        'picture',
+        (qb) =>
+          qb.where('picture.isPrivate = 0').andWhere('picture.deleted = 0')
       )
       .getOne();
   }

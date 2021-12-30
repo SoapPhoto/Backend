@@ -1,6 +1,4 @@
-import {
-  Args, Context, Query, Resolver, Info,
-} from '@nestjs/graphql';
+import { Args, Context, Query, Resolver, Info } from '@nestjs/graphql';
 
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
@@ -15,13 +13,13 @@ import { PictureService } from '../picture/picture.service';
 export class TagResolver {
   constructor(
     private readonly tagService: TagService,
-    private readonly pictureService: PictureService,
+    private readonly pictureService: PictureService
   ) {}
 
   @Query()
   public async tag(
     @Context('user') user: Maybe<UserEntity>,
-    @Args('name') name: string,
+    @Args('name') name: string
   ) {
     return this.tagService.getTagInfo(name, user);
   }
@@ -31,7 +29,7 @@ export class TagResolver {
     @Context('user') user: Maybe<UserEntity>,
     @Args('name') name: string,
     @Args('query') query: GetTagPictureListDto,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     return this.pictureService.getTagPictureList(name, user, query, info);
   }

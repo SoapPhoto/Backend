@@ -1,5 +1,8 @@
 import {
-  MiddlewareConsumer, Module, NestModule, forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  forwardRef,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -24,8 +27,6 @@ import { CollectionResolver } from './collection.resolvers';
 })
 export class CollectionModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(CollectionController);
+    consumer.apply(OauthMiddleware).forRoutes(CollectionController);
   }
 }

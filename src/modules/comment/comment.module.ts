@@ -18,7 +18,12 @@ import { ChildCommentLoader, CommentSubCountLoader } from './comment.loader';
     forwardRef(() => PictureModule),
     forwardRef(() => NotificationModule),
   ],
-  providers: [CommentService, CommentResolver, ChildCommentLoader, CommentSubCountLoader],
+  providers: [
+    CommentService,
+    CommentResolver,
+    ChildCommentLoader,
+    CommentSubCountLoader,
+  ],
   controllers: [CommentController],
   exports: [CommentService],
 })

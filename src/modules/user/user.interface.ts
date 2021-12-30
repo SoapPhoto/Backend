@@ -76,7 +76,8 @@ export interface IWeiboUserInfo {
   insecurity: { sexual_content: boolean };
   status: {
     visible: {
-      type: number; list_id: number;
+      type: number;
+      list_id: number;
     };
     created_at: string;
     id: number;
@@ -97,7 +98,7 @@ export interface IWeiboUserInfo {
     geo: null;
     is_paid: boolean;
     mblog_vip_type: number;
-    annotations: [ [Record<string, any>] ];
+    annotations: [[Record<string, any>]];
     reposts_count: number;
     comments_count: number;
     attitudes_count: number;
@@ -119,7 +120,10 @@ export interface IWeiboUserInfo {
     content_auth: number;
     gif_ids: string;
     is_show_bulletin: 2;
-    comment_manage_info: { comment_permission_type: -1; approval_comment_type: 0 };
+    comment_manage_info: {
+      comment_permission_type: -1;
+      approval_comment_type: 0;
+    };
     pic_num: number;
   };
   ptype: number;
@@ -161,4 +165,4 @@ export interface IWeiboUserInfo {
   is_teenager_list: number;
 }
 
-export type IOauthUserInfo = IWeiboUserInfo | IGithubUserInfo |IGoogleUserInfo
+export type IOauthUserInfo = IWeiboUserInfo | IGithubUserInfo | IGoogleUserInfo;

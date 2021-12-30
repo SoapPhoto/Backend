@@ -1,6 +1,4 @@
-import {
-  IsOptional, IsPositive, Max, Min,
-} from 'class-validator';
+import { IsOptional, IsPositive, Max, Min } from 'class-validator';
 
 import { Type } from 'class-transformer';
 import dayjs from 'dayjs';

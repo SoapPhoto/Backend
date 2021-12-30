@@ -5,9 +5,7 @@ import { NotificationSubscribersUserEntity } from './subscribers-user.entity';
 import { SubscribersUserService } from './subscribers-user.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([NotificationSubscribersUserEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([NotificationSubscribersUserEntity])],
   providers: [SubscribersUserService],
   exports: [SubscribersUserService],
 })

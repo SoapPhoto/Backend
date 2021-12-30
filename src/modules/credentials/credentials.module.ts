@@ -18,8 +18,6 @@ import { CredentialsEntity } from './credentials.entity';
 })
 export class CredentialsModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(CredentialsController);
+    consumer.apply(OauthMiddleware).forRoutes(CredentialsController);
   }
 }

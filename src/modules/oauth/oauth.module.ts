@@ -1,6 +1,4 @@
-import {
-  forwardRef, Global, Module,
-} from '@nestjs/common';
+import { forwardRef, Global, Module } from '@nestjs/common';
 
 import { UserModule } from '@server/modules/user/user.module';
 import { AccessTokenModule } from './access-token/access-token.module';

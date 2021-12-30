@@ -1,5 +1,8 @@
 import {
-  ArgumentsHost, Catch, ExceptionFilter, HttpException,
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
@@ -23,12 +26,10 @@ export class AllExceptionFilter implements ExceptionFilter {
         // tslint:disable-next-line: object-shorthand-properties-first
         stack,
       });
-      response
-        .status(statusCode)
-        .json({
-          statusCode,
-          message,
-        });
+      response.status(statusCode).json({
+        statusCode,
+        message,
+      });
     };
     const doneRes = (res: any, stack?: any) => {
       Logger.error({
@@ -37,9 +38,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         ...res,
         stack,
       });
-      response
-        .status(res.statusCode)
-        .json(res);
+      response.status(res.statusCode).json(res);
     };
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
@@ -48,11 +47,14 @@ export class AllExceptionFilter implements ExceptionFilter {
         done(status, exRes, exception.stack);
       } else if (exRes.message) {
         if (Array.isArray(exRes.message)) {
-          doneRes({
-            statusCode: exRes.statusCode ?? status,
-            error: 'Validation Error',
-            message: this.formatValidatorClass(exRes.message),
-          }, exception.stack);
+          doneRes(
+            {
+              statusCode: exRes.statusCode ?? status,
+              error: 'Validation Error',
+              message: this.formatValidatorClass(exRes.message),
+            },
+            exception.stack
+          );
         } else {
           doneRes(exRes, exception.stack);
         }
@@ -70,7 +72,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     const formatedErrors = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const msg of errors) {
-      if (msg as any instanceof ValidationError) {
+      if ((msg as any) instanceof ValidationError) {
         const message = Object.values(msg.constraints);
         const err = { param: msg.property, message };
         formatedErrors.push(err);

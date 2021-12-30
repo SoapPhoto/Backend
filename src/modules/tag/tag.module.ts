@@ -1,5 +1,8 @@
 import {
-  forwardRef, MiddlewareConsumer, Module, NestModule,
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -21,8 +24,6 @@ import { TagService } from './tag.service';
 })
 export class TagModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(TagController);
+    consumer.apply(OauthMiddleware).forRoutes(TagController);
   }
 }

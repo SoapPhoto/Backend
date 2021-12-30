@@ -1,5 +1,10 @@
 import {
-  Injectable, Inject, forwardRef, ForbiddenException, UnauthorizedException, BadGatewayException,
+  Injectable,
+  Inject,
+  forwardRef,
+  ForbiddenException,
+  UnauthorizedException,
+  BadGatewayException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,38 +22,45 @@ export class CredentialsService {
     private readonly userService: UserService,
     @InjectRepository(CredentialsEntity)
     private credentialsRepository: Repository<CredentialsEntity>,
-    private readonly redisManager: RedisManager,
+    private readonly redisManager: RedisManager
   ) {}
 
-  public getInfo = async (id: string) => this.credentialsRepository.createQueryBuilder('cr')
-    .where('cr.id=:id', { id })
-    .leftJoinAndSelect('cr.user', 'user')
-    .getOne();
+  public getInfo = async (id: string) =>
+    this.credentialsRepository
+      .createQueryBuilder('cr')
+      .where('cr.id=:id', { id })
+      .leftJoinAndSelect('cr.user', 'user')
+      .getOne();
 
   public async create(data: Partial<CredentialsEntity>) {
     return this.credentialsRepository.save(
-      this.credentialsRepository.create(data),
+      this.credentialsRepository.create(data)
     );
   }
 
   public async getUserCredentialList(user: UserEntity) {
-    return this.credentialsRepository.createQueryBuilder('cr')
+    return this.credentialsRepository
+      .createQueryBuilder('cr')
       .where('cr.userId=:id', { id: user.id })
       .getMany();
   }
 
   public async authorize(user: UserEntity, { code }: AuthorizeDto) {
     const redisClient = this.redisManager.getClient();
-    const strData = await redisClient.get(`oauth:${OauthStateType.authorize}:${code}`);
+    const strData = await redisClient.get(
+      `oauth:${OauthStateType.authorize}:${code}`
+    );
     if (!strData) {
       throw new UnauthorizedException('code_credentials_invalid');
     }
     const { data, type } = JSON.parse(strData);
     const isAuthorize = await Promise.all([
-      this.credentialsRepository.createQueryBuilder('cr')
+      this.credentialsRepository
+        .createQueryBuilder('cr')
         .where('cr.userId=:id AND cr.type=:type', { id: user.id, type })
         .getOne(),
-      this.credentialsRepository.createQueryBuilder('cr')
+      this.credentialsRepository
+        .createQueryBuilder('cr')
         .where('cr.id=:id', { id: `${type}_${data.id}` })
         .getOne(),
     ]);
@@ -71,13 +83,15 @@ export class CredentialsService {
     if (!data || data.user.id !== user.id) {
       throw new ForbiddenException();
     }
-    const count = await this.credentialsRepository.createQueryBuilder('cr')
+    const count = await this.credentialsRepository
+      .createQueryBuilder('cr')
       .where('cr.userId=:id', { id: user.id })
       .getCount();
     if (count === 1 && !user.isPassword) {
       throw new BadGatewayException('reserved_login');
     }
-    await this.credentialsRepository.createQueryBuilder()
+    await this.credentialsRepository
+      .createQueryBuilder()
       .delete()
       .from(CredentialsEntity)
       .where('id=:id', { id })

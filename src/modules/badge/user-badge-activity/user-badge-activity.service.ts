@@ -9,7 +9,7 @@ import { UserBadgeActivityEntity } from './user-badge-activity.entity';
 export class UserBadgeActivityService {
   constructor(
     @InjectRepository(UserBadgeActivityEntity)
-    private activityRepository: Repository<UserBadgeActivityEntity>,
+    private activityRepository: Repository<UserBadgeActivityEntity>
   ) {}
 
   get metadata() {
@@ -17,17 +17,18 @@ export class UserBadgeActivityService {
   }
 
   public async isExist(badgeId: number, userId: number) {
-    return !!await this.activityRepository.findOne({ badgeId, userId });
+    return !!(await this.activityRepository.findOne({ badgeId, userId }));
   }
 
   public async addBadge(user: UserEntity, badgeId: number, userId: number) {
-    if (await this.isExist(badgeId, userId)) throw new BadGatewayException('badge_exist');
+    if (await this.isExist(badgeId, userId))
+      throw new BadGatewayException('badge_exist');
     return this.activityRepository.save(
       this.activityRepository.create({
         badgeId,
         userId,
         createUserId: user.id,
-      }),
+      })
     );
   }
 }

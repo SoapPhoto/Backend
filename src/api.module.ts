@@ -35,10 +35,6 @@ import { InviteModule } from './modules/invite/invite.module';
     InviteModule,
     // PictureMarkModule,
   ],
-  exports: [
-    ClientModule,
-    PictureModule,
-    UserModule,
-  ],
+  exports: [ClientModule, PictureModule, UserModule],
 })
 export class ApiModule {}

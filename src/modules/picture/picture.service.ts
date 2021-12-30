@@ -1,6 +1,4 @@
-import {
-  classToPlain, plainToClass,
-} from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -24,14 +22,18 @@ import { UserEntity } from '@server/modules/user/user.entity';
 import { UserService } from '@server/modules/user/user.service';
 import { keyword } from '@server/common/utils/keyword';
 import { LoggingService } from '@server/shared/logging/logging.service';
-import { isBoolean, uniq } from 'lodash';
+import { isBoolean } from 'lodash';
 import { PicturesType } from '@common/enum/picture';
 import { GraphQLResolveInfo } from 'graphql';
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
-import { platform } from 'os';
 import { LocationEntity } from '@common/types/modules/location/location.entity';
-import { GetPictureListDto, UpdatePictureDot, GetNewPictureListDto } from './dto/picture.dto';
+
+import {
+  GetPictureListDto,
+  UpdatePictureDot,
+  GetNewPictureListDto,
+} from './dto/picture.dto';
 import { PictureEntity } from './picture.entity';
 import { PictureUserActivityService } from './user-activity/user-activity.service';
 import { Role } from '../user/enum/role.enum';
@@ -39,8 +41,6 @@ import { CollectionService } from '../collection/collection.service';
 import { CommentService } from '../comment/comment.service';
 import { BadgeService } from '../badge/badge.service';
 import { FollowService } from '../follow/follow.service';
-import { BadgeEntity } from '../badge/badge.entity';
-import { PictureBadgeActivityEntity } from '../badge/picture-badge-activity/picture-badge-activity.entity';
 import { LocationService } from '../location/location.service';
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
@@ -66,8 +66,8 @@ export class PictureService {
     private readonly locationService: LocationService,
     @InjectRepository(PictureEntity)
     private pictureRepository: Repository<PictureEntity>,
-    private readonly redisManager: RedisManager,
-  ) { }
+    private readonly redisManager: RedisManager
+  ) {}
 
   public getPictureKeyword(picture: PictureEntity) {
     const keywords = keyword([picture.title, picture.bio]);
@@ -75,10 +75,18 @@ export class PictureService {
     if (picture.location?.form === 'BAIDU') {
       locationKey.push(picture.location.name);
       if (picture.location.detail.tag) {
-        locationKey = locationKey.concat([...picture.location.detail.tag.split(';')]);
+        locationKey = locationKey.concat([
+          ...picture.location.detail.tag.split(';'),
+        ]);
       }
     }
-    const key = [...new Set([...keywords, ...(picture.classify || []).map(v => v.keyword)]), ...locationKey].join('|');
+    const key = [
+      ...new Set([
+        ...keywords,
+        ...(picture.classify || []).map((v) => v.keyword),
+      ]),
+      ...locationKey,
+    ].join('|');
     return key;
   }
 
@@ -86,8 +94,10 @@ export class PictureService {
     const newData = { ...data };
     const keywords = keyword([newData.title, newData.bio]);
     if (Array.isArray(data.tags)) {
-      newData.tags = await Promise.all(data.tags.map(tag => this.tagService.createTag(tag)));
-      keywords.unshift(...newData.tags.map(tag => tag.name));
+      newData.tags = await Promise.all(
+        data.tags.map((tag) => this.tagService.createTag(tag))
+      );
+      keywords.unshift(...newData.tags.map((tag) => tag.name));
     }
     const newPicture = this.pictureRepository.create(newData);
     newPicture.keywords = this.getPictureKeyword(newPicture);
@@ -95,8 +105,13 @@ export class PictureService {
     return picture;
   }
 
-  public async update(id: number, { tags, ...data }: UpdatePictureDot, user: UserEntity) {
-    const picture = await this.pictureRepository.createQueryBuilder('picture')
+  public async update(
+    id: number,
+    { tags, ...data }: UpdatePictureDot,
+    user: UserEntity
+  ) {
+    const picture = await this.pictureRepository
+      .createQueryBuilder('picture')
       .where('picture.id=:id', { id })
       .andWhere('picture.deleted = 0')
       .leftJoinAndSelect('picture.user', 'user')
@@ -113,27 +128,27 @@ export class PictureService {
     updateData.location = location;
     if (tags.length > 0) {
       const newTags = await Promise.all(
-        (tags as string[]).map((tag: string) => this.tagService.createTag({ name: tag })),
+        (tags as string[]).map((tag: string) =>
+          this.tagService.createTag({ name: tag })
+        )
       );
       updateData.tags = newTags;
     } else {
       updateData.tags = [];
     }
-    updateData.keywords = this.getPictureKeyword({ ...picture, ...updateData } as PictureEntity);
-    const p = this.pictureRepository.merge(
-      picture,
-      updateData,
-    );
+    updateData.keywords = this.getPictureKeyword({
+      ...picture,
+      ...updateData,
+    } as PictureEntity);
+    const p = this.pictureRepository.merge(picture, updateData);
     (p as any).location = updateData.location;
-    await this.pictureRepository.save(
-      p,
-    );
+    await this.pictureRepository.save(p);
     // await this.pictureRepository.createQueryBuilder()
     //   .update()
     //   .set({ location: updateData.location })
     //   .where('id = :id', { id })
     //   .execute();
-    return this.findOne(id, null);
+    return this.findOne(id, user);
     // return classToPlain(
     //   await this.pictureRepository.save(
     //     this.pictureRepository.merge(
@@ -145,9 +160,16 @@ export class PictureService {
     // );
   }
 
-  public search = async (words: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+  public search = async (
+    words: string,
+    query: GetPictureListDto,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
     const { length } = words;
-    const splicedWords: string[] = nodejieba.extract(words, 20).map((v: any) => v.word);
+    const splicedWords: string[] = nodejieba
+      .extract(words, 20)
+      .map((v: any) => v.word);
     // eslint-disable-next-line no-restricted-syntax
     // for (const whiteSpaceSpliced of words.split(/\s+/)) {
     //   splicedWords.push(...nodejieba.tag(whiteSpaceSpliced).map((v: any) => v.word));
@@ -155,21 +177,36 @@ export class PictureService {
     const q = this.selectList(user, query, { info, path: 'data' });
     this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
     if (length > 1 && splicedWords.length > 1) {
-      q.andWhere(`MATCH(keywords) AGAINST('+${splicedWords.map(v => `${v}*`).join(' ~')}' IN boolean MODE)`);
+      q.andWhere(
+        `MATCH(keywords) AGAINST('+${splicedWords
+          .map((v) => `${v}*`)
+          .join(' ~')}' IN boolean MODE)`
+      );
     } else if (length > 1) {
-      q.andWhere(`MATCH(keywords) AGAINST('+${splicedWords[0]}*' IN boolean MODE)`);
+      q.andWhere(
+        `MATCH(keywords) AGAINST('+${splicedWords[0]}*' IN boolean MODE)`
+      );
     } else {
       q.andWhere(`keywords like '%${words}%'`);
     }
-    const [data, count] = await q.andWhere('picture.isPrivate=:private', { private: false })
+    const [data, count] = await q
+      .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.deleted = 0')
       .cache(3000)
       .getManyAndCount();
     return listRequest(query, data, count);
   };
 
-  public getNewList = async (user: Maybe<UserEntity>, query: GetNewPictureListDto, info: GraphQLResolveInfo) => {
-    const q = this.selectList(user, { ...query, timestamp: undefined } as GetNewPictureListDto, { info, path: 'data' })
+  public getNewList = async (
+    user: Maybe<UserEntity>,
+    query: GetNewPictureListDto,
+    info: GraphQLResolveInfo
+  ) => {
+    const q = this.selectList(
+      user,
+      { ...query, timestamp: undefined } as GetNewPictureListDto,
+      { info, path: 'data' }
+    )
       .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.createTime > :after', { after: query.lastTime })
       .andWhere('picture.createTime <= :before', { before: query.time })
@@ -186,7 +223,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public addViewCount(id: number) {
-    return this.pictureRepository.createQueryBuilder()
+    return this.pictureRepository
+      .createQueryBuilder()
       .update()
       .set({
         views: () => 'views + 1',
@@ -205,7 +243,11 @@ export class PictureService {
    * @returns {Promise<Record<string, any>>}
    * @memberof PictureService
    */
-  public async findOne(id: number, user: Maybe<UserEntity>, select?: GraphQLResolveInfo): Promise<PictureEntity>
+  public async findOne(
+    id: number,
+    user: Maybe<UserEntity>,
+    select?: GraphQLResolveInfo
+  ): Promise<PictureEntity>;
 
   /**
    * 获取单个图片信息
@@ -218,7 +260,12 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line no-dupe-class-members
-  public async findOne(id: number, user: Maybe<UserEntity>, toPlain: boolean, info?: GraphQLResolveInfo): Promise<Record<string, any>>
+  public async findOne(
+    id: number,
+    user: Maybe<UserEntity>,
+    toPlain: boolean,
+    info?: GraphQLResolveInfo
+  ): Promise<Record<string, any>>;
 
   /**
    * 获取单个图片信息
@@ -231,7 +278,12 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line no-dupe-class-members
-  public async findOne(id: number, user: Maybe<UserEntity>, toPlain?: boolean | GraphQLResolveInfo, info?: GraphQLResolveInfo) {
+  public async findOne(
+    id: number,
+    user: Maybe<UserEntity>,
+    toPlain?: boolean | GraphQLResolveInfo,
+    info?: GraphQLResolveInfo
+  ) {
     const q = this.select(user, {
       value: '',
       info: isBoolean(toPlain) ? info : toPlain,
@@ -251,18 +303,35 @@ export class PictureService {
     return data;
   }
 
-  public async find(user: Maybe<UserEntity>, type: PicturesType, query: GetNewPictureListDto, info: GraphQLResolveInfo) {
-    const q = this.selectList(user, query, { info, value: 'user', path: 'data' })
+  public async find(
+    user: Maybe<UserEntity>,
+    type: PicturesType,
+    query: GetNewPictureListDto,
+    info: GraphQLResolveInfo
+  ) {
+    const q = this.selectList(user, query, {
+      info,
+      value: 'user',
+      path: 'data',
+    })
       .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.deleted = 0');
     if (type === PicturesType.CHOICE) {
-      q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
-        .andWhere('badgeActivity.pictureId=picture.id', { private: false });
+      q.leftJoin(
+        this.badgeService.pictureActivityMetadata.tableName,
+        'badgeActivity',
+        'badgeActivity.pictureId=picture.id'
+      ).andWhere('badgeActivity.pictureId=picture.id', { private: false });
     }
     if (type === PicturesType.FEED) {
       if (!user) throw new ForbiddenException();
       const fq = plainToClass(PaginationDto, { page: 1, pageSize: 100000000 });
-      const ids = await this.followService.followUsers(user.id, fq, 'followed', true);
+      const ids = await this.followService.followUsers(
+        user.id,
+        fq,
+        'followed',
+        true
+      );
       if (ids.length === 0) return listRequest(query, [], 0);
       q.andWhere('picture.userId IN (:ids)', { ids });
     }
@@ -291,9 +360,15 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getUserPicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
-    const q = this.selectList(user, query, { info, path: 'data' })
-      .andWhere('picture.deleted = 0');
+  public getUserPicture = async (
+    idOrName: string,
+    query: GetPictureListDto,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
+    const q = this.selectList(user, query, { info, path: 'data' }).andWhere(
+      'picture.deleted = 0'
+    );
     let isOwner = false;
     if (isNumberString(idOrName)) {
       if (user && user.id.toString() === idOrName) isOwner = true;
@@ -306,9 +381,13 @@ export class PictureService {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, classToPlain(data, {
-      groups: isOwner ? [Role.OWNER] : undefined,
-    }), count);
+    return listRequest(
+      query,
+      classToPlain(data, {
+        groups: isOwner ? [Role.OWNER] : undefined,
+      }),
+      count
+    );
   };
 
   /**
@@ -318,9 +397,18 @@ export class PictureService {
    * @param {GetPictureListDto} query
    * @memberof PictureService
    */
-  public async getFeedPictures(user: UserEntity, query: GetPictureListDto, info: GraphQLResolveInfo) {
+  public async getFeedPictures(
+    user: UserEntity,
+    query: GetPictureListDto,
+    info: GraphQLResolveInfo
+  ) {
     const fq = plainToClass(PaginationDto, { page: 1, pageSize: 100000000 });
-    const ids = await this.followService.followUsers(user.id, fq, 'followed', true);
+    const ids = await this.followService.followUsers(
+      user.id,
+      fq,
+      'followed',
+      true
+    );
     if (ids.length === 0) return listRequest(query, [], 0);
     const q = this.selectList(user, query, { info, path: 'data' })
       .where('picture.userId IN (:ids)', { ids })
@@ -334,8 +422,17 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getUserLikePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
-    const [count, ids] = await this.activityService.getLikeList(idOrName, query, user);
+  public getUserLikePicture = async (
+    idOrName: string,
+    query: GetPictureListDto,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
+    const [count, ids] = await this.activityService.getLikeList(
+      idOrName,
+      query,
+      user
+    );
     if (ids.length === 0) {
       return listRequest(query, [], count as number);
     }
@@ -351,7 +448,12 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getUserChoicePicture = async (idOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+  public getUserChoicePicture = async (
+    idOrName: string,
+    query: GetPictureListDto,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
     const q = this.selectList(user, query, { info, path: 'data' });
     let isOwner = false;
     if (isNumberString(idOrName)) {
@@ -364,13 +466,23 @@ export class PictureService {
     if (!isOwner) {
       q.andWhere('picture.isPrivate=:private', { private: false });
     }
-    q.leftJoin(this.badgeService.pictureActivityMetadata.tableName, 'badgeActivity', 'badgeActivity.pictureId=picture.id')
-      .andWhere('badgeActivity.pictureId=picture.id AND badgeActivity.badgeId=1')
+    q.leftJoin(
+      this.badgeService.pictureActivityMetadata.tableName,
+      'badgeActivity',
+      'badgeActivity.pictureId=picture.id'
+    )
+      .andWhere(
+        'badgeActivity.pictureId=picture.id AND badgeActivity.badgeId=1'
+      )
       .andWhere('picture.deleted = 0');
     const [data, count] = await q.cache(100).getManyAndCount();
-    return listRequest(query, classToPlain(data, {
-      groups: isOwner ? [Role.OWNER] : undefined,
-    }), count);
+    return listRequest(
+      query,
+      classToPlain(data, {
+        groups: isOwner ? [Role.OWNER] : undefined,
+      }),
+      count
+    );
   };
 
   /**
@@ -378,7 +490,12 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getTagPictureList = async (name: string, user: Maybe<UserEntity>, query: GetTagPictureListDto, info: GraphQLResolveInfo) => {
+  public getTagPictureList = async (
+    name: string,
+    user: Maybe<UserEntity>,
+    query: GetTagPictureListDto,
+    info: GraphQLResolveInfo
+  ) => {
     const q = this.selectList(user, query, { info, path: 'data' });
     const [data, count] = await q
       .innerJoinAndSelect('picture.tags', 'tags', 'tags.name=:name', { name })
@@ -393,20 +510,34 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public getPictureRelated = async (id: number, limit: number, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
+  public getPictureRelated = async (
+    id: number,
+    limit: number,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
     const userData = await this.findOne(id, null);
     // let tag: string[] = [];
     // nodejieba.tag(userData.title).forEach(v => tag.push(v.word));
     // userData.tags.forEach(v => tag.push(v.name));
     // tag = uniq(tag);
-    const q = this.selectList(user, plainToClass(PaginationDto, {
-      page: 1,
-      pageSize: limit,
-    }), { info, orderBy: true });
+    const q = this.selectList(
+      user,
+      plainToClass(PaginationDto, {
+        page: 1,
+        pageSize: limit,
+      }),
+      { info, orderBy: true }
+    );
     // this.logger.warn(`${words}=${splicedWords.toString()}`, 'search-info');
-    q.andWhere(`MATCH(keywords) AGAINST('${userData.keywords.split('|').map(v => `>${v}`).join(' ')}' IN boolean MODE)`)
-      .andWhere('picture.id != :id', { id });
-    const data = await q.andWhere('picture.isPrivate=:private', { private: false })
+    q.andWhere(
+      `MATCH(keywords) AGAINST('${userData.keywords
+        .split('|')
+        .map((v) => `>${v}`)
+        .join(' ')}' IN boolean MODE)`
+    ).andWhere('picture.id != :id', { id });
+    const data = await q
+      .andWhere('picture.isPrivate=:private', { private: false })
       .andWhere('picture.deleted = 0')
       .cache(3000)
       .getMany();
@@ -424,7 +555,8 @@ export class PictureService {
       throw new BadRequestException();
     }
     if (data.user.id === user.id) {
-      await this.pictureRepository.createQueryBuilder()
+      await this.pictureRepository
+        .createQueryBuilder()
         .update()
         .set({
           deleted: 1,
@@ -447,8 +579,11 @@ export class PictureService {
    * @memberof PictureService
    */
   public async getUserPreviewPictures(username: string, limit: number) {
-    return this.pictureRepository.createQueryBuilder('picture')
-      .where('picture.userUsername=:username AND picture.deleted = 0', { username })
+    return this.pictureRepository
+      .createQueryBuilder('picture')
+      .where('picture.userUsername=:username AND picture.deleted = 0', {
+        username,
+      })
       .andWhere('picture.deleted = 0')
       .andWhere('picture.isPrivate=0')
       .orderBy('picture.createTime', 'DESC')
@@ -467,11 +602,15 @@ export class PictureService {
   public async getCurrentCollections(id: number, user: UserEntity) {
     return classToPlain(
       await this.collectionService.getCurrentCollections(id, user),
-      { groups: [Role.OWNER] },
+      { groups: [Role.OWNER] }
     );
   }
 
-  public getPictureHotInfoList = async (user: Maybe<UserEntity>, query: GetPictureListDto, info: GraphQLResolveInfo) => {
+  public getPictureHotInfoList = async (
+    user: Maybe<UserEntity>,
+    query: GetPictureListDto,
+    info: GraphQLResolveInfo
+  ) => {
     const client = this.redisManager.getClient();
     const limit = (query.page - 1) * query.pageSize;
     const [ids, count] = await Promise.all([
@@ -490,10 +629,23 @@ export class PictureService {
     return listRequest(query, classToPlain(data), count as number);
   };
 
-  public getCollectionPictureListQuery = (id: number, user: Maybe<UserEntity>, info: GraphQLResolveInfo) => {
-    const q = this.pictureRepository.createQueryBuilder('picture')
-      .leftJoin(this.collectionService.activityMetadata.tableName, 'collectionActivity', 'collectionActivity.pictureId=picture.id')
-      .leftJoin(this.collectionService.metadata.tableName, 'collection', 'collection.id=collectionActivity.collectionId')
+  public getCollectionPictureListQuery = (
+    id: number,
+    user: Maybe<UserEntity>,
+    info: GraphQLResolveInfo
+  ) => {
+    const q = this.pictureRepository
+      .createQueryBuilder('picture')
+      .leftJoin(
+        this.collectionService.activityMetadata.tableName,
+        'collectionActivity',
+        'collectionActivity.pictureId=picture.id'
+      )
+      .leftJoin(
+        this.collectionService.metadata.tableName,
+        'collection',
+        'collection.id=collectionActivity.collectionId'
+      )
       .where('collection.id=:id', { id });
     this.selectInfo(q, user, { info, path: 'data' });
     return q;
@@ -506,7 +658,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public async calculateHotPictures() {
-    const data = await this.pictureRepository.createQueryBuilder('picture')
+    const data = await this.pictureRepository
+      .createQueryBuilder('picture')
       .where('picture.isPrivate=:isPrivate', { isPrivate: false })
       .andWhere('picture.deleted = 0')
       .select('picture.id, picture.views, picture.createTime')
@@ -514,11 +667,11 @@ export class PictureService {
         'picture.badge',
         this.badgeService.pictureActivityMetadata.tableName,
         'pictureBadge',
-        'pictureBadge.pictureId=picture.id AND pictureBadge.badgeId=1',
+        'pictureBadge.pictureId=picture.id AND pictureBadge.badgeId=1'
       )
       .limit(1000)
       .getRawMany();
-    const ids = data.map(v => v.id);
+    const ids = data.map((v) => v.id);
     const [likes, comments] = await Promise.all([
       this.activityService.getPicturesLikeCount(ids),
       this.commentService.getPicturesCommentCount(ids),
@@ -526,8 +679,8 @@ export class PictureService {
     const zData: any[] = [];
     data.forEach((item) => {
       let count = 0;
-      const likeItem = likes.find(v => v.pictureId === item.id);
-      const commentItem = comments.find(v => v.pictureId === item.id);
+      const likeItem = likes.find((v) => v.pictureId === item.id);
+      const commentItem = comments.find((v) => v.pictureId === item.id);
       item.likedCount = Number(likeItem?.count ?? 0);
       item.commentCount = Number(commentItem?.count ?? 0);
       count += item.views;
@@ -539,16 +692,18 @@ export class PictureService {
       item.count = count;
       const crTime = dayjs(item.createTime).valueOf();
       const nowTime = dayjs().valueOf();
-      item.count /= ((nowTime - crTime) / 10000000000);
+      item.count /= (nowTime - crTime) / 10000000000;
       zData.push(item.count, item.id);
     });
     return zData;
   }
 
   public async findCommentCounts(ids: readonly number[]) {
-    const data = await this.commentService.getPicturesCommentCount(ids as number[]);
+    const data = await this.commentService.getPicturesCommentCount(
+      ids as number[]
+    );
     const result = ids.map((id) => {
-      const d = data.find(v => v.pictureId === id);
+      const d = data.find((v) => v.pictureId === id);
       if (!d) {
         return 0;
       }
@@ -563,7 +718,8 @@ export class PictureService {
    * @memberof PictureService
    */
   public select = (user: Maybe<UserEntity>, options?: ISelectOptions) => {
-    const q = this.pictureRepository.createQueryBuilder('picture')
+    const q = this.pictureRepository
+      .createQueryBuilder('picture')
       .andWhere('picture.deleted = 0');
     if (!options?.orderBy) {
       q.orderBy('picture.createTime', 'DESC');
@@ -577,7 +733,11 @@ export class PictureService {
    *
    * @memberof PictureService
    */
-  public selectList = (user: Maybe<UserEntity>, query: GetPictureListDto, options?: ISelectOptions) => {
+  public selectList = (
+    user: Maybe<UserEntity>,
+    query: GetPictureListDto,
+    options?: ISelectOptions
+  ) => {
     const q = this.select(user, options);
     if (query) {
       if (query.timestamp) {
@@ -594,16 +754,27 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public selectInfo = <T>(q: SelectQueryBuilder<T>, user: Maybe<UserEntity>, options?: ISelectOptions) => {
-    q.leftJoinAndSelect('picture.user', options?.value || 'user')
-      .andWhere('picture.deleted = 0');
+  public selectInfo = <T>(
+    q: SelectQueryBuilder<T>,
+    user: Maybe<UserEntity>,
+    options?: ISelectOptions
+  ) => {
+    q.leftJoinAndSelect('picture.user', options?.value || 'user').andWhere(
+      'picture.deleted = 0'
+    );
     if (options && options.info) {
-      const pictureSelect = fieldsProjection(options.info, { path: options?.path || '' });
-      const userSelect = fieldsProjection(options.info, { path: `${options?.path ? `${options?.path}.` : ''}user` });
+      const pictureSelect = fieldsProjection(options.info, {
+        path: options?.path || '',
+      });
+      const userSelect = fieldsProjection(options.info, {
+        path: `${options?.path ? `${options?.path}.` : ''}user`,
+      });
       if (pictureSelect.likedCount) {
         q.loadRelationCountAndMap(
-          'picture.likedCount', 'picture.activities', 'activity',
-          qb => qb.andWhere('activity.like=:like', { like: true }),
+          'picture.likedCount',
+          'picture.activities',
+          'activity',
+          (qb) => qb.andWhere('activity.like=:like', { like: true })
         );
       }
       if (userSelect['badge.id']) {
@@ -611,51 +782,68 @@ export class PictureService {
       }
       if (pictureSelect.isLike && user) {
         q.loadRelationCountAndMap(
-          'picture.isLike', 'picture.activities', 'activity',
-          qb => qb.andWhere(
-            'activity.userId=:userId AND activity.like=:like',
-            { userId: user.id, like: true },
-          ),
+          'picture.isLike',
+          'picture.activities',
+          'activity',
+          (qb) =>
+            qb.andWhere('activity.userId=:userId AND activity.like=:like', {
+              userId: user.id,
+              like: true,
+            })
         );
       }
     }
   };
 
-  public getAllPicture = async () => this.pictureRepository.createQueryBuilder('picture')
-    .getMany();
+  public getAllPicture = async () =>
+    this.pictureRepository.createQueryBuilder('picture').getMany();
 
-  public getNotClassifyPicture = async () => this.pictureRepository.createQueryBuilder('picture')
-    .where('picture.classify is null')
-    .andWhere('picture.deleted = 0')
-    .orderBy('picture.createTime', 'DESC')
-    .skip(0)
-    .take(5)
-    .getMany();
+  public getNotClassifyPicture = async () =>
+    this.pictureRepository
+      .createQueryBuilder('picture')
+      .where('picture.classify is null')
+      .andWhere('picture.deleted = 0')
+      .orderBy('picture.createTime', 'DESC')
+      .skip(0)
+      .take(5)
+      .getMany();
 
-  public updateClassifyPicture = async (id: number, classify: BaiduClassify[]) => this.pictureRepository.createQueryBuilder('picture')
-    .update()
-    .set({ classify })
-    .where('id = :id', { id })
-    .execute();
+  public updateClassifyPicture = async (
+    id: number,
+    classify: BaiduClassify[]
+  ) =>
+    this.pictureRepository
+      .createQueryBuilder('picture')
+      .update()
+      .set({ classify })
+      .where('id = :id', { id })
+      .execute();
 
-  public getRawList = async () => this.pictureRepository.createQueryBuilder('picture')
-    .leftJoinAndSelect('picture.tags', 'tag')
-    .getMany();
+  public getRawList = async () =>
+    this.pictureRepository
+      .createQueryBuilder('picture')
+      .leftJoinAndSelect('picture.tags', 'tag')
+      .getMany();
 
-  public updateRaw = async (picture: PictureEntity, updateData: Partial<PictureEntity>) => this.pictureRepository.save(
-    this.pictureRepository.merge(
-      picture,
-      updateData,
-    ),
-  );
+  public updateRaw = async (
+    picture: PictureEntity,
+    updateData: Partial<PictureEntity>
+  ) =>
+    this.pictureRepository.save(
+      this.pictureRepository.merge(picture, updateData)
+    );
 
   public getPictureLikes = (id: number) => this.activityService.getLikes(id);
 
-  public getUserIsLike = (id: number, user: UserEntity) => this.activityService.isLike(id, user);
+  public getUserIsLike = (id: number, user: UserEntity) =>
+    this.activityService.isLike(id, user);
 
-  public userLikesCount = (id: number) => this.activityService.userLikesCount(id);
+  public userLikesCount = (id: number) =>
+    this.activityService.userLikesCount(id);
 
-  public getPictureLikedCount = (id: number) => this.activityService.getPictureLikedCount(id);
+  public getPictureLikedCount = (id: number) =>
+    this.activityService.getPictureLikedCount(id);
 
-  public getUserLikedCount = (id: number) => this.activityService.getUserLikedCount(id);
+  public getUserLikedCount = (id: number) =>
+    this.activityService.getUserLikedCount(id);
 }

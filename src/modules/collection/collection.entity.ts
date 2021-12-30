@@ -1,6 +1,10 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import {
-  Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
@@ -41,18 +45,23 @@ export class CollectionEntity extends BaseEntity {
 
   /** 收藏夹作者 */
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.collections, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => UserEntity, (user) => user.collections, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
   @Expose()
   public readonly user!: UserEntity;
 
   /* 收藏信息 */
-  @OneToMany(() => CollectionPictureEntity, picture => picture.collection, { onDelete: 'CASCADE' })
+  @OneToMany(() => CollectionPictureEntity, (picture) => picture.collection, {
+    onDelete: 'CASCADE',
+  })
   public info!: CollectionPictureEntity[];
 
   @Expose()
   @Type(() => PictureEntity)
   get preview() {
-    return this.info ? this.info.map(info => info.picture) : [];
+    return this.info ? this.info.map((info) => info.picture) : [];
   }
 
   /** 用户的picture数量 */

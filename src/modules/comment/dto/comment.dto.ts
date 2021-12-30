@@ -17,5 +17,4 @@ export class CreatePictureCommentDot implements Partial<CommentEntity> {
   public readonly content!: string;
 }
 
-export class GetPictureCommentListDto extends PaginationDto {
-}
+export class GetPictureCommentListDto extends PaginationDto {}

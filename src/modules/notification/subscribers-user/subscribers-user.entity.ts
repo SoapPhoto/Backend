@@ -1,6 +1,10 @@
-
 import {
-  Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';

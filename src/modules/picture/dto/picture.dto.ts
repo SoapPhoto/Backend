@@ -1,8 +1,11 @@
+import { Exclude, Expose, Type } from 'class-transformer';
 import {
-  Exclude, Expose, Type,
-} from 'class-transformer';
-import {
-  IsArray, IsBoolean, IsNotEmpty, IsString, IsOptional, IsObject,
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsObject,
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
@@ -10,9 +13,7 @@ import dayjs from 'dayjs';
 import { LocationEntity } from '@server/modules/location/location.entity';
 import { PictureEntity } from '../picture.entity';
 
-export class GetPictureListDto extends PaginationDto {
-
-}
+export class GetPictureListDto extends PaginationDto {}
 
 export class GetNewPictureListDto extends PaginationDto {
   @Type(() => Number)
@@ -26,9 +27,7 @@ export class GetNewPictureListDto extends PaginationDto {
   }
 }
 
-export class GetUserPictureListDto extends GetPictureListDto {
-
-}
+export class GetUserPictureListDto extends GetPictureListDto {}
 
 @Exclude()
 export class CreatePictureAddDot implements Partial<PictureEntity> {

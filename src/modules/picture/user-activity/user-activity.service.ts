@@ -6,7 +6,10 @@ import { isNumberString } from 'class-validator';
 import { NotificationService } from '@server/modules/notification/notification.service';
 import { UserEntity } from '@server/modules/user/user.entity';
 
-import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import {
+  NotificationType,
+  NotificationCategory,
+} from '@common/enum/notification';
 import { GetPictureListDto } from '../dto/picture.dto';
 import { PictureEntity } from '../picture.entity';
 import { PictureUserActivityEntity } from './user-activity.entity';
@@ -16,29 +19,32 @@ export class PictureUserActivityService {
   constructor(
     private readonly notificationService: NotificationService,
     @InjectRepository(PictureUserActivityEntity)
-    private activityRepository: Repository<PictureUserActivityEntity>,
+    private activityRepository: Repository<PictureUserActivityEntity>
   ) {}
 
   get metadata() {
     return this.activityRepository.metadata;
   }
 
-  public getOne = async (pictureId: number, userId: number) => this.activityRepository.createQueryBuilder('activity')
-    .where('activity.pictureId=:pictureId', { pictureId })
-    .leftJoinAndSelect('activity.user', 'user')
-    .leftJoinAndSelect('activity.picture', 'picture')
-    .andWhere('activity.userId=:userId', { userId })
-    .getOne()
+  public getOne = async (pictureId: number, userId: number) =>
+    this.activityRepository
+      .createQueryBuilder('activity')
+      .where('activity.pictureId=:pictureId', { pictureId })
+      .leftJoinAndSelect('activity.user', 'user')
+      .leftJoinAndSelect('activity.picture', 'picture')
+      .andWhere('activity.userId=:userId', { userId })
+      .getOne();
 
   public like = async (
     picture: PictureEntity,
     user: UserEntity,
-    data: boolean,
+    data: boolean
   ) => {
     const activity = await this.getOne(picture.id, user.id);
     if (!activity || activity.like === !data) {
       if (activity) {
-        await this.activityRepository.createQueryBuilder()
+        await this.activityRepository
+          .createQueryBuilder()
           .update(PictureUserActivityEntity)
           .set({ like: data })
           .where('id=:id', { id: activity.id })
@@ -57,15 +63,11 @@ export class PictureUserActivityService {
           .execute();
       }
       if (picture.user.id !== user.id && data) {
-        this.notificationService.publishNotification(
-          user,
-          picture.user,
-          {
-            type: NotificationType.USER,
-            category: NotificationCategory.LIKED,
-            mediaId: picture.id,
-          },
-        );
+        this.notificationService.publishNotification(user, picture.user, {
+          type: NotificationType.USER,
+          category: NotificationCategory.LIKED,
+          mediaId: picture.id,
+        });
       }
       return {
         isLike: data,
@@ -73,71 +75,82 @@ export class PictureUserActivityService {
       };
     }
     throw new BadRequestException('liked');
-  }
+  };
 
   public setInfo = async (
     data: Partial<PictureUserActivityEntity>,
     picture: PictureEntity,
-    user: UserEntity,
+    user: UserEntity
   ) => {
     const activity = await this.getOne(picture.id, user.id);
     if (activity) {
       return this.activityRepository.save(
-        this.activityRepository.merge(activity, data),
+        this.activityRepository.merge(activity, data)
       );
     }
-    return this.activityRepository.save(
-      this.activityRepository.create(data),
-    );
-  }
+    return this.activityRepository.save(this.activityRepository.create(data));
+  };
 
-  public getPicturesLikeCount = async (ids: number[]) => this.activityRepository.createQueryBuilder('activity')
-    .select('COUNT(DISTINCT(`activity`.`id`)) as count, activity.pictureId')
-    .where('activity.pictureId IN (:...ids) AND activity.like=1', { ids })
-    .groupBy('activity.pictureId')
-    .getRawMany()
+  public getPicturesLikeCount = async (ids: number[]) =>
+    this.activityRepository
+      .createQueryBuilder('activity')
+      .select('COUNT(DISTINCT(`activity`.`id`)) as count, activity.pictureId')
+      .where('activity.pictureId IN (:...ids) AND activity.like=1', { ids })
+      .groupBy('activity.pictureId')
+      .getRawMany();
 
-  public getLikes = async (id: number) => this.activityRepository.createQueryBuilder('activity')
-    .where('activity.pictureId=:id AND activity.like=1', { id })
-    .getCount()
+  public getLikes = async (id: number) =>
+    this.activityRepository
+      .createQueryBuilder('activity')
+      .where('activity.pictureId=:id AND activity.like=1', { id })
+      .getCount();
 
   public isLike = async (id: number, user: UserEntity) => {
-    const data = await this.activityRepository.createQueryBuilder('activity')
+    const data = await this.activityRepository
+      .createQueryBuilder('activity')
       .where('activity.pictureId=:id AND activity.userId=:userId', {
         id,
         userId: user.id,
       })
       .getOne();
     return Boolean(data);
-  }
+  };
 
   public userLikesCount = async (userId: number) => {
-    const data = await this.activityRepository.createQueryBuilder('activity')
+    const data = await this.activityRepository
+      .createQueryBuilder('activity')
       .leftJoin('activity.picture', 'picture')
       .where('picture.userId=:userId AND activity.like=1', { userId })
       .andWhere('picture.deleted = 0')
       .getCount();
     return data;
-  }
+  };
 
-  public deleteByPicture = async (picture: PictureEntity, entityManager: EntityManager) => entityManager
-    .createQueryBuilder()
-    .delete()
-    .from(PictureUserActivityEntity)
-    .where('pictureId=:id', { id: picture.id })
-    .execute()
+  public deleteByPicture = async (
+    picture: PictureEntity,
+    entityManager: EntityManager
+  ) =>
+    entityManager
+      .createQueryBuilder()
+      .delete()
+      .from(PictureUserActivityEntity)
+      .where('pictureId=:id', { id: picture.id })
+      .execute();
 
-  public getLikeList = async (userIdOrName: string, query: GetPictureListDto, user: Maybe<UserEntity>): Promise<[number, string[]]> => {
+  public getLikeList = async (
+    userIdOrName: string,
+    query: GetPictureListDto,
+    user: Maybe<UserEntity>
+  ): Promise<[number, string[]]> => {
     const getQ = (isCount = false) => {
       let isMe = false;
       let type = '';
-      const q = this.activityRepository.createQueryBuilder('activity')
+      const q = this.activityRepository
+        .createQueryBuilder('activity')
         .select(
-          ...(
-            isCount
-              ? ['COUNT(DISTINCT(`pictureId`))', 'count']
-              : ['DISTINCT(`pictureId`)', 'id']
-          ) as [string, string],
+          ...((isCount
+            ? ['COUNT(DISTINCT(`pictureId`))', 'count']
+            : ['DISTINCT(`pictureId`)', 'id']) as [string, string])
         )
         .where('activity.like=:like', { like: true });
       if (isNumberString(userIdOrName)) {
@@ -152,18 +165,19 @@ export class PictureUserActivityService {
         .andWhere('picture.isPrivate = 0');
       if (isMe) {
         const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
-        q
-          .andWhere(`((picture.${type}=:id AND ${qO}) OR picture.isPrivate = 0)`, {
+        q.andWhere(
+          `((picture.${type}=:id AND ${qO}) OR picture.isPrivate = 0)`,
+          {
             id: userIdOrName,
-          });
+          }
+        );
       } else {
-        q
-          .andWhere('picture.isPrivate = 0');
+        q.andWhere('picture.isPrivate = 0');
       }
       if (!isCount) {
-        q
-          .addSelect('likedTime')
-          .skip((query.page - 1) * query.pageSize).take(query.pageSize)
+        q.addSelect('likedTime')
+          .skip((query.page - 1) * query.pageSize)
+          .take(query.pageSize)
           .orderBy('activity.likedTime', 'DESC');
       }
       return q;
@@ -173,24 +187,29 @@ export class PictureUserActivityService {
       getQ(true).getRawOne(),
       getQ().getRawMany(),
     ]);
-    return [count.count as number, data.map((activity: {id: string}) => activity.id)];
-  }
+    return [
+      count.count as number,
+      data.map((activity: { id: string }) => activity.id),
+    ];
+  };
 
   public getPictureLikedCount = async (pictureId: number) => {
-    const data = await this.activityRepository.createQueryBuilder('activity')
+    const data = await this.activityRepository
+      .createQueryBuilder('activity')
       .where('activity.pictureId=:pictureId AND activity.like=1', { pictureId })
       .leftJoin('activity.picture', 'picture')
       .andWhere('picture.deleted = 0')
       .getCount();
     return data;
-  }
+  };
 
   public getUserLikedCount = async (userId: number) => {
-    const data = await this.activityRepository.createQueryBuilder('activity')
+    const data = await this.activityRepository
+      .createQueryBuilder('activity')
       .where('activity.userId=:userId AND activity.like=1', { userId })
       .leftJoin('activity.picture', 'picture')
       .andWhere('picture.deleted = 0')
       .getCount();
     return data;
-  }
+  };
 }

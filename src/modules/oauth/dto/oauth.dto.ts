@@ -1,8 +1,6 @@
 import { OauthStateType } from '@common/enum/oauthState';
 import { Exclude, Expose } from 'class-transformer';
-import {
-  IsEnum, IsString, IsNotEmpty,
-} from 'class-validator';
+import { IsEnum, IsString, IsNotEmpty } from 'class-validator';
 import { IsUserName } from '@server/common/validator';
 
 @Exclude()

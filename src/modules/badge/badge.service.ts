@@ -16,7 +16,7 @@ export class BadgeService {
     @Inject(forwardRef(() => UserBadgeActivityService))
     private readonly userBadgeActivityService: UserBadgeActivityService,
     @InjectRepository(BadgeEntity)
-    private badgeRepository: Repository<BadgeEntity>,
+    private badgeRepository: Repository<BadgeEntity>
   ) {}
 
   get pictureActivityMetadata() {
@@ -31,7 +31,7 @@ export class BadgeService {
     user: UserEntity,
     type: BadgeType,
     badgeId: number,
-    targetId: number,
+    targetId: number
   ) {
     if (type === BadgeType.PICTURE) {
       return this.pictureBadgeActivityService.addBadge(user, badgeId, targetId);
@@ -39,12 +39,14 @@ export class BadgeService {
     return this.pictureBadgeActivityService.addBadge(user, badgeId, targetId);
   }
 
-  public getBadges(
-    type: BadgeType,
-    targetId: number,
-  ) {
-    return this.badgeRepository.createQueryBuilder('badge')
-      .leftJoin(this.pictureBadgeActivityService.metadata.tableName, 'badgeActivity', 'badgeActivity.badgeId=badge.id')
+  public getBadges(type: BadgeType, targetId: number) {
+    return this.badgeRepository
+      .createQueryBuilder('badge')
+      .leftJoin(
+        this.pictureBadgeActivityService.metadata.tableName,
+        'badgeActivity',
+        'badgeActivity.badgeId=badge.id'
+      )
       .where('badgeActivity.pictureId=:targetId', { targetId })
       .getMany();
   }

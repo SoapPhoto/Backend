@@ -13,7 +13,7 @@ export class FileService {
     @InjectRepository(FileEntity)
     private fileRepository: Repository<FileEntity>,
     @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService,
+    private readonly userService: UserService
   ) {}
 
   public async create(data: CreateFileDot) {
@@ -27,7 +27,8 @@ export class FileService {
   }
 
   public async getOne(key: string) {
-    return this.fileRepository.createQueryBuilder('file')
+    return this.fileRepository
+      .createQueryBuilder('file')
       .where('file.key=:key', { key })
       .getOne();
   }

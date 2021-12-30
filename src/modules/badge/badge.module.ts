@@ -8,19 +8,12 @@ import { UserBadgeActivityModule } from './user-badge-activity/user-badge-activi
 import { BadgePictureLoader } from './badge.loader';
 
 @Module({
-  providers: [
-    BadgeResolver,
-    BadgeService,
-    BadgePictureLoader,
-  ],
+  providers: [BadgeResolver, BadgeService, BadgePictureLoader],
   imports: [
     TypeOrmModule.forFeature([BadgeEntity]),
     PictureBadgeActivityModule,
     UserBadgeActivityModule,
   ],
-  exports: [
-    BadgeService,
-    BadgePictureLoader,
-  ],
+  exports: [BadgeService, BadgePictureLoader],
 })
 export class BadgeModule {}

@@ -1,5 +1,13 @@
 import {
-  Args, Context, Query, Resolver, ResolveField, Parent, Mutation, Info, Subscription,
+  Args,
+  Context,
+  Query,
+  Resolver,
+  ResolveField,
+  Parent,
+  Mutation,
+  Info,
+  Subscription,
 } from '@nestjs/graphql';
 import { fieldsList } from 'graphql-fields-list';
 
@@ -30,14 +38,14 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
     private readonly followService: FollowService,
-    private readonly pictureService: PictureService,
-  ) { }
+    private readonly pictureService: PictureService
+  ) {}
 
   @Query()
   @Roles(Role.USER)
   public async whoami(
-  @User() user: UserEntity,
-    @Info() info: GraphQLResolveInfo,
+    @User() user: UserEntity,
+    @Info() info: GraphQLResolveInfo
   ) {
     const fields = fieldsList(info);
     return classToPlain(await this.userService.findOne(user.id, user, fields), {
@@ -47,10 +55,10 @@ export class UserResolver {
 
   @Query()
   public async user(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Info() info: GraphQLResolveInfo,
     @Args('id') id: string,
-    @Args('username') username: string,
+    @Args('username') username: string
   ) {
     const fields = fieldsList(info);
     return this.userService.findOne(id || username, user, fields);
@@ -58,46 +66,51 @@ export class UserResolver {
 
   @Query()
   public async userCollectionsByName(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('username') username: string,
-    @Args('query') query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto
   ) {
     return this.collectionService.getUserCollectionList(username, query, user);
   }
 
   @Query()
   public async userCollectionsById(
-  @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>,
     @Args('id') id: string,
-    @Args('query') query: GetPictureListDto,
+    @Args('query') query: GetPictureListDto
   ) {
     return this.collectionService.getUserCollectionList(id, query, user);
   }
 
   @Query()
   public async userPicturesByName(
-  @Context('user') user: Maybe<UserEntity>,
+    @Context('user') user: Maybe<UserEntity>,
     @Args('username') username: string,
     @Args('type') type: UserPictureType,
     @Args('query') query: GetPictureListDto,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     if (type === UserPictureType.MY) {
       return this.pictureService.getUserPicture(username, query, user, info);
     }
     if (type === UserPictureType.CHOICE) {
-      return this.pictureService.getUserChoicePicture(username, query, user, info);
+      return this.pictureService.getUserChoicePicture(
+        username,
+        query,
+        user,
+        info
+      );
     }
     return this.pictureService.getUserLikePicture(username, query, user, info);
   }
 
   @Query()
   public async userPicturesById(
-  @Context('user') user: Maybe<UserEntity>,
+    @Context('user') user: Maybe<UserEntity>,
     @Args('id') id: string,
     @Args('type') type: UserPictureType,
     @Args('query') query: GetPictureListDto,
-    @Info() info: GraphQLResolveInfo,
+    @Info() info: GraphQLResolveInfo
   ) {
     if (type === UserPictureType.MY) {
       return this.pictureService.getUserPicture(id, query, user, info);
@@ -111,8 +124,8 @@ export class UserResolver {
   @Mutation()
   @Roles(Role.USER)
   public async updateProfile(
-  @User() user: UserEntity,
-    @Args('data') data: UpdateProfileSettingDto,
+    @User() user: UserEntity,
+    @Args('data') data: UpdateProfileSettingDto
   ) {
     return this.userService.updateUserProfile(user, data);
   }
@@ -120,8 +133,8 @@ export class UserResolver {
   @Mutation()
   @Roles(Role.USER)
   public async updateCover(
-  @User() user: UserEntity,
-    @Args('cover') cover: string,
+    @User() user: UserEntity,
+    @Args('cover') cover: string
   ) {
     return this.userService.updateCover(user, cover);
   }
@@ -138,57 +151,50 @@ export class UserResolver {
   }
 
   @ResolveField('likedCount')
-  public async likedCount(
-  @Parent() parent: UserEntity,
-  ) {
+  public async likedCount(@Parent() parent: UserEntity) {
     return this.pictureService.getUserLikedCount(parent.id);
   }
 
   @ResolveField('likesCount')
-  public async likesCount(
-  @Parent() parent: UserEntity,
-  ) {
+  public async likesCount(@Parent() parent: UserEntity) {
     return this.pictureService.userLikesCount(parent.id);
   }
 
   @ResolveField('isFollowing')
   public async isFollowing(
-  @User() user: Maybe<UserEntity>,
-    @Parent() parent: UserEntity,
+    @User() user: Maybe<UserEntity>,
+    @Parent() parent: UserEntity
   ) {
     if (!user) return 0;
     return this.followService.isFollowing(user, parent.id);
   }
 
   @ResolveField('isOnline')
-  public async isOnline(
-    @Parent() parent: UserEntity,
-  ) {
+  public async isOnline(@Parent() parent: UserEntity) {
     const client = this.redisManager.getClient();
-    const result = await client.sismember(SUBSCRIPTIONS_ONLINE_USER, `userId:${parent.id.toString()}`);
+    const result = await client.sismember(
+      SUBSCRIPTIONS_ONLINE_USER,
+      `userId:${parent.id.toString()}`
+    );
 
     return result === 1;
     // return this.followService.followerCount(parent.id);
   }
 
   @ResolveField('followerCount')
-  public async followerCount(
-    @Parent() parent: UserEntity,
-  ) {
+  public async followerCount(@Parent() parent: UserEntity) {
     return this.followService.followerCount(parent.id);
   }
 
   @ResolveField('followedCount')
-  public async followedCount(
-    @Parent() parent: UserEntity,
-  ) {
+  public async followedCount(@Parent() parent: UserEntity) {
     return this.followService.followedCount(parent.id);
   }
 
   @ResolveField('pictures')
   public async getAvatarSize(
     @Parent() parent: UserEntity,
-    @Args('limit') limit: number,
+    @Args('limit') limit: number
   ) {
     return this.pictureService.getUserPreviewPictures(parent.username, limit);
   }

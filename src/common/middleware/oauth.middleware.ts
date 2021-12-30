@@ -7,13 +7,15 @@ import * as OAuth2Server from 'oauth2-server';
 
 @Injectable()
 export class OauthMiddleware implements NestMiddleware {
-  constructor(
-    private readonly oauthServerService: OauthServerService,
-  ) {}
+  constructor(private readonly oauthServerService: OauthServerService) {}
 
   public async use(req: any, res: Response, next: () => void) {
-    const isReqAccept = /text\/html|application\/json/g.test(req.headers.accept || '');
-    const isReqContentType = /text\/html|application\/json/g.test(req.headers['content-type'] || '');
+    const isReqAccept = /text\/html|application\/json/g.test(
+      req.headers.accept || ''
+    );
+    const isReqContentType = /text\/html|application\/json/g.test(
+      req.headers['content-type'] || ''
+    );
     if (!isReqAccept && !isReqContentType) {
       next();
       return;
@@ -25,7 +27,10 @@ export class OauthMiddleware implements NestMiddleware {
     const request = new OAuth2Server.Request(req);
     const response = new OAuth2Server.Response(res);
     try {
-      const token = await this.oauthServerService.server.authenticate(request, response);
+      const token = await this.oauthServerService.server.authenticate(
+        request,
+        response
+      );
       req.user = token.user;
     } catch (err) {
       req.user = null;

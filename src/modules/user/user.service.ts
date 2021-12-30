@@ -37,10 +37,12 @@ export class UserService {
     @Inject(forwardRef(() => FileService))
     private readonly fileService: FileService,
     @Inject(forwardRef(() => BadgeService))
-    private readonly badgeService: BadgeService,
+    private readonly badgeService: BadgeService
   ) {}
 
-  public async createUser(data: CreateUserDto & Partial<UserEntity>): Promise<UserEntity> {
+  public async createUser(
+    data: CreateUserDto & Partial<UserEntity>
+  ): Promise<UserEntity> {
     const { salt, hash } = await this.getPassword(data.password);
     const newUser = this.userEntity.create({
       salt,
@@ -49,7 +51,8 @@ export class UserService {
       username: data.username.toLowerCase(),
       email: data.email,
     });
-    await this.userEntity.createQueryBuilder('user')
+    await this.userEntity
+      .createQueryBuilder('user')
       .createQueryBuilder()
       .insert()
       .into(UserEntity)
@@ -64,15 +67,19 @@ export class UserService {
     if (is && is === 'username') {
       username = uid(`${username}-`);
     }
-    return this.userEntity.save(this.userEntity.create({
-      ...data,
-      username: username.toLowerCase(),
-    }));
+    return this.userEntity.save(
+      this.userEntity.create({
+        ...data,
+        username: username.toLowerCase(),
+      })
+    );
   }
 
   public async getPassword(password: string) {
     const salt = await crypto.randomBytes(32).toString('hex');
-    const hash = await crypto.pbkdf2Sync(password, salt, 20, 32, 'sha512').toString('hex');
+    const hash = await crypto
+      .pbkdf2Sync(password, salt, 20, 32, 'sha512')
+      .toString('hex');
     return {
       salt,
       hash,
@@ -112,7 +119,11 @@ export class UserService {
     // 发送email验证邮件
     if (isEmail) {
       try {
-        await this.emailService.sendSignupEmail(info.identifier!, info.verificationToken!, userInfo);
+        await this.emailService.sendSignupEmail(
+          info.identifier!,
+          info.verificationToken!,
+          userInfo
+        );
       } catch (err) {
         this.logger.error(err);
         throw new BadRequestException('activation_email_failed');
@@ -123,13 +134,19 @@ export class UserService {
     };
   }
 
-  public async verifyUser(username: string, password: string): Promise<UserEntity | undefined> {
-    const q = this.userEntity.createQueryBuilder('user')
+  public async verifyUser(
+    username: string,
+    password: string
+  ): Promise<UserEntity | undefined> {
+    const q = this.userEntity
+      .createQueryBuilder('user')
       .where('user.username=:username', { username });
     this.selectBadge(q);
     const user = await q.getOne();
     if (user) {
-      const hash = crypto.pbkdf2Sync(password, user.salt, 20, 32, 'sha512').toString('hex');
+      const hash = crypto
+        .pbkdf2Sync(password, user.salt, 20, 32, 'sha512')
+        .toString('hex');
       if (hash !== user.hash) {
         return undefined;
       }
@@ -141,7 +158,11 @@ export class UserService {
     return undefined;
   }
 
-  public async findOne(query: ID, _user: Maybe<UserEntity>, info?: GraphQLResolveInfo | string[]) {
+  public async findOne(
+    query: ID,
+    _user: Maybe<UserEntity>,
+    info?: GraphQLResolveInfo | string[]
+  ) {
     const q = this.userEntity.createQueryBuilder('user');
     const isId = isNumber(query) || isNumberString(query as string);
     if (isId) {
@@ -188,43 +209,54 @@ export class UserService {
    */
   public selectBadge<E>(q: SelectQueryBuilder<E>, value = 'user') {
     return q
-      .leftJoin(this.badgeService.userActivityMetadata.tableName, 'userBadgeActivity', `userBadgeActivity.userId=${value}.id`)
-      .leftJoinAndMapMany(`${value}.badge`, BadgeEntity, 'userBadge', 'userBadgeActivity.badgeId=userBadge.id');
+      .leftJoin(
+        this.badgeService.userActivityMetadata.tableName,
+        'userBadgeActivity',
+        `userBadgeActivity.userId=${value}.id`
+      )
+      .leftJoinAndMapMany(
+        `${value}.badge`,
+        BadgeEntity,
+        'userBadge',
+        'userBadgeActivity.badgeId=userBadge.id'
+      );
   }
 
   public async getRawIdsList(ids: string[], _user: Maybe<UserEntity>) {
-    const q = this.userEntity.createQueryBuilder('user')
+    const q = this.userEntity
+      .createQueryBuilder('user')
       .where('user.id IN (:...ids)', { ids });
     this.selectBadge(q);
     return q.getMany();
   }
 
-  public async updateUser(user: UserEntity, body: Partial<UserEntity>, groups?: string[]) {
-    const data = await this.userEntity.save(
-      this.userEntity.merge(
-        user,
-        body,
-      ),
-    );
+  public async updateUser(
+    user: UserEntity,
+    body: Partial<UserEntity>,
+    groups?: string[]
+  ) {
+    const data = await this.userEntity.save(this.userEntity.merge(user, body));
     return plainToClass(UserEntity, data, {
       groups,
     });
   }
 
   public async findAllUsers() {
-    return this.userEntity.createQueryBuilder('user')
-      .getMany();
+    return this.userEntity.createQueryBuilder('user').getMany();
   }
 
-  public async updateUserProfile(user: UserEntity, body: UpdateProfileSettingDto) {
+  public async updateUserProfile(
+    user: UserEntity,
+    body: UpdateProfileSettingDto
+  ) {
     const [, data] = await Promise.all([
       this.fileService.activated(body.key),
       this.userEntity.save(
         this.userEntity.merge(
           user,
           omit(body, ['key']),
-          body.key ? { avatar: body.key } : {},
-        ),
+          body.key ? { avatar: body.key } : {}
+        )
       ),
     ]);
     return classToPlain(data, {
@@ -233,16 +265,14 @@ export class UserService {
   }
 
   public async updateCover(user: UserEntity, cover: string) {
-    const m = this.userEntity.createQueryBuilder()
+    const m = this.userEntity
+      .createQueryBuilder()
       .update()
       .set({
         cover,
       })
       .where('id = :id', { id: user.id });
-    await Promise.all([
-      this.fileService.activated(cover),
-      m.execute(),
-    ]);
+    await Promise.all([this.fileService.activated(cover), m.execute()]);
     const data = await this.findOne(user.id, null);
     return classToPlain(data, {
       groups: [Role.OWNER],

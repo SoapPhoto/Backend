@@ -11,23 +11,25 @@ export interface IChildCommentLoaderArgs {
 }
 
 @Injectable({ scope: Scope.REQUEST })
-export class ChildCommentLoader implements NestDataLoader<IChildCommentLoaderArgs, CommentEntity[]> {
-  constructor(
-    private readonly commentService: CommentService,
-  ) { }
+export class ChildCommentLoader
+  implements NestDataLoader<IChildCommentLoaderArgs, CommentEntity[]>
+{
+  constructor(private readonly commentService: CommentService) {}
 
   public generateDataLoader() {
-    return new DataLoader<IChildCommentLoaderArgs, CommentEntity[]>(keys => this.commentService.findByChildComments(keys));
+    return new DataLoader<IChildCommentLoaderArgs, CommentEntity[]>((keys) =>
+      this.commentService.findByChildComments(keys)
+    );
   }
 }
 
 @Injectable({ scope: Scope.REQUEST })
 export class CommentSubCountLoader implements NestDataLoader<number, number> {
-  constructor(
-    private readonly commentService: CommentService,
-  ) { }
+  constructor(private readonly commentService: CommentService) {}
 
   public generateDataLoader() {
-    return new DataLoader<number, number>(keys => this.commentService.findBySubCounts(keys));
+    return new DataLoader<number, number>((keys) =>
+      this.commentService.findBySubCounts(keys)
+    );
   }
 }

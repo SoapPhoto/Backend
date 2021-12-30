@@ -11,7 +11,7 @@ import { BadgeEntity } from '../badge.entity';
 export class PictureBadgeActivityService {
   constructor(
     @InjectRepository(PictureBadgeActivityEntity)
-    private activityRepository: Repository<PictureBadgeActivityEntity>,
+    private activityRepository: Repository<PictureBadgeActivityEntity>
   ) {}
 
   get metadata() {
@@ -19,17 +19,18 @@ export class PictureBadgeActivityService {
   }
 
   public async isExist(badgeId: number, pictureId: number) {
-    return !!await this.activityRepository.findOne({ badgeId, pictureId });
+    return !!(await this.activityRepository.findOne({ badgeId, pictureId }));
   }
 
   public async addBadge(user: UserEntity, badgeId: number, pictureId: number) {
-    if (await this.isExist(badgeId, pictureId)) throw new BadGatewayException('badge_exist');
+    if (await this.isExist(badgeId, pictureId))
+      throw new BadGatewayException('badge_exist');
     return this.activityRepository.save(
       this.activityRepository.create({
         badgeId,
         pictureId,
         createUserId: user.id,
-      }),
+      })
     );
   }
 
@@ -54,6 +55,9 @@ export class PictureBadgeActivityService {
         badgeMap[badge.pictureId] = [badge];
       }
     });
-    return plainToClass(BadgeEntity, ids.map(id => plainToClass(BadgeEntity, badgeMap[id] || [])));
+    return plainToClass(
+      BadgeEntity,
+      ids.map((id) => plainToClass(BadgeEntity, badgeMap[id] || []))
+    );
   }
 }

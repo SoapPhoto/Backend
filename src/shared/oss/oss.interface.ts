@@ -1,4 +1,3 @@
-
 export interface ISts {
   AccessKeyId: string;
   AccessKeySecret: string;

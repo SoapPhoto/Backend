@@ -19,7 +19,11 @@ export const clientInfo = (req: Request) => ({
   },
 });
 
-export const listRequest = <Q extends Omit<PaginationDto, 'time'>, T>(query: Q, data: T, count: number): IListRequest<T> => ({
+export const listRequest = <Q extends Omit<PaginationDto, 'time'>, T>(
+  query: Q,
+  data: T,
+  count: number
+): IListRequest<T> => ({
   count,
   data,
   page: query.page,

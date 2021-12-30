@@ -1,6 +1,4 @@
-import {
-  Column, Entity, ManyToOne, PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { FileType } from './enum/type.enum';

@@ -12,9 +12,6 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import * as Sentry from '@sentry/node';
-import RateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
-import Redis from 'ioredis';
 
 import { AppModule } from './app.module';
 import { LoggingService } from './shared/logging/logging.service';
@@ -44,15 +41,19 @@ const bootstrap = async () => {
   // server.use(limiter);
   server.use(bodyParser.json({ limit: '50mb' }));
   server.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-  server.use(helmet({
-    contentSecurityPolicy: false,
-  }));
+  server.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+  );
   server.use(compression());
   server.use(cookieParser());
   // server.useGlobalInterceptors(new TransformInterceptor());
-  server.useGlobalPipes(new ValidationPipe({
-    transform: true,
-  }));
+  server.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    })
+  );
   server.enableCors({
     origin: process.env.URL,
     credentials: true,

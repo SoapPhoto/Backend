@@ -14,14 +14,12 @@ import { InviteService } from './invite.service';
 export class InviteResolver {
   constructor(
     @Inject(forwardRef(() => InviteService))
-    private readonly inviteService: InviteService,
-  ) { }
+    private readonly inviteService: InviteService
+  ) {}
 
   @Mutation()
   @Roles(Role.ADMIN, Role.OWNER)
-  public async createInvite(
-    @User() user: UserEntity,
-  ) {
+  public async createInvite(@User() user: UserEntity) {
     // console.log(user);
     const data = await this.inviteService.create();
     return classToPlain(data, {

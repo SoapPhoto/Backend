@@ -8,10 +8,12 @@ import { PictureBadgeActivityService } from './picture-badge-activity/picture-ba
 @Injectable({ scope: Scope.REQUEST })
 export class BadgePictureLoader implements NestDataLoader<number, BadgeEntity> {
   constructor(
-    private readonly pictureBadgeActivityService: PictureBadgeActivityService,
-  ) { }
+    private readonly pictureBadgeActivityService: PictureBadgeActivityService
+  ) {}
 
   public generateDataLoader(): DataLoader<number, BadgeEntity> {
-    return new DataLoader<number, BadgeEntity>(keys => this.pictureBadgeActivityService.findByIds(keys));
+    return new DataLoader<number, BadgeEntity>((keys) =>
+      this.pictureBadgeActivityService.findByIds(keys)
+    );
   }
 }

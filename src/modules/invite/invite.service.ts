@@ -12,7 +12,7 @@ import { InviteEntity } from './invite.entity';
 export class InviteService {
   constructor(
     @InjectRepository(InviteEntity)
-    private inviteRepository: Repository<InviteEntity>,
+    private inviteRepository: Repository<InviteEntity>
   ) {}
 
   public async create() {
@@ -20,7 +20,7 @@ export class InviteService {
     return this.inviteRepository.save(
       this.inviteRepository.create({
         code,
-      }),
+      })
     );
   }
 }

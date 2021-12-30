@@ -1,6 +1,4 @@
-import {
-  Resolver, Mutation, Context, Args, Query,
-} from '@nestjs/graphql';
+import { Resolver, Mutation, Context, Args, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { AuthGuard } from '@server/common/guard/auth.guard';
@@ -13,9 +11,7 @@ import { BadgeService } from './badge.service';
 @Resolver('Badge')
 @UseGuards(AuthGuard)
 export class BadgeResolver {
-  constructor(
-    private readonly badgeService: BadgeService,
-  ) {}
+  constructor(private readonly badgeService: BadgeService) {}
 
   @Roles(Role.ADMIN, Role.OWNER)
   @Mutation()
@@ -23,7 +19,7 @@ export class BadgeResolver {
     @Context('user') user: UserEntity,
     @Args('type') type: BadgeType,
     @Args('badgeId') badgeId: number,
-    @Args('targetId') targetId: number,
+    @Args('targetId') targetId: number
   ) {
     await this.badgeService.addBadge(user, type, badgeId, targetId);
     return {
@@ -34,7 +30,7 @@ export class BadgeResolver {
   @Query()
   public async getBadges(
     @Args('type') type: BadgeType,
-    @Args('targetId') targetId: number,
+    @Args('targetId') targetId: number
   ) {
     return this.badgeService.getBadges(type, targetId);
   }

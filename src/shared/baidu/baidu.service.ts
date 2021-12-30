@@ -20,13 +20,17 @@ export class BaiduService {
 
   public async getAccountToken() {
     if (dayjs(this.expiresDate).isBefore(dayjs()) || !this.token) {
-      const { data } = await Axios.post<BaiduToken>('https://aip.baidubce.com/oauth/2.0/token', {}, {
-        params: {
-          grant_type: 'client_credentials',
-          client_id: process.env.BAIDU_CLIENT_ID,
-          client_secret: process.env.BAIDU_CLIENT_SECRET,
-        },
-      });
+      const { data } = await Axios.post<BaiduToken>(
+        'https://aip.baidubce.com/oauth/2.0/token',
+        {},
+        {
+          params: {
+            grant_type: 'client_credentials',
+            client_id: process.env.BAIDU_CLIENT_ID,
+            client_secret: process.env.BAIDU_CLIENT_SECRET,
+          },
+        }
+      );
       this.token = data;
       this.expiresDate = dayjs().add(this.token.expires_in, 's').toString();
     }
@@ -42,8 +46,11 @@ export class BaiduService {
    */
   public async getImageClassify(image: string, url = false) {
     const token = await this.getAccountToken();
-    const { data } = await Axios.post<{result: BaiduClassify[]}>('https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general',
-      qs.stringify({ [url ? 'url' : 'image']: url ? image : image.split(',')[1] }),
+    const { data } = await Axios.post<{ result: BaiduClassify[] }>(
+      'https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general',
+      qs.stringify({
+        [url ? 'url' : 'image']: url ? image : image.split(',')[1],
+      }),
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -51,7 +58,8 @@ export class BaiduService {
         params: {
           access_token: token.access_token,
         },
-      });
+      }
+    );
     if ((data as any).error_msg) {
       throw new BadGatewayException((data as any).error_msg);
     }
@@ -69,7 +77,10 @@ export class BaiduService {
    * @return {*}  {Promise<Place[]>}
    * @memberof BaiduService
    */
-  public async chinaPlaceSearch(query: string, region?: string): Promise<Place[]> {
+  public async chinaPlaceSearch(
+    query: string,
+    region?: string
+  ): Promise<Place[]> {
     const q = {
       ak: this.mapToken,
       scope: 2,
@@ -78,16 +89,26 @@ export class BaiduService {
       region: region || '全国',
       query,
     };
-    const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/search', {}, {
-      params: q,
-    });
+    const { data } = await Axios.post<any>(
+      'https://api.map.baidu.com/place/v2/search',
+      {},
+      {
+        params: q,
+      }
+    );
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results.map((v: any) => ({ ...v, detail: v.detail_info })));
+      return plainToClass<Place, any[]>(
+        Place,
+        data.results.map((v: any) => ({ ...v, detail: v.detail_info }))
+      );
     }
     return [];
   }
 
-  public async abroadPlaceSearch(region: string, query: string): Promise<Place[]> {
+  public async abroadPlaceSearch(
+    region: string,
+    query: string
+  ): Promise<Place[]> {
     const q = {
       ak: this.mapToken,
       scope: 2,
@@ -96,11 +117,18 @@ export class BaiduService {
       region,
       query,
     };
-    const { data } = await Axios.post<any>('http://api.map.baidu.com/place_abroad/v1/search', {}, {
-      params: q,
-    });
+    const { data } = await Axios.post<any>(
+      'http://api.map.baidu.com/place_abroad/v1/search',
+      {},
+      {
+        params: q,
+      }
+    );
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.results.map((v: any) => ({ ...v, detail: v.detail_info })));
+      return plainToClass<Place, any[]>(
+        Place,
+        data.results.map((v: any) => ({ ...v, detail: v.detail_info }))
+      );
     }
     return [];
   }
@@ -113,17 +141,22 @@ export class BaiduService {
    * @memberof BaiduService
    */
   public async reverseGeocoding(location: string): Promise<Place[]> {
-    const geo = location.split(',').map(v => Number(v))as [number, number];
-    const { data } = await Axios.get('https://api.map.baidu.com/reverse_geocoding/v3/', {
-      params: {
-        location: gcoord.transform<Position>(geo, gcoord.GCJ02, gcoord.BD09).toString(),
-        region: '全国',
-        output: 'json',
-        extensions_poi: 1,
-        ak: process.env.BAIDU_MAP_BACK_AK,
-        scope: 2,
-      },
-    });
+    const geo = location.split(',').map((v) => Number(v)) as [number, number];
+    const { data } = await Axios.get(
+      'https://api.map.baidu.com/reverse_geocoding/v3/',
+      {
+        params: {
+          location: gcoord
+            .transform<Position>(geo, gcoord.GCJ02, gcoord.BD09)
+            .toString(),
+          region: '全国',
+          output: 'json',
+          extensions_poi: 1,
+          ak: process.env.BAIDU_MAP_BACK_AK,
+          scope: 2,
+        },
+      }
+    );
     if (data.status === 0 && data.result && data.result.pois) {
       const { addressComponent, pois } = data.result;
       const address = {
@@ -132,24 +165,30 @@ export class BaiduService {
         city: addressComponent.city,
         area: addressComponent.district,
       };
-      return plainToClass<Place, any[]>(Place, pois.map((poi: any) => ({
-        name: poi.name,
-        ...address,
-        location: {
-          lng: poi.point.x,
-          lat: poi.point.y,
-        },
-        address: poi.addr,
-        uid: poi.uid,
-        detail: {
-          tag: poi.tag,
-        },
-      })));
+      return plainToClass<Place, any[]>(
+        Place,
+        pois.map((poi: any) => ({
+          name: poi.name,
+          ...address,
+          location: {
+            lng: poi.point.x,
+            lat: poi.point.y,
+          },
+          address: poi.addr,
+          uid: poi.uid,
+          detail: {
+            tag: poi.tag,
+          },
+        }))
+      );
     }
     return [];
   }
 
-  public async placeSuggestion(query: string, region?: string): Promise<Place[]> {
+  public async placeSuggestion(
+    query: string,
+    region?: string
+  ): Promise<Place[]> {
     const q = {
       ak: this.mapToken,
       output: 'json',
@@ -157,16 +196,23 @@ export class BaiduService {
       region: region || '全国',
       query,
     };
-    const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/suggestion', {}, {
-      params: q,
-    });
+    const { data } = await Axios.post<any>(
+      'https://api.map.baidu.com/place/v2/suggestion',
+      {},
+      {
+        params: q,
+      }
+    );
     if (data.status === 0) {
-      return plainToClass<Place, any[]>(Place, data.result.map((v: any) => ({ ...v })));
+      return plainToClass<Place, any[]>(
+        Place,
+        data.result.map((v: any) => ({ ...v }))
+      );
     }
     return [];
   }
 
-  public async placeDetail(uid: string): Promise<LocationEntity|undefined> {
+  public async placeDetail(uid: string): Promise<LocationEntity | undefined> {
     const q = {
       ak: this.mapToken,
       output: 'json',
@@ -174,11 +220,18 @@ export class BaiduService {
       ret_coordtype: 'gcj02ll',
       uid,
     };
-    const { data } = await Axios.post<any>('https://api.map.baidu.com/place/v2/detail', {}, {
-      params: q,
-    });
+    const { data } = await Axios.post<any>(
+      'https://api.map.baidu.com/place/v2/detail',
+      {},
+      {
+        params: q,
+      }
+    );
     if (data.status === 0 && data.result) {
-      return plainToClass<LocationEntity, any>(LocationEntity, { ...data.result, detail: data.result.detail_info });
+      return plainToClass<LocationEntity, any>(LocationEntity, {
+        ...data.result,
+        detail: data.result.detail_info,
+      });
     }
     return undefined;
   }

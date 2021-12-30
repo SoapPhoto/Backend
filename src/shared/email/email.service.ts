@@ -28,14 +28,20 @@ export class EmailService {
   }
 
   public setMailContent(type: string, options: Record<string, string>) {
-    const string = fs.readFileSync(path.join(__dirname, `./template/${type}.mjml`)).toString();
+    const string = fs
+      .readFileSync(path.join(__dirname, `./template/${type}.mjml`))
+      .toString();
     return lodash.template(string)({
       ...options,
       host: `${process.env.URL}`,
     });
   }
 
-  public async sendSignupEmail(identifier: string, verificationToken: string, userInfo: UserEntity) {
+  public async sendSignupEmail(
+    identifier: string,
+    verificationToken: string,
+    userInfo: UserEntity
+  ) {
     return this.transporter.sendMail({
       from: `"Soap 👻" <${process.env.EMAIL_USER}>`,
       to: identifier,
@@ -45,8 +51,10 @@ export class EmailService {
           identifier,
           verificationToken,
           username: userInfo.username,
-          id: Buffer.from(userInfo.id.toString() as any).toString('base64').replace('=', ''),
-        }),
+          id: Buffer.from(userInfo.id.toString() as any)
+            .toString('base64')
+            .replace('=', ''),
+        })
       ).html,
     });
   }

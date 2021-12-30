@@ -6,4 +6,4 @@ export enum Role {
   OWNER = 'OWNER',
 }
 
-export const RoleValues = $enum(Role).map(key => Role[key]);
+export const RoleValues = $enum(Role).map((key) => Role[key]);

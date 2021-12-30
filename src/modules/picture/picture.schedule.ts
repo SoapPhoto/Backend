@@ -1,7 +1,5 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import {
-  Cron, NestSchedule,
-} from 'nest-schedule';
+import { Cron, NestSchedule } from 'nest-schedule';
 import { PictureService } from '@server/modules/picture/picture.service';
 import { RedisManager } from '@liaoliaots/nestjs-redis';
 import dayjs from 'dayjs';
@@ -11,7 +9,7 @@ export class PictureScheduleService extends NestSchedule {
   constructor(
     @Inject(forwardRef(() => PictureService))
     private readonly pictureService: PictureService,
-    private readonly redisManager: RedisManager,
+    private readonly redisManager: RedisManager
   ) {
     super();
   }

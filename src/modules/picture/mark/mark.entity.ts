@@ -1,6 +1,4 @@
-import {
-  Column, Entity, ManyToOne, PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { PictureMarkType } from '@common/enum/picture';

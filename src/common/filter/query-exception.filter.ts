@@ -1,5 +1,8 @@
 import {
-  ArgumentsHost, Catch, ExceptionFilter, HttpStatus,
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
 } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';
 
@@ -11,12 +14,10 @@ export class QueryExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     Logger.error(exception);
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        timestamp: new Date().toISOString(),
-        message: exception.message,
-      });
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      timestamp: new Date().toISOString(),
+      message: exception.message,
+    });
   }
 }

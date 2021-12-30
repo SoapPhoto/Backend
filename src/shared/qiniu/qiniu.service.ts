@@ -11,7 +11,7 @@ export class QiniuService {
     // callbackUrl: 'https://eniluiqxyujmi.x.pipedream.net/api/file/upload/callback',
     callbackUrl: `${process.env.API_URL}/api/file/upload/callback`,
     callbackBodyType: 'application/json',
-  }
+  };
 
   private baseCallbackBody = {
     key: '$(key)',
@@ -19,9 +19,9 @@ export class QiniuService {
     size: '$(fsize)',
     mimetype: '$(mimeType)',
     originalname: '$(fname)',
-  }
+  };
 
-  public uploadFile(file: File): Promise<{hash: string; key: string}> {
+  public uploadFile(file: File): Promise<{ hash: string; key: string }> {
     const uploadConfig = new qiniu.conf.Config() as any;
     uploadConfig.zone = qiniu.zone.Zone_z0;
     const formUploader = new qiniu.form_up.FormUploader(uploadConfig);
@@ -41,13 +41,16 @@ export class QiniuService {
           } else {
             reject(respInfo);
           }
-        },
+        }
       );
     });
   }
 
   public createToken(callbackData: Record<string, string | number> = {}) {
-    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
+    const mac = new qiniu.auth.digest.Mac(
+      process.env.QN_ACCESS_KEY,
+      process.env.QN_SECRET_KEY
+    );
     const putPolicy = new qiniu.rs.PutPolicy({
       ...this.config,
       callbackBody: JSON.stringify({
@@ -59,7 +62,10 @@ export class QiniuService {
   }
 
   public createBucketManager() {
-    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
+    const mac = new qiniu.auth.digest.Mac(
+      process.env.QN_ACCESS_KEY,
+      process.env.QN_SECRET_KEY
+    );
     const config = new qiniu.conf.Config() as any;
     config.zone = qiniu.zone.Zone_z0;
     return new qiniu.rs.BucketManager(mac, config);
@@ -68,21 +74,28 @@ export class QiniuService {
   public deleteFile(key: string) {
     const bucketManager = this.createBucketManager();
     return new Promise((resolve, reject) => {
-      bucketManager.delete(process.env.QN_BUCKET!, key, (respErr, respBody, respInfo) => {
-        if (respErr) {
-          reject(respErr);
+      bucketManager.delete(
+        process.env.QN_BUCKET!,
+        key,
+        (respErr, respBody, respInfo) => {
+          if (respErr) {
+            reject(respErr);
+          }
+          if (respInfo.statusCode === 200 || respInfo.statusCode === 612) {
+            resolve(respBody);
+          } else {
+            reject(respInfo);
+          }
         }
-        if (respInfo.statusCode === 200 || respInfo.statusCode === 612) {
-          resolve(respBody);
-        } else {
-          reject(respInfo);
-        }
-      });
+      );
     });
   }
 
   public isQiniuCallback(url: string, authorization: string) {
-    const mac = new qiniu.auth.digest.Mac(process.env.QN_ACCESS_KEY, process.env.QN_SECRET_KEY);
+    const mac = new qiniu.auth.digest.Mac(
+      process.env.QN_ACCESS_KEY,
+      process.env.QN_SECRET_KEY
+    );
     try {
       return qiniu.util.isQiniuCallback(mac, url, null, authorization);
     } catch {
@@ -93,18 +106,23 @@ export class QiniuService {
   public async fetch(url: string, key: string): Promise<any> {
     const bucketManager = this.createBucketManager();
     return new Promise((resolve, reject) => {
-      bucketManager.fetch(url, this.config.scope!, key, (err, respBody, respInfo) => {
-        if (err) {
-          reject(err);
-          // throw err;
-        } else if (respInfo.statusCode === 200) {
-          resolve(respBody);
-        } else {
-          console.log(respInfo.statusCode);
-          console.log(respBody);
-          reject(respInfo);
+      bucketManager.fetch(
+        url,
+        this.config.scope!,
+        key,
+        (err, respBody, respInfo) => {
+          if (err) {
+            reject(err);
+            // throw err;
+          } else if (respInfo.statusCode === 200) {
+            resolve(respBody);
+          } else {
+            console.log(respInfo.statusCode);
+            console.log(respBody);
+            reject(respInfo);
+          }
         }
-      });
+      );
     });
   }
 }

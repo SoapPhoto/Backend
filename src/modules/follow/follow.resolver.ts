@@ -1,8 +1,9 @@
+import { Resolver, Context, Args, Mutation, Query } from '@nestjs/graphql';
 import {
-  Resolver, Context, Args, Mutation, Query,
-} from '@nestjs/graphql';
-import {
-  forwardRef, Inject, BadGatewayException, UseGuards,
+  forwardRef,
+  Inject,
+  BadGatewayException,
+  UseGuards,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -18,13 +19,13 @@ import { FollowUserDto, FollowUsersDto } from './dto/follow.dto';
 export class FollowResolver {
   constructor(
     @Inject(forwardRef(() => FollowService))
-    private readonly followService: FollowService,
+    private readonly followService: FollowService
   ) {}
 
   @Query()
   public async followerUsers(
     @Args('id') id: number,
-    @Args('query') query: PaginationDto,
+    @Args('query') query: PaginationDto
   ) {
     return this.followService.followUsers(id, query);
   }
@@ -32,7 +33,7 @@ export class FollowResolver {
   @Query()
   public async followedUsers(
     @Args('id') id: number,
-    @Args('query') query: PaginationDto,
+    @Args('query') query: PaginationDto
   ) {
     return this.followService.followUsers(id, query, 'followed');
   }
@@ -41,7 +42,7 @@ export class FollowResolver {
   @Roles(Role.USER)
   public async followUser(
     @Context('user') user: UserEntity,
-    @Args('input') input: FollowUserDto,
+    @Args('input') input: FollowUserDto
   ) {
     if (user.id === input.userId) {
       throw new BadGatewayException('no follow me');
@@ -57,7 +58,7 @@ export class FollowResolver {
   @Roles(Role.USER)
   public async unFollowUser(
     @Context('user') user: UserEntity,
-    @Args('input') input: FollowUserDto,
+    @Args('input') input: FollowUserDto
   ) {
     if (user.id === input.userId) {
       throw new BadGatewayException('no unFollow me');

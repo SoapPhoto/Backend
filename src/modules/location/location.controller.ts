@@ -1,5 +1,10 @@
 import {
-  Controller, Inject, forwardRef, Get, Param, Query,
+  Controller,
+  Inject,
+  forwardRef,
+  Get,
+  Param,
+  Query,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -14,7 +19,7 @@ export class LocationController {
     @Inject(forwardRef(() => LocationService))
     private readonly locationService: LocationService,
     @Inject(forwardRef(() => MapboxService))
-    private readonly mapboxService: MapboxService,
+    private readonly mapboxService: MapboxService
   ) {}
 
   @Get('place/:search')
@@ -22,7 +27,7 @@ export class LocationController {
   public async searchPlace(
     @Query('region') region: string,
     @Param('search') value: string,
-    @Query('clientType') type = LocationClientType.BAIDU,
+    @Query('clientType') type = LocationClientType.BAIDU
   ) {
     if (type === LocationClientType.BAIDU) {
       return this.locationService.search(region, value);
@@ -31,9 +36,7 @@ export class LocationController {
   }
 
   @Get('reverse/geocoding')
-  public async reverseGeocoding(
-    @Query('location') location: string,
-  ) {
+  public async reverseGeocoding(@Query('location') location: string) {
     return this.locationService.reverseGeocoding(location);
   }
 }

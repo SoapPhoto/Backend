@@ -1,6 +1,4 @@
-import {
-  Entity, PrimaryGeneratedColumn, Column,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
 import { BaseEntity } from '@server/common/base.entity';

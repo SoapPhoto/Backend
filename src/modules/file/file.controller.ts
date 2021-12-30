@@ -31,14 +31,14 @@ export class FileController {
   constructor(
     private readonly qiniuService: QiniuService,
     private readonly ossService: OssService,
-    private readonly fileService: FileService,
+    private readonly fileService: FileService
   ) {}
 
   @Get('token')
   @Roles(Role.USER)
   public getUploadToken(
-  @Query() callbackData: GetTokenDot,
-    @User() user: UserEntity,
+    @Query() callbackData: GetTokenDot,
+    @User() user: UserEntity
   ) {
     return this.qiniuService.createToken({
       ...callbackData,
@@ -53,8 +53,8 @@ export class FileController {
 
   @All('upload/oss/callback')
   public async uploadOssCallback(
-  @Req() req: Request,
-    @Body() data: CreateOssFileDot,
+    @Req() req: Request,
+    @Body() data: CreateOssFileDot
   ) {
     await this.ossService.isOssCallback(data, req);
     await this.fileService.create({
@@ -71,11 +71,17 @@ export class FileController {
 
   @All('upload/callback')
   public uploadCallback(
-  @Body() data: CreateFileDot,
+    @Body() data: CreateFileDot,
     @Req() req: Request,
-    @Headers('authorization') token: string,
+    @Headers('authorization') token: string
   ) {
-    if (this.qiniuService.isQiniuCallback(`https://${req.headers.host}${req.originalUrl}`, token) && data.userId) {
+    if (
+      this.qiniuService.isQiniuCallback(
+        `https://${req.headers.host}${req.originalUrl}`,
+        token
+      ) &&
+      data.userId
+    ) {
       try {
         return this.fileService.create(data);
       } catch (err) {

@@ -1,5 +1,9 @@
 import {
-  ForbiddenException, Injectable, NotFoundException, Inject, forwardRef,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
@@ -14,7 +18,10 @@ import { UserService } from '@server/modules/user/user.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { CollectionEntity } from './collection.entity';
 import {
-  CreateCollectionDot, GetCollectionPictureListDto, GetUserCollectionListDto, UpdateCollectionDot,
+  CreateCollectionDot,
+  GetCollectionPictureListDto,
+  GetUserCollectionListDto,
+  UpdateCollectionDot,
 } from './dto/collection.dto';
 import { CollectionPictureEntity } from './picture/collection-picture.entity';
 
@@ -28,7 +35,7 @@ export class CollectionService {
     @Inject(forwardRef(() => PictureService))
     private pictureService: PictureService,
     @Inject(forwardRef(() => UserService))
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   get metadata() {
@@ -52,13 +59,18 @@ export class CollectionService {
       this.collectionEntity.create({
         ...body,
         user,
-      }),
+      })
     );
     return this.getCollectionDetail(data.id, user);
   }
 
-  public async updateCollection(body: UpdateCollectionDot, id: number, user: UserEntity) {
-    const collection = await this.collectionEntity.createQueryBuilder('collection')
+  public async updateCollection(
+    body: UpdateCollectionDot,
+    id: number,
+    user: UserEntity
+  ) {
+    const collection = await this.collectionEntity
+      .createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user')
       .getOne();
@@ -66,7 +78,8 @@ export class CollectionService {
     if (!collection || collection.user.id !== user.id) {
       throw new ForbiddenException();
     }
-    await this.collectionEntity.createQueryBuilder()
+    await this.collectionEntity
+      .createQueryBuilder()
       .update()
       .set(body)
       .where('id = :id', { id })
@@ -102,17 +115,16 @@ export class CollectionService {
         collection,
         picture,
         user,
-      }),
+      })
     );
-    return classToPlain(
-      collection, {
-        groups: [Role.OWNER],
-      },
-    );
+    return classToPlain(collection, {
+      groups: [Role.OWNER],
+    });
   }
 
   public async removePicture(id: number, pictureId: number, _user: UserEntity) {
-    const data = await this.collectionPictureEntity.createQueryBuilder('cp')
+    const data = await this.collectionPictureEntity
+      .createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .andWhere('cp.pictureId=:pictureId', { pictureId })
       .getOne();
@@ -137,7 +149,7 @@ export class CollectionService {
    */
   public selectInfo<E = CollectionEntity>(
     q: SelectQueryBuilder<E>,
-    user: Maybe<UserEntity>,
+    user: Maybe<UserEntity>
   ) {
     let sql = '';
     const qO = '(picture.isPrivate = 1 OR picture.isPrivate = 0)';
@@ -145,12 +157,15 @@ export class CollectionService {
       sql = `(collection.userId=${user.id} AND ${qO}) OR `;
     }
     q.loadRelationCountAndMap(
-      'collection.pictureCount', 'collection.info', 'info',
-      qb => qb
-        .leftJoin('info.picture', 'picture')
-        .leftJoin('info.collection', 'collection')
-        .andWhere(`(${sql}picture.isPrivate = 0)`)
-        .andWhere('picture.deleted = 0'),
+      'collection.pictureCount',
+      'collection.info',
+      'info',
+      (qb) =>
+        qb
+          .leftJoin('info.picture', 'picture')
+          .leftJoin('info.collection', 'collection')
+          .andWhere(`(${sql}picture.isPrivate = 0)`)
+          .andWhere('picture.deleted = 0')
     );
   }
 
@@ -168,7 +183,8 @@ export class CollectionService {
     if (user) {
       sql = `(collection.userId=${user.id} AND ${qO}) OR `;
     }
-    const q = this.collectionEntity.createQueryBuilder('collection')
+    const q = this.collectionEntity
+      .createQueryBuilder('collection')
       .where('collection.id=:id', { id })
       .leftJoinAndSelect('collection.user', 'user')
       .leftJoin('collection.info', 'info')
@@ -182,7 +198,7 @@ export class CollectionService {
           collection_info.pictureId = picture.id AND
           (${sql}picture.isPrivate=0) AND
           picture.deleted = 0
-        `,
+        `
       )
       .leftJoinAndSelect('collection_info.picture', 'collection_info_picture')
       .orderBy('info.createTime', 'DESC')
@@ -212,7 +228,7 @@ export class CollectionService {
     id: number,
     query: GetCollectionPictureListDto,
     user: Maybe<UserEntity>,
-    info: GraphQLResolveInfo,
+    info: GraphQLResolveInfo
   ) {
     const collection = await this.collectionEntity.findOne(id);
     const owner = user && collection && user.id === collection.user.id;
@@ -223,7 +239,8 @@ export class CollectionService {
     if (collection.isPrivate && !owner) {
       throw new ForbiddenException();
     }
-    const countQuery = this.collectionPictureEntity.createQueryBuilder('cp')
+    const countQuery = this.collectionPictureEntity
+      .createQueryBuilder('cp')
       .where('cp.collectionId=:id', { id })
       .select('COUNT(DISTINCT pictureId)', 'count')
       .leftJoin('cp.picture', 'picture')
@@ -231,17 +248,29 @@ export class CollectionService {
     if (!owner) {
       countQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
-    const dataQuery = this.pictureService.getCollectionPictureListQuery(id, user, info);
+    const dataQuery = this.pictureService.getCollectionPictureListQuery(
+      id,
+      user,
+      info
+    );
     dataQuery.skip((query.page - 1) * query.pageSize).take(query.pageSize);
     if (!owner) {
       dataQuery.andWhere('picture.isPrivate=:isPrivate', { isPrivate: false });
     }
     dataQuery.andWhere('picture.deleted = 0');
     const [list, count] = await dataQuery.getManyAndCount();
-    return listRequest(query, classToPlain(list, { groups: owner ? [Role.OWNER] : [] }), count);
+    return listRequest(
+      query,
+      classToPlain(list, { groups: owner ? [Role.OWNER] : [] }),
+      count
+    );
   }
 
-  public async getUserCollectionList(idOrName: string, query: GetUserCollectionListDto, user: Maybe<UserEntity>) {
+  public async getUserCollectionList(
+    idOrName: string,
+    query: GetUserCollectionListDto,
+    user: Maybe<UserEntity>
+  ) {
     let isOwner = false;
     const q = this.collectionEntity.createQueryBuilder('collection');
     let userValue;
@@ -256,8 +285,7 @@ export class CollectionService {
     if (!isOwner) {
       q.andWhere('collection.isPrivate=:private', { private: false });
     }
-    q
-      .leftJoinAndSelect('collection.user', 'user')
+    q.leftJoinAndSelect('collection.user', 'user')
       .skip((query.page - 1) * query.pageSize)
       .orderBy('collection.createTime', 'DESC')
       .take(query.pageSize);
@@ -274,17 +302,19 @@ export class CollectionService {
       sql = `(collection.userId=${user.id} AND ${qO}) OR `;
     }
     const previewList = await Promise.all(
-      data.map(async v => this.collectionPictureEntity
-        .createQueryBuilder('cp')
-        .andWhere('cp.collectionId=:id', { id: v.id })
-        .leftJoinAndSelect('cp.picture', 'picture')
-        .leftJoin('cp.collection', 'collection')
-        .andWhere(`(${sql}picture.isPrivate=0)`)
-        .andWhere('picture.deleted = 0')
-        .orderBy('cp.createTime', 'DESC')
-        .limit(3)
-        .offset(0)
-        .getMany()),
+      data.map(async (v) =>
+        this.collectionPictureEntity
+          .createQueryBuilder('cp')
+          .andWhere('cp.collectionId=:id', { id: v.id })
+          .leftJoinAndSelect('cp.picture', 'picture')
+          .leftJoin('cp.collection', 'collection')
+          .andWhere(`(${sql}picture.isPrivate=0)`)
+          .andWhere('picture.deleted = 0')
+          .orderBy('cp.createTime', 'DESC')
+          .limit(3)
+          .offset(0)
+          .getMany()
+      )
     );
     const newData = data.map((collection, index) => {
       const previewInfos = previewList[index];
@@ -295,37 +325,41 @@ export class CollectionService {
       }
       return collection;
     });
-    return listRequest(query, classToPlain(newData, {
-      groups: isOwner ? [Role.OWNER] : undefined,
-    }), count);
+    return listRequest(
+      query,
+      classToPlain(newData, {
+        groups: isOwner ? [Role.OWNER] : undefined,
+      }),
+      count
+    );
   }
 
   public async deleteCollection(id: number, user: UserEntity) {
     const collection = await this.collectionEntity.findOne(id);
-    const isOwner = !!(collection && (user.id === collection.user.id));
+    const isOwner = !!(collection && user.id === collection.user.id);
     if (!isOwner) {
       throw new ForbiddenException();
     }
-    await this.collectionEntity.createQueryBuilder('collection')
+    await this.collectionEntity
+      .createQueryBuilder('collection')
       .delete()
       .where('collection.id=:id', { id })
       .execute();
   }
 
   public async pictureRelatedCollection(pictureId: number, limit = 3) {
-    const q = this.collectionEntity.createQueryBuilder('ct')
+    const q = this.collectionEntity
+      .createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId', { pictureId })
       .andWhere('ct.isPrivate=0')
       .select('ct.id');
     const [idList, count] = await Promise.all([
-      q.limit(limit)
-        .offset(0)
-        .getRawMany(),
+      q.limit(limit).offset(0).getRawMany(),
       q.getCount(),
     ]);
     const data = await Promise.all(
-      idList.map(async _ => this.getCollectionDetail(_.ct_id, null)),
+      idList.map(async (_) => this.getCollectionDetail(_.ct_id, null))
     );
     return {
       data: classToPlain(data),
@@ -334,10 +368,12 @@ export class CollectionService {
   }
 
   public async getCurrentCollections(pictureId: number, user: UserEntity) {
-    const q = this.collectionEntity.createQueryBuilder('ct')
+    const q = this.collectionEntity
+      .createQueryBuilder('ct')
       .leftJoin('ct.info', 'ct_info')
       .where('ct_info.pictureId=:pictureId AND ct_info.userId=:userId', {
-        userId: user.id, pictureId,
+        userId: user.id,
+        pictureId,
       });
     return q.getMany();
   }
@@ -348,7 +384,8 @@ export class CollectionService {
    * @memberof CollectionService
    */
   public async isCollected(id: number, pictureId: number) {
-    const data = await this.collectionPictureEntity.createQueryBuilder('cp')
+    const data = await this.collectionPictureEntity
+      .createQueryBuilder('cp')
       .where('cp.pictureId=:pictureId', { pictureId })
       .andWhere('cp.collectionId=:id', { id })
       .getOne();

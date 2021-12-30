@@ -5,7 +5,8 @@ export class ValidationException extends HttpException {
     super(
       {
         message: [{ param, message: [message] }],
-      }, HttpStatus.BAD_REQUEST,
+      },
+      HttpStatus.BAD_REQUEST
     );
   }
 }

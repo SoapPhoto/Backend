@@ -9,7 +9,9 @@ describe('PictureBadgeActivityService', () => {
       providers: [PictureBadgeActivityService],
     }).compile();
 
-    service = module.get<PictureBadgeActivityService>(PictureBadgeActivityService);
+    service = module.get<PictureBadgeActivityService>(
+      PictureBadgeActivityService
+    );
   });
 
   it('should be defined', () => {

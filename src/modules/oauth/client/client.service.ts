@@ -9,7 +9,7 @@ import { CreateClientDto } from './dto/client.dto';
 export class ClientService {
   constructor(
     @InjectRepository(ClientEntity)
-    private clientRepository: Repository<ClientEntity>,
+    private clientRepository: Repository<ClientEntity>
   ) {}
 
   public getOne = async (id: string, secret: string) => {
@@ -25,11 +25,10 @@ export class ClientService {
   public create = async (data: CreateClientDto) => {
     const client = new ClientEntity();
     return this.clientRepository.save(
-      this.clientRepository.merge(client, data),
+      this.clientRepository.merge(client, data)
     );
   };
 
-  public getBaseClient = async () => {
-
-  };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public getBaseClient = async () => {};
 }

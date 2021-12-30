@@ -1,6 +1,3 @@
-/* eslint-disable import/no-duplicates */
-/* eslint-disable import/newline-after-import */
-
 declare module 'oauth2-server';
 declare module 'oauth2-server/lib/handlers/token-handler';
 
@@ -83,4 +80,4 @@ declare module '*/fragments.graphql' {
   export default value;
 }
 
-declare module 'ali-oss'
+declare module 'ali-oss';

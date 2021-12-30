@@ -1,5 +1,8 @@
 import {
-  Module, forwardRef, NestModule, MiddlewareConsumer,
+  Module,
+  forwardRef,
+  NestModule,
+  MiddlewareConsumer,
 } from '@nestjs/common';
 import { QiniuModule } from '@server/shared/qiniu/qiniu.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,8 +24,6 @@ import { UserModule } from '../user/user.module';
 })
 export class FileModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(FileController);
+    consumer.apply(OauthMiddleware).forRoutes(FileController);
   }
 }

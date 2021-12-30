@@ -13,7 +13,7 @@ export class LocationService {
     @Inject(forwardRef(() => BaiduService))
     private readonly baiduService: BaiduService,
     @InjectRepository(LocationEntity)
-    private locationRepository: Repository<LocationEntity>,
+    private locationRepository: Repository<LocationEntity>
   ) {}
 
   public async search(value: string, region?: string) {

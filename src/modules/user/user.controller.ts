@@ -34,14 +34,12 @@ export class UserController {
     private readonly userService: UserService,
     private readonly collectionService: CollectionService,
     private readonly qiniuService: QiniuService,
-    private readonly fileService: FileService,
+    private readonly fileService: FileService
   ) {}
 
   @Get('whoami')
   @Roles(Role.USER)
-  public async getMyInfo(
-  @User() user: UserEntity,
-  ) {
+  public async getMyInfo(@User() user: UserEntity) {
     return this.userService.findOne(user.id, user);
   }
 
@@ -49,23 +47,25 @@ export class UserController {
   @Roles(Role.OWNER)
   public async githubAvatar() {
     const list = await this.userService.findAllUsers();
-    await Promise.all(list.map(async (user) => {
-      if (/githubusercontent.com/g.test(user.avatar)) {
-        const data = await this.qiniuService.fetch(user.avatar, uuid());
-        if (data) {
-          await this.fileService.create({
-            key: data.key,
-            hash: data.hash,
-            userId: user.id,
-            type: FileType.AVATAR,
-            originalname: user.avatar,
-            size: data.fsize,
-            mimetype: data.mimeType,
-          });
-          this.userService.updateUser(user, { avatar: data.key });
+    await Promise.all(
+      list.map(async (user) => {
+        if (/githubusercontent.com/g.test(user.avatar)) {
+          const data = await this.qiniuService.fetch(user.avatar, uuid());
+          if (data) {
+            await this.fileService.create({
+              key: data.key,
+              hash: data.hash,
+              userId: user.id,
+              type: FileType.AVATAR,
+              originalname: user.avatar,
+              size: data.fsize,
+              mimetype: data.mimeType,
+            });
+            this.userService.updateUser(user, { avatar: data.key });
+          }
         }
-      }
-    }));
+      })
+    );
     return {
       status: 'done',
     };
@@ -73,18 +73,18 @@ export class UserController {
 
   @Get(':idOrName/picture')
   public async getUserPicture(
-  @Param('idOrName') idOrName: string,
+    @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
-    @Query() query: GetPictureListDto,
+    @Query() query: GetPictureListDto
   ) {
     // return this.userService.getUserPicture(idOrName, query, user);
   }
 
   @Get(':idOrName/picture/like')
   public async getUserLikePicture(
-  @Param('idOrName') idOrName: string,
+    @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
-    @Query() query: GetPictureListDto,
+    @Query() query: GetPictureListDto
   ) {
     // return this.userService.getUserLikePicture(idOrName, query, user);
   }
@@ -92,9 +92,9 @@ export class UserController {
   @Post(':name/setting/profile')
   @Roles(Role.USER)
   public async updateUserSetting(
-  @Param('name') username: string,
+    @Param('name') username: string,
     @User() user: UserEntity,
-    @Body() body: UpdateProfileSettingDto,
+    @Body() body: UpdateProfileSettingDto
   ) {
     if (user.username !== username) {
       throw new ForbiddenException();
@@ -104,25 +104,25 @@ export class UserController {
 
   @Get(':id([0-9]+)')
   public async getIdInfo(
-  @Param('id') id: string,
-    @User() user: Maybe<UserEntity>,
+    @Param('id') id: string,
+    @User() user: Maybe<UserEntity>
   ) {
     return this.userService.findOne(id, user);
   }
 
   @Get(':name')
   public async getNameInfo(
-  @Param('name') username: string,
-    @User() user: Maybe<UserEntity>,
+    @Param('name') username: string,
+    @User() user: Maybe<UserEntity>
   ) {
     return this.userService.findOne(username, user);
   }
 
   @Get(':idOrName/collection')
   public async getUserCollections(
-  @Param('idOrName') idOrName: string,
+    @Param('idOrName') idOrName: string,
     @User() user: Maybe<UserEntity>,
-    @Query() query: GetUserCollectionListDto,
+    @Query() query: GetUserCollectionListDto
   ) {
     return this.collectionService.getUserCollectionList(idOrName, query, user);
   }

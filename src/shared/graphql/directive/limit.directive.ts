@@ -2,7 +2,8 @@ import { MapperKind, mapSchema } from '@graphql-tools/utils';
 import {
   GraphQLFieldConfig,
   GraphQLInputFieldConfig,
-  GraphQLScalarType, GraphQLSchema,
+  GraphQLScalarType,
+  GraphQLSchema,
 } from 'graphql';
 
 // export function lengthDirective(directiveName: string) {

@@ -1,6 +1,4 @@
-import {
-  Entity, PrimaryGeneratedColumn, Column, PrimaryColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 

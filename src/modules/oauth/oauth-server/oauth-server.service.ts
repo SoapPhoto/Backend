@@ -30,7 +30,7 @@ export class OauthServerService {
     private readonly clientService: ClientService,
     private readonly userService: UserService,
     private readonly accessTokenService: AccessTokenService,
-    private readonly redisManager: RedisManager,
+    private readonly redisManager: RedisManager
   ) {
     this.server = new OAuth2Server({
       model: {
@@ -45,9 +45,16 @@ export class OauthServerService {
     });
   }
 
-  public generateOauthToken = async (req: Request, res: Response, type: OauthType) => {
+  public generateOauthToken = async (
+    req: Request,
+    res: Response,
+    type: OauthType
+  ) => {
     const credentials = TokenHandler.prototype.getClientCredentials(req);
-    const client = await this.getClient(credentials.clientId, credentials.clientSecret);
+    const client = await this.getClient(
+      credentials.clientId,
+      credentials.clientSecret
+    );
     if (!client) {
       throw new UnauthorizedException('client_credentials_invalid');
     }
@@ -64,10 +71,14 @@ export class OauthServerService {
     if (!userInfo) {
       throw new UnauthorizedException('user_credentials_invalid');
     }
-    return this.saveToken({
-      accessToken: await this.generateAccessToken(),
-      refreshToken: await this.generateRefreshToken(),
-    }, client, userInfo);
+    return this.saveToken(
+      {
+        accessToken: await this.generateAccessToken(),
+        refreshToken: await this.generateRefreshToken(),
+      },
+      client,
+      userInfo
+    );
   };
 
   private getClient = async (clientId: string, clientSecret: string) => {
@@ -75,7 +86,11 @@ export class OauthServerService {
     return client;
   };
 
-  private saveToken = async ({ accessToken, refreshToken }: any, client: ClientEntity, user: UserEntity) => {
+  private saveToken = async (
+    { accessToken, refreshToken }: any,
+    client: ClientEntity,
+    user: UserEntity
+  ) => {
     const token = {
       client,
       user,

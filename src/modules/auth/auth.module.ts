@@ -1,5 +1,8 @@
 import {
-  forwardRef, Module, NestModule, MiddlewareConsumer,
+  forwardRef,
+  Module,
+  NestModule,
+  MiddlewareConsumer,
 } from '@nestjs/common';
 import { UserModule } from '@server/modules/user/user.module';
 import { OauthMiddleware } from '@server/common/middleware/oauth.middleware';
@@ -21,8 +24,6 @@ import { OauthModule } from '../oauth/oauth.module';
 })
 export class AuthModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(AuthController);
+    consumer.apply(OauthMiddleware).forRoutes(AuthController);
   }
 }

@@ -1,5 +1,11 @@
 import {
-  Context, Query, Resolver, ResolveField, Subscription, Mutation, Parent,
+  Context,
+  Query,
+  Resolver,
+  ResolveField,
+  Subscription,
+  Mutation,
+  Parent,
 } from '@nestjs/graphql';
 import { isNumber } from 'class-validator';
 
@@ -14,30 +20,24 @@ import { NotificationEntity } from './notification.entity';
 @Resolver('Notification')
 @UseGuards(AuthGuard)
 export class NotificationResolver {
-  constructor(
-    private readonly notificationService: NotificationService,
-  ) { }
+  constructor(private readonly notificationService: NotificationService) {}
 
   @Query()
   @Roles(Role.USER)
-  public async userNotification(
-    @Context('user') user: UserEntity,
-  ) {
+  public async userNotification(@Context('user') user: UserEntity) {
     return this.notificationService.getList(user);
   }
 
   @Query()
   @Roles(Role.USER)
-  public async unreadNotificationCount(
-    @Context('user') user: UserEntity,
-  ) {
+  public async unreadNotificationCount(@Context('user') user: UserEntity) {
     const count = await this.notificationService.getUnReadCount(user);
     return {
       count,
     };
   }
 
-  @Subscription(_returns => NotificationEntity, {
+  @Subscription((_returns) => NotificationEntity, {
     filter: (payload, _var, context) => {
       const { user } = context;
       return user.id.toString() === payload.subscribers.id.toString();
@@ -50,9 +50,7 @@ export class NotificationResolver {
 
   @Mutation()
   @Roles(Role.USER)
-  public async markNotificationReadAll(
-    @Context('user') user: UserEntity,
-  ) {
+  public async markNotificationReadAll(@Context('user') user: UserEntity) {
     return this.notificationService.markNotificationReadAll(user);
   }
 }
@@ -60,9 +58,7 @@ export class NotificationResolver {
 @Resolver('NotificationMedia')
 export class NotificationMediaResolver {
   @ResolveField('__resolveType')
-  public async resolveType(
-    @Parent() parent: any,
-  ) {
+  public async resolveType(@Parent() parent: any) {
     if (isNumber(parent.subCount)) {
       return 'Comment';
     }

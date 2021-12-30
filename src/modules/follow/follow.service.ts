@@ -1,9 +1,15 @@
 import {
-  Injectable, Inject, forwardRef, BadGatewayException,
+  Injectable,
+  Inject,
+  forwardRef,
+  BadGatewayException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import {
+  NotificationType,
+  NotificationCategory,
+} from '@common/enum/notification';
 import { PaginationDto } from '@server/common/dto/pagination.dto';
 import { FollowEntity } from './follow.entity';
 import { UserEntity } from '../user/user.entity';
@@ -19,11 +25,13 @@ export class FollowService {
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @Inject(forwardRef(() => NotificationService))
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: NotificationService
   ) {}
 
   public async create(user: UserEntity, followedId: number) {
-    const followUser = await this.userService.findOne(followedId, null, ['badge']);
+    const followUser = await this.userService.findOne(followedId, null, [
+      'badge',
+    ]);
     if (!followUser) {
       throw new BadGatewayException('no_user');
     }
@@ -31,17 +39,13 @@ export class FollowService {
       this.followRepository.create({
         followed_user_id: followedId,
         follower_user_id: user.id,
-      }),
+      })
     );
-    this.notificationService.publishNotification(
-      user,
-      followUser,
-      {
-        type: NotificationType.USER,
-        category: NotificationCategory.FOLLOW,
-        mediaId: user.id,
-      },
-    );
+    this.notificationService.publishNotification(user, followUser, {
+      type: NotificationType.USER,
+      category: NotificationCategory.FOLLOW,
+      mediaId: user.id,
+    });
   }
 
   public async remove(userId: number, followedId: number) {
@@ -61,43 +65,64 @@ export class FollowService {
    * @returns
    * @memberof FollowService
    */
-  public async followUsers(id: number, query: PaginationDto, type: string, onlyId: boolean): Promise<string[]>
+  public async followUsers(
+    id: number,
+    query: PaginationDto,
+    type: string,
+    onlyId: boolean
+  ): Promise<string[]>;
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers(id: number, query: PaginationDto, type?: string): Promise<UserEntity[]>
+  public async followUsers(
+    id: number,
+    query: PaginationDto,
+    type?: string
+  ): Promise<UserEntity[]>;
 
   // eslint-disable-next-line no-dupe-class-members
-  public async followUsers(id: number, query: PaginationDto, type = 'follower', onlyId?: boolean) {
+  public async followUsers(
+    id: number,
+    query: PaginationDto,
+    type = 'follower',
+    onlyId?: boolean
+  ) {
     let queryId = 'follower_user_id';
     let getId = 'followed_user_id';
     if (type === 'follower') {
       queryId = 'followed_user_id';
       getId = 'follower_user_id';
     }
-    const q = await this.followRepository.createQueryBuilder('follow')
+    const q = await this.followRepository
+      .createQueryBuilder('follow')
       .where(`follow.${queryId} = :id`, { id })
       .cache(5000);
     const [ids] = await Promise.all([
       q
         .select(`\`follow\`.\`${getId}\``)
-        .skip((query.page - 1) * query.pageSize).take(query.pageSize)
+        .skip((query.page - 1) * query.pageSize)
+        .take(query.pageSize)
         .getRawMany(),
     ]);
     if (ids.length === 0) return [];
-    if (onlyId) return ids.map(v => v[getId]) as string[];
-    const data = await this.userService.getRawIdsList(ids.map(v => v[getId]), null);
+    if (onlyId) return ids.map((v) => v[getId]) as string[];
+    const data = await this.userService.getRawIdsList(
+      ids.map((v) => v[getId]),
+      null
+    );
     return data;
   }
 
   public async followerCount(userId: number) {
-    return this.followRepository.createQueryBuilder('follow')
+    return this.followRepository
+      .createQueryBuilder('follow')
       .where('follow.followed_user_id=:userId', { userId })
       .cache(5000)
       .getCount();
   }
 
   public async followedCount(userId: number) {
-    return this.followRepository.createQueryBuilder('follow')
+    return this.followRepository
+      .createQueryBuilder('follow')
       .where('follow.follower_user_id=:userId', { userId })
       .cache(5000)
       .getCount();

@@ -1,5 +1,8 @@
 import {
-  forwardRef, MiddlewareConsumer, Module, NestModule,
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -32,8 +35,6 @@ import { BadgeModule } from '../badge/badge.module';
 })
 export class UserModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(OauthMiddleware)
-      .forRoutes(UserController);
+    consumer.apply(OauthMiddleware).forRoutes(UserController);
   }
 }

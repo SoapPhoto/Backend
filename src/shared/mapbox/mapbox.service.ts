@@ -13,12 +13,14 @@ export class MapboxService {
   private geocodingClient = geocoding({ accessToken: process.env.MAPBOX_AK! });
 
   public async forwardGeocode(value: string) {
-    const { body } = await this.geocodingClient.forwardGeocode({
-      query: value,
-      limit: 20,
-      mode: 'mapbox.places',
-      language: ['zh-CN', 'en'],
-    }).send();
+    const { body } = await this.geocodingClient
+      .forwardGeocode({
+        query: value,
+        limit: 20,
+        mode: 'mapbox.places',
+        language: ['zh-CN', 'en'],
+      })
+      .send();
     if (body.features) {
       const list = body.features;
       list.map((geo: any) => {
@@ -39,13 +41,15 @@ export class MapboxService {
   }
 
   public async reverseGeocode(location: string | LngLatLike) {
-    const { body } = await this.geocodingClient.reverseGeocode({
-      query: location,
-      limit: 1,
-      types: ['poi'],
-      mode: 'mapbox.places',
-      language: ['zh-CN', 'en'],
-    }).send();
+    const { body } = await this.geocodingClient
+      .reverseGeocode({
+        query: location,
+        limit: 1,
+        types: ['poi'],
+        mode: 'mapbox.places',
+        language: ['zh-CN', 'en'],
+      })
+      .send();
     if (body.features) {
       const list = body.features;
       if (list[0]) {

@@ -6,4 +6,4 @@ export enum FileType {
   USER_COVER = 'USER_COVER',
 }
 
-export const FileTypeValues = $enum(FileType).map(key => FileType[key]);
+export const FileTypeValues = $enum(FileType).map((key) => FileType[key]);

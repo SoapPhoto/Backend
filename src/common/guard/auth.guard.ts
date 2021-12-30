@@ -1,5 +1,10 @@
 import {
-  CanActivate, ExecutionContext, forwardRef, Inject, Injectable, UnauthorizedException,
+  CanActivate,
+  ExecutionContext,
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -11,12 +16,10 @@ export class AuthGuard implements CanActivate {
   constructor(
     @Inject(forwardRef(() => OauthServerService))
     private readonly oauthServerService: OauthServerService,
-    private readonly reflector: Reflector,
+    private readonly reflector: Reflector
   ) {}
 
-  public async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
       return true;

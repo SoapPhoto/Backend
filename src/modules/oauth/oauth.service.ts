@@ -2,7 +2,10 @@
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable max-len */
 import {
-  Injectable, UnauthorizedException, BadGatewayException, BadRequestException,
+  Injectable,
+  UnauthorizedException,
+  BadGatewayException,
+  BadRequestException,
 } from '@nestjs/common';
 import axios from 'axios';
 
@@ -15,7 +18,9 @@ import { Status } from '@common/enum/userStatus';
 import { ValidationException } from '@server/common/exception/validation.exception';
 import { ClientService } from './client/client.service';
 import {
-  IOauthUserInfo, IGithubUserInfo, IWeiboUserInfo,
+  IOauthUserInfo,
+  IGithubUserInfo,
+  IWeiboUserInfo,
 } from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { CredentialsService } from '../credentials/credentials.service';
@@ -35,23 +40,27 @@ export class OauthService {
     private readonly redisManager: RedisManager,
     private readonly clientService: ClientService,
     private readonly userService: UserService,
-    private readonly credentialsService: CredentialsService,
-  ) { }
+    private readonly credentialsService: CredentialsService
+  ) {}
 
   public async github({ code, state }: OauthQueryDto) {
     const proxyOptions = 'socks5://127.0.0.1:7890';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
-    const { data: info } = await axios.post(this.github_authorize, {}, {
-      params: {
-        client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
-        client_secret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
-        code,
-      },
-      headers: {
-        accept: 'application/json',
-      },
-      httpsAgent,
-    });
+    const { data: info } = await axios.post(
+      this.github_authorize,
+      {},
+      {
+        params: {
+          client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
+          client_secret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+          code,
+        },
+        headers: {
+          accept: 'application/json',
+        },
+        httpsAgent,
+      }
+    );
     console.log(info);
     if (info.access_token) {
       try {
@@ -82,76 +91,106 @@ export class OauthService {
     const proxyOptions = 'socks5://127.0.0.1:7890';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
     const client = axios.create({ httpsAgent });
-    const { data: info } = await client.post(this.google_authorize, {}, {
-      params: {
-        grant_type: 'authorization_code',
-        client_id: process.env.OAUTH_GOOGLE_CLIENT_ID,
-        client_secret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
-        redirect_uri: `${process.env.OAUTH_CALLBACK_URL}/oauth/google/redirect`,
-        code,
-      },
-      headers: {
-        accept: 'application/json',
-      },
-    });
-    if (info && info.access_token) {
-      const { data } = await client.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: {
-          Authorization: `Bearer ${info.access_token}`,
+    const { data: info } = await client.post(
+      this.google_authorize,
+      {},
+      {
+        params: {
+          grant_type: 'authorization_code',
+          client_id: process.env.OAUTH_GOOGLE_CLIENT_ID,
+          client_secret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
+          redirect_uri: `${process.env.OAUTH_CALLBACK_URL}/oauth/google/redirect`,
+          code,
         },
-      });
+        headers: {
+          accept: 'application/json',
+        },
+      }
+    );
+    if (info && info.access_token) {
+      const { data } = await client.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: {
+            Authorization: `Bearer ${info.access_token}`,
+          },
+        }
+      );
       return this.saveOauthInfo(code, state, OauthType.GOOGLE, data.sub, data);
     }
     return null;
   }
 
   public async weibo({ code, state }: OauthQueryDto) {
-    const { data: info } = await axios.post(this.weibo_authorize, {}, {
-      params: {
-        client_id: process.env.OAUTH_WEIBO_CLIENT_ID,
-        client_secret: process.env.OAUTH_WEIBO_CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        redirect_uri: 'https://soapphoto.com/oauth/weibo/redirect',
-        code,
-      },
-      headers: {
-        accept: 'application/json',
-      },
-    });
-    if (info?.access_token) {
-      const { data } = await axios.get('https://api.weibo.com/2/users/show.json', {
+    const { data: info } = await axios.post(
+      this.weibo_authorize,
+      {},
+      {
         params: {
-          access_token: info.access_token,
-          uid: info.uid,
+          client_id: process.env.OAUTH_WEIBO_CLIENT_ID,
+          client_secret: process.env.OAUTH_WEIBO_CLIENT_SECRET,
+          grant_type: 'authorization_code',
+          redirect_uri: 'https://soapphoto.com/oauth/weibo/redirect',
+          code,
         },
         headers: {
           accept: 'application/json',
         },
-      });
+      }
+    );
+    if (info?.access_token) {
+      const { data } = await axios.get(
+        'https://api.weibo.com/2/users/show.json',
+        {
+          params: {
+            access_token: info.access_token,
+            uid: info.uid,
+          },
+          headers: {
+            accept: 'application/json',
+          },
+        }
+      );
       return this.saveOauthInfo(code, state, OauthType.WEIBO, data.id, data);
     }
     return null;
   }
 
-  public async saveOauthInfo(code: string, state: OauthStateType, type: OauthType, id: number, data: IOauthUserInfo): Promise<{code: string; action: OauthActionType} | null> {
+  public async saveOauthInfo(
+    code: string,
+    state: OauthStateType,
+    type: OauthType,
+    id: number,
+    data: IOauthUserInfo
+  ): Promise<{ code: string; action: OauthActionType } | null> {
     const redisClient = this.redisManager.getClient();
     if (state === OauthStateType.login) {
       // 这边验证oauth账户，有存在的话就返回，不存在就创建并返回创建的数据
       const cr = await this.verifyUser(type, id, data);
       if (!cr) throw new UnauthorizedException('No Credential Info');
       if (cr.user) {
-        await redisClient.set(`oauth:code:${code}`, JSON.stringify({
-          type,
-          client: await this.clientService.getBaseClient(),
-          user: cr.user,
-        }), 'EX', 2000);
+        await redisClient.set(
+          `oauth:code:${code}`,
+          JSON.stringify({
+            type,
+            client: await this.clientService.getBaseClient(),
+            user: cr.user,
+          }),
+          'EX',
+          2000
+        );
         return { code, action: OauthActionType.login };
       }
-      await redisClient.set(`oauth:active:${code}`, JSON.stringify({
-        type,
-        client: await this.clientService.getBaseClient(),
-        cr,
-      }), 'EX', 2000);
+      await redisClient.set(
+        `oauth:active:${code}`,
+        JSON.stringify({
+          type,
+          client: await this.clientService.getBaseClient(),
+          cr,
+        }),
+        'EX',
+        2000
+      );
       return { code, action: OauthActionType.active };
     }
     if (state === OauthStateType.authorize) {
@@ -159,16 +198,25 @@ export class OauthService {
       if (cr) {
         throw new BadGatewayException('authorized user');
       }
-      await redisClient.set(`oauth:authorize:${code}`, JSON.stringify({
-        type,
-        data,
-      }), 'EX', 5000);
+      await redisClient.set(
+        `oauth:authorize:${code}`,
+        JSON.stringify({
+          type,
+          data,
+        }),
+        'EX',
+        5000
+      );
       return { code, action: OauthActionType.authorize };
     }
     return null;
   }
 
-  public async verifyUser(type: OauthType, id: number, data: IOauthUserInfo): Promise<CredentialsEntity> {
+  public async verifyUser(
+    type: OauthType,
+    id: number,
+    data: IOauthUserInfo
+  ): Promise<CredentialsEntity> {
     const cr = await this.credentialsService.getInfo(`${type}_${id}`);
     if (cr) {
       return cr;
@@ -220,11 +268,16 @@ export class OauthService {
         signupType: type as SignupType,
       });
       await redisClient.del(`oauth:active:${code}`);
-      await redisClient.set(`oauth:code:${code}`, JSON.stringify({
-        type,
-        user,
-        client: await this.clientService.getBaseClient(),
-      }), 'EX', 2000);
+      await redisClient.set(
+        `oauth:code:${code}`,
+        JSON.stringify({
+          type,
+          user,
+          client: await this.clientService.getBaseClient(),
+        }),
+        'EX',
+        2000
+      );
       return {
         type,
         user,

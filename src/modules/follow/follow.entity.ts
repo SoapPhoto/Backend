@@ -1,7 +1,5 @@
 /* eslint-disable no-undef */
-import {
-  Entity, PrimaryColumn,
-} from 'typeorm';
+import { Entity, PrimaryColumn } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { Expose, Type } from 'class-transformer';

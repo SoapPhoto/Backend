@@ -1,5 +1,10 @@
 import {
-  Controller, Get, Param, Query, UseFilters, UseGuards,
+  Controller,
+  Get,
+  Param,
+  Query,
+  UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 
 import { User } from '@server/common/decorator/user.decorator';
@@ -13,14 +18,12 @@ import { TagService } from './tag.service';
 @UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class TagController {
-  constructor(
-    private readonly tagService: TagService,
-  ) {}
+  constructor(private readonly tagService: TagService) {}
 
   @Get(':name')
   public async getTagInfo(
     @Param('name') name: string,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.tagService.getTagInfo(name, user);
   }
@@ -29,7 +32,7 @@ export class TagController {
   public async getTagPictureList(
     @Param('name') name: string,
     @User() user: UserEntity,
-    @Query() query: GetTagPictureListDto,
+    @Query() query: GetTagPictureListDto
   ) {
     // return this.tagService.getTagPicture(name, user, query);
   }

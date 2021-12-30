@@ -6,7 +6,7 @@ export class FollowUserDto {
   @IsNumber()
   @Expose()
   @Type(() => Number)
-  public readonly userId!: number
+  public readonly userId!: number;
 }
 
 @Exclude()
@@ -14,5 +14,5 @@ export class FollowUsersDto {
   @IsNumber()
   @Expose()
   @Type(() => Number)
-  public readonly id!: number
+  public readonly id!: number;
 }

@@ -1,8 +1,8 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 
 interface ILocation {
-  lng: number
-  lat: number
+  lng: number;
+  lat: number;
 }
 
 @Exclude()

@@ -3,8 +3,8 @@ import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export interface ILocation {
-  lng: number
-  lat: number
+  lng: number;
+  lat: number;
 }
 
 export interface ILocationDetail {

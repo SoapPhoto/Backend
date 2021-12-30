@@ -1,11 +1,19 @@
 import {
-  Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Column,
 } from 'typeorm';
 import { Expose, Type } from 'class-transformer';
 
 import { BaseEntity } from '@server/common/base.entity';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { NotificationType, NotificationCategory } from '@common/enum/notification';
+import {
+  NotificationType,
+  NotificationCategory,
+} from '@common/enum/notification';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
 import { PictureEntity } from '../picture/picture.entity';
 import { CommentEntity } from '../comment/comment.entity';
@@ -30,11 +38,18 @@ export class NotificationEntity extends BaseEntity {
   @Expose({ groups: [Role.ADMIN] })
   public mediaId?: number;
 
-  @Column({ type: 'enum', enum: NotificationType, default: `${NotificationType.USER}` })
+  @Column({
+    type: 'enum',
+    enum: NotificationType,
+    default: `${NotificationType.USER}`,
+  })
   @Expose()
   public readonly type!: NotificationType;
 
-  @OneToMany(() => NotificationSubscribersUserEntity, item => item.notification)
+  @OneToMany(
+    () => NotificationSubscribersUserEntity,
+    (item) => item.notification
+  )
   @Expose()
   public readonly subscribers!: NotificationSubscribersUserEntity[];
 
@@ -43,7 +58,10 @@ export class NotificationEntity extends BaseEntity {
 
   @Expose()
   get comment(): CommentEntity | undefined {
-    if (this.category === NotificationCategory.REPLY || this.category === NotificationCategory.COMMENT) {
+    if (
+      this.category === NotificationCategory.REPLY ||
+      this.category === NotificationCategory.COMMENT
+    ) {
       return this.media as CommentEntity;
     }
     return undefined;
@@ -67,5 +85,5 @@ export class NotificationEntity extends BaseEntity {
 
   @Type(() => Boolean)
   @Expose()
-  public read = false
+  public read = false;
 }

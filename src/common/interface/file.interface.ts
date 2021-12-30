@@ -1,4 +1,3 @@
-
 export class File {
   public fieldname!: string;
 

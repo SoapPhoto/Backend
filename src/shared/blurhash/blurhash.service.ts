@@ -7,9 +7,7 @@ import dayjs from 'dayjs';
 
 @Injectable()
 export class BlurhashService {
-  constructor(
-    private readonly redisManager: RedisManager,
-  ) {}
+  constructor(private readonly redisManager: RedisManager) {}
 
   public async getBase64(hash: string, width: number, height: number) {
     const client = this.redisManager.getClient();

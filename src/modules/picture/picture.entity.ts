@@ -166,21 +166,28 @@ export class PictureEntity extends BaseEntity {
 
   /** 图片作者 */
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.pictures)
+  @ManyToOne(() => UserEntity, (user) => user.pictures)
   @Expose()
   public readonly user!: UserEntity;
 
   /** 图片的评论 */
-  @OneToMany(() => PictureEntity, photo => photo.user, { onDelete: 'CASCADE' })
+  @OneToMany(() => PictureEntity, (photo) => photo.user, {
+    onDelete: 'CASCADE',
+  })
   @Expose()
   public readonly comments!: CommentEntity[];
 
-  @OneToMany(() => PictureUserActivityEntity, activity => activity.picture, { onDelete: 'CASCADE' })
+  @OneToMany(() => PictureUserActivityEntity, (activity) => activity.picture, {
+    onDelete: 'CASCADE',
+  })
   @Expose()
   public readonly activities!: PictureUserActivityEntity[];
 
   /* tagId */
-  @ManyToMany(() => TagEntity, tag => tag.pictures, { onDelete: 'CASCADE', cascade: true })
+  @ManyToMany(() => TagEntity, (tag) => tag.pictures, {
+    onDelete: 'CASCADE',
+    cascade: true,
+  })
   @JoinTable({ name: 'picture_tags' })
   @Expose()
   public tags!: TagEntity[];
@@ -206,7 +213,7 @@ export class PictureEntity extends BaseEntity {
   @Expose()
   get currentCollections() {
     if (this.info && this.info.length > 0) {
-      return this.info.map(item => item.collection);
+      return this.info.map((item) => item.collection);
     }
     return [];
   }

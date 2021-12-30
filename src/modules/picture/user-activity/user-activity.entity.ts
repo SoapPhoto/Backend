@@ -1,5 +1,9 @@
 import {
-  Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { BaseEntity } from '@server/common/base.entity';

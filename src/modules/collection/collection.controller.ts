@@ -1,5 +1,14 @@
 import {
-  Body, Controller, Get, Param, Post, Query, UseFilters, UseGuards, Delete, Put,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseFilters,
+  UseGuards,
+  Delete,
+  Put,
 } from '@nestjs/common';
 
 import { Roles } from '@server/common/decorator/roles.decorator';
@@ -9,21 +18,23 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { CollectionService } from './collection.service';
-import { CreateCollectionDot, GetCollectionPictureListDto, UpdateCollectionDot } from './dto/collection.dto';
+import {
+  CreateCollectionDot,
+  GetCollectionPictureListDto,
+  UpdateCollectionDot,
+} from './dto/collection.dto';
 
 @Controller('api/collection')
 @UseGuards(AuthGuard)
 @UseFilters(new AllExceptionFilter())
 export class CollectionController {
-  constructor(
-    private readonly collectionService: CollectionService,
-  ) {}
+  constructor(private readonly collectionService: CollectionService) {}
 
   @Post('')
   @Roles(Role.USER)
   public async createCollection(
     @Body() body: CreateCollectionDot,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.collectionService.create(body, user);
   }
@@ -32,7 +43,7 @@ export class CollectionController {
   @Roles(Role.USER)
   public async deleteCollection(
     @Param('collectionId') collectionId: number,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.collectionService.deleteCollection(collectionId, user);
   }
@@ -42,7 +53,7 @@ export class CollectionController {
   public async updateCollection(
     @Body() body: UpdateCollectionDot,
     @Param('collectionId') collectionId: number,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.collectionService.updateCollection(body, collectionId, user);
   }
@@ -52,7 +63,7 @@ export class CollectionController {
   public async addPictureCollection(
     @Param('pictureId') pictureId: number,
     @Param('collectionId') collectionId: number,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.collectionService.addPicture(collectionId, pictureId, user);
   }
@@ -62,7 +73,7 @@ export class CollectionController {
   public async removePictureCollection(
     @Param('pictureId') pictureId: number,
     @Param('collectionId') collectionId: number,
-    @User() user: UserEntity,
+    @User() user: UserEntity
   ) {
     return this.collectionService.removePicture(collectionId, pictureId, user);
   }
@@ -71,7 +82,7 @@ export class CollectionController {
   public async collectionDetail(
     @Param('collectionId') collectionId: number,
     @Query() query: GetCollectionPictureListDto,
-    @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>
   ) {
     return this.collectionService.getCollectionDetail(collectionId, user);
   }
@@ -80,7 +91,7 @@ export class CollectionController {
   public async collectionPictureList(
     @Param('collectionId') collectionId: number,
     @Query() query: GetCollectionPictureListDto,
-    @User() user: Maybe<UserEntity>,
+    @User() user: Maybe<UserEntity>
   ) {
     // return this.collectionService.getCollectionPictureList(collectionId, query, user);
   }
