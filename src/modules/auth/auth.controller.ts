@@ -9,6 +9,7 @@ import {
   UseGuards,
   Put,
   Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -45,6 +46,8 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response
   ) {
+    // TODO: 暂时关闭注册，开发完成邀请码机制再开放
+    throw new ForbiddenException();
     await this.authService.emailSignup(body);
     const request = new OAuth2Server.Request({
       method: 'POST',

@@ -14,7 +14,7 @@ import bodyParser from 'body-parser';
 import * as Sentry from '@sentry/node';
 
 import { AppModule } from './app.module';
-import { LoggingService } from './shared/logging/logging.service';
+import { Logger, LoggingService } from './shared/logging/logging.service';
 
 const bootstrap = async () => {
   Sentry.init({
@@ -61,7 +61,10 @@ const bootstrap = async () => {
   });
   await server.listen(process.env.PORT!);
 
-  // Logger.log(`Server running on http://localhost:${process.env.PORT} 🚀 👌`, 'Bootstrap');
+  Logger.log(
+    `Server running on http://localhost:${process.env.PORT} 🚀 👌`,
+    'Bootstrap'
+  );
 };
 
 bootstrap();

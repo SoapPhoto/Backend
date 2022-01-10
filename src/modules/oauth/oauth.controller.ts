@@ -11,6 +11,7 @@ import {
   Query,
   Body,
   BadGatewayException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -97,6 +98,8 @@ export class OauthController {
     @Req() req: Request,
     @Res() res: Response
   ) {
+    // TODO: 暂时关闭注册，开发完成邀请码机制再开放
+    throw new ForbiddenException();
     const { type } = await this.oauthService.activeUser(body);
     return this.token(req, res, type);
   }
