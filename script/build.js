@@ -20,20 +20,22 @@ const onCancel = () => {
 
 const promptsOptions = { onCancel };
 
-const getBuild = async () => new Promise((resolve) => {
-  // console.log(sp);
-  const result = spawn('npm', ['run', 'build'], { stdio: 'inherit' });
-  result.on('close', (code) => {
-    if (code === 0) {
-      resolve();
-    } else {
-      reject();
-    }
-  })
-    .on('error', () => {
-      reject();
-    });
-});
+const getBuild = async () =>
+  new Promise((resolve) => {
+    // console.log(sp);
+    const result = spawn('npm', ['run', 'build'], { stdio: 'inherit' });
+    result
+      .on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject();
+        }
+      })
+      .on('error', () => {
+        reject();
+      });
+  });
 
 const build = async () => {
   await logger(getBuild(), '打包文件');
@@ -51,40 +53,49 @@ const migrate = async () => {
     console.log(`${chalk.red('×')} 迁移名称不能为空！`);
     return null;
   }
-  const { run } = await prompts({
-    type: 'confirm',
-    name: 'run',
-    message: '是否直接执行迁移文件？',
-    initial: true,
-  }, promptsOptions);
-  const spCreate = async () => new Promise((resolve, reject) => {
-    const result = spawn('npm', ['run', 'typeorm:migrate'], { stdio: 'inherit' });
-    result
-      .on('close', (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject();
-        }
-      })
-      .on('error', () => {
-        reject();
+  const { run } = await prompts(
+    {
+      type: 'confirm',
+      name: 'run',
+      message: '是否直接执行迁移文件？',
+      initial: true,
+    },
+    promptsOptions
+  );
+  const spCreate = async () =>
+    new Promise((resolve, reject) => {
+      const result = spawn('npm', ['run', 'typeorm:migrate'], {
+        stdio: 'inherit',
       });
-  });
-  const spRun = async () => new Promise((resolve, reject) => {
-    const result = spawn('npm', ['run', 'typeorm:run', name], { stdio: 'inherit' });
-    result
-      .on('close', (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
+      result
+        .on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject();
+          }
+        })
+        .on('error', () => {
           reject();
-        }
-      })
-      .on('error', () => {
-        reject(new Error('Should not emit error'));
+        });
+    });
+  const spRun = async () =>
+    new Promise((resolve, reject) => {
+      const result = spawn('npm', ['run', 'typeorm:run', name], {
+        stdio: 'inherit',
       });
-  });
+      result
+        .on('close', (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject();
+          }
+        })
+        .on('error', () => {
+          reject(new Error('Should not emit error'));
+        });
+    });
   await logger(spCreate(), '生成迁移文件');
   if (run) {
     await logger(spRun(), '执行迁移文件');
@@ -93,16 +104,23 @@ const migrate = async () => {
 };
 
 const main = async () => {
-  const { value } = await prompts({
-    type: 'select',
-    name: 'value',
-    message: '请选择功能',
-    choices: [
-      { title: '打包（build）', description: '打包后端文件', value: 'build' },
-      { title: '数据库迁移（migrate）', description: '数据库迁移工作', value: 'migrate' },
-    ],
-    initial: 0,
-  }, promptsOptions);
+  const { value } = await prompts(
+    {
+      type: 'select',
+      name: 'value',
+      message: '请选择功能',
+      choices: [
+        { title: '打包（build）', description: '打包后端文件', value: 'build' },
+        {
+          title: '数据库迁移（migrate）',
+          description: '数据库迁移工作',
+          value: 'migrate',
+        },
+      ],
+      initial: 0,
+    },
+    promptsOptions
+  );
   if (value === 'migrate') {
     migrate();
   } else {
