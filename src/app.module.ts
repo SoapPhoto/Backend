@@ -28,6 +28,7 @@ import { IpModule } from './shared/ip/ip.module';
 import { OssModule } from './shared/oss/oss.module';
 import { BlurhashModule } from './shared/blurhash/blurhash.module';
 import { DataLoaderInterceptor } from './shared/graphql/loader/loader.interceptor';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 // const dev = process.env.NODE_ENV !== 'production';
 // const dev = false;
@@ -54,7 +55,8 @@ import { DataLoaderInterceptor } from './shared/graphql/loader/loader.intercepto
       },
     }),
     TypeOrmModule.forRoot(ormconfig),
-    GraphQLModule.forRootAsync({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       useClass: GraphqlService,
     }),
     MailerModule.forRootAsync({

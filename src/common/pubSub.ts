@@ -1,7 +1,7 @@
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import Redis from 'ioredis';
+import Redis, { RedisOptions } from 'ioredis';
 
-const options: Redis.RedisOptions = {
+const options: RedisOptions = {
   host: process.env.REDIS_HOST,
   port: Number(process.env.REDIS_PORT),
   db: Number(process.env.REDIS_DB),
@@ -10,6 +10,6 @@ const options: Redis.RedisOptions = {
 };
 
 export const pubSub = new RedisPubSub({
-  publisher: new Redis(options),
-  subscriber: new Redis(options),
+  publisher: new Redis(options) as any,
+  subscriber: new Redis(options) as any,
 });

@@ -71,7 +71,7 @@ export class MapboxService {
         });
         // return plainToClass(PictureLocation, data);
       }
-      return list as IMapboxGeocodeFeature;
+      return list as IMapboxGeocodeFeature[];
     }
     return null;
   }
