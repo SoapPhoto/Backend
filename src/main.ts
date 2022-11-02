@@ -24,6 +24,7 @@ const bootstrap = async () => {
 
   const server = await NestFactory.create(AppModule, {
     logger: new LoggingService(),
+    cors: false,
   });
   // const limiter = new RateLimit({
   //   store: new RedisStore({
@@ -54,11 +55,6 @@ const bootstrap = async () => {
       transform: true,
     })
   );
-  server.enableCors({
-    origin: process.env.URL,
-    credentials: true,
-    methods: ['GET', 'PUT', 'POST', 'DELETE'],
-  });
   await server.listen(process.env.PORT!);
 
   Logger.log(

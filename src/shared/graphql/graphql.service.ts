@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { GqlOptionsFactory, GqlModuleOptions } from '@nestjs/graphql';
-import { ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLError } from 'graphql';
 import * as OAuth2Server from 'oauth2-server';
 import { isString } from 'class-validator';
@@ -23,23 +22,18 @@ export class GraphqlService implements GqlOptionsFactory {
     private readonly redisManager: RedisManager
   ) {}
 
-  public async createGqlOptions(): Promise<ApolloDriverConfig> {
+  public async createGqlOptions(): Promise<GqlModuleOptions> {
     // 服务器中断就要清空掉redis
     const client = this.redisManager.getClient();
     const data = await client.del(
       SUBSCRIPTIONS_ONLINE_USER,
       SUBSCRIPTIONS_TOTAL
     );
-    console.log('deleteAll：', data);
     return {
       // plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
       playground: true,
-      cors: {
-        origin: process.env.URL,
-        credentials: true,
-        methods: ['GET', 'PUT', 'POST', 'DELETE'],
-      },
+      cors: false,
       context: async ({ req, res, connection }) => {
         if (connection) {
           return {

@@ -13,7 +13,7 @@ import {
   BadGatewayException,
   ForbiddenException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { OauthTypeValues, OauthType } from '@common/enum/router';

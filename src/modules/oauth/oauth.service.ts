@@ -46,22 +46,28 @@ export class OauthService {
   public async github({ code, state }: OauthQueryDto) {
     const proxyOptions = 'socks5://127.0.0.1:7890';
     const httpsAgent = new SocksProxyAgent(proxyOptions);
-    const { data: info } = await axios.post(
-      this.github_authorize,
-      {},
-      {
-        params: {
-          client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
-          client_secret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
-          code,
-        },
-        headers: {
-          accept: 'application/json',
-        },
-        httpsAgent,
-      }
-    );
-    console.log(info);
+    let info: any = {};
+    try {
+      const { data } = await axios.post(
+        this.github_authorize,
+        {},
+        {
+          params: {
+            client_id: process.env.OAUTH_GITHUB_CLIENT_ID,
+            client_secret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+            code,
+          },
+          headers: {
+            accept: 'application/json',
+          },
+          httpsAgent,
+        }
+      );
+      info = data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
     if (info.access_token) {
       try {
         const { data } = await axios.get('https://api.github.com/user', {
@@ -71,7 +77,6 @@ export class OauthService {
           },
           httpsAgent,
         });
-        // console.log(data);
         console.log(state);
         return this.saveOauthInfo(code, state, OauthType.GITHUB, data.id, data);
       } catch (err: any) {
