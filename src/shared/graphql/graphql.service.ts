@@ -14,6 +14,7 @@ import {
   SUBSCRIPTIONS_TOTAL,
 } from '@server/common/constants/subscriptions';
 import { Logger } from '../logging/logging.service';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
@@ -22,7 +23,7 @@ export class GraphqlService implements GqlOptionsFactory {
     private readonly redisManager: RedisManager
   ) {}
 
-  public async createGqlOptions(): Promise<GqlModuleOptions> {
+  public async createGqlOptions(): Promise<ApolloDriverConfig> {
     // 服务器中断就要清空掉redis
     const client = this.redisManager.getClient();
     const data = await client.del(

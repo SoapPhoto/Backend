@@ -68,5 +68,6 @@
   ],
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.keystyle": "nested",
-  "eslint.enable": true
+  "eslint.enable": true,
+  "nuxt.isNuxtApp": false
 }
