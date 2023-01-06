@@ -34,7 +34,10 @@ export class GraphqlService implements GqlOptionsFactory {
       // plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
       playground: true,
-      cors: false,
+      cors: {
+        origin: '*',
+        credentials: true,
+      },
       context: async ({ req, res, connection }) => {
         if (connection) {
           return {

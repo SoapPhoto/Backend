@@ -66,7 +66,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
           from: '"soap" <4049310@qq.com>',
         },
         template: {
-          dir: `${__dirname}/common/email/template`,
+          dir: `${process.cwd()}/common/email/template`,
           adapter: new MjmlAdapter(), // or new PugAdapter()
           options: {
             strict: true,
