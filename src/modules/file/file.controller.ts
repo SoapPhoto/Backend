@@ -56,6 +56,7 @@ export class FileController {
     @Req() req: Request,
     @Body() data: CreateOssFileDot
   ) {
+    console.log('data', data);
     await this.ossService.isOssCallback(data, req);
     await this.fileService.create({
       key: data.object,
