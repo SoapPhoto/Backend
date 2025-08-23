@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GqlOptionsFactory, GqlModuleOptions } from '@nestjs/graphql';
-import { GraphQLError } from 'graphql';
+import { GqlOptionsFactory } from '@nestjs/graphql';
 import * as OAuth2Server from 'oauth2-server';
 import { isString } from 'class-validator';
 
@@ -8,13 +7,13 @@ import { OauthServerService } from '@server/modules/oauth/oauth-server/oauth-ser
 import { pubSub } from '@server/common/pubSub';
 import { formatValidatorClass } from '@server/common/validator/error';
 import { RedisManager } from '@liaoliaots/nestjs-redis';
-import { async } from 'rxjs';
 import {
   SUBSCRIPTIONS_ONLINE_USER,
   SUBSCRIPTIONS_TOTAL,
 } from '@server/common/constants/subscriptions';
 import { Logger } from '../logging/logging.service';
 import { ApolloDriverConfig } from '@nestjs/apollo';
+import type { GraphQLFormattedError } from 'graphql/index';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
@@ -25,20 +24,16 @@ export class GraphqlService implements GqlOptionsFactory {
 
   public async createGqlOptions(): Promise<ApolloDriverConfig> {
     // 服务器中断就要清空掉redis
-    const client = this.redisManager.getClient();
-    const data = await client.del(
-      SUBSCRIPTIONS_ONLINE_USER,
-      SUBSCRIPTIONS_TOTAL
-    );
+    // const client = this.redisManager.getClient();
+    // const data = await client.del(
+    //   SUBSCRIPTIONS_ONLINE_USER,
+    //   SUBSCRIPTIONS_TOTAL
+    // );
     return {
       // plugins: [ApolloServerPluginLandingPageLocalDefault()],
       introspection: true,
       playground: true,
-      cors: {
-        origin: '*',
-        credentials: true,
-      },
-      context: async ({ req, res, connection }) => {
+      context: async ({ req, res, connection }: any) => {
         if (connection) {
           return {
             req: connection.context,
@@ -135,34 +130,36 @@ export class GraphqlService implements GqlOptionsFactory {
         //   },
         // },
       },
-      formatError: (error: GraphQLError) => {
+      formatError: (formattedError: GraphQLFormattedError, error: any) => {
         const returnError = (message: string, err?: any) => ({
-          ...error,
+          ...formattedError,
           message,
           error: err,
         });
         // console.log(error.extensions.exception);
-        if (isString(error.message)) {
+        if (isString(formattedError.message)) {
           Logger.error(
-            error.message,
-            error.stack ? error.stack.toString() : '',
-            `graphql-${error.path?.toString()}`
+            formattedError.message,
+            formattedError.extensions
+              ? formattedError.extensions.toString()
+              : '',
+            `graphql-${formattedError.path?.toString()}`
           );
-          return returnError(error.message);
+          return returnError(formattedError.message);
         }
-        const { message } = error as any;
+        const { message } = formattedError as any;
         if (message.statusCode === 400) {
           Logger.warn(
             'Validation Error',
             // error.stack,
-            `graphql-${error.path?.toString()}`
+            `graphql-${formattedError.path?.toString()}`
           );
           return returnError(
             'Validation Error',
             formatValidatorClass(message.message)
           );
         }
-        return error;
+        return formattedError;
       },
     };
   }

@@ -71,7 +71,9 @@ export class PictureUserActivityService {
       }
       return {
         isLike: data,
-        count: await this.activityRepository.count({ picture, like: true }),
+        count: await this.activityRepository.count({
+          where: { picture, like: true },
+        }),
       };
     }
     throw new BadRequestException('liked');

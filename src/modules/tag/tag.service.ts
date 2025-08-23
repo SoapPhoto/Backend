@@ -16,11 +16,11 @@ export class TagService {
   ) {}
 
   public async createTag(tag: Partial<TagEntity>): Promise<TagEntity> {
-    let tagData: TagEntity | undefined;
+    let tagData!: TagEntity | null;
     if (tag.id) {
-      tagData = await this.tagRepository.findOne(tag.id);
+      tagData = await this.tagRepository.findOneBy({ id: tag.id });
     } else if (tag.name) {
-      tagData = await this.tagRepository.findOne({
+      tagData = await this.tagRepository.findOneBy({
         name: tag.name,
       });
     }

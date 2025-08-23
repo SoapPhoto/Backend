@@ -9,7 +9,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { RavenModule, RavenInterceptor } from 'nest-raven';
 
 import { AuthModule } from '@server/modules/auth/auth.module';
 import { OauthModule } from '@server/modules/oauth/oauth.module';
@@ -74,7 +73,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
         },
       }),
     }),
-    RavenModule,
     LoggingModule,
     AuthModule,
     OauthModule,
@@ -94,10 +92,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     {
       provide: APP_INTERCEPTOR,
       useClass: DataLoaderInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useValue: new RavenInterceptor(),
     },
   ],
 })

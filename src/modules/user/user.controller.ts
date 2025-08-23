@@ -102,7 +102,7 @@ export class UserController {
     return this.userService.updateUserProfile(user, body);
   }
 
-  @Get(':id([0-9]+)')
+  @Get(':id')
   public async getIdInfo(
     @Param('id') id: string,
     @User() user: Maybe<UserEntity>

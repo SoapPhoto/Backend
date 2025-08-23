@@ -1,11 +1,11 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import { EventsGateway } from '@server/events/events.gateway';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { NotificationCategory } from '@common/enum/notification';
-import { classToPlain } from 'class-transformer';
+import { instanceToPlain } from 'class-transformer';
 import { pubSub } from '@server/common/pubSub';
 import { NotificationEntity } from './notification.entity';
 import { NotificationSubscribersUserEntity } from './subscribers-user/subscribers-user.entity';
@@ -13,7 +13,9 @@ import { PictureService } from '../picture/picture.service';
 import { SubscribersUserService } from './subscribers-user/subscribers-user.service';
 import { CommentService } from '../comment/comment.service';
 import { UserService } from '../user/user.service';
-import { PictureEntity } from '../picture/picture.entity';
+import { PictureEntity } from '@server/modules/picture/picture.entity';
+import { CommentEntity } from '@server/modules/comment/comment.entity';
+import { CollectionEntity } from '@server/modules/collection/collection.entity';
 
 @Injectable()
 export class NotificationService {
@@ -68,7 +70,7 @@ export class NotificationService {
       publisher
     );
     await this.pubSub.publish('newNotification', {
-      newNotification: classToPlain(notification),
+      newNotification: instanceToPlain(notification),
       subscribers,
     });
     // this.wss.emitUserMessage(subscribers, 'message', {
@@ -95,7 +97,7 @@ export class NotificationService {
     return Promise.all(
       data.map(async (notify) => {
         notify.media = await this.setNotificationItemMedia(notify, user);
-        return classToPlain(notify);
+        return instanceToPlain(notify);
       })
     );
   }
@@ -103,12 +105,13 @@ export class NotificationService {
   public setNotificationItemMedia = async (
     notify: NotificationEntity,
     user: Maybe<UserEntity>
-  ) => {
+  ): Promise<
+    PictureEntity | CommentEntity | UserEntity | CollectionEntity | undefined
+  > => {
     if (notify.category === NotificationCategory.LIKED) {
       try {
         // 不存在会报错
-        const data = await this.pictureService.findOne(notify.mediaId!, user);
-        return data;
+        return await this.pictureService.findOne(notify.mediaId!, user);
       } catch (e) {
         // console.log(e);
       }
@@ -117,10 +120,15 @@ export class NotificationService {
       notify.category === NotificationCategory.REPLY ||
       notify.category === NotificationCategory.COMMENT
     ) {
-      return this.commentService.getRawOne(notify.mediaId!);
+      return (
+        (await this.commentService.getRawOne(notify.mediaId!)) ?? undefined
+      );
     }
     if (notify.category === NotificationCategory.FOLLOW) {
-      return this.userService.findOne(notify.mediaId!, null, ['badge']);
+      return (
+        (await this.userService.findOne(notify.mediaId!, null, ['badge'])) ??
+        undefined
+      );
     }
     return undefined;
   };

@@ -4,10 +4,6 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "baseUrl": "./",
-    "types": [
-      "webpack-env",
-      "node"
-    ],
     "lib": [
       "es6",
       "dom",

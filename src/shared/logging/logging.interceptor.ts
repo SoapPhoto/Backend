@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import * as Sentry from '@sentry/node';
 
 import { LoggingService } from './logging.service';
 

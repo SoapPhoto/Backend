@@ -8,7 +8,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import dayjs from 'dayjs';
 import nodejieba from 'nodejieba';
 import { RedisManager } from '@liaoliaots/nestjs-redis';
@@ -121,11 +121,11 @@ export class PictureService {
       throw new ForbiddenException();
     }
     const updateData: Partial<Writeable<PictureEntity>> = data;
-    let location: LocationEntity | undefined;
+    let location: LocationEntity | null = null;
     if (data.locationUid) {
       location = await this.locationService.getOneOrCreate(data.locationUid);
     }
-    updateData.location = location;
+    updateData.location = location ?? undefined;
     if (tags.length > 0) {
       const newTags = await Promise.all(
         (tags as string[]).map((tag: string) =>
@@ -315,6 +315,7 @@ export class PictureService {
       path: 'data',
     })
       .andWhere('picture.isPrivate=:private', { private: false })
+      .leftJoinAndSelect('picture.tags', 'tag')
       .andWhere('picture.deleted = 0');
     if (type === PicturesType.CHOICE) {
       q.leftJoin(
@@ -754,7 +755,7 @@ export class PictureService {
    * @memberof PictureService
    */
   // eslint-disable-next-line arrow-parens
-  public selectInfo = <T>(
+  public selectInfo = <T extends ObjectLiteral>(
     q: SelectQueryBuilder<T>,
     user: Maybe<UserEntity>,
     options?: ISelectOptions

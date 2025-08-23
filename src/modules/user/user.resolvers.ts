@@ -18,7 +18,7 @@ import { GetPictureListDto } from '@server/modules/picture/dto/picture.dto';
 import { classToPlain } from 'class-transformer';
 import { UserPictureType } from '@common/enum/picture';
 import { User } from '@server/common/decorator/user.decorator';
-import { GraphQLResolveInfo } from 'graphql';
+import type { GraphQLResolveInfo } from 'graphql';
 import { pubSub } from '@server/common/pubSub';
 import { RedisManager } from '@liaoliaots/nestjs-redis';
 import { SUBSCRIPTIONS_ONLINE_USER } from '@server/common/constants/subscriptions';

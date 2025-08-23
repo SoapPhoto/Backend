@@ -37,13 +37,13 @@ export class LocationService {
   }
 
   public async getOneOrCreate(uid: string) {
-    const data = await this.locationRepository.findOne({ uid });
+    const data = await this.locationRepository.findOneBy({ uid });
     if (!data) {
       const poi = await this.placeDetail(uid);
       if (poi) {
         await this.locationRepository.save(poi);
       }
     }
-    return this.locationRepository.findOne({ uid });
+    return this.locationRepository.findOneBy({ uid });
   }
 }

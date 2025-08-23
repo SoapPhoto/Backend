@@ -21,7 +21,7 @@ const LOGGER_COMMON_FORMAT = winston.format.combine(
   winston.format.splat(),
   winston.format.printf((info) => {
     const { timestamp, level, message, stack } = info;
-    const time = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+    const time = dayjs(timestamp as number).format('YYYY-MM-DD HH:mm:ss');
     return `${time} [${level.toUpperCase()}] ${message} ${stack || ''}`;
   })
 );
@@ -61,7 +61,7 @@ export class LoggingService implements LoggerService {
           winston.format.timestamp(),
           winston.format.printf((info) => {
             const { timestamp, level, message } = info;
-            const time = dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss');
+            const time = dayjs(timestamp as number).format('YYYY-MM-DD HH:mm:ss');
             let newMessage = message;
             if (typeof message === 'object') {
               newMessage = JSON.stringify(message);

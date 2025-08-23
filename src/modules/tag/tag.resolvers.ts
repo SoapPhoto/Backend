@@ -3,7 +3,7 @@ import { Args, Context, Query, Resolver, Info } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { UserEntity } from '@server/modules/user/user.entity';
-import { GraphQLResolveInfo } from 'graphql';
+import type { GraphQLResolveInfo } from 'graphql';
 import { GetTagPictureListDto } from './dto/tag.dto';
 import { TagService } from './tag.service';
 import { PictureService } from '../picture/picture.service';

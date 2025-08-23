@@ -17,7 +17,7 @@ export class UserBadgeActivityService {
   }
 
   public async isExist(badgeId: number, userId: number) {
-    return !!(await this.activityRepository.findOne({ badgeId, userId }));
+    return !!(await this.activityRepository.findOneBy({ badgeId, userId }));
   }
 
   public async addBadge(user: UserEntity, badgeId: number, userId: number) {

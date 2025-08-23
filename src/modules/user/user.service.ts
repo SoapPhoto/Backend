@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import crypto from 'crypto';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import uid from 'uniqid';
 import { omit, isArray } from 'lodash';
 import { fieldsProjection } from 'graphql-fields-list';
@@ -88,8 +88,8 @@ export class UserService {
 
   public async isSignup(username: string, email: string, err = true) {
     const [nameData, userData] = await Promise.all([
-      this.userEntity.findOne({ username }),
-      this.userEntity.findOne({ email }),
+      this.userEntity.findOneBy({ username }),
+      this.userEntity.findOneBy({ email }),
     ]);
     if (nameData) {
       if (err) {
@@ -185,7 +185,10 @@ export class UserService {
     return data;
   }
 
-  public selectInfo<E>(q: SelectQueryBuilder<E>, options?: ISelectOptions) {
+  public selectInfo<E extends ObjectLiteral>(
+    q: SelectQueryBuilder<E>,
+    options?: ISelectOptions
+  ) {
     if (options?.info) {
       const select = fieldsProjection(options.info);
       if (select['badge.id']) {
@@ -207,7 +210,10 @@ export class UserService {
    * @returns
    * @memberof UserService
    */
-  public selectBadge<E>(q: SelectQueryBuilder<E>, value = 'user') {
+  public selectBadge<E extends ObjectLiteral>(
+    q: SelectQueryBuilder<E>,
+    value = 'user'
+  ) {
     return q
       .leftJoin(
         this.badgeService.userActivityMetadata.tableName,

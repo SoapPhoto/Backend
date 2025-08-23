@@ -16,7 +16,7 @@ import { AuthGuard } from '@server/common/guard/auth.guard';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { Roles } from '@server/common/decorator/roles.decorator';
 import { QiniuService } from '@server/shared/qiniu/qiniu.service';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { User } from '@server/common/decorator/user.decorator';
 import { OssService } from '@server/shared/oss/oss.service';
 import { Role } from '../user/enum/role.enum';

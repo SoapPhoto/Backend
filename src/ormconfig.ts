@@ -38,7 +38,7 @@ const ormconfig: TypeOrmModuleOptions = {
   // migrationsRun: true,
   logging: process.env.NODE_ENV !== 'production',
   logger: 'file',
-  keepConnectionAlive: true,
+  // keepConnectionAlive: true,
   entities: [
     UserEntity,
     PictureEntity,
@@ -62,9 +62,9 @@ const ormconfig: TypeOrmModuleOptions = {
     // PictureMarkEntity,
   ],
   migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
-  cli: {
-    migrationsDir: 'src/migrations',
-  },
+  // cli: {
+  //   migrationsDir: 'src/migrations',
+  // },
 };
 
 // export = ormconfig;

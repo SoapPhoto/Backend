@@ -23,7 +23,6 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { User } from '@server/common/decorator/user.decorator';
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { AuthGuard } from '@server/common/guard/auth.guard';
-import { QiniuService } from '@server/shared/qiniu/qiniu.service';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
 import { keyword } from '@server/common/utils/keyword';
@@ -65,9 +64,9 @@ export class PictureController {
     if (file) {
       let location: LocationEntity | undefined;
       if (restInfo.location) {
-        location = await this.locationService.getOneOrCreate(
-          restInfo.location.uid
-        );
+        location =
+          (await this.locationService.getOneOrCreate(restInfo.location.uid)) ??
+          undefined;
       }
       const [, picture] = await Promise.all([
         this.fileService.activated(body.key),
@@ -110,10 +109,8 @@ export class PictureController {
   }
 
   @Get()
-  public async getList(
-    @User() user: Maybe<UserEntity>,
-    @Query() query: GetPictureListDto
-  ) {
+  public async getList() {
+    // @Query() query: GetPictureListDto // @User() user: Maybe<UserEntity>,
     // return this.pictureService.find(user,  query);
   }
 
@@ -128,18 +125,18 @@ export class PictureController {
     // console.log(data);
   }
 
-  @Get(':id([0-9]+)')
+  @Get(':id')
   public async getOne(@Param('id') id: string, @User() user: UserEntity) {
     return this.pictureService.findOne(Number(id), user, true);
   }
 
-  @Put('like/:id([0-9]+)')
+  @Put('like/:id')
   @Roles(Role.USER)
   public async likePicture(@Param('id') id: string, @User() user: UserEntity) {
     return this.pictureService.likePicture(Number(id), user, true);
   }
 
-  @Put('unlike/:id([0-9]+)')
+  @Put('unlike/:id')
   @Roles(Role.USER)
   public async unlikePicture(
     @Param('id') id: string,
@@ -148,7 +145,7 @@ export class PictureController {
     return this.pictureService.likePicture(Number(id), user, false);
   }
 
-  @Get(':id([0-9]+)/comments')
+  @Get(':id/comments')
   public async getPictureCommentList(
     @Param('id') id: string,
     @User() user: Maybe<UserEntity>,

@@ -6,8 +6,8 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-import { classToPlain } from 'class-transformer';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
+import { classToPlain, instanceToPlain } from 'class-transformer';
 import { isNumberString } from 'class-validator';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -98,7 +98,7 @@ export class CollectionService {
   public async addPicture(id: number, pictureId: number, user: UserEntity) {
     const [picture, collection] = await Promise.all([
       this.pictureService.findOne(pictureId, user),
-      this.collectionEntity.findOne(id),
+      this.collectionEntity.findOneBy({ id }),
     ]);
     if (!picture) {
       throw new NotFoundException('no_exist_picture');
@@ -117,11 +117,12 @@ export class CollectionService {
         user,
       })
     );
-    return classToPlain(collection, {
+    return instanceToPlain(collection, {
       groups: [Role.OWNER],
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async removePicture(id: number, pictureId: number, _user: UserEntity) {
     const data = await this.collectionPictureEntity
       .createQueryBuilder('cp')
@@ -147,7 +148,7 @@ export class CollectionService {
    * @param {Maybe<UserEntity>} user
    * @memberof CollectionService
    */
-  public selectInfo<E = CollectionEntity>(
+  public selectInfo<E extends ObjectLiteral = CollectionEntity>(
     q: SelectQueryBuilder<E>,
     user: Maybe<UserEntity>
   ) {
@@ -230,7 +231,7 @@ export class CollectionService {
     user: Maybe<UserEntity>,
     info: GraphQLResolveInfo
   ) {
-    const collection = await this.collectionEntity.findOne(id);
+    const collection = await this.collectionEntity.findOneBy({ id });
     const owner = user && collection && user.id === collection.user.id;
     if (!collection) {
       throw new NotFoundException();
@@ -335,7 +336,7 @@ export class CollectionService {
   }
 
   public async deleteCollection(id: number, user: UserEntity) {
-    const collection = await this.collectionEntity.findOne(id);
+    const collection = await this.collectionEntity.findOneBy({ id });
     const isOwner = !!(collection && user.id === collection.user.id);
     if (!isOwner) {
       throw new ForbiddenException();

@@ -18,6 +18,9 @@ export class FileService {
 
   public async create(data: CreateFileDot) {
     const user = await this.userService.findOne(data.userId, null);
+    if (!user) {
+      return;
+    }
     await this.fileRepository
       .createQueryBuilder()
       .insert()

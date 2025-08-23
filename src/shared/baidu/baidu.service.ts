@@ -4,8 +4,7 @@ import { LocationEntity } from '@server/modules/location/location.entity';
 import Axios from 'axios';
 import { plainToClass } from 'class-transformer';
 import dayjs from 'dayjs';
-import gcoord from 'gcoord';
-import { Position } from 'gcoord/dist/types/geojson';
+import gcoord, { Position } from "gcoord";
 import { qs } from 'url-parse';
 
 import { BaiduClassify, BaiduToken } from './interface/baidu.interface';

@@ -3,7 +3,7 @@ import { Entity, BaseEntity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
 
 import { OauthType } from '@common/enum/router';
 import { UserEntity } from '../user/user.entity';
-import { IOauthUserInfo } from '../user/user.interface';
+import type { IOauthUserInfo } from '../user/user.interface';
 
 @Exclude()
 @Entity('user_credentials')

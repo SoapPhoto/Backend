@@ -7,7 +7,7 @@ import {
   Parent,
   Info,
 } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
+import type { GraphQLResolveInfo } from 'graphql';
 
 import { UseGuards, Inject, forwardRef } from '@nestjs/common';
 import { Roles } from '@server/common/decorator/roles.decorator';

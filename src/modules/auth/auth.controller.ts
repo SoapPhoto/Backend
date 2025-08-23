@@ -11,7 +11,7 @@ import {
   Req,
   ForbiddenException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import express from 'express';
 
 import { AllExceptionFilter } from '@server/common/filter/exception.filter';
 import { CreateUserDto } from '@server/modules/user/dto/user.dto';
@@ -43,8 +43,8 @@ export class AuthController {
   @Post('signup')
   public async signup(
     @Body() body: CreateUserDto,
-    @Req() req: Request,
-    @Res() res: Response
+    @Req() req: express.Request,
+    @Res() res: express.Response
   ) {
     // TODO: 暂时关闭注册，开发完成邀请码机制再开放
     throw new ForbiddenException();
@@ -73,7 +73,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  public async logout(@Res() res: Response) {
+  public async logout(@Res() res: express.Response) {
     res.clearCookie('Authorization', {
       domain: process.env.COOKIE_DOMAIN,
     });

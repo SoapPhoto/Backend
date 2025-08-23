@@ -19,7 +19,7 @@ export class PictureBadgeActivityService {
   }
 
   public async isExist(badgeId: number, pictureId: number) {
-    return !!(await this.activityRepository.findOne({ badgeId, pictureId }));
+    return !!(await this.activityRepository.findOneBy({ badgeId, pictureId }));
   }
 
   public async addBadge(user: UserEntity, badgeId: number, pictureId: number) {

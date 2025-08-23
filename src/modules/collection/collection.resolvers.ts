@@ -9,7 +9,7 @@ import {
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Roles } from '@server/common/decorator/roles.decorator';
-import { GraphQLResolveInfo } from 'graphql';
+import type { GraphQLResolveInfo } from 'graphql';
 import { CollectionService } from './collection.service';
 import { UserEntity } from '../user/user.entity';
 import {

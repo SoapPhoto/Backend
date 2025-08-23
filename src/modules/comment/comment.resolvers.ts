@@ -13,10 +13,8 @@ import { Roles } from '@server/common/decorator/roles.decorator';
 import { AuthGuard } from '@server/common/guard/auth.guard';
 import { Role } from '@server/modules/user/enum/role.enum';
 import { UserEntity } from '@server/modules/user/user.entity';
-import {
-  ClientInfo,
-  IClientInfo,
-} from '@server/common/decorator/client_info.decorator';
+import { ClientInfo } from '@server/common/decorator/client_info.decorator';
+import type { IClientInfo } from '@server/common/decorator/client_info.decorator';
 import DataLoader from 'dataloader';
 import { Loader } from '@server/shared/graphql/loader/loader.interceptor';
 import { CommentEntity } from './comment.entity';
