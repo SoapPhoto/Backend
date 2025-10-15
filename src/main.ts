@@ -11,16 +11,15 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import * as Sentry from '@sentry/node';
 
 import { AppModule } from './app.module';
 import { Logger, LoggingService } from './shared/logging/logging.service';
 
 const bootstrap = async () => {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    debug: true,
-  });
+  // Sentry.init({
+  //   dsn: process.env.SENTRY_DSN,
+  //   debug: true,
+  // });
 
   const server = await NestFactory.create(AppModule, {
     logger: new LoggingService(),

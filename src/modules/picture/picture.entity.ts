@@ -79,10 +79,12 @@ export class PictureEntity extends BaseEntity {
 
   /** 图片原始文件名 */
   @Column()
+  @Expose()
   public readonly originalname!: string;
 
   /** 图片类型 */
   @Column()
+  @Expose()
   public readonly mimetype!: string;
 
   /** 图片大小 */
@@ -142,6 +144,11 @@ export class PictureEntity extends BaseEntity {
   @Column({ nullable: true })
   @Expose()
   public readonly blurhash?: string;
+
+  /** thumbhash */
+  @Column({ nullable: true })
+  @Expose()
+  public readonly thumbhash?: string;
 
   /** EXIF信息 */
   @Column('simple-json', {

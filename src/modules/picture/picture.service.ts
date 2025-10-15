@@ -1,4 +1,4 @@
-import { classToPlain, plainToClass } from 'class-transformer';
+import { classToPlain, instanceToPlain, plainToClass } from 'class-transformer';
 import {
   BadRequestException,
   forwardRef,
@@ -100,6 +100,7 @@ export class PictureService {
       keywords.unshift(...newData.tags.map((tag) => tag.name));
     }
     const newPicture = this.pictureRepository.create(newData);
+    console.log(newData, newPicture);
     newPicture.keywords = this.getPictureKeyword(newPicture);
     const picture = await this.pictureRepository.save(newPicture);
     return picture;
@@ -296,7 +297,7 @@ export class PictureService {
       throw new NotFoundException();
     }
     if (isBoolean(toPlain)) {
-      return classToPlain(data, {
+      return instanceToPlain(data, {
         groups: isOwner ? [Role.OWNER] : [],
       });
     }
@@ -627,7 +628,7 @@ export class PictureService {
       .orderBy(`FIELD(\`picture\`.\`id\`, ${ids.toString()})`)
       .cache(1000);
     const data = await q.getMany();
-    return listRequest(query, classToPlain(data), count as number);
+    return listRequest(query, instanceToPlain(data), count as number);
   };
 
   public getCollectionPictureListQuery = (

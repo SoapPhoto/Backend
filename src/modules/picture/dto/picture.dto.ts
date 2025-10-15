@@ -6,6 +6,7 @@ import {
   IsString,
   IsOptional,
   IsObject,
+  IsNumber,
 } from 'class-validator';
 
 import { PaginationDto } from '@server/common/dto/pagination.dto';
@@ -78,6 +79,18 @@ export class CreatePictureAddDot implements Partial<PictureEntity> {
   @IsObject()
   @Expose()
   public readonly location?: LocationEntity;
+
+  @IsString()
+  @Expose()
+  public readonly originalname!: string;
+
+  @IsString()
+  @Expose()
+  public readonly mimetype!: string;
+
+  @IsNumber()
+  @Expose()
+  public readonly size!: number;
 
   // @Type(() => BaiduClassify)
   // @Expose()

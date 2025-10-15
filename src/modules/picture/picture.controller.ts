@@ -30,11 +30,7 @@ import { BaiduService } from '@server/shared/baidu/baidu.service';
 import { encode } from 'blurhash';
 import { plainToClass } from 'class-transformer';
 import { BaiduClassify } from '@server/shared/baidu/interface/baidu.interface';
-import {
-  CreatePictureAddDot,
-  GetPictureListDto,
-  UpdatePictureDot,
-} from './dto/picture.dto';
+import { CreatePictureAddDot, UpdatePictureDot } from './dto/picture.dto';
 import { PictureService } from './picture.service';
 import { FileService } from '../file/file.service';
 import { LocationService } from '../location/location.service';
@@ -68,6 +64,7 @@ export class PictureController {
           (await this.locationService.getOneOrCreate(restInfo.location.uid)) ??
           undefined;
       }
+      console.log(info, restInfo);
       const [, picture] = await Promise.all([
         this.fileService.activated(body.key),
         this.pictureService.create({
@@ -76,9 +73,6 @@ export class PictureController {
           tags,
           user,
           location,
-          originalname: file.originalname,
-          mimetype: file.mimetype,
-          size: file.size,
           key: file.key,
           hash: file.hash,
         }),

@@ -14,6 +14,7 @@ import {
 import { Logger } from '../logging/logging.service';
 import { ApolloDriverConfig } from '@nestjs/apollo';
 import type { GraphQLFormattedError } from 'graphql/index';
+import GraphQLJSON from 'graphql-type-json';
 
 @Injectable()
 export class GraphqlService implements GqlOptionsFactory {
@@ -129,6 +130,9 @@ export class GraphqlService implements GqlOptionsFactory {
         //     };
         //   },
         // },
+      },
+      resolvers: {
+        JSON: GraphQLJSON,
       },
       formatError: (formattedError: GraphQLFormattedError, error: any) => {
         const returnError = (message: string, err?: any) => ({
